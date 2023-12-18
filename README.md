@@ -27,10 +27,10 @@ After you're finished please remove all the comments and instructions!
 
 <div align="center">
   <!-- You are encouraged to replace this logo with your own! Otherwise you can also remove it. -->
-  <img src="murple_logo.png" alt="logo" width="140"  height="auto" />
+  <img src="" alt="logo" width="140"  height="auto" />
   <br/>
 
-  <h3><b>Microverse README Template</b></h3>
+  <h3><b>Domino Marketing Solution PLC</b></h3>
 
 </div>
 
@@ -60,11 +60,9 @@ After you're finished please remove all the comments and instructions!
 
 <!-- PROJECT DESCRIPTION -->
 
-# 📖 [your_project_name] <a name="about-project"></a>
+# 📖 [Web Application for Domino Marketing Solution PLC] <a name="about-project"></a>
 
-> Describe your project in 1 or 2 sentences.
-
-**[your_project__name]** is a...
+**[Web Application for Domino Marketing Solution PLC]** This project proposes the development of a web application to streamline the workflow of a design and printing company. The application will facilitate seamless collaboration between customer service, designers, managers, and the banner printer, ensuring efficient order fulfillment and minimizing material waste.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -76,6 +74,15 @@ After you're finished please remove all the comments and instructions!
   <summary>Client</summary>
   <ul>
     <li><a href="https://reactjs.org/">React.js</a></li>
+  </ul>
+   <ul>
+    <li><a href="https://reactjs.org/">TypeScript</a></li>
+  </ul>
+   <ul>
+    <li><a href="https://reactjs.org/">Redux</a></li>
+  </ul>
+  <ul>
+    <li><a href="https://reactjs.org/">CSS</a></li>
   </ul>
 </details>
 
@@ -111,7 +118,7 @@ After you're finished please remove all the comments and instructions!
 
 > Add a link to your deployed project.
 
-- [Live Demo Link](https://yourdeployedapplicationlink.com)
+- Coming soon
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
