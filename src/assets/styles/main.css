@@ -1,0 +1,33 @@
+#root{
+    --primary-color : #000000;
+    --secondary-color : #f01d52;
+    --tertiary-color : #ffffff;
+}
+
+*, *::before, *::after{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header{
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+} 
+
+.blur-section {
+    background-color: var(--secondary-color);
+    opacity: 0.9;
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 80px);
+    top: 80px;
+    left: 0;
+    filter: blur(20px);
+    mix-blend-mode: multiply;
+}
+
+nav ul li a.active{
+    background-color: var(--primary-color);
+    width: 100%;
+}

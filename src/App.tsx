@@ -7,6 +7,7 @@ import Blog from "./pages/Blog"
 import Contact from "./pages/Contact"
 import GetStarted from "./pages/GetStarted"
 import Home from "./pages/Home"
+import "./assets/styles/main.css"
 
 const App = () => {
   return (
