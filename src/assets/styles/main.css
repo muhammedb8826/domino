@@ -10,18 +10,20 @@ header{
 } 
 
 .blur-section {
-    background-color: var(--secondary-color);
-    opacity: 0.9;
+    background-color: var(--primary-color);
     position: absolute;
     width: 100%;
     height: calc(100vh - 64px);
-    top: 80px;
+    top: 64px;
     left: 0;
-    filter: blur(20px);
+    z-index: 10;
+    opacity: 0.9;
+    filter: blur(10px);
     mix-blend-mode: multiply;
 }
 
 nav ul li {
+    z-index: 12;
     display: inline-block;
     margin: 0 10px;
     position: relative;
@@ -63,3 +65,28 @@ nav ul li a:hover::after{
     border-radius: 1px;
     transition: all ease-in-out 0.5s;
 }
+
+.hero-image{
+    background-size: cover;
+    object-fit: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: calc(100vh - 64px);
+}
+
+.hero-text {
+  color: white;
+  text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+}
+
