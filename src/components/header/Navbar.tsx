@@ -9,7 +9,7 @@ const Navbar = () => {
   };
   return (
     <header>
-      <nav className="h-20 border flex justify-between items-center relative px-4">
+      <nav className="h-16 border flex justify-between items-center relative px-4">
         <div>
           <NavLink to="/">Logo</NavLink>
         </div>
@@ -32,7 +32,7 @@ const Navbar = () => {
           <li className="flex mb-1">
             <NavLink
               to="/about"
-              className="w-full p-4 rounded-md"
+              className="w-full p-3 rounded-md"
               onClick={handleToggle}
             >
               About
@@ -41,7 +41,7 @@ const Navbar = () => {
           <li className="flex mb-1">
             <NavLink
               to="/services"
-              className="w-full p-4 rounded-md"
+              className="w-full p-3 rounded-md"
               onClick={handleToggle}
             >
               Services
@@ -50,7 +50,7 @@ const Navbar = () => {
           <li className="flex mb-1">
             <NavLink
               to="/latest-work"
-              className="w-full p-4 rounded-md"
+              className="w-full p-3 rounded-md"
               onClick={handleToggle}
             >
               Latest Work
@@ -59,7 +59,7 @@ const Navbar = () => {
           <li className="flex mb-1">
             <NavLink
               to="/blog"
-              className="w-full p-4 rounded-md"
+              className="w-full p-3 rounded-md"
               onClick={handleToggle}
             >
               Blog
@@ -68,7 +68,7 @@ const Navbar = () => {
           <li className="flex mb-1">
             <NavLink
               to="/contact"
-              className="w-full p-4 rounded-md"
+              className="w-full p-3 rounded-md"
               onClick={handleToggle}
             >
               Contact
@@ -77,7 +77,7 @@ const Navbar = () => {
           <li className="flex mb-1">
             <NavLink
               to="/get-started"
-              className="w-full p-4 rounded-md"
+              className="w-full p-3 rounded-md"
               onClick={handleToggle}
             >
               Get started
