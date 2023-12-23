@@ -14,8 +14,8 @@ const ScrollablePages = () => {
           speed: -20,
           children: (
             <div className="absolute inset-0 flex flex-col gap-5 justify-end items-center h-[65%]">
-              <h1 className="text-8xl text-white font-medium">DESTROY</h1>
-              <p className="text-4xl text-white font-medium">YOUR COMPETITION</p>
+              <h1 className="max-md:text-[10vw] text-8xl text-white font-medium">DESTROY</h1>
+              <p className="max-md:text-[5vw] text-4xl text-white font-medium">YOUR COMPETITION</p>
             </div>
           ),
         },
@@ -31,8 +31,8 @@ const ScrollablePages = () => {
           speed: -20,
           children: (
             <div className="absolute inset-0 flex flex-col gap-5 justify-end items-center h-[72%]">
-            <h1 className="text-8xl text-[#CCC7BF] font-medium">ALWAYS</h1>
-            <p className="text-3xl text-[#3E342F] font-medium">CUTTING EDGE. NEVER COOKIE CUTTER</p>
+            <h1 className="max-md:text-[10vw] text-8xl text-[#CCC7BF] font-medium">ALWAYS</h1>
+            <p className="max-md:text-[5vw] text-3xl text-[#3E342F] font-medium">CUTTING EDGE. NEVER COOKIE CUTTER</p>
           </div>
           ),
         },
