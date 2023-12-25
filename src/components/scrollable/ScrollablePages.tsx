@@ -3,6 +3,7 @@ import bannerForeGround from "./images/klipartz.png";
 import bannerBackground from "./images/bg3.jpg";
 import front from "./images/foreground.png";
 import back from "./images/graphtree1.png";
+import GetStarted from "../../pages/GetStarted";
 
 const ScrollablePages = () => {
   return (
@@ -40,9 +41,7 @@ const ScrollablePages = () => {
       ]}
       className="aspect-[2/1] h-screen"
     />
-    <div className="h-screen flex justify-center items-center">
-      <h1>Getting Started section</h1>
-    </div>
+    <GetStarted />
     </>
   );
 };
