@@ -4,7 +4,7 @@ import TopBar from "../components/order/TopBar"
 
 const OrderPage = () => {
   return (
-    <section className="w-screen flex justify-between">
+    <section className="w-screen h-screen flex justify-between bg-[#EBE9EA] overflow-hidden">
       <div className="w-[20%]">
       <SideBar />
       </div>
