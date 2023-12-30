@@ -2,8 +2,15 @@ import { SiVirustotal } from "react-icons/si";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { MdApproval } from "react-icons/md";
 import { IoBagAdd } from "react-icons/io5";
+import { useState } from "react";
 
 const OrderDetails = () => {
+  const [toggle, setToggle] = useState(false);
+
+  const handlePopup = () => {
+    setToggle(!toggle);
+  };
+
   return (
     <div className="p-4 overflow-y-scroll">
       <h1 className="flex items-center gap-4">
@@ -33,7 +40,7 @@ const OrderDetails = () => {
             <p className="text-gray-400">Total Order Pending</p>
           </div>
           <div className="progress ml-auto">
-          <div className="relative w-14 h-14">
+            <div className="relative w-14 h-14">
               <svg className="w-full h-full" viewBox="0 0 100 100">
                 {/* <!-- Background circle --> */}
                 <circle
@@ -123,6 +130,7 @@ const OrderDetails = () => {
 
       <div className="rounded h-screen">
         <button
+          onClick={handlePopup}
           type="button"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
@@ -130,8 +138,24 @@ const OrderDetails = () => {
           <span className="ml-2">Add New Order</span>
         </button>
 
-        <div className="bg-white h-screen mt-4"></div>
+        <div className="bg-white h-screen mt-4">orders table</div>
       </div>
+
+      {toggle && (
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-lg w-[50%] h-[50%]">
+            <div className="flex justify-between items-center p-4">
+              <h1 className="text-2xl font-bold">Add New Order</h1>
+              <button onClick={handlePopup} className="text-2xl font-bold">
+                &times;
+              </button>
+            </div>
+            <hr />
+
+            <form className="p-4"></form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
