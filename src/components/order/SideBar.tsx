@@ -4,7 +4,7 @@ import { FaCartArrowDown } from "react-icons/fa";
 export const SideBar = () => {
   return (
     <aside
-      className="absolute left-0 top-0 z-9999 flex h-screen w-[270px] flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
+      className="flex h-screen flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark"
     >
        <div className="py-4 flex items-center justify-center mb-10">
           <NavLink to="/" className="flex text-3xl items-center"><span className="font-bold text-white">D</span><span className="text-[#f01d52]">omino</span> </NavLink>

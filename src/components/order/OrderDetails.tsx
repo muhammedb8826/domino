@@ -1,6 +1,6 @@
 const OrderDetails = () => {
   return (
-    <div>
+    <div className="flex justify-center items-center">
       OrderDetails
     </div>
   )

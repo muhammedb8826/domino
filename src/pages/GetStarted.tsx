@@ -1,8 +1,10 @@
 import sideImage from "../assets/images/get-started-side-image.png";
+import Navbar from "../components/header/Navbar";
 
 const GetStarted = () => {
   return (
     <>
+    <Navbar />
       <div className="wrapper flex justify-between gap-4 pt-5">
         <div className="w-1/2 hidden lg:block">
           <img src={sideImage} alt="side image" className="w-full" />
