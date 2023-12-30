@@ -1,7 +1,7 @@
 import { SiVirustotal } from "react-icons/si";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { MdApproval } from "react-icons/md";
-import { IoBagAdd} from "react-icons/io5";
+import { IoBagAdd } from "react-icons/io5";
 
 const OrderDetails = () => {
   return (
@@ -15,41 +15,108 @@ const OrderDetails = () => {
 
       <div className="cards flex items-center justify-between py-4">
         <div className="total-order flex items-center gap-4 shadow-sm bg-white rounded-md p-4 w-[30%]">
-          <p>
+          <p className="text-xl">
             <SiVirustotal />
           </p>
           <div className="">
-            <p>34</p>
-            <p>Total Order</p>
-          </div>
-          <div className="progress ml-auto">
-            <span>progeress</span>
+            <p className="font-bold text-2xl">34</p>
+            <p className="text-gray-400">Total Order</p>
           </div>
         </div>
 
         <div className="total-order flex items-center gap-4 shadow-sm bg-white rounded-md p-4 w-[30%]">
-          <p>
+          <p className="text-xl">
             <MdOutlinePendingActions />
           </p>
           <div className="">
-            <p>34</p>
-            <p>Total Order Pending</p>
+            <p className="font-bold text-2xl">34</p>
+            <p className="text-gray-400">Total Order Pending</p>
           </div>
           <div className="progress ml-auto">
-            <span>progeress</span>
+          <div className="relative w-14 h-14">
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                {/* <!-- Background circle --> */}
+                <circle
+                  className="text-gray-200 stroke-current"
+                  stroke-width="10"
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="transparent"
+                ></circle>
+                {/* <!-- Progress circle --> */}
+                <circle
+                  className="text-blue-500  progress-ring__circle stroke-current"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="transparent"
+                  stroke-dashoffset="calc(400 - (400 * 45) / 100)"
+                ></circle>
+
+                {/* <!-- Center text --> */}
+                <text
+                  x="50"
+                  y="50"
+                  font-family="Verdana"
+                  font-size="20"
+                  text-anchor="middle"
+                  alignment-baseline="middle"
+                >
+                  70%
+                </text>
+              </svg>
+            </div>
           </div>
         </div>
 
         <div className="total-order flex items-center gap-4 shadow-sm bg-white rounded-md p-4 w-[30%]">
-          <p>
+          <p className="text-xl">
             <MdApproval />
           </p>
           <div className="">
-            <p>34</p>
-            <p>Total Order Approved</p>
+            <p className="font-bold text-2xl">34</p>
+            <p className="text-gray-400">Total Order Approved</p>
           </div>
           <div className="progress ml-auto">
-            <span>progeress</span>
+            <div className="relative w-14 h-14">
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                {/* <!-- Background circle --> */}
+                <circle
+                  className="text-gray-200 stroke-current"
+                  stroke-width="10"
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="transparent"
+                ></circle>
+                {/* <!-- Progress circle --> */}
+                <circle
+                  className="text-blue-500  progress-ring__circle stroke-current"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="transparent"
+                  stroke-dashoffset="calc(400 - (400 * 45) / 100)"
+                ></circle>
+
+                {/* <!-- Center text --> */}
+                <text
+                  x="50"
+                  y="50"
+                  font-family="Verdana"
+                  font-size="20"
+                  text-anchor="middle"
+                  alignment-baseline="middle"
+                >
+                  70%
+                </text>
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -59,12 +126,11 @@ const OrderDetails = () => {
           type="button"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-        <IoBagAdd />
-        <span className="ml-2">Add New Order</span>
+          <IoBagAdd />
+          <span className="ml-2">Add New Order</span>
         </button>
 
-        <div className="bg-white h-screen mt-4">
-        </div>
+        <div className="bg-white h-screen mt-4"></div>
       </div>
     </div>
   );
