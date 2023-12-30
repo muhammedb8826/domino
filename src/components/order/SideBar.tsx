@@ -1,7 +1,10 @@
 import { NavLink } from "react-router-dom"
 import { FaCartArrowDown } from "react-icons/fa";
 
-export const SideBar = () => {
+
+
+export const SideBar = ({ handleButtonClick, active }: { handleButtonClick: (arg: string) => void, active: string }) => {
+
   return (
     <aside
       className="flex h-screen flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark"
@@ -13,9 +16,9 @@ export const SideBar = () => {
         <hr />
 
   <div className="sidebar-items text-white flex flex-col gap-4 py-4">
-    <NavLink to="/orders" className="bg-white text-black ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-10"><FaCartArrowDown /> <span> Order</span></NavLink>
-    <NavLink to="/customer" className=" ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-10"> <span> Customer</span></NavLink>
-    <NavLink to="/setting" className=" ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-10"> <span> Setting</span></NavLink>
+    <button type="button" onClick={()=>handleButtonClick("order")} className={`${active === "order"? "bg-white text-black" : ""} ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-10`}><FaCartArrowDown /> <span> Order</span></button>
+    <button type="button" onClick={()=>handleButtonClick("customer")} className={`${active === "customer"? "bg-white text-black" : ""} ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-10`}> <span> Customer</span></button>
+    <button type="button" onClick={()=>handleButtonClick("setting")} className={`${active === "setting"? "bg-white text-black" : ""} ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-10`}> <span> Setting</span></button>
   </div>
 
 
