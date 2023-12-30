@@ -83,6 +83,15 @@ const Navbar = () => {
               Get started
             </NavLink>
           </li>
+          <li className="flex mb-1">
+            <NavLink
+              to="/sign-in"
+              className="w-full p-3 rounded-md bg-[#f01d52] text-white"
+              onClick={handleToggle}
+            >
+              Sign in
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </header>
