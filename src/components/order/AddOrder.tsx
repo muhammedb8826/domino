@@ -1,67 +1,27 @@
 import { useState } from "react";
+import { CgAttribution } from "react-icons/cg";
+import { PiGridFour } from "react-icons/pi";
 
 const AddOrder = () => {
-  const [quantity, setQuantity] = useState(0);
+  const [count, setCount] = useState(1);
+  const [active, setActive] = useState("");
+
+  const handleAddAttributes = () => {
+    setCount(count + 1);
+  };
+
   const data = [];
-  for (let i = 0; i < quantity; i++) {
-    data.push(
-      <div className="grid gap-6 mb-6 md:grid-cols-3">
-        <div>
-          <label
-            htmlFor="height"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            height
-          </label>
-          <input
-            type="number"
-            id="height"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            placeholder="height"
-            required
-          />
-        </div>
 
-        <div>
-          <label
-            htmlFor="width"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            width
-          </label>
-          <input
-            type="number"
-            id="width"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            placeholder="width"
-            required
-          />
-        </div>
-
-        <div>
-
-        <label
-          htmlFor="quantity"
-          className="block mb-2 text-sm font-medium text-gray-900 "
-        >
-          Select a quatity for each type
-        </label>
-        <select
-          id="quantity"
-          className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full block p-2.5 "
-        >
-          <option selected>Choose a quantity</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-        </div>
-      </div>
-    );
+  for (let i = 0; i < count; i++) {
+    const id = `attribute-${i}`;
+    data.push(id);
   }
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setQuantity(Number(e.target.value));
+
+  const handleDelete = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.classList.add("hidden");
+    }
   };
 
   return (
@@ -134,42 +94,159 @@ const AddOrder = () => {
           </div>
         </div>
 
-        <label
-          htmlFor="type"
-          className="block mb-2 text-sm font-medium text-gray-900 "
-        >
-          Select a type
-        </label>
-        <select
-          id="type"
-          className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-        >
-          <option selected>Choose a type</option>
-          <option value="banner">Banner</option>
-          <option value="t-shirt">T-shirt</option>
-          <option value="mug">Mug</option>
-          <option value="postcard">Postcard</option>
-        </select>
+        <div className="border mb-6">
+          <p className="p-2 py-4">Product data</p>
+          <hr />
 
-        <label
-          htmlFor="type-quantity"
-          className="block mb-2 text-sm font-medium text-gray-900 "
-        >
-          Select a quatity for each type
-        </label>
-        <select
-          onChange={handleChange}
-          id="type-quantity"
-          className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-1/4 block p-2.5 "
-        >
-          <option selected>Choose a quantity</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
+          <div className="flex">
+            <div className="attributes w-1/4 bg-slate-50 flex flex-col text-sky-500 border-r">
+              <button
+                onClick={() => setActive("attributes")}
+                type="button"
+                className={`${
+                  active === "attributes" ? "bg-gray-200 text-gray-600" : ""
+                } p-2 text-left indent-2 border-b flex items-center gap-2`}
+              >
+                <span>
+                  <CgAttribution />
+                </span>{" "}
+                Attributes
+              </button>
+              <button
+                onClick={() => setActive("variations")}
+                type="button"
+                className={`${
+                  active === "variations" ? "bg-gray-200 text-gray-600" : ""
+                } p-2 text-left indent-2 border-b flex items-center gap-2`}
+              >
+                <span>
+                  <PiGridFour />
+                </span>{" "}
+                variations
+              </button>
+            </div>
 
-        {data.length > 0 && data.map((item) => item)}
+            {/* attributes */}
+
+            {active === "attributes" && (
+              <div className="w-[75%]">
+                <p className="description border p-4 m-4">
+                  Add attributes to your product. Attributes are used to define
+                  the variations of your product. For example, if are adding a
+                  banner, you can add size and quantity as a value. You can also
+                  add new attributes or use existing ones.
+                </p>
+                <div className="flex items-center">
+                  <button
+                    onClick={handleAddAttributes}
+                    type="button"
+                    className="border-2 text-sky-500 border-sky-500 m-4 p-1.5 px-4 rounded"
+                  >
+                    Add new
+                  </button>
+                  <select
+                    title="attributes"
+                    name="attributes"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5"
+                  >
+                    <option selected>Add existing</option>
+                    <option value="banner">Banner</option>
+                    <option value="poster">Poster</option>
+                    <option value="t-shirt">T-shirt</option>
+                    <option value="sticker">Sticker</option>
+                  </select>
+                </div>
+                <hr />
+
+                {/* New Attribute section */}
+
+                {data.map((item) => (
+                  <div className={`add-attribute-section`} key={item} id={item}>
+                    <div className="flex justify-between p-4">
+                      <p>New attribute</p>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(item)}
+                        className="text-red-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <hr />
+                    <div className="grid gap-6 mb-6 md:grid-cols-2 p-4">
+                      <div>
+                        <label
+                          htmlFor="attribute_name"
+                          className="block mb-2 text-sm font-medium text-gray-900 "
+                        >
+                          Name:
+                        </label>
+                        <input
+                          type="text"
+                          id="attribute_name"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                          placeholder="e.g. Banner or Poster"
+                          required
+                        />
+                        <div className="flex items-center mt-4">
+                          <input
+                            checked
+                            id="checked-checkbox"
+                            type="checkbox"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                          <label
+                            htmlFor="checked-checkbox"
+                            className="ms-2 text-sm font-medium text-gray-900"
+                          >
+                            Used for variations
+                          </label>
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="value"
+                          className="block mb-2 text-sm font-medium text-gray-900 "
+                        >
+                          Value(s):
+                        </label>
+                        <textarea
+                          id="value"
+                          rows={4}
+                          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                          placeholder="Enter options to choose from e.g 2 or 3 "
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                <hr />
+
+                <button
+                  type="button"
+                  className="p-y m-4 text-white bg-blue-400 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  disabled
+                >
+                  Save attributes
+                </button>
+              </div>
+            )}
+
+            {/* variations */}
+
+            {active === "variations" && (
+              <div className="w-[75%] min-h-[300px] flex items-center">
+                <p className="description border p-4 m-4">
+                  Add some attributes in the Attributes tab to generate
+                  variations for your product. Make sure to check the "Used for
+                  variations" checkbox for the attributes you want to use.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
 
         <button
           type="submit"
