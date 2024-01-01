@@ -13,11 +13,11 @@ const OrderPage = () => {
 
   return (
     <section className="w-screen h-screen flex justify-between bg-[#EBE9EA] overflow-hidden">
-      <div className="w-[20%]">
+      <div className="lg:w-[15%] lg:static absolute w-[5%]">
       <SideBar handleButtonClick={handleButtonClick} active={active}/>
       </div>
       
-      <div className="flex flex-col w-[80%]">
+      <div className="flex flex-col w-full">
         {active === "order" && 
       <>
       <TopBar />

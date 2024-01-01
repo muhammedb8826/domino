@@ -8,6 +8,7 @@ import GetStarted from "./pages/GetStarted"
 import Home from "./pages/Home"
 import "./assets/styles/main.css"
 import OrderPage from "./pages/OrderPage"
+import AddOrder from "./components/order/AddOrder"
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/contact" element={<Contact/>} />
         <Route path="/get-started" element={<GetStarted/>} />
         <Route path="/sign-in" element={<OrderPage/>} />
+        <Route path="/add-order" element={<AddOrder />} />
         <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
     </main>
