@@ -1,14 +1,53 @@
-import { useState } from "react";
-import { CgAttribution } from "react-icons/cg";
-import { PiGridFour } from "react-icons/pi";
+import { useRef, useState } from "react";
 
 const AddOrder = () => {
   const [count, setCount] = useState(1);
   const [active, setActive] = useState("");
+  const [productType, setProductType] = useState(
+    ["Banner", "Poster", "T-shirt", "Sticker"]
+  );
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const getValue = () => {
+    if (inputRef.current) {
+      // Accessing the input value directly from the DOM element
+      const value = inputRef.current.value;
+      console.log(value);
+
+    setAddActiveProductType(false);
+    setProductType([...productType, value])
+    }
+  };
+
+const [activeAddProductType, setAddActiveProductType] = useState(false);
+
+  const [productTypeValue, setProductTypeValue] = useState([]);
+
+  const [attributes, setAttributes] = useState("");
+
+  const handleChangeAttributes = (e: any) => {
+    setAttributes(e.target.value);
+  };
 
   const handleAddAttributes = () => {
     setCount(count + 1);
   };
+
+  const handleProductType = (e) => {
+    setActive(e.target.value);
+    setProductTypeValue([...productTypeValue, e.target.value]);
+  };
+
+
+  const handleActiveAddProductType = () => {
+    setAddActiveProductType(true);
+  };
+
+  const handleDeleteType = (element: string) => {
+    const filtered = productTypeValue.filter((item) => item !== element);
+    setProductTypeValue(filtered);
+  };
+
 
   const data = [];
 
@@ -100,35 +139,72 @@ const AddOrder = () => {
 
           <div className="flex">
             <div className="attributes w-1/4 bg-slate-50 flex flex-col text-sky-500 border-r">
-              <button
-                onClick={() => setActive("attributes")}
-                type="button"
-                className={`${
-                  active === "attributes" ? "bg-gray-200 text-gray-600" : ""
-                } p-2 text-left indent-2 border-b flex items-center gap-2`}
-              >
-                <span>
-                  <CgAttribution />
-                </span>{" "}
-                Attributes
-              </button>
-              <button
-                onClick={() => setActive("variations")}
-                type="button"
-                className={`${
-                  active === "variations" ? "bg-gray-200 text-gray-600" : ""
-                } p-2 text-left indent-2 border-b flex items-center gap-2`}
-              >
-                <span>
-                  <PiGridFour />
-                </span>{" "}
-                variations
-              </button>
+
+              <div className="flex items-end my-4 relative">
+                <button
+                  onClick={handleActiveAddProductType}
+                  type="button"
+                  className="border-2 text-sky-500 border-sky-500 m-4 mb-0 p-1.5 px-4 rounded"
+                >
+                  Add new
+                </button>
+                <div className="flex flex-col flex-1 pe-4">
+
+                {activeAddProductType && <div className="flex justify-center p-4 flex-col gap-4 absolute left-0 h-56 top-0 bg-white rounded shadow-lg w-full">
+                  
+                  <input
+                  type="text"
+                  ref={inputRef}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 "
+                  placeholder="e.g. Banner or Poster"
+                  required
+                />
+                <hr />
+                <div className="flex justify-between">
+                <button
+                  onClick={getValue}
+                  type="button"
+                  className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                >
+                  Add new type
+                </button>
+                <button
+                  onClick={()=>setAddActiveProductType(false)}
+                  type="button"
+                  className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                >
+                  Cancel
+                </button>
+                </div>
+                </div>
+                
+                }
+                <hr />
+
+                <label
+                  htmlFor="product"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Select a type
+                </label>
+                <select
+                  value={productTypeValue.map((item)=> item)}
+                  onChange={handleProductType}
+                  id="product"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                >
+                  <option value="">Add existing</option>
+                  {productType.map((item)=> <option value={item}>{item}</option>)}
+                </select>
+                </div>
+              </div>
+              <hr />
+              {productTypeValue.length> 0 && productTypeValue.map((product)=><div key={product} className={`${product === active ? "bg-gray-200": "" } gap-4 flex justify-between items-center border-b-2`}><button type="button" onClick={()=>setActive(product)} className="p-4 py-2 flex flex-1">{product} </button><button type="button" onClick={()=>handleDeleteType(product)} className="text-red-600 p-4 py-2">Remove</button></div>)}
             </div>
 
             {/* attributes */}
 
-            {active === "attributes" && (
+            { active && (
               <div className="w-[75%]">
                 <p className="description border p-4 m-4">
                   Add attributes to your product. Attributes are used to define
@@ -145,15 +221,19 @@ const AddOrder = () => {
                     Add new
                   </button>
                   <select
+                    id="attributes"
+                    onChange={handleChangeAttributes}
                     title="attributes"
                     name="attributes"
+                    value={attributes}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5"
                   >
-                    <option selected>Add existing</option>
-                    <option value="banner">Banner</option>
-                    <option value="poster">Poster</option>
-                    <option value="t-shirt">T-shirt</option>
-                    <option value="sticker">Sticker</option>
+                    <option value="">Add existing</option>
+                    <option value="Size">Size</option>
+                    <option value="Quantity">Quantity</option>
+                    <option value="Price">Price</option>
+                    <option value="Height">Height</option>
+                    <option value="width">width</option>
                   </select>
                 </div>
                 <hr />
@@ -163,7 +243,9 @@ const AddOrder = () => {
                 {data.map((item) => (
                   <div className={`add-attribute-section`} key={item} id={item}>
                     <div className="flex justify-between p-4">
-                      <p>New attribute</p>
+
+                        <p className="font-bold">{active}</p>
+                    
                       <button
                         type="button"
                         onClick={() => handleDelete(item)}
@@ -181,28 +263,17 @@ const AddOrder = () => {
                         >
                           Name:
                         </label>
-                        <input
-                          type="text"
-                          id="attribute_name"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder="e.g. Banner or Poster"
-                          required
-                        />
-                        <div className="flex items-center mt-4">
+                        {attributes ? (
+                          <p className="font-bold">{attributes}</p>
+                        ) : (
                           <input
-                            checked
-                            id="checked-checkbox"
-                            type="checkbox"
-                            value=""
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            type="text"
+                            id="attribute_name"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                            placeholder="e.g. Banner or Poster"
+                            required
                           />
-                          <label
-                            htmlFor="checked-checkbox"
-                            className="ms-2 text-sm font-medium text-gray-900"
-                          >
-                            Used for variations
-                          </label>
-                        </div>
+                        )}
                       </div>
                       <div>
                         <label
