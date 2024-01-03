@@ -21,11 +21,11 @@ const AddOrder = () => {
 
 const [activeAddProductType, setAddActiveProductType] = useState(false);
 
-  const [productTypeValue, setProductTypeValue] = useState([]);
+  const [productTypeValue, setProductTypeValue] = useState<string[]>([]);
 
-  const [attributes, setAttributes] = useState("");
+  const [attributes, setAttributes] = useState<string>("");
 
-  const handleChangeAttributes = (e: any) => {
+  const handleChangeAttributes = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setAttributes(e.target.value);
   };
 
@@ -33,7 +33,7 @@ const [activeAddProductType, setAddActiveProductType] = useState(false);
     setCount(count + 1);
   };
 
-  const handleProductType = (e) => {
+  const handleProductType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setActive(e.target.value);
     setProductTypeValue([...productTypeValue, e.target.value]);
   };
