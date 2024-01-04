@@ -1,23 +1,49 @@
 import { useState } from "react";
 import { VscCollapseAll } from "react-icons/vsc";
 
-const SimpleProductPage = () => {
+interface Attribute {
+  quantity: string;
+  width: string;
+  height: string;
+  price: string;
+  note: string;
+  [key: string]: string;
+}
 
-  const [simpleProductCount, setSimpleProductCount] = useState(1);
+
+interface SimpleProductPageProps {
+  active: string;
+}
+
+const SimpleProductPage = ({active}: SimpleProductPageProps) => {
+  const [attributes, setAttributes] = useState([
+    {
+      quantity: "",
+      width: "",
+      height: "",
+      price: "",
+      note: "",
+    },
+  ]);
+
   const handleAddSimpleProduct = () => {
-    setSimpleProductCount(simpleProductCount + 1);
+    setAttributes([...attributes, { quantity: "", width: "", height: "", price: "", note: "" }]);
   };
-  const simpleProduct = [];
-  for (let i = 0; i < simpleProductCount; i++) {
-    const id = `simple-product-${i}`;
-    simpleProduct.push(id);
-  }
-  const handleDeleteSimpleProducAttribute = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.classList.add("hidden");
-    }
+
+  const handleDeleteSimpleProducAttribute = (index: number) => {
+    const updatedAttributes = [...attributes];
+    updatedAttributes.splice(index, 1);
+    setAttributes(updatedAttributes);
+};
+
+
+
+  const getTotal = (property: string) => {
+    return attributes.reduce((acc, attribute: Attribute) => {
+      return acc + parseFloat(attribute[property] || '0');
+    }, 0);
   };
+
   return (
     <>
       <p className="description border p-4 m-4">
@@ -37,17 +63,17 @@ const SimpleProductPage = () => {
 
       {/* simple product secticon */}
 
-      {simpleProduct.map((item) => (
-        <div className="attribute-section" id={item} key={item}>
+      {attributes.map((_, index) => (
+        <div className="attribute-section" key={index}>
           <div className="flex justify-between items-center p-4">
-            <p className="font-bold text-gray-400">
-              Attribute({simpleProductCount})
+            <p className={`${active? "font-bold text-black": "font-bold text-gray-400"}`}>
+              {active? `${active}'s`: ''} Attribute {index + 1}
             </p>
             <div className="flex gap-4">
               <button
                 type="button"
                 className="text-red-600"
-                onClick={() => handleDeleteSimpleProducAttribute(item)}
+                onClick={() => handleDeleteSimpleProducAttribute(index)}
               >
                 Remove
               </button>
@@ -71,6 +97,12 @@ const SimpleProductPage = () => {
               </label>
 
               <input
+                onChange={(e) => {
+                  const updatedAttributes = [...attributes];
+                  updatedAttributes[index].quantity = e.target.value;
+                  setAttributes(updatedAttributes);
+                }}
+                name="quantity"
                 type="number"
                 id="quantity"
                 className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
@@ -95,6 +127,12 @@ const SimpleProductPage = () => {
               </label>
 
               <input
+                onChange={(e) => {
+                  const updatedAttributes = [...attributes];
+                  updatedAttributes[index].width = e.target.value;
+                  setAttributes(updatedAttributes);
+                }}
+                name="width"
                 type="number"
                 id="width"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
@@ -109,6 +147,12 @@ const SimpleProductPage = () => {
               </label>
 
               <input
+                onChange={(e) => {
+                  const updatedAttributes = [...attributes];
+                  updatedAttributes[index].height = e.target.value;
+                  setAttributes(updatedAttributes);
+                }}
+                name="height"
                 type="number"
                 id="height"
                 className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
@@ -126,6 +170,12 @@ const SimpleProductPage = () => {
               </label>
 
               <input
+                onChange={(e) => {
+                  const updatedAttributes = [...attributes];
+                  updatedAttributes[index].price = e.target.value;
+                  setAttributes(updatedAttributes);
+                }}
+                name="price"
                 type="number"
                 id="price"
                 className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
@@ -142,6 +192,12 @@ const SimpleProductPage = () => {
                 Note:
               </label>
               <textarea
+               onChange={(e) => {
+                const updatedAttributes = [...attributes];
+                updatedAttributes[index].note = e.target.value;
+                setAttributes(updatedAttributes);
+              }}
+                name="note"
                 id="note"
                 rows={4}
                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
@@ -152,22 +208,12 @@ const SimpleProductPage = () => {
         </div>
       ))}
 
-      {/* simple product secticon */}
-      <hr />
-      <button
-        type="button"
-        className="p-y m-4 text-white bg-blue-400 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-        disabled
-      >
-        Save attributes
-      </button>
-
       <hr />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
-        <p>Total quantity: </p>
-        <p>Total width: </p>
-        <p>Total height: </p>
-        <p>Total price: </p>
+      <p>Total quantity: {getTotal('quantity')} </p>
+        <p>Total width: {getTotal('width')}</p>
+        <p>Total height: {getTotal('height')}</p>
+        <p>Total price: {getTotal('price')}</p>
       </div>
     </>
   );
