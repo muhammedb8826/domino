@@ -26,6 +26,21 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
     },
   ]);
 
+
+  const handleCollapse = (e: React.MouseEvent, index: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const element = document.getElementsByClassName('attribute-field-section')[index];
+    element.classList.remove('block')
+    element.classList.toggle('hidden');
+  };
+
+  const handleShow = (index: number) => {
+    const element = document.getElementsByClassName('attribute-field-section')[index];
+    element.classList.remove('hidden')
+    element.classList.toggle('block');
+  };
+
   const handleAddSimpleProduct = () => {
     setAttributes([...attributes, { quantity: "", width: "", height: "", price: "", note: "" }]);
   };
@@ -54,7 +69,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
         <button
           onClick={handleAddSimpleProduct}
           type="button"
-          className="border-2 text-sky-500 border-sky-500 m-4 p-1.5 px-4 rounded"
+          className="border-2 text-xs text-sky-500 border-sky-500 m-4 mt-0 p-1.5 px-4 rounded"
         >
           Add new
         </button>
@@ -65,7 +80,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
 
       {attributes.map((_, index) => (
         <div className="attribute-section" key={index}>
-          <div className="flex justify-between items-center p-4">
+          <div onClick={()=>handleShow(index)} className="hover:cursor-pointer hover:bg-gray-200 flex justify-between items-center px-4 py-2">
             <p className={`${active? "font-bold text-black": "font-bold text-gray-400"}`}>
               {active? `${active}'s`: ''} Attribute {index + 1}
             </p>
@@ -78,22 +93,23 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 Remove
               </button>
               <button
+              onClick={(e) => handleCollapse(e,index)}
                 title="collapse"
                 type="button"
-                className="text-black rounded p-1.5"
+                className="text-black rounded p-1.5 border border-black"
               >
                 <VscCollapseAll />
               </button>
             </div>
           </div>
           <hr />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+          <div className="attribute-field-section grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
             <div>
               <label
                 htmlFor="quantity"
                 className="block mb-2 text-sm font-medium text-gray-900 border-b border-black pb-2"
               >
-                Quantity
+                Quantity:
               </label>
 
               <input
@@ -105,7 +121,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 name="quantity"
                 type="number"
                 id="quantity"
-                className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
                 placeholder="e.g. 2 or 3..."
                 required
               />
@@ -116,12 +132,12 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 htmlFor="size"
                 className="block mb-2 text-sm font-medium text-gray-900 border-b border-black pb-2"
               >
-                Size
+                Dimensions:
               </label>
 
               <label
                 htmlFor="width"
-                className="mt-4 block mb-2 text-sm font-medium text-gray-900 "
+                className="mt-2 block mb-2 text-sm font-medium text-gray-900 "
               >
                 Width
               </label>
@@ -135,7 +151,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 name="width"
                 type="number"
                 id="width"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
                 placeholder="e.g. 10 or 50 in cm..."
                 required
               />
@@ -155,7 +171,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 name="height"
                 type="number"
                 id="height"
-                className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                 placeholder="e.g. 10 or 50 in cm..."
                 required
               />
@@ -166,7 +182,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 htmlFor="price"
                 className="block mb-2 text-sm font-medium text-gray-900 border-b border-black pb-2"
               >
-                Price
+                Price:
               </label>
 
               <input
@@ -178,7 +194,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 name="price"
                 type="number"
                 id="price"
-                className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
                 placeholder="e.g. 500 or 1000..."
                 required
               />

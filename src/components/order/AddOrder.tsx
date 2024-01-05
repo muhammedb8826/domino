@@ -52,7 +52,7 @@ const AddOrder = () => {
       <h1 className="text-2xl font-bold">Add Order</h1>
 
       <form className="py-4">
-        <div className="grid gap-6 mb-6 md:grid-cols-2">
+        <div className="grid gap-6 mb-6 md:grid-cols-4">
           <div>
             <label
               htmlFor="first_name"
@@ -118,7 +118,7 @@ const AddOrder = () => {
         </div>
 
         <div className="border mb-6">
-          <div className="flex items-center p-4 gap-2">
+          <div className="md:flex items-center p-4 gap-2">
             <label
               htmlFor="productType"
               className="text-sm font-medium text-gray-900 "
@@ -132,7 +132,7 @@ const AddOrder = () => {
               title="Product-type"
               name="productType"
               id="productType"
-              className="w-1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5"
+              className="w-full sm:w-1/2 md:1/4  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5"
             >
               <option value="simple-product">Simple product</option>
               <option value="variable-product">Variable product</option>
@@ -140,13 +140,13 @@ const AddOrder = () => {
           </div>
           <hr />
 
-          <div className="flex">
-            <div className="attributes w-1/4 bg-slate-50 flex flex-col text-sky-500 border-r">
-              <div className="flex items-end my-4 relative">
+          <div className="md:flex">
+            <div className="attributes w-full md:w-1/4 bg-slate-50 flex flex-col text-sky-500 border-r">
+              <div className="max-lg:p-4 lg:flex items-end my-4 relative">
                 <button
                   onClick={handleActiveAddProductType}
                   type="button"
-                  className="border-2 text-sky-500 border-sky-500 m-4 mb-0 p-1.5 px-4 rounded"
+                  className="border-2 text-sky-500 border-sky-500 lg:mx-4 p-1.5 px-4 rounded"
                 >
                   Add new
                 </button>
@@ -165,39 +165,37 @@ const AddOrder = () => {
                         <button
                           onClick={getValue}
                           type="button"
-                          className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                          className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2"
                         >
                           Add new type
                         </button>
                         <button
                           onClick={() => setAddActiveProductType(false)}
                           type="button"
-                          className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                          className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2"
                         >
                           Cancel
                         </button>
                       </div>
                     </div>
                   )}
-                  <hr />
-
-                  <label
-                    htmlFor="product"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
-                    Select a product
-                  </label>
-                  <select
-                    value={productTypeValue.map((item) => item)}
-                    onChange={handleProductType}
-                    id="product"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  >
-                    <option value="">Add existing</option>
-                    {productType.map((item) => (
-                      <option value={item}>{item}</option>
-                    ))}
-                  </select>
+                    <label
+                      htmlFor="product"
+                      className="block mb-2 text-sm font-medium text-gray-900 "
+                    >
+                      Select a product
+                    </label>
+                    <select
+                      value={productTypeValue.map((item) => item)}
+                      onChange={handleProductType}
+                      id="product"
+                      className="max-md:1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    >
+                      <option value="">Add existing</option>
+                      {productType.map((item) => (
+                        <option value={item}>{item}</option>
+                      ))}
+                    </select>
                 </div>
               </div>
               <hr />
@@ -229,7 +227,7 @@ const AddOrder = () => {
 
             {/* attributes */}
 
-            <div className="w-[75%]">
+            <div className="w-full md:w-[75%] max-h-screen overflow-hidden overflow-y-scroll">
               {simpleOrVariable === "simple-product" ? (
                 <SimpleProductPage active={active} />
               ) : (
