@@ -9,6 +9,7 @@ import Home from "./pages/Home"
 import "./assets/styles/main.css"
 import OrderPage from "./pages/OrderPage"
 import AddOrder from "./components/order/AddOrder"
+import NotFound from "./components/header/NotFound"
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
         <Route path="/get-started" element={<GetStarted/>} />
         <Route path="/sign-in" element={<OrderPage/>} />
         <Route path="/add-order" element={<AddOrder />} />
-        <Route path="*" element={<h1>Not Found</h1>} />
+        <Route path="*" element={<NotFound/>} />
         </Routes>
     </main>
   )
