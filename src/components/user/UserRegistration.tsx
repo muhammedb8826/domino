@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { IoMdAddCircle } from "react-icons/io";
+import { addUser } from "../../redux/features/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const UserRegistration = () => {
   const [userData, setUserData] = useState({
@@ -13,9 +15,24 @@ const UserRegistration = () => {
     confirmPassword: "",
     dateOfBirth: "",
   });
+
+ const dispatch = useDispatch();
+
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitted", userData);
+    dispatch(addUser(userData));
+    setUserData({
+      firstName: "",
+      lastName: "",
+      userName: "",
+      phoneNumber: "",
+      email: "",
+      profileImage: "",
+      password: "",
+      confirmPassword: "",
+      dateOfBirth: "",
+    });
   };
 
   return (

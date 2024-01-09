@@ -1,0 +1,16 @@
+{
+  "user": [
+    {
+      "id": "7083",
+      "firstName": "Muhammed",
+      "lastName": "Berisso",
+      "userName": "@domino123",
+      "phoneNumber": "090-50-788",
+      "email": "muhammedb8826@gmail.com",
+      "profileImage": "C:\\fakepath\\screenshot-1.png",
+      "password": "J4MxfZbLxeYnBH7",
+      "confirmPassword": "http://localhost:3000/user",
+      "dateOfBirth": "2024-01-10"
+    }
+  ]
+}

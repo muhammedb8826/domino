@@ -14,11 +14,16 @@ const initialState: UserState = {
   error: null,
 };
 
-const url = "https://jsonplaceholder.typicode.com/users/1";
+const url = "http://localhost:3000/user";
 
 export const getUser = createAsyncThunk("user/getUser", async () => {
     const response = await axios.get(url);
     return response.data;
+    });
+
+    export const addUser = createAsyncThunk("user/addUser", async (user: any) => {
+        const response = await axios.post(url, user);
+        return response.data;
     });
 
 
