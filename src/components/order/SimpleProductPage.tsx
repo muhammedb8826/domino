@@ -76,7 +76,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
       </div>
       <hr />
 
-      {/* simple product secticon */}
+      {/* simple product section */}
 
       {attributes.map((_, index) => (
         <div className="attribute-section" key={index}>

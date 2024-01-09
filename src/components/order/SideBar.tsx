@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaCartArrowDown } from "react-icons/fa";
+import { FaCartArrowDown, FaUserPlus, FaUsers } from "react-icons/fa";
 
 export const SideBar = ({
   handleButtonClick,
@@ -25,18 +25,28 @@ export const SideBar = ({
           onClick={() => handleButtonClick("order")}
           className={`${
             active === "order" ? "bg-white text-black" : ""
-          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-4`}
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
         >
           <FaCartArrowDown /> <span> Order</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => handleButtonClick("userRegistration")}
+          className={`${
+            active === "userRegistration" ? "bg-white text-black" : ""
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
+        >
+          <FaUserPlus />
+          <span>User Registration</span>
         </button>
         <button
           type="button"
           onClick={() => handleButtonClick("customer")}
           className={`${
             active === "customer" ? "bg-white text-black" : ""
-          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-4`}
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
         >
-          {" "}
+          <FaUsers />
           <span> Customer</span>
         </button>
         <button
@@ -44,11 +54,11 @@ export const SideBar = ({
           onClick={() => handleButtonClick("setting")}
           className={`${
             active === "setting" ? "bg-white text-black" : ""
-          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-2xl ml-4`}
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
         >
-          {" "}
           <span> Setting</span>
         </button>
+        
       </div>
     </aside>
   );

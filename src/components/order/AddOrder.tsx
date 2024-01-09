@@ -186,14 +186,14 @@ const AddOrder = () => {
                       Select a product
                     </label>
                     <select
-                      value={productTypeValue.map((item) => item)}
+                      value={active}
                       onChange={handleProductType}
                       id="product"
                       className="max-md:1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     >
                       <option value="">Add existing</option>
                       {productType.map((item) => (
-                        <option value={item}>{item}</option>
+                        <option value={item} key={item}>{item}</option>
                       ))}
                     </select>
                 </div>
@@ -231,7 +231,7 @@ const AddOrder = () => {
               {simpleOrVariable === "simple-product" ? (
                 <SimpleProductPage active={active} />
               ) : (
-                <VariableProduct />
+                <VariableProduct active={active} />
               )}
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import OrderDetails from "../components/order/OrderDetails"
 import { SideBar } from "../components/order/SideBar"
 import TopBar from "../components/order/TopBar"
+import UserRegistration from "../components/user/UserRegistration";
 
 const OrderPage = () => {
   const [active, setActive] = useState("order");
@@ -22,6 +23,12 @@ const OrderPage = () => {
       <>
       <TopBar />
       <OrderDetails />
+      </>
+      }
+
+      {active === "userRegistration" &&
+      <>
+      <UserRegistration/>
       </>
       }
 
