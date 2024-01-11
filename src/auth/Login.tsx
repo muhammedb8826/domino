@@ -1,26 +1,18 @@
-import { useState } from "react";
+import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { loginUser } from "../redux/features/user/authentication";
 
 const Login = () => {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
-  const dispatch = useDispatch();
+  const email = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
 
- const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
-    console.log(user);
-    
-  }
+  const dispatch= useDispatch();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      dispatch({ type: "LOGIN", payload: user });
+      const user = { email: email.current?.value, password: password.current?.value }
+      dispatch(loginUser(user));
     };
 
   return (
@@ -38,7 +30,7 @@ const Login = () => {
               Username
             </label>
             <input
-            onChange={handleChange}
+            ref={email}
             name="email"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="username"
@@ -54,7 +46,7 @@ const Login = () => {
               Password
             </label>
             <input
-            onChange={handleChange}
+            ref={password}
             name="password"
               className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
