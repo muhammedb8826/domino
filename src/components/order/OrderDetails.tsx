@@ -50,7 +50,7 @@ const OrderDetails = () => {
                 <circle
                   className="text-blue-500  progress-ring__circle stroke-current"
                   stroke-width="10"
-                  stroke-linecap="round"
+                  strokeLinecap="round"
                   cx="50"
                   cy="50"
                   r="40"

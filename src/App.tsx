@@ -7,9 +7,10 @@ import Contact from "./pages/Contact"
 import GetStarted from "./pages/GetStarted"
 import Home from "./pages/Home"
 import "./assets/styles/main.css"
-import Dashboard from "./pages/Dashboard"
+// import Dashboard from "./pages/Dashboard"
 import AddOrder from "./components/order/AddOrder"
 import NotFound from "./components/header/NotFound"
+import Login from "./auth/Login"
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
         <Route path="/blog" element={<Blog/>} />
         <Route path="/contact" element={<Contact/>} />
         <Route path="/get-started" element={<GetStarted/>} />
-        <Route path="/sign-in" element={<Dashboard/>} />
+        <Route path="/sign-in" element={<Login />} />
         <Route path="/add-order" element={<AddOrder />} />
         <Route path="*" element={<NotFound/>} />
         </Routes>
