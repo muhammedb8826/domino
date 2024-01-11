@@ -11,6 +11,18 @@
       "password": "J4MxfZbLxeYnBH7",
       "confirmPassword": "http://localhost:3000/user",
       "dateOfBirth": "2024-01-10"
+    },
+    {
+      "id": "0aa4",
+      "firstName": "Abdulkerim",
+      "lastName": "Jemal",
+      "userName": "@abduki",
+      "phoneNumber": "090-50-788",
+      "email": "muhammedb8826@gmail.com",
+      "profileImage": "C:\\fakepath\\salesssss (1).jpg",
+      "password": "12345678",
+      "confirmPassword": "12345678",
+      "dateOfBirth": "2024-01-10"
     }
   ]
 }

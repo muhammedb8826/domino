@@ -7,7 +7,7 @@ import Contact from "./pages/Contact"
 import GetStarted from "./pages/GetStarted"
 import Home from "./pages/Home"
 import "./assets/styles/main.css"
-import OrderPage from "./pages/OrderPage"
+import Dashboard from "./pages/Dashboard"
 import AddOrder from "./components/order/AddOrder"
 import NotFound from "./components/header/NotFound"
 
@@ -22,7 +22,7 @@ const App = () => {
         <Route path="/blog" element={<Blog/>} />
         <Route path="/contact" element={<Contact/>} />
         <Route path="/get-started" element={<GetStarted/>} />
-        <Route path="/sign-in" element={<OrderPage/>} />
+        <Route path="/sign-in" element={<Dashboard/>} />
         <Route path="/add-order" element={<AddOrder />} />
         <Route path="*" element={<NotFound/>} />
         </Routes>
