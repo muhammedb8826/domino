@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import { loginUser } from "../redux/features/user/authentication";
 
 const Login = () => {
@@ -8,11 +8,19 @@ const Login = () => {
   const password = useRef<HTMLInputElement>(null);
 
   const dispatch= useDispatch();
+  const navigate = useNavigate();
+  const { user,isLoading, error } = useSelector((state) => state.auth);
+ 
+  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const user = { email: email.current?.value, password: password.current?.value }
-      dispatch(loginUser(user));
+      dispatch(loginUser(user)).then((res) => {
+        if (res.payload) {
+          navigate("/dashboard");
+        }
+      });
     };
 
   return (
@@ -53,16 +61,17 @@ const Login = () => {
               type="password"
               placeholder="******************"
             />
-            <p className="text-red-500 text-xs italic">
+            {error ? <p className="text-red-500 text-xs italic">Incorrect username or password </p>: <p className="text-red-500 text-xs italic">
               Please choose a password.
-            </p>
+            </p>}
+           
           </div>
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Log In
+            {isLoading ? "Loading..." : "Login"}
             </button>
             <a
               className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"

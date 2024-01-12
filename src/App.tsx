@@ -11,6 +11,7 @@ import "./assets/styles/main.css"
 import AddOrder from "./components/order/AddOrder"
 import NotFound from "./components/header/NotFound"
 import Login from "./auth/Login"
+import Dashboard from "./pages/Dashboard"
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/blog" element={<Blog/>} />
         <Route path="/contact" element={<Contact/>} />
         <Route path="/get-started" element={<GetStarted/>} />
+        <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/sign-in" element={<Login />} />
         <Route path="/add-order" element={<AddOrder />} />
         <Route path="*" element={<NotFound/>} />

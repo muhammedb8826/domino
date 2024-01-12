@@ -1,4 +1,5 @@
-import getStartedImage from "../../assets/images/avatar.jpg";
+
+import Logout from "../../auth/Logout";
 
 const TopBar = () => {
   return (
@@ -21,9 +22,9 @@ const TopBar = () => {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
@@ -55,14 +56,15 @@ const TopBar = () => {
           </span>
         </button>
       </div>
-      <div className="relative">
-        <img
+      {/* <div className="relative"> */}
+        <Logout />
+        {/* <img
           className="w-10 h-10 rounded-full"
           src={getStartedImage}
           alt=""
         />
-        <span className="top-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
-      </div>
+        <span className="top-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span> */}
+      {/* </div> */}
     </div>
   );
 };

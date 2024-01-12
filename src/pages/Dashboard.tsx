@@ -4,15 +4,22 @@ import { SideBar } from "../components/order/SideBar";
 import TopBar from "../components/order/TopBar";
 import UserRegistration from "../components/user/UserRegistration";
 import UserList from "../components/user/UserList";
+// import { Navigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
 
 const Dashboard = () => {
+  // const { isAuthenticated } = useSelector((state) => state.auth);
+  
+
   const [active, setActive] = useState("order");
 
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
 
-  return (
+
+  // {!isAuthenticated && <Navigate to="/sign-in" />}
+return (
     <section className="w-screen h-screen flex justify-between bg-[#EBE9EA] overflow-hidden">
       <div className="w-[15%] static">
         <SideBar handleButtonClick={handleButtonClick} active={active} />

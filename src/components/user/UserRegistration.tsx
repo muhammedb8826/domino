@@ -1,37 +1,46 @@
 import { useState } from "react";
 import { IoMdAddCircle } from "react-icons/io";
-import { addUser } from "../../redux/features/user/userSlice";
+import { createUser } from "../../redux/features/user/userSlice";
 import { useDispatch } from "react-redux";
 
 const UserRegistration = () => {
   const [userData, setUserData] = useState({
     firstName: "",
+    middleName: "",
     lastName: "",
-    userName: "",
     phoneNumber: "",
     email: "",
-    profileImage: "",
-    password: "",
-    confirmPassword: "",
-    dateOfBirth: "",
+    address: "",
+    isActive: true,
+    joinedDate: new Date(),
   });
 
- const dispatch = useDispatch();
-
+  const dispatch = useDispatch();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addUser(userData));
+    const newUserData = {
+      first_name: userData.firstName,
+      middle_name: userData.middleName,
+      last_name: userData.lastName,
+      phone: userData.phoneNumber,
+      email: userData.email,
+      address: userData.address,
+      joined_date: userData.joinedDate,
+      is_active: true,
+    };
+
+    dispatch(createUser(newUserData));
+
     setUserData({
       firstName: "",
+      middleName: "",
       lastName: "",
-      userName: "",
       phoneNumber: "",
       email: "",
-      profileImage: "",
-      password: "",
-      confirmPassword: "",
-      dateOfBirth: "",
+      address: "",
+      isActive: true,
+      joinedDate: new Date(),
     });
   };
 
@@ -40,7 +49,8 @@ const UserRegistration = () => {
       <form className="bg-white w-10/12 p-4 rounded-md" onSubmit={handleSubmit}>
         <h1 className="text-xl font-bold p-4">User Registration</h1>
         <hr />
-        <div className="grid gap-6 mb-6 md:grid-cols-2 p-4">
+
+        <div className="grid gap-6 mb-6 md:grid-cols-3 p-4">
           <div>
             <label
               htmlFor="first_name"
@@ -66,6 +76,26 @@ const UserRegistration = () => {
               htmlFor="last_name"
               className="block mb-2 text-sm font-medium text-gray-900 "
             >
+              Middle name
+            </label>
+            <input
+              type="text"
+              id="middle_name"
+              name="middleName"
+              value={userData.middleName}
+              onChange={(e) =>
+                setUserData({ ...userData, middleName: e.target.value })
+              }
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+              placeholder="Doe"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="last_name"
+              className="block mb-2 text-sm font-medium text-gray-900 "
+            >
               Last name
             </label>
             <input
@@ -81,26 +111,9 @@ const UserRegistration = () => {
               required
             />
           </div>
-          <div>
-            <label
-              htmlFor="userName"
-              className="block mb-2 text-sm font-medium text-gray-900 "
-            >
-              User name
-            </label>
-            <input
-              type="text"
-              id="userName"
-              name="userName"
-              value={userData.userName}
-              onChange={(e) =>
-                setUserData({ ...userData, userName: e.target.value })
-              }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-              placeholder="@domino123"
-              required
-            />
-          </div>
+        </div>
+
+        <div className="grid gap-6 mb-6 md:grid-cols-2 p-4">
           <div>
             <label
               htmlFor="phone"
@@ -143,7 +156,7 @@ const UserRegistration = () => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label
               className="block mb-2 text-sm font-medium text-gray-900"
               htmlFor="file_input"
@@ -165,8 +178,8 @@ const UserRegistration = () => {
             <p className="mt-1 text-sm text-gray-500" id="file_input_help">
               SVG, PNG, JPG or GIF (MAX. 800x400px).
             </p>
-          </div>
-          <div className="mb-6">
+          </div> */}
+          {/* <div className="mb-6">
             <label
               htmlFor="password"
               className="block mb-2 text-sm font-medium text-gray-900 "
@@ -185,28 +198,28 @@ const UserRegistration = () => {
               placeholder="•••••••••"
               required
             />
-          </div>
+          </div> */}
           <div className="mb-6">
             <label
-              htmlFor="confirm_password"
+              htmlFor="address"
               className="block mb-2 text-sm font-medium text-gray-900 "
             >
-              Confirm password
+              Address
             </label>
             <input
-              type="password"
-              id="confirm_password"
-              name="confirmPassword"
-              value={userData.confirmPassword}
+              type="text"
+              id="address"
+              name="address"
+              value={userData.address}
               onChange={(e) =>
-                setUserData({ ...userData, confirmPassword: e.target.value })
+                setUserData({ ...userData, address: e.target.value })
               }
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-              placeholder="•••••••••"
+              placeholder="123 Main St, City"
               required
             />
           </div>
-          <div className="relative max-w-sm">
+          {/* <div className="relative max-w-sm">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
@@ -230,7 +243,7 @@ const UserRegistration = () => {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2"
               placeholder="Select date"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-center justify-center">
