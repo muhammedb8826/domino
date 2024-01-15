@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { FaCartArrowDown, FaUserPlus, FaUsers } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
+import { MdSettings } from "react-icons/md";
 
 export const SideBar = ({
   handleButtonClick,
@@ -67,6 +68,7 @@ export const SideBar = ({
             active === "setting" ? "bg-white text-black" : ""
           } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
         >
+          <MdSettings />
           <span> Setting</span>
         </button>
         

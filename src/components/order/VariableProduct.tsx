@@ -1,10 +1,4 @@
 import { useState } from "react";
-import {
-  tShirtAttributes,
-  tShirtValues,
-  bannerValues,
-  BannerAttributes,
-} from "../../utils/data";
 import { VscCollapseAll } from "react-icons/vsc";
 import { MdOutlineCancel } from "react-icons/md";
 
@@ -174,7 +168,7 @@ const VariableProduct = ({ active }: VariableProductProps) => {
               </div>
             </div>
             <div className="col-span-2">
-              <select
+              {/* <select
                 id="attributes"
                 onChange={handleSelectedAttribute}
                 title="attributes"
@@ -237,7 +231,7 @@ const VariableProduct = ({ active }: VariableProductProps) => {
                     </fieldset>
                   ))}
                 </div>
-              ) : null}
+              ) : null} */}
 {/* 
               {active === "Banner" ? (
                 <div>

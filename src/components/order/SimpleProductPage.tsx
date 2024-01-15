@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { VscCollapseAll } from "react-icons/vsc";
+import { simpleProducts } from "../../utils/data";
 
 interface Attribute {
   quantity: string;
@@ -10,12 +11,11 @@ interface Attribute {
   [key: string]: string;
 }
 
-
 interface SimpleProductPageProps {
   active: string;
 }
 
-const SimpleProductPage = ({active}: SimpleProductPageProps) => {
+const SimpleProductPage = ({ active }: SimpleProductPageProps) => {
   const [attributes, setAttributes] = useState([
     {
       quantity: "",
@@ -26,36 +26,66 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
     },
   ]);
 
+  const [simpleProduct, setSimpleProduct] = useState(simpleProducts);
+
+  console.log(simpleProduct);
 
   const handleCollapse = (e: React.MouseEvent, index: number) => {
     e.preventDefault();
     e.stopPropagation();
-    const element = document.getElementsByClassName('attribute-field-section')[index];
-    element.classList.remove('block')
-    element.classList.toggle('hidden');
+    const element = document.getElementsByClassName("attribute-field-section")[
+      index
+    ];
+    element.classList.remove("block");
+    element.classList.toggle("hidden");
   };
 
   const handleShow = (index: number) => {
-    const element = document.getElementsByClassName('attribute-field-section')[index];
-    element.classList.remove('hidden')
-    element.classList.toggle('block');
+    const element = document.getElementsByClassName("attribute-field-section")[
+      index
+    ];
+    element.classList.remove("hidden");
+    element.classList.toggle("block");
   };
 
   const handleAddSimpleProduct = () => {
-    setAttributes([...attributes, { quantity: "", width: "", height: "", price: "", note: "" }]);
+    setAttributes([
+      ...attributes,
+      { quantity: "", width: "", height: "", price: "", note: "" },
+    ]);
+  };
+
+  const mergeAttributes = () => {
+    const name = active;
+
+    // Find the index of the product in simpleProducts array
+    const productIndex = simpleProducts.findIndex(
+      (product) => product.name === name
+    );
+
+    // If the product is found
+    if (productIndex !== -1) {
+      // Create a copy of the product
+      const updatedSimpleProduct = [...simpleProducts];
+
+      // Update the attributes property of the found product
+      updatedSimpleProduct[productIndex] = {
+        ...updatedSimpleProduct[productIndex],
+        attributes,
+      };
+      setSimpleProduct(updatedSimpleProduct);
+    }
   };
 
   const handleDeleteSimpleProducAttribute = (index: number) => {
     const updatedAttributes = [...attributes];
     updatedAttributes.splice(index, 1);
     setAttributes(updatedAttributes);
-};
-
-
+  };
 
   const getTotal = (property: string) => {
     return attributes.reduce((acc, attribute: Attribute) => {
-      return acc + parseFloat(attribute[property] || '0');
+      return acc + parseFloat(attribute[property] || "0");
     }, 0);
   };
 
@@ -80,9 +110,16 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
 
       {attributes.map((_, index) => (
         <div className="attribute-section" key={index}>
-          <div onClick={()=>handleShow(index)} className="hover:cursor-pointer hover:bg-gray-200 flex justify-between items-center px-4 py-2">
-            <p className={`${active? "font-bold text-black": "font-bold text-gray-400"}`}>
-              {active? `${active}'s`: ''} Attribute {index + 1}
+          <div
+            onClick={() => handleShow(index)}
+            className="hover:cursor-pointer hover:bg-gray-200 flex justify-between items-center px-4 py-2"
+          >
+            <p
+              className={`${
+                active ? "font-bold text-black" : "font-bold text-gray-400"
+              }`}
+            >
+              {active ? `${active}'s` : ""} Attribute {index + 1}
             </p>
             <div className="flex gap-4">
               <button
@@ -93,7 +130,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 Remove
               </button>
               <button
-              onClick={(e) => handleCollapse(e,index)}
+                onClick={(e) => handleCollapse(e, index)}
                 title="collapse"
                 type="button"
                 className="text-black rounded p-1.5 border border-black"
@@ -117,6 +154,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                   const updatedAttributes = [...attributes];
                   updatedAttributes[index].quantity = e.target.value;
                   setAttributes(updatedAttributes);
+                  mergeAttributes();
                 }}
                 name="quantity"
                 type="number"
@@ -147,6 +185,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                   const updatedAttributes = [...attributes];
                   updatedAttributes[index].width = e.target.value;
                   setAttributes(updatedAttributes);
+                  mergeAttributes();
                 }}
                 name="width"
                 type="number"
@@ -167,6 +206,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                   const updatedAttributes = [...attributes];
                   updatedAttributes[index].height = e.target.value;
                   setAttributes(updatedAttributes);
+                  mergeAttributes();
                 }}
                 name="height"
                 type="number"
@@ -190,6 +230,7 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                   const updatedAttributes = [...attributes];
                   updatedAttributes[index].price = e.target.value;
                   setAttributes(updatedAttributes);
+                  mergeAttributes();
                 }}
                 name="price"
                 type="number"
@@ -208,11 +249,12 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
                 Note:
               </label>
               <textarea
-               onChange={(e) => {
-                const updatedAttributes = [...attributes];
-                updatedAttributes[index].note = e.target.value;
-                setAttributes(updatedAttributes);
-              }}
+                onChange={(e) => {
+                  const updatedAttributes = [...attributes];
+                  updatedAttributes[index].note = e.target.value;
+                  setAttributes(updatedAttributes);
+                  mergeAttributes();
+                }}
                 name="note"
                 id="note"
                 rows={4}
@@ -226,10 +268,10 @@ const SimpleProductPage = ({active}: SimpleProductPageProps) => {
 
       <hr />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
-      <p>Total quantity: {getTotal('quantity')} </p>
-        <p>Total width: {getTotal('width')}</p>
-        <p>Total height: {getTotal('height')}</p>
-        <p>Total price: {getTotal('price')}</p>
+        <p>Total quantity: {getTotal("quantity")} </p>
+        <p>Total width: {getTotal("width")}</p>
+        <p>Total height: {getTotal("height")}</p>
+        <p>Total price: {getTotal("price")}</p>
       </div>
     </>
   );

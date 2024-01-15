@@ -3,17 +3,16 @@ import { IoRemoveOutline } from "react-icons/io5";
 
 import SimpleProductPage from "./SimpleProductPage";
 import VariableProduct from "./VariableProduct";
+import { simpleProducts, variableProducts } from "../../utils/data";
 
 const AddOrder = () => {
   const [active, setActive] = useState("");
-  const [productType, setProductType] = useState([
-    "Banner",
-    "Poster",
-    "T-shirt",
-    "Sticker",
-  ]);
-
+  const [productType, setProductType] = useState(simpleProducts);
+  const [activeAddProductType, setAddActiveProductType] = useState(false);
   const [simpleOrVariable, setSimpleOrVariable] = useState("simple-product");
+  const [simpleProductTypeValue, setSimpleProductTypeValue] = useState<string[]>([]);
+  const [variableProductTypeValue, setVariableProductTypeValue] = useState<string[]>([]);
+  
 
   const inputRef = useRef<HTMLInputElement>(null);
   const getValue = () => {
@@ -21,17 +20,20 @@ const AddOrder = () => {
       // Accessing the input value directly from the DOM element
       const value = inputRef.current.value;
       setAddActiveProductType(false);
-      setProductType([...productType, value]);
+      setProductType([...productType, { id: Date.now(), name: value }]);
     }
   };
 
-  const [activeAddProductType, setAddActiveProductType] = useState(false);
 
-  const [productTypeValue, setProductTypeValue] = useState<string[]>([]);
+
 
   const handleProductType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setActive(e.target.value);
-    setProductTypeValue([...productTypeValue, e.target.value]);
+    if (simpleOrVariable === "simple-product") {
+      setSimpleProductTypeValue([...simpleProductTypeValue, e.target.value]);
+    }
+      setVariableProductTypeValue([...variableProductTypeValue, e.target.value]);
+  
   };
 
   const handleActiveAddProductType = () => {
@@ -39,12 +41,28 @@ const AddOrder = () => {
   };
 
   const handleDeleteType = (element: string) => {
-    const filtered = productTypeValue.filter((item) => item !== element);
-    setProductTypeValue(filtered);
+    if (simpleOrVariable === "simple-product") {
+      const updatedSimpleProductTypeValue = simpleProductTypeValue.filter(
+        (item) => item !== element
+      );
+      setSimpleProductTypeValue(updatedSimpleProductTypeValue);
+    }
+    const updatedVariableProductTypeValue = variableProductTypeValue.filter(
+      (item) => item !== element
+    );
+    setVariableProductTypeValue(updatedVariableProductTypeValue);
   };
 
   const handleSimpleOrVariable = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSimpleOrVariable(e.target.value);
+    if (e.target.value === "simple-product") {
+      setProductType(simpleProducts);
+      setSimpleOrVariable("simple-product");
+
+    }
+    if (e.target.value === "variable-product") {
+      setProductType(variableProducts);
+      setSimpleOrVariable("variable-product");
+    }
   };
 
   return (
@@ -193,14 +211,15 @@ const AddOrder = () => {
                     >
                       <option value="">Add existing</option>
                       {productType.map((item) => (
-                        <option value={item} key={item}>{item}</option>
+                        <option value={item.name} key={item.id}>{item.name}</option>
                       ))}
                     </select>
                 </div>
               </div>
               <hr />
-              {productTypeValue.length > 0 &&
-                productTypeValue.map((product) => (
+              {simpleOrVariable === "simple-product" ? 
+              simpleProductTypeValue.length > 0 &&
+                simpleProductTypeValue.map((product) => (
                   <div
                     key={product}
                     className={`${
@@ -222,6 +241,29 @@ const AddOrder = () => {
                       Remove
                     </button>
                   </div>
+                )): variableProductTypeValue.length > 0 &&
+                variableProductTypeValue.map((product) => (
+                  <div
+                  key={product}
+                  className={`${
+                    product === active ? "bg-gray-200" : ""
+                  } gap-4 flex justify-between items-center border-b-2`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActive(product)}
+                    className="p-4 py-2 flex flex-1"
+                  >
+                    {product}{" "}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteType(product)}
+                    className="text-red-600 p-4 py-2"
+                  >
+                    Remove
+                  </button>
+                </div>  
                 ))}
             </div>
 
