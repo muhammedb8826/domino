@@ -1,28 +1,34 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { loginUser } from "../redux/features/user/authentication";
+import { loginUser, setToken, setUser } from "../redux/features/user/authentication";
 
 const Login = () => {
+  const { user, token, isLoading, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user && token) {
+      dispatch(setUser(user));
+      dispatch(setToken(token));
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+    }
+  }, [user, token, dispatch]);
+
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
-  const dispatch= useDispatch();
-  const navigate = useNavigate();
-  const { user,isLoading, error } = useSelector((state) => state.auth);
- 
-  
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const user = { email: email.current?.value, password: password.current?.value }
-      dispatch(loginUser(user)).then((res) => {
-        if (res.payload) {
-          navigate("/dashboard");
-        }
-      });
-    };
-
+    e.preventDefault();
+    const userData = { email: email.current?.value, password: password.current?.value };
+    dispatch(loginUser(userData)).then((res) => {
+      if (res.payload) {
+        navigate("/dashboard");
+      }
+    });
+  };
   return (
     <section className="flex items-center justify-center w-full h-screen">
       <div className="w-full max-w-xs">

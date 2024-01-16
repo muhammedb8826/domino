@@ -1,25 +1,25 @@
 import { useState } from "react";
-import OrderDetails from "../components/order/OrderDetails";
+import { useSelector } from "react-redux";
 import { SideBar } from "../components/order/SideBar";
 import TopBar from "../components/order/TopBar";
+import OrderDetails from "../components/order/OrderDetails";
 import UserRegistration from "../components/user/UserRegistration";
 import UserList from "../components/user/UserList";
-// import { Navigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 const Dashboard = () => {
-  // const { isAuthenticated } = useSelector((state) => state.auth);
-  
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
 
   const [active, setActive] = useState("order");
-
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  // {!isAuthenticated && <Navigate to="/sign-in" />}
-return (
+  return isAuthenticated ? (
     <section className="w-screen h-screen flex justify-between bg-[#EBE9EA] overflow-hidden">
       <div className="w-[15%] static">
         <SideBar handleButtonClick={handleButtonClick} active={active} />
@@ -35,12 +35,12 @@ return (
 
         {active === "userRegistration" && <UserRegistration />}
 
-        {active === "userList" && 
-        <>
-        <TopBar />
-        <UserList />
-        </>
-        }
+        {active === "userList" && (
+          <>
+            <TopBar />
+            <UserList />
+          </>
+        )}
 
         {active === "customer" && (
           <>
@@ -52,7 +52,9 @@ return (
         {active === "setting" && <div>setting</div>}
       </div>
     </section>
-  );
+  ) : (
+    <div>Not authenticated user <NavLink to="/sign-in" className="text-sky-400 decoration-black">Please contact your admin</NavLink></div>
+    );
 };
 
 export default Dashboard;
