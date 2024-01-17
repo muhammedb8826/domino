@@ -4,6 +4,7 @@ import { IoRemoveOutline } from "react-icons/io5";
 import SimpleProductPage from "./SimpleProductPage";
 import VariableProduct from "./VariableProduct";
 import { simpleProducts, variableProducts } from "../../utils/data";
+import { GoBack } from "../common/GoBack";
 
 const AddOrder = () => {
   const [active, setActive] = useState("");
@@ -67,6 +68,7 @@ const AddOrder = () => {
 
   return (
     <div className="wrapper p-4">
+      <GoBack goback="/dashboard" />
       <h1 className="text-2xl font-bold">Add Order</h1>
 
       <form className="py-4">

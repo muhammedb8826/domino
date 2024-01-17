@@ -3,6 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { loginUser, setToken, setUser } from "../redux/features/user/authentication";
 
+interface ILogin {
+  email: string | undefined;
+  password: string | undefined;
+}
+
 const Login = () => {
   const { user, token, isLoading, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -22,7 +27,7 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userData = { email: email.current?.value, password: password.current?.value };
+    const userData: ILogin = { email: email.current?.value, password: password.current?.value };
     dispatch(loginUser(userData)).then((res) => {
       if (res.payload) {
         navigate("/dashboard");

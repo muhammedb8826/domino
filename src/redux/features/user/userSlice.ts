@@ -1,35 +1,58 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { usersURL } from "../../api/API";
+import { selectToken } from "./authentication";
 
 interface UserState {
   users: [];
   isLoading: boolean;
+  token: string | null;
   error: string | null;
+  message: string | null;
+  errors: string[] | null;
 }
 
 const initialState: UserState = {
   users: [],
   isLoading: false,
+  token: localStorage.getItem("token") || null,
   error: null,
+  errors:[],
+  message: null
+
 };
 
 
 
-export const getUsers = createAsyncThunk("user/getUser", async () => {
-  const response = await axios.get(usersURL);
-  return response.data;
+export const getUsers = createAsyncThunk("user/getUser", async (_, { getState }) => {
+  const token = selectToken(getState()); // Pass the state as the first argument
+  try {
+    const response = await axios.get(usersURL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error; // Re-throw the error so that it can be caught in the rejected case
+  }
 });
 
 
-export const createUser = createAsyncThunk('user/createUser', async (newUserData) => {
-  console.log(newUserData);
+export const createUser = createAsyncThunk('user/createUser', async (newUserData, { rejectWithValue }) => {
+  const token = localStorage.getItem("token") || null;
   
   try {
-    const response = await axios.post(usersURL, newUserData);
-    return response.data;
+    const response = await axios.post(usersURL, newUserData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data; // Return the created user data
   } catch (error) {
-    throw error.response.data;
+    return rejectWithValue(error.response?.data);
+    // Re-throw the error so that it can be caught in the rejected case
   }
 });
 
@@ -49,13 +72,18 @@ export const deleteUser = createAsyncThunk("user/deleteUser", async (user) => {
 const user = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getUsers.pending, (state) => {
       state.isLoading = true;
     })
     builder.addCase(getUsers.fulfilled, (state, action) => {
-      state.users = action.payload;
+      // const {data} = ;
+       state.users =action.payload ;
       state.isLoading = false;
       state.error = null;
     })
@@ -63,18 +91,26 @@ const user = createSlice({
       state.isLoading = false;
       state.error = action.error.message || null;
     })
-    .addCase(createUser.pending, (state) => {
+    builder.addCase(createUser.pending, (state) => {
       state.isLoading = true;
     })
-    .addCase(createUser.fulfilled, (state, action) => {
+    builder.addCase(createUser.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.users = action.payload;
+      // const data = action.payload;
+      const {data, message} = action.payload
+      console.log(data,message);
+      state.message = message;
+      
+      [...state.users, data];
     })
-    .addCase(createUser.rejected, (state, action) => {
+    builder.addCase(createUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.error.message;
+      state.error = action.payload.message || null;
+      state.errors = action.payload.errors || null;
     })
   },
 });
 
+export const { setToken } = user.actions;
 export default user.reducer;
+

@@ -74,7 +74,7 @@ const UserList = () => {
 
   return (
     <div className="flex w-full justify-center p-4">
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-11/12">
+      <div className="relative overflow-x-auto h-[49%] overflow-y-auto shadow-md sm:rounded-lg w-11/12">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
