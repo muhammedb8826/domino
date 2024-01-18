@@ -222,6 +222,7 @@ const errPassword = errors && errors.password ? errors.password[0] : null;
                 onChange={(e) =>
                   setUserData({ ...userData, gender: e.target.value })
                 }
+                required
               />
               <label
                 htmlFor="inline-radio-male"
@@ -240,6 +241,7 @@ const errPassword = errors && errors.password ? errors.password[0] : null;
                 onChange={(e) =>
                   setUserData({ ...userData, gender: e.target.value })
                 }
+                required
               />
               <label
                 htmlFor="inline-2-radio-female"
