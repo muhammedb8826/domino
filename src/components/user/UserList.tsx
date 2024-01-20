@@ -1,9 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../../redux/features/user/userSlice";
+import { getUsers, deleteUser } from "../../redux/features/user/userSlice";
 import { useEffect, useState } from "react";
 import userImage from "../../assets/images/avatar.jpg";
 import { CiMenuKebab } from "react-icons/ci";
 import { NavLink } from "react-router-dom";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const UserList = () => {
   const { users, isLoading, error } = useSelector((state: any) => state.user);
@@ -18,6 +20,10 @@ const handleAction = (index: number) => {
     dispatch(getUsers());
   }, [dispatch]);
 
+  const handleDeleteUser = (id) => {
+    dispatch(deleteUser(id));
+  }
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -26,9 +32,8 @@ const handleAction = (index: number) => {
     return <div>{error}</div>;
   }
 
-  const userListContent =
-    users && users.data
-      ? users.data.map((user: any, index: number) => (
+  const userListContent = users
+      ? users.map((user: any, index: number) => (
           <tbody key={user.id}>
             <tr className="bg-white border-b hover:bg-gray-50">
               <td className="w-4 p-4">
@@ -86,11 +91,11 @@ const handleAction = (index: number) => {
                     </div>
                     <ul className="py-2 text-sm text-gray-700">
                       <li>
-                      <NavLink to="#" className="w-full block px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</NavLink>
+                      <NavLink to="#" className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"><FaRegEdit />Edit</NavLink>
                       </li>
                       <li>
-                        <button type="button" className="text-left w-full block px-4 py-2 hover:bg-gray-100">
-                          Delete
+                        <button onClick={()=>handleDeleteUser(user.id)} type="button" className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100">
+                        <MdDelete /> Delete
                         </button>
                       </li>
                     </ul>
@@ -104,7 +109,7 @@ const handleAction = (index: number) => {
 
   return (
     <div className="flex w-full justify-center p-4">
-      <div className="relative overflow-x-auto h-[49%] overflow-y-auto shadow-md sm:rounded-lg w-11/12">
+      <div className="relative overflow-x-auto h-[575px] overflow-y-auto shadow-md sm:rounded-lg w-11/12 bg-white">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>

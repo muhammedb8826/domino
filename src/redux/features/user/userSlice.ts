@@ -40,8 +40,8 @@ export const getUsers = createAsyncThunk("user/getUser", async (_, { getState })
 });
 
 
-export const createUser = createAsyncThunk('user/createUser', async (newUserData, { rejectWithValue }) => {
-  const token = localStorage.getItem("token") || null;
+export const createUser = createAsyncThunk('user/createUser', async (newUserData, { getState, rejectWithValue }) => {
+  const token = selectToken(getState());
   
   try {
     const response = await axios.post(usersURL, newUserData, {
@@ -52,18 +52,37 @@ export const createUser = createAsyncThunk('user/createUser', async (newUserData
     return response.data; // Return the created user data
   } catch (error) {
     return rejectWithValue(error.response?.data);
-    // Re-throw the error so that it can be caught in the rejected case
   }
 });
 
 export const updateUser = createAsyncThunk("user/updateUser", async (user) => {
+  
   const response = await axios.put(usersURL, user);
   return response.data;
 });
 
-export const deleteUser = createAsyncThunk("user/deleteUser", async (user) => {
-  const response = await axios.delete(usersURL, user);
-  return response.data;
+export const deleteUser = createAsyncThunk('user/deleteUser', async (id, { getState, rejectWithValue }) => { 
+  try {
+    const token = selectToken(getState());
+    const response = await axios.delete(`${usersURL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data+"response");
+    
+    return id;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      // Handle 404 Not Found error
+      console.error('User not found:', error.response.data);
+      return rejectWithValue('User not found');
+    } else {
+      // Handle other errors
+      console.error('Error deleting user:', error.message);
+      throw error;
+    }
+  }
 });
 
 
@@ -82,8 +101,7 @@ const user = createSlice({
       state.isLoading = true;
     })
     builder.addCase(getUsers.fulfilled, (state, action) => {
-      // const {data} = ;
-       state.users =action.payload ;
+       state.users =action.payload.data;
       state.isLoading = false;
       state.error = null;
     })
@@ -96,17 +114,43 @@ const user = createSlice({
     })
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.isLoading = false;
-      // const data = action.payload;
-      const {data, message} = action.payload
-      console.log(data,message);
+      const { data, message } = action.payload;
       state.message = message;
-      
-      [...state.users, data];
+      state.users.push(data);
     })
     builder.addCase(createUser.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload.message || null;
       state.errors = action.payload.errors || null;
+    })
+    builder.addCase(updateUser.pending, (state) => {
+      state.isLoading = true;
+    })
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      const data = action.payload;
+      state.users = state.users.map((user) => {
+        if (user.id === data.id) {
+          return data;
+        }
+        return user;
+      });
+    })
+    builder.addCase(updateUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message || null;
+    })
+    builder.addCase(deleteUser.pending, (state) => {
+      state.isLoading = true;
+    })
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
+      state.isLoading = false; 
+      
+      state.users = state.users.filter((user) => user.id !== action.payload);
+    })
+    builder.addCase(deleteUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message || null;
     })
   },
 });

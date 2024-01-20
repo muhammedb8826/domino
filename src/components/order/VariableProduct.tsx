@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { VscCollapseAll } from "react-icons/vsc";
-import { MdOutlineCancel } from "react-icons/md";
+import { variableProducts } from "../../utils/data";
 
 interface VariableProductProps {
   active: string;
@@ -13,16 +13,16 @@ interface AttributeValues {
 }
 
 const VariableProduct = ({ active }: VariableProductProps) => {
-  const [attributeValues, setAttributeValues] =
-    useState<AttributeValues>({
-      quantity: [""],
-      price: [""],
-      note: [""],
-    });
+  const product = variableProducts.find((item) => item.name === active);
 
+  const [attributeValues, setAttributeValues] = useState<AttributeValues>({
+    quantity: [""],
+    price: [""],
+    note: [""],
+  });
+
+  const [optionsData, setOptionsData] = useState([]);
   const [disabledOptions, setDisabledOptions] = useState<string[]>([]);
-
-  const [values, setValues] = useState<string[]>([""]);
 
   const handleAddVariableProduct = () => {
     setAttributeValues((prevState) => ({
@@ -32,14 +32,22 @@ const VariableProduct = ({ active }: VariableProductProps) => {
     }));
   };
 
-  const handleSelectedAttribute = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedAttribute = e.target.value;
-    setValues([...values, selectedAttribute]);
-    setDisabledOptions([...disabledOptions, selectedAttribute]);
-  };
+  const handleSelectedAttribute = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    index: number
+  ) => {
+    const selected = e.target.value;
+    setDisabledOptions([...disabledOptions, selected]);
+    const selectedIndex =
+      e.target.options[e.target.selectedIndex].getAttribute("data-index");
+    const filteredData = product?.attributes[selectedIndex];
+    setOptionsData([...optionsData, filteredData]);
 
-  console.log();
-  
+    // console.log(selectedIndex+"selected");
+    console.log(index);
+
+    // console.log(optionsData);
+  };
 
   const handleDeleteVariableProducAttribute = (index: number) => {
     setAttributeValues((prevState) => {
@@ -95,7 +103,9 @@ const VariableProduct = ({ active }: VariableProductProps) => {
             onClick={() => handleShow(index)}
             className="hover:bg-gray-200 flex justify-between items-center px-4 py-2"
           >
-            <p className="font-bold text-gray-400">Attribute {index + 1}</p>
+            <p className="font-bold text-gray-400">
+              {product?.name} Attribute {index + 1}
+            </p>
             <div className="flex gap-4">
               <button
                 type="button"
@@ -168,101 +178,99 @@ const VariableProduct = ({ active }: VariableProductProps) => {
               </div>
             </div>
             <div className="col-span-2">
-              {/* <select
+              <select
                 id="attributes"
-                onChange={handleSelectedAttribute}
+                onChange={(e) => handleSelectedAttribute(e, index)}
                 title="attributes"
-                name="attributes"
+                name={`attributes-${index}`}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-4"
               >
                 <option value="">Choose attributes</option>
-                {active === "T-shirt"
-                  ? tShirtAttributes.map((item) => (
+                {product
+                  ? product.attributes.map((attribute, index) => (
                       <option
-                        value={item}
-                        key={item}
-                        disabled={disabledOptions.includes(item)}
+                        value={attribute.name}
+                        key={attribute.name}
+                        disabled={disabledOptions.includes(attribute.name)}
+                        data-index={index}
                       >
-                        {item}
-                      </option>
-                    ))
-                  : null}
-
-                  
-                {active === "Banner"
-                  ? BannerAttributes.map((item) => (
-                      <option
-                        value={item}
-                        key={item}
-                        disabled={disabledOptions.includes(item)}
-                      >
-                        {item}
+                        {attribute.name}
                       </option>
                     ))
                   : null}
               </select>
 
-              {active === "T-shirt" ? (
+              {optionsData && (
                 <div>
-                  {values.map((item, valueIndex) => (
-                    <fieldset className="border border-sky-500 p-4" key={item}>
+                  {optionsData.map((item) => (
+                    <fieldset
+                      className="border border-sky-500 p-4 mb-2"
+                      key={item.name}
+                    >
                       <legend className="bg-sky-500 text-white border px-2">
-                        Choose your favorite {item}
+                        Choose your favorite {item.name}
                       </legend>
-                      {tShirtValues[item].map(
-                        (optionItem: string, index: number) => (
-                          <div className="flex items-center mb-4" key={index}>
-                            <input
-                              id={`radio-${valueIndex}-${index}`} // Updated unique id
-                              type="radio"
-                              value={optionItem}
-                              name={`default-radio-${valueIndex}`} // Unique name for each set
-                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                            />
-                            <label
-                              htmlFor={`radio-${valueIndex}-${index}`}
-                              className="ms-2 text-sm font-medium text-gray-900"
-                            >
-                              {optionItem}
-                            </label>
-                          </div>
-                        )
-                      )}
+
+                      {item.name==="width" &&
+                     <div>
+                     <label
+                       htmlFor="width"
+                       className="mt-2 block mb-2 text-sm font-medium text-gray-900 "
+                     >
+                       Width
+                     </label>
+       
+                     <input
+                       name="width"
+                       type="number"
+                       id="width"
+                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
+                       placeholder="e.g. 10 or 50 in cm..."
+                       required
+                     />
+                     <label
+                       htmlFor="height"
+                       className="block mb-2 text-sm font-medium text-gray-900 "
+                     >
+                       Height
+                     </label>
+       
+                     <input
+                       name="height"
+                       type="number"
+                       id="height"
+                       className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                       placeholder="e.g. 10 or 50 in cm..."
+                       required
+                     />
+                   </div>  
+                    }
+
+
+                      {item.options.map((option, optionIndex) => (
+                        <div
+                          className="flex items-center mb-4"
+                          key={optionIndex}
+                        >
+                          <input
+                            id={`radio-${optionIndex}`}
+                            type="radio"
+                            value="{optionItem}"
+                            name={`default-radio-${optionIndex}`}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                          />
+                          <label
+                            htmlFor={`radio-${optionIndex}`}
+                            className="ms-2 text-sm font-medium text-gray-900"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
                     </fieldset>
                   ))}
                 </div>
-              ) : null} */}
-{/* 
-              {active === "Banner" ? (
-                <div>
-                  {values.map((item, valueIndex) => (
-                    <fieldset className="border border-sky-500 p-4" key={item}>
-                      <legend className="bg-sky-500 text-white border px-2">
-                        Choose your favorite {item}
-                      </legend>
-                      {bannerValues[item].map(
-                        (optionItem: string, index: number) => (
-                          <div className="flex items-center mb-4" key={index}>
-                            <input
-                              id={`radio-${valueIndex}-${index}`} // Updated unique id
-                              type="radio"
-                              value={optionItem}
-                              name={`default-radio-${valueIndex}`} // Unique name for each set
-                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                            />
-                            <label
-                              htmlFor={`radio-${valueIndex}-${index}`}
-                              className="ms-2 text-sm font-medium text-gray-900"
-                            >
-                              {optionItem}
-                            </label>
-                          </div>
-                        )
-                      )}
-                    </fieldset>
-                  ))}
-                </div>
-              ) : null}  */}
+              )}
             </div>
           </div>
         </div>

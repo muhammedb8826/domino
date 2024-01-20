@@ -94,11 +94,11 @@ export const variableProducts = [
       },
       {
         name: "height",
-        options: ["10", "12", "15", "20", "25"],
+        options: [""],
       },
       {
         name: "width",
-        options: ["10", "12", "15", "20", "25"],
+        options: [""],
       },
       {
         name: "unit",

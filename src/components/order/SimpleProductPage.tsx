@@ -28,8 +28,6 @@ const SimpleProductPage = ({ active }: SimpleProductPageProps) => {
 
   const [simpleProduct, setSimpleProduct] = useState(simpleProducts);
 
-  console.log(simpleProduct);
-
   const handleCollapse = (e: React.MouseEvent, index: number) => {
     e.preventDefault();
     e.stopPropagation();
