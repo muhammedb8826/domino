@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaCartArrowDown, FaUserPlus, FaUsers } from "react-icons/fa";
+import { FaCartArrowDown, FaUsers } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
 import { MdSettings } from "react-icons/md";
 
@@ -33,23 +33,13 @@ export const SideBar = ({
         </button>
         <button
           type="button"
-          onClick={() => handleButtonClick("userRegistration")}
+          onClick={() => handleButtonClick("user")}
           className={`${
-            active === "userRegistration" ? "bg-white text-black" : ""
-          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
-        >
-          <FaUserPlus />
-          <span>User Registration</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => handleButtonClick("userList")}
-          className={`${
-            active === "userList" ? "bg-white text-black" : ""
+            active === "user" ? "bg-white text-black" : ""
           } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
         >
           <FaUsersGear />
-          <span>Users List</span>
+          <span>User</span>
         </button>
         <button
           type="button"

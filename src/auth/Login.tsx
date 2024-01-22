@@ -2,6 +2,10 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { loginUser, setToken, setUser } from "../redux/features/user/authentication";
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { RootState } from '../redux//store';
+
+
 
 interface ILogin {
   email: string | undefined;
@@ -9,9 +13,9 @@ interface ILogin {
 }
 
 const Login = () => {
-  const { user, token, isLoading, error } = useSelector((state) => state.auth);
+  const { user, token, isLoading, error } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<RootState, any, AnyAction>>();
 
   useEffect(() => {
     if (user && token) {

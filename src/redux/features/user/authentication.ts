@@ -2,8 +2,26 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { loginURL } from "../../api/API";
 
-const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+
+interface User {
+  token: string;
+}
+
+interface AuthState {
+  isLoading: boolean;
+  error: string;
+  isAuthenticated: boolean;
+  user: User | null;
+  token: string | null;
+}
+
+
+
+const userItem = localStorage.getItem("user");
+const user = userItem ? JSON.parse(userItem) : null;
+
+const initialState: AuthState = {
+  user,
   isLoading: false,
   isAuthenticated: !!localStorage.getItem("token"),
   token: localStorage.getItem("token") || null,
@@ -28,10 +46,10 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
-  state.token = null;
-  state.isAuthenticated = false;
-  localStorage.removeItem("user");
-  localStorage.removeItem("token");
+      state.token = null;
+      state.isAuthenticated = false;
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     },
   },
   extraReducers: (builder) => {
@@ -53,6 +71,6 @@ const authSlice = createSlice({
 });
 
 export const { setUser, setToken, logout } = authSlice.actions;
-export const selectToken = (state) => state.user.token;
+export const selectToken = (state: AuthState) => state.user?.token;
 // export const selectAuth = (state) => state.auth;
 export default authSlice.reducer;

@@ -3,9 +3,8 @@ import { useSelector } from "react-redux";
 import { SideBar } from "../components/order/SideBar";
 import TopBar from "../components/order/TopBar";
 import OrderDetails from "../components/order/OrderDetails";
-import UserRegistration from "../components/user/UserRegistration";
-import UserList from "../components/user/UserList";
 import { NavLink } from "react-router-dom";
+import User from "../components/user/User";
 
 const Dashboard = () => {
   const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
@@ -20,12 +19,12 @@ const Dashboard = () => {
   }
 
   return isAuthenticated ? (
-    <section className="w-screen h-screen flex justify-between bg-[#EBE9EA] overflow-hidden">
+    <section className="w-screen h-screen flex justify-between bg-[#EBE9EA] overflow-hidden box-border relative">
       <div className="w-[15%] static">
         <SideBar handleButtonClick={handleButtonClick} active={active} />
       </div>
 
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full h-full">
         {active === "order" && (
           <>
             <TopBar />
@@ -33,12 +32,10 @@ const Dashboard = () => {
           </>
         )}
 
-        {active === "userRegistration" && <UserRegistration />}
-
-        {active === "userList" && (
+        {active === "user" && (
           <>
             <TopBar />
-            <UserList />
+            <User />
           </>
         )}
 

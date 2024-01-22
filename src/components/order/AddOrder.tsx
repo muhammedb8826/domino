@@ -1,17 +1,12 @@
 import { useRef, useState } from "react";
-import { IoRemoveOutline } from "react-icons/io5";
-
-import SimpleProductPage from "./SimpleProductPage";
 import VariableProduct from "./VariableProduct";
-import { simpleProducts, variableProducts } from "../../utils/data";
+import { variableProducts } from "../../utils/data";
 import { GoBack } from "../common/GoBack";
 
 const AddOrder = () => {
   const [active, setActive] = useState("");
-  const [productType, setProductType] = useState(simpleProducts);
+  const [productType, setProductType] = useState(variableProducts);
   const [activeAddProductType, setAddActiveProductType] = useState(false);
-  const [simpleOrVariable, setSimpleOrVariable] = useState("simple-product");
-  const [simpleProductTypeValue, setSimpleProductTypeValue] = useState<string[]>([]);
   const [variableProductTypeValue, setVariableProductTypeValue] = useState<string[]>([]);
   
 
@@ -30,9 +25,6 @@ const AddOrder = () => {
 
   const handleProductType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setActive(e.target.value);
-    if (simpleOrVariable === "simple-product") {
-      setSimpleProductTypeValue([...simpleProductTypeValue, e.target.value]);
-    }
       setVariableProductTypeValue([...variableProductTypeValue, e.target.value]);
   
   };
@@ -42,29 +34,12 @@ const AddOrder = () => {
   };
 
   const handleDeleteType = (element: string) => {
-    if (simpleOrVariable === "simple-product") {
-      const updatedSimpleProductTypeValue = simpleProductTypeValue.filter(
-        (item) => item !== element
-      );
-      setSimpleProductTypeValue(updatedSimpleProductTypeValue);
-    }
     const updatedVariableProductTypeValue = variableProductTypeValue.filter(
       (item) => item !== element
     );
     setVariableProductTypeValue(updatedVariableProductTypeValue);
   };
 
-  const handleSimpleOrVariable = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.value === "simple-product") {
-      setProductType(simpleProducts);
-      setSimpleOrVariable("simple-product");
-
-    }
-    if (e.target.value === "variable-product") {
-      setProductType(variableProducts);
-      setSimpleOrVariable("variable-product");
-    }
-  };
 
   return (
     <div className="wrapper p-4">
@@ -145,18 +120,6 @@ const AddOrder = () => {
             >
               Product type
             </label>
-            <IoRemoveOutline />
-            <select
-              onChange={handleSimpleOrVariable}
-              value={simpleOrVariable}
-              title="Product-type"
-              name="productType"
-              id="productType"
-              className="w-full sm:w-1/2 md:1/4  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5"
-            >
-              <option value="simple-product">Simple product</option>
-              <option value="variable-product">Variable product</option>
-            </select>
           </div>
           <hr />
 
@@ -183,7 +146,6 @@ const AddOrder = () => {
                       <hr />
                       <div className="flex justify-between">
                         <button
-                          onClick={getValue}
                           type="button"
                           className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2"
                         >
@@ -219,31 +181,7 @@ const AddOrder = () => {
                 </div>
               </div>
               <hr />
-              {simpleOrVariable === "simple-product" ? 
-              simpleProductTypeValue.length > 0 &&
-                simpleProductTypeValue.map((product) => (
-                  <div
-                    key={product}
-                    className={`${
-                      product === active ? "bg-gray-200" : ""
-                    } gap-4 flex justify-between items-center border-b-2`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setActive(product)}
-                      className="p-4 py-2 flex flex-1"
-                    >
-                      {product}{" "}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteType(product)}
-                      className="text-red-600 p-4 py-2"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                )): variableProductTypeValue.length > 0 &&
+              { variableProductTypeValue.length > 0 &&
                 variableProductTypeValue.map((product) => (
                   <div
                   key={product}
@@ -272,11 +210,9 @@ const AddOrder = () => {
             {/* attributes */}
 
             <div className="w-full md:w-[75%] max-h-screen overflow-hidden overflow-y-scroll">
-              {simpleOrVariable === "simple-product" ? (
-                <SimpleProductPage active={active} />
-              ) : (
+              {
                 <VariableProduct active={active} />
-              )}
+              }
             </div>
           </div>
         </div>

@@ -18,6 +18,8 @@ const VariableProduct = ({ active }: VariableProductProps) => {
   const [attributeValues, setAttributeValues] = useState<AttributeValues>({
     quantity: [""],
     price: [""],
+    height: [""],
+    width: [""],
     note: [""],
   });
 
@@ -28,6 +30,8 @@ const VariableProduct = ({ active }: VariableProductProps) => {
     setAttributeValues((prevState) => ({
       quantity: [...prevState.quantity, ""],
       price: [...prevState.price, ""],
+      height: [...prevState.height, ""],
+      width: [...prevState.width, ""],
       note: [...prevState.note, ""],
     }));
   };

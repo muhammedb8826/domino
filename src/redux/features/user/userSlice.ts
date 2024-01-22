@@ -18,7 +18,8 @@ const initialState: UserState = {
   token: localStorage.getItem("token") || null,
   error: null,
   errors:[],
-  message: null
+  message: null,
+  registrationErrors: {},
 
 };
 
@@ -95,6 +96,11 @@ const user = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    clearSuccessMessage: (state) => {
+      state.message = null;
+      state.errors = [];
+      state.registrationErrors = {};
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getUsers.pending, (state) => {
@@ -119,8 +125,8 @@ const user = createSlice({
       state.users.push(data);
     })
     builder.addCase(createUser.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload.message || null;
+      state.isLoading = false;  
+      state.registrationErrors = action.payload || null;
       state.errors = action.payload.errors || null;
     })
     builder.addCase(updateUser.pending, (state) => {
@@ -156,5 +162,6 @@ const user = createSlice({
 });
 
 export const { setToken } = user.actions;
+export const { clearSuccessMessage } = user.actions;
 export default user.reducer;
 
