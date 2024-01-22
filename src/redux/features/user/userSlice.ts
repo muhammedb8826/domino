@@ -122,7 +122,7 @@ const user = createSlice({
       state.isLoading = false;
       const { data, message } = action.payload;
       state.message = message;
-      state.users.push(data);
+      state.users.unshift(data);
     })
     builder.addCase(createUser.rejected, (state, action) => {
       state.isLoading = false;  

@@ -3,22 +3,24 @@ import { getUsers, deleteUser } from "../../redux/features/user/userSlice";
 import { useEffect, useState } from "react";
 import userImage from "../../assets/images/avatar.jpg";
 import { CiMenuKebab } from "react-icons/ci";
-import { NavLink } from "react-router-dom";
 import { FaRegEdit, FaUserPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import UserRegistration from "./UserRegistration";
+import Swal from "sweetalert2";
+import UserUpdate from "./UserUpdate";
 
 const User = () => {
   const { users, isLoading,errors, error } = useSelector((state: any) => state.user);
   const [showPopover, setShowPopover] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const dispatch = useDispatch();
 
 useEffect(() => {
   if (errors) {
-    // setIsModalOpen(true);
     setRegistrationError(errors);
   }
 }
@@ -26,9 +28,14 @@ useEffect(() => {
 
 
   const handleModalOpen = () => {
-    // setRegistrationError(null); // Clear previous errors
     setIsModalOpen(!isModalOpen);
   };
+
+  const handleUpdateModal = (id) => {
+    setIsUpdateModalOpen(!isUpdateModalOpen);
+    setUserId(id);
+  };
+
 
   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
@@ -39,8 +46,26 @@ useEffect(() => {
   }, [dispatch]);
 
   const handleDeleteUser = (id) => {
-    dispatch(deleteUser(id));
-    setShowPopover(null);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this user!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The user has been deleted.",
+          icon: "success"
+        }).then(() => {
+          dispatch(deleteUser(id));
+        });
+      }
+      setShowPopover(null);
+    });
   };
 
   if (isLoading) {
@@ -108,13 +133,14 @@ if (error) {
                   </div>
                   <ul className="py-2 text-sm text-gray-700">
                     <li>
-                      <NavLink
-                        to="#"
+                      <button
+                      onClick={()=>handleUpdateModal(user.id)}
+                        type="button"
                         className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
                       >
                         <FaRegEdit />
                         Edit
-                      </NavLink>
+                      </button>
                     </li>
                     <li>
                       <button
@@ -198,6 +224,39 @@ if (error) {
             </span>
 
             <UserRegistration handleModalOpen={handleModalOpen}  errors={registrationError} />
+            <UserUpdate
+              handleModalOpen={handleUpdateModal}
+              isUpdateModalOpen={isUpdateModalOpen}
+              userId={userId}
+            />
+          </div>
+        </div>
+      )}
+
+
+{isUpdateModalOpen &&  (
+        <div
+          className="fixed z-10 inset-0 overflow-y-auto"
+          aria-labelledby="modal-title"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+              aria-hidden="true"
+            ></div>
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <UserUpdate
+              handleModalOpen={handleUpdateModal}
+              isUpdateModalOpen={isUpdateModalOpen}
+              userId={userId}
+            />
           </div>
         </div>
       )}

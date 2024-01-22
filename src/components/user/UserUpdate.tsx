@@ -1,93 +1,29 @@
-import { useState } from "react";
-import { createUser } from "../../redux/features/user/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+// import { FaRegWindowClose } from "react-icons/fa";
+// import { useSelector } from "react-redux";
+// import { useDispatch } from "react-redux";
+// import { updateUser } from "../../redux/features/user/userSlice";
+// import { useEffect, useState } from "react";
+
 import { FaRegWindowClose } from "react-icons/fa";
-import { RootState } from "@reduxjs/toolkit/query";
-import { clearSuccessMessage } from "../../redux/features/user/userSlice";
-import {  toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
+const UserUpdate = ({handleModalOpen, isUpdateModalOpen, userId}) => {
+// const [userData, setUserData] = useState({});
 
+// const { isLoading } = useSelector(
+//     (state) => state.user
+//   );
+//   const dispatch = useDispatch();
+//   useEffect(() => {
+//     dispatch(updateUser(userId)).then((res) => {
+//        setUserData(res.payload);
+//       });
+//   }, [dispatch]);
+// console.log(userData);
 
-interface UserRegistrationProps {
-  handleModalOpen: () => void;
-  errors: null | string;
-}
-
-
-const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) => {
-  const { isLoading, registrationErrors, message } = useSelector(
-    (state: RootState) => state.user
-  );
-
-
-  // const [errPhone, setErrPhone] = useState(null);
-  // const [errEmail, setErrEmail] = useState(null);
-  // const [errPassword, setErrPassword] = useState(null);
-
-  const errPhone = errors && errors.phone ? errors.phone[0] : null;
-  const errEmail = errors && errors.email ? errors.email[0] : null;
-  const errPassword = errors && errors.password ? errors.password[0] : null;
-
-  const [userData, setUserData] = useState({
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    gender: "male",
-    phoneNumber: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    joinedDate: "",
-    address: "",
-    profileImage: "",
-  });
-
-  const dispatch = useDispatch();
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const newUserData = {
-      first_name: userData.firstName,
-      middle_name: userData.middleName,
-      last_name: userData.lastName,
-      gender: userData.gender,
-      phone: userData.phoneNumber,
-      email: userData.email,
-      password: userData.password,
-      password_confirmation: userData.confirmPassword,
-      joined_date: userData.joinedDate,
-      address: userData.address,
-      profile_image: userData.profileImage,
-    };
-
-    dispatch(createUser(newUserData)).then((res) => {
-      
-        if(res.payload.data){
-          toast(message)
-          dispatch(clearSuccessMessage());
-          handleModalOpen();
-        }  
-    });
-    
-    setUserData({
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      gender: "",
-      phoneNumber: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      joinedDate: "",
-      address: "",
-      profileImage: "",
-    });
-  };
 
   return (
     <form
-      onSubmit={handleSubmit}
+    //   onSubmit={handleSubmit}
       className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
       role="dialog"
       aria-modal="true"
@@ -101,7 +37,7 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                 className="text-lg font-medium leading-6 text-gray-900"
                 id="modal-headline"
               >
-                Add New User
+                Edit user {userId}
               </h3>
               
               <button
@@ -113,12 +49,12 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                 <FaRegWindowClose />
               </button>
             </div>
-            {registrationErrors && (
+            {/* {registrationErrors && (
                 <p className="text-red-500 text-xs italic">
                   {registrationErrors.message}{" "}
                 </p>
-              )}
-            <div className="mt-2">
+              )} */}
+            {/* <div className="mt-2">
               <div>
                
                 <hr />
@@ -412,20 +348,20 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
-      <div className="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+      {/* <div className="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
         <button
           type="submit"
           className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-700 border border-transparent rounded-md shadow-sm hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:ml-3 sm:w-auto sm:text-sm"
         >
-          {isLoading ? "Saving..." : "Save"}
+          {isLoading ? "Updating..." : "Update"}
         </button>
-      </div>
+      </div> */}
     </form>
   );
 };
 
-export default UserRegistration;
+export default UserUpdate;
