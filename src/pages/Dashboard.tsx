@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { SideBar } from "../components/order/SideBar";
-import TopBar from "../components/order/TopBar";
+import { SideBar } from "../components/dashboard/SideBar";
+import TopBar from "../components/dashboard/TopBar";
 import OrderDetails from "../components/order/OrderDetails";
 import { NavLink } from "react-router-dom";
 import User from "../components/user/User";
+import Product from "../components/product/Product";
+import Pricing from "../components/pricing/Pricing";
+import { RootState } from "../redux/store";
 
 const Dashboard = () => {
-  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+
+  const { isAuthenticated, isLoading } = useSelector((state: RootState) => state.auth);
 
   const [active, setActive] = useState("order");
   const handleButtonClick = (newActiveState: string) => {
@@ -43,6 +47,20 @@ const Dashboard = () => {
           <>
             <TopBar />
             <div>customer</div>
+          </>
+        )}
+
+        {active === "product" && (
+          <>
+            <TopBar />
+            <Product/>
+          </>
+        )}
+
+        {active === "pricing" && (
+          <>
+            <TopBar />
+            <Pricing/>
           </>
         )}
 

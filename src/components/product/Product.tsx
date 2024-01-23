@@ -1,85 +1,43 @@
-import { useDispatch, useSelector } from "react-redux";
-import { getUsers, deleteUser } from "../../redux/features/user/userSlice";
 import { useEffect, useState } from "react";
-import userImage from "../../assets/images/avatar.jpg";
-import { CiMenuKebab } from "react-icons/ci";
+import { RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts } from "../../redux/features/user/productSlice";
 import { FaRegEdit, FaUserPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import UserRegistration from "./UserRegistration";
-import Swal from "sweetalert2";
+import { CiMenuKebab } from "react-icons/ci";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 
+const Product = () => {
+    const { products, isLoading, error } = useSelector((state: RootState) => state.product);
+    const { user } = useSelector((state: RootState) => state.auth);
+    const [showPopover, setShowPopover] = useState(null);
+    const dispatch = useDispatch();
 
-const User = () => {
-  const { users, isLoading, errors, error } = useSelector(
-    (state: any) => state.user
-  );
-  const [showPopover, setShowPopover] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [registrationError, setRegistrationError] = useState(null);
-  const [userId, setUserId] = useState(null);
+   useEffect(() => {
+    dispatch(getProducts());
+   }, [dispatch]);
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (errors) {
-      setRegistrationError(errors);
-    }
-  }, [errors]);
-
-  const handleModalOpen = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  const handleUpdateModal = (id) => {
-    setIsUpdateModalOpen(!isUpdateModalOpen);
-    setUserId(id);
-  };
-
-  const handleAction = (index: number) => {
+   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
+    const handleDeleteProduct = (id: number) => {
+        // dispatch(deleteProduct(id));
+        }
+console.log(products);
 
-  const handleDeleteUser = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You want to delete this user!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "The user has been deleted.",
-          icon: "success",
-        }).then(() => {
-          dispatch(deleteUser(id));
-        });
-      }
-      setShowPopover(null);
-    });
-  };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+    if (isLoading) {
+      return  <Loading />
+    }
+    if (error) {
+        return <ErroPage error={error} />
+    }
 
-  if (error) {
-    return <ErroPage error={error} />;
-  }
-
-  const userListContent = users
-    ? users.map((user, index: number) => (
-        <tbody key={user.id}>
+    const productListContent = products
+    ? products.map((product, index: number) => (
+        <tbody key={product.id}>
           <tr className="bg-white border-b hover:bg-gray-50">
             <td className="w-4 p-4">
               <div className="flex items-center">
@@ -99,19 +57,19 @@ const User = () => {
             >
               <img
                 className="w-10 h-10 rounded-full"
-                src={userImage}
+                src={product.image}
                 alt="Jese image"
               />
               <div className="ps-3">
                 <div className="text-base font-semibold">
-                  {user.first_name} {user.middle_name} {user.last_name}
+                  {product.name} 
                 </div>
-                <div className="font-normal text-gray-500">{user.email}</div>
+                <div className="font-normal text-gray-500">{product.description}</div>
               </div>
             </th>
-            <td className="px-6 py-4">{user.phone}</td>
-            <td className="px-6 py-4">{user.address}</td>
-            <td className="px-6 py-4">{user.joined_date}</td>
+            <td className="px-6 py-4">{product.price}</td>
+            <td className="px-6 py-4 truncate">{product.attributes.map((item)=>item.name).join(", ")}</td>
+            <td className="px-6 py-4">product reg date</td>
             <td className="px-6 py-4">
               <button
                 onClick={() => handleAction(index)}
@@ -128,13 +86,13 @@ const User = () => {
                 <div className="absolute z-10 right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                   {/* Dropdown content */}
                   <div className="px-4 py-3 text-sm text-gray-900">
-                    <div className="font-medium">Pro User</div>
-                    <div className="truncate">{user.email}</div>
+                    <div className="font-medium">Name: {product.name}</div>
+                    <div className="truncate font-medium">Product Id: {product.id}</div>
                   </div>
                   <ul className="py-2 text-sm text-gray-700">
                     <li>
                       <button
-                        onClick={() => handleUpdateModal(user.id)}
+                        // onClick={() => handleUpdateModal(user.id)}
                         type="button"
                         className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
                       >
@@ -144,7 +102,7 @@ const User = () => {
                     </li>
                     <li>
                       <button
-                        onClick={() => handleDeleteUser(user.id)}
+                        onClick={() => handleDeleteProduct(product.id)}
                         type="button"
                         className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
                       >
@@ -159,19 +117,19 @@ const User = () => {
         </tbody>
       ))
     : null;
-
+    
   return (
     <>
     <div className="p-4 h-[550px] overflow-y-scroll">
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
         <div>
           <button
-            onClick={handleModalOpen}
+            // onClick={handleModalOpen}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             type="button"
           >
             <FaUserPlus />
-            <span className="ml-2">Add New User</span>
+            <span className="ml-2">Add New Product</span>
           </button>
         </div>
 
@@ -205,7 +163,7 @@ const User = () => {
         </div>
       </div>
 
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div
           className="fixed z-10 inset-0 overflow-y-auto"
           aria-labelledby="modal-title"
@@ -224,37 +182,10 @@ const User = () => {
               &#8203;
             </span>
 
-            <UserRegistration
+            {/* <UserRegistration
               handleModalOpen={handleModalOpen}
               errors={registrationError}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* {isUpdateModalOpen &&  (
-        <div
-          className="fixed z-10 inset-0 overflow-y-auto"
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-              aria-hidden="true"
-            ></div>
-            <span
-              className="hidden sm:inline-block sm:align-middle sm:h-screen"
-              aria-hidden="true"
-            >
-              &#8203;
-            </span>
-            <UserUpdate
-              handleModalOpen={handleUpdateModal}
-              isUpdateModalOpen={isUpdateModalOpen}
-              userId={userId}
-            />
+            /> 
           </div>
         </div>
       )} */}
@@ -275,23 +206,23 @@ const User = () => {
               </div>
             </th>
             <th scope="col" className="px-6 py-3">
-              Full name
+              Product name
             </th>
             <th scope="col" className="px-6 py-3">
-              Phone
+              Price
             </th>
             <th scope="col" className="px-6 py-3">
-              Address
+                Attributes
             </th>
             <th scope="col" className="px-6 py-3">
-              Joined date
+                Created At
             </th>
             <th scope="col" className="px-6 py-3">
               Action
             </th>
           </tr>
         </thead>
-        {userListContent}
+        {productListContent}
       </table>
       
     </div>
@@ -383,7 +314,7 @@ const User = () => {
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default User;
+export default Product

@@ -88,7 +88,7 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
   return (
     <form
       onSubmit={handleSubmit}
-      className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+      className="w-1/2 inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-headline"

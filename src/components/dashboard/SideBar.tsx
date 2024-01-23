@@ -1,7 +1,8 @@
 import { NavLink } from "react-router-dom";
-import { FaCartArrowDown, FaUsers } from "react-icons/fa";
+import { FaCartArrowDown, FaProductHunt, FaUsers } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
 import { MdSettings } from "react-icons/md";
+import { IoIosPricetags } from "react-icons/io";
 
 export const SideBar = ({
   handleButtonClick,
@@ -50,6 +51,26 @@ export const SideBar = ({
         >
           <FaUsers />
           <span> Customer</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => handleButtonClick("product")}
+          className={`${
+            active === "product" ? "bg-white text-black" : ""
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
+        >
+          <FaProductHunt />
+          <span> Product</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => handleButtonClick("pricing")}
+          className={`${
+            active === "pricing" ? "bg-white text-black" : ""
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
+        >
+          <IoIosPricetags />
+          <span> Pricing</span>
         </button>
         <button
           type="button"
