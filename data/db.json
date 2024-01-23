@@ -6,7 +6,7 @@
       "price": 10,
       "description": "A simple T-Shirt",
       "image":
-        "https://images.unsplash.com/photo-1584308967182-0c1b0b3f0f1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dCUyMHRzaGlydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+       "https://unblast.com/wp-content/uploads/2018/09/T-shirt-Mockup.jpg",
       "attributes": [
         {
           "name": "fabric",
@@ -52,7 +52,7 @@
       "price": 10,
       "description": "A simple Banner",
       "image":
-        "https://images.unsplash.com/photo-1584308967182-0c1b0b3f0f1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dCUyMHRzaGlydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+       "https://unblast.com/wp-content/uploads/2018/10/Rollup-Mockup.jpg",
       "attributes": [
         {
           "name": "material",
@@ -94,7 +94,7 @@
       "price": 10,
       "description": "A simple Sticker",
       "image":
-        "https://images.unsplash.com/photo-1584308967182-0c1b0b3f0f1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dCUyMHRzaGlydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+       "https://unblast.com/wp-content/uploads/2020/10/Red-Grey-Watercolor-Floral-Clipart-1.jpg",
       "attributes": [
         {
           "name": "material",

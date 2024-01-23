@@ -13,6 +13,8 @@ const Product = () => {
     const { user } = useSelector((state: RootState) => state.auth);
     const [showPopover, setShowPopover] = useState(null);
     const dispatch = useDispatch();
+    console.log(products);
+    
 
    useEffect(() => {
     dispatch(getProducts());
@@ -156,9 +158,9 @@ console.log(products);
           </div>
           <input
             type="text"
-            id="table-search-users"
+            id="table-search-products"
             className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search for users"
+            placeholder="Search for products"
           />
         </div>
       </div>

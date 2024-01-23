@@ -3,6 +3,7 @@ import { FaCartArrowDown, FaProductHunt, FaUsers } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
 import { MdSettings } from "react-icons/md";
 import { IoIosPricetags } from "react-icons/io";
+import dominoLogo from "../../assets/images/domino-logo.jpg";
 
 export const SideBar = ({
   handleButtonClick,
@@ -14,9 +15,10 @@ export const SideBar = ({
   return (
     <aside className="flex h-screen flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark">
       <div className="py-4 flex items-center justify-center mb-10">
-        <NavLink to="/" className="flex text-3xl items-center">
-          <span className="font-bold text-white">D</span>
-          <span className="text-[#f01d52]">omino</span>{" "}
+        <NavLink to="/" className="flex text-3xl items-center justify-center p-4">
+          <img src={dominoLogo} alt="logo image" className="w-10/12" />
+          {/* <span className="font-bold text-white">D</span>
+          <span className="text-[#f01d52]">omino</span>{" "} */}
         </NavLink>
       </div>
 
