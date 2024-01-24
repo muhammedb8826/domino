@@ -1,40 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VscCollapseAll } from "react-icons/vsc";
-import { variableProducts } from "../../utils/data";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts } from "../../redux/features/user/productSlice";
+import { v4 as uuidv4 } from 'uuid';
 
 interface VariableProductProps {
   active: string;
 }
 
-interface AttributeValues {
-  quantity: string[]; // Add explicit type for quantity property
-  price: string[];
-  note: string[];
-}
+const initialFormState = {
+  id: uuidv4(),
+  quantity: '',
+  description: '',
+  price: '',
+  attributes: []
+};
 
-const VariableProduct = ({ active }: VariableProductProps) => {
-  const product = variableProducts.find((item) => item.name === active);
+const VariableProduct = ({setProductValues, active }: VariableProductProps) => {
+  const { products } = useSelector((state) => state.product);
+  const product = products.find((product) => product.name === active);
 
-  const [attributeValues, setAttributeValues] = useState<AttributeValues>({
-    quantity: [""],
-    price: [""],
-    height: [""],
-    width: [""],
-    note: [""],
-  });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+
 
   const [optionsData, setOptionsData] = useState([]);
   const [disabledOptions, setDisabledOptions] = useState<string[]>([]);
+  const [formValues, setFormValues] = useState([initialFormState]);
+
+  useEffect(() => {
+    // Reset form values, including attributes array
+    setFormValues([{
+      ...initialFormState,
+      attributes: []
+    }]);
+    setOptionsData([]);
+    setDisabledOptions([]);
+  }, [active]);
 
   const handleAddVariableProduct = () => {
-    setAttributeValues((prevState) => ({
-      quantity: [...prevState.quantity, ""],
-      price: [...prevState.price, ""],
-      height: [...prevState.height, ""],
-      width: [...prevState.width, ""],
-      note: [...prevState.note, ""],
-    }));
+    setFormValues([...formValues, initialFormState]);
   };
+
+  const getTotalPrice = () => {
+    return formValues.reduce((acc, curr) => acc + Number(curr.price), 0);
+  };
+  
+  const getTotalQuantity = () => {
+    return formValues.reduce((acc, curr) => acc + Number(curr.quantity), 0);
+  };
+
 
   const handleSelectedAttribute = (
     e: React.ChangeEvent<HTMLSelectElement>,
@@ -45,41 +62,57 @@ const VariableProduct = ({ active }: VariableProductProps) => {
     const selectedIndex =
       e.target.options[e.target.selectedIndex].getAttribute("data-index");
     const filteredData = product?.attributes[selectedIndex];
-    setOptionsData([...optionsData, filteredData]);
+    setOptionsData([filteredData, ...optionsData]);
 
-    // console.log(selectedIndex+"selected");
-    console.log(index);
+    setFormValues((prevFormValues) => {
+      const updatedFormValues = [...prevFormValues];
+      const selectedAttribute = updatedFormValues[index].attributes.find(
+        (attr) => attr.name === filteredData.name
+      );
 
-    // console.log(optionsData);
-  };
+      if (selectedAttribute) {
+        // Update existing attribute
+        selectedAttribute.options = filteredData.options;
+      } else {
+        // Add a new attribute
+        updatedFormValues[index].attributes.push({
+          name: filteredData.name,
+          options: filteredData.options,
+        });
+      }
 
-  const handleDeleteVariableProducAttribute = (index: number) => {
-    setAttributeValues((prevState) => {
-      const updatedValues = { ...prevState };
-      updatedValues.quantity.splice(index, 1);
-      updatedValues.price.splice(index, 1);
-      updatedValues.note.splice(index, 1);
-      return updatedValues;
+      return updatedFormValues;
     });
   };
 
-  const handleCollapse = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const element = e.currentTarget
-      .closest(".attribute-section")
-      ?.querySelector(".attribute-field-section");
-    if (element) {
-      element.classList.toggle("hidden");
+  console.log(formValues);
+  
+
+  const handleDeleteProducAttribute = (index: number) => {
+    setFormValues((prevFormValues) => {
+      const updatedFormValues = [...prevFormValues];
+      updatedFormValues.splice(index, 1);
+      return updatedFormValues;
+    });
+  };
+
+  const handleCollapse = (e, index) => {
+    const elements = document.getElementsByClassName("attribute-field-section");
+
+    // Check if the index is within the valid range
+    if (index >= 0 && index < elements.length) {
+      elements[index].classList.toggle("hidden");
     }
   };
 
   const handleShow = (index: number) => {
-    const element = document.getElementsByClassName("attribute-field-section")[
-      index
-    ];
-    element.classList.remove("hidden");
-    element.classList.toggle("block");
+    const element = document.getElementsByClassName("attribute-field-section");
+    for (let i = 0; i < element.length; i++) {
+      if (i === index) {
+        element[i].classList.remove("hidden");
+        element[i].classList.toggle("block");
+      }
+    }
   };
 
   return (
@@ -101,25 +134,29 @@ const VariableProduct = ({ active }: VariableProductProps) => {
 
       {/* variable product section */}
 
-      {attributeValues.quantity.map((_, index) => (
+      {formValues.map((formValue, index) => (
         <div className="attribute-section" key={index}>
           <div
             onClick={() => handleShow(index)}
             className="hover:bg-gray-200 flex justify-between items-center px-4 py-2"
           >
-            <p className="font-bold text-gray-400">
+            <p
+              className={`font-bold ${
+                product ? "text-black" : "text-gray-400"
+              }`}
+            >
               {product?.name} Attribute {index + 1}
             </p>
             <div className="flex gap-4">
               <button
                 type="button"
                 className="text-red-600"
-                onClick={() => handleDeleteVariableProducAttribute(index)}
+                onClick={() => handleDeleteProducAttribute(index)}
               >
                 Remove
               </button>
               <button
-                onClick={(e) => handleCollapse(e)}
+                onClick={(e) => handleCollapse(e,index)}
                 title="collapse"
                 type="button"
                 className="text-black rounded p-1.5 border border-black"
@@ -144,6 +181,13 @@ const VariableProduct = ({ active }: VariableProductProps) => {
                     name="quantity"
                     type="number"
                     id="quantity"
+                    onChange={(e) => setFormValues((prevFormValues) => {
+                      const updatedFormValues = [...prevFormValues];
+                      updatedFormValues[index] = { ...updatedFormValues[index], quantity: e.target.value };
+                      return updatedFormValues;
+                    })}
+                    value={formValue.quantity}
+                    required
                     className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
                   />
                 </div>
@@ -160,6 +204,13 @@ const VariableProduct = ({ active }: VariableProductProps) => {
                     name="price"
                     type="number"
                     id="price"
+                    onChange={(e) => setFormValues((prevFormValues) => {
+                      const updatedFormValues = [...prevFormValues];
+                      updatedFormValues[index] = { ...updatedFormValues[index], price: e.target.value };
+                      return updatedFormValues;
+                    })}
+                    value={formValue.price}
+                    required
                     className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
                   />
                 </div>
@@ -167,17 +218,24 @@ const VariableProduct = ({ active }: VariableProductProps) => {
 
               <div>
                 <label
-                  htmlFor="note"
+                  htmlFor="description"
                   className="block mb-2 text-sm font-medium text-gray-900 border-b border-black pb-2"
                 >
-                  Note:
+                  Description:
                 </label>
-                <textarea
-                  name="note"
+                <textarea                  
+                  name="description"
                   id="note"
                   rows={4}
+                  onChange={(e) => setFormValues((prevFormValues) => {
+                    const updatedFormValues = [...prevFormValues];
+                    updatedFormValues[index] = { ...updatedFormValues[index], description: e.target.value };
+                    return updatedFormValues;
+                  })}
+                  value={formValue.description}
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                   placeholder="Enter options to choose from e.g 2 or 3 "
+                  required
                 ></textarea>
               </div>
             </div>
@@ -187,6 +245,7 @@ const VariableProduct = ({ active }: VariableProductProps) => {
                 onChange={(e) => handleSelectedAttribute(e, index)}
                 title="attributes"
                 name={`attributes-${index}`}
+                required
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-4"
               >
                 <option value="">Choose attributes</option>
@@ -215,41 +274,212 @@ const VariableProduct = ({ active }: VariableProductProps) => {
                         Choose your favorite {item.name}
                       </legend>
 
-                      {item.name==="width" &&
-                     <div>
-                     <label
-                       htmlFor="width"
-                       className="mt-2 block mb-2 text-sm font-medium text-gray-900 "
-                     >
-                       Width
-                     </label>
-       
-                     <input
-                       name="width"
-                       type="number"
-                       id="width"
-                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
-                       placeholder="e.g. 10 or 50 in cm..."
-                       required
-                     />
-                     <label
-                       htmlFor="height"
-                       className="block mb-2 text-sm font-medium text-gray-900 "
-                     >
-                       Height
-                     </label>
-       
-                     <input
-                       name="height"
-                       type="number"
-                       id="height"
-                       className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                       placeholder="e.g. 10 or 50 in cm..."
-                       required
-                     />
-                   </div>  
-                    }
+                      {item.name === "dimensions" && (
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label
+                              htmlFor="width"
+                              className="mt-2 block mb-2 text-sm font-medium text-gray-900 "
+                            >
+                              Width
+                            </label>
 
+                            <input
+                              name="width"
+                              type="number"
+                              id="width"
+                              onChange={(e) => setFormValues((prevFormValues) => {
+                                const updatedFormValues = [...prevFormValues];
+                                const attributeIndex = updatedFormValues[index].attributes.findIndex(attr => attr.name === e.target.name);
+                              
+                                if (attributeIndex !== -1) {
+                                  // Update existing attribute
+                                  updatedFormValues[index].attributes[attributeIndex].options = e.target.value.split(',').map(option => option.trim());
+                                } else {
+                                  // Add a new attribute
+                                  updatedFormValues[index].attributes.push({
+                                    name: e.target.name,
+                                    options: e.target.value.split(',').map(option => option.trim())
+                                  });
+                                }
+                              
+                                return updatedFormValues;
+                              })}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 "
+                              placeholder="e.g. 10 or 50 in cm..."
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="height"
+                              className="block mb-2 text-sm font-medium text-gray-900 "
+                            >
+                              Height
+                            </label>
+
+                            <input
+                              name="height"
+                              type="number"
+                              id="height"
+                              onChange={(e) => setFormValues((prevFormValues) => {
+                                const updatedFormValues = [...prevFormValues];
+                                const attributeIndex = updatedFormValues[index].attributes.findIndex(attr => attr.name === e.target.name);
+                              
+                                if (attributeIndex !== -1) {
+                                  // Update existing attribute
+                                  updatedFormValues[index].attributes[attributeIndex].options = e.target.value.split(',').map(option => option.trim());
+                                } else {
+                                  // Add a new attribute
+                                  updatedFormValues[index].attributes.push({
+                                    name: e.target.name,
+                                    options: e.target.value.split(',').map(option => option.trim())
+                                  });
+                                }
+                              
+                                return updatedFormValues;
+                              })}
+                              className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                              placeholder="e.g. 10 or 50 in cm..."
+                              required
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {item.name === "placement" && (
+                        <div>
+                          <div className="flex items-center mb-4">
+                            <input
+                              id="front"
+                              type="checkbox"
+                              name="front"
+                              onChange={(e) => setFormValues((prevFormValues) => {
+                                const updatedFormValues = [...prevFormValues];
+                                const attributeIndex = updatedFormValues[index].attributes.findIndex(attr => attr.name === e.target.name);
+                              
+                                if (attributeIndex !== -1) {
+                                  // Update existing attribute
+                                  updatedFormValues[index].attributes[attributeIndex].options = e.target.value.split(',').map(option => option.trim());
+                                } else {
+                                  // Add a new attribute
+                                  updatedFormValues[index].attributes.push({
+                                    name: e.target.name,
+                                    options: e.target.value.split(',').map(option => option.trim())
+                                  });
+                                }
+                              
+                                return updatedFormValues;
+                              })}
+                              required
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 "
+                            />
+                            <label
+                              htmlFor="front"
+                              className="ms-2 text-sm font-medium text-gray-900"
+                            >
+                              Front
+                            </label>
+                          </div>
+                          <div className="flex items-center mb-4">
+                            <input
+                              id="back"
+                              type="checkbox"
+                              name="back"
+                              onChange={(e) => setFormValues((prevFormValues) => {
+                                const updatedFormValues = [...prevFormValues];
+                                const attributeIndex = updatedFormValues[index].attributes.findIndex(attr => attr.name === e.target.name);
+                              
+                                if (attributeIndex !== -1) {
+                                  // Update existing attribute
+                                  updatedFormValues[index].attributes[attributeIndex].options = e.target.value.split(',').map(option => option.trim());
+                                } else {
+                                  // Add a new attribute
+                                  updatedFormValues[index].attributes.push({
+                                    name: e.target.name,
+                                    options: e.target.value.split(',').map(option => option.trim())
+                                  });
+                                }
+                              
+                                return updatedFormValues;
+                              })}
+                              required
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor="back"
+                              className="ms-2 text-sm font-medium text-gray-900"
+                            >
+                              Back
+                            </label>
+                          </div>
+                          <div className="flex items-center mb-4">
+                            <input
+                           
+                              id="left-sleeve"
+                              type="checkbox"
+                              name="left-sleeve"
+                              onChange={(e) => setFormValues((prevFormValues) => {
+                                const updatedFormValues = [...prevFormValues];
+                                const attributeIndex = updatedFormValues[index].attributes.findIndex(attr => attr.name === e.target.name);
+                              
+                                if (attributeIndex !== -1) {
+                                  // Update existing attribute
+                                  updatedFormValues[index].attributes[attributeIndex].options = e.target.value.split(',').map(option => option.trim());
+                                } else {
+                                  // Add a new attribute
+                                  updatedFormValues[index].attributes.push({
+                                    name: e.target.name,
+                                    options: e.target.value.split(',').map(option => option.trim())
+                                  });
+                                }
+                              
+                                return updatedFormValues;
+                              })}
+                              required
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor="left-sleeve"
+                              className="ms-2 text-sm font-medium text-gray-900"
+                            >
+                              Left Sleeve
+                            </label>
+                          </div>
+                          <div className="flex items-center mb-4">
+                            <input
+                              id="right-sleeve"
+                              type="checkbox"
+                              name="right-sleeve"
+                              onChange={(e) => setFormValues((prevFormValues) => {
+                                const updatedFormValues = [...prevFormValues];
+                                const attributeIndex = updatedFormValues[index].attributes.findIndex(attr => attr.name === e.target.name);
+                              
+                                if (attributeIndex !== -1) {
+                                  // Update existing attribute
+                                  updatedFormValues[index].attributes[attributeIndex].options = e.target.value.split(',').map(option => option.trim());
+                                } else {
+                                  // Add a new attribute
+                                  updatedFormValues[index].attributes.push({
+                                    name: e.target.name,
+                                    options: e.target.value.split(',').map(option => option.trim())
+                                  });
+                                }
+                              
+                                return updatedFormValues;
+                              })}
+                              required
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor="right-sleeve"
+                              className="ms-2 text-sm font-medium text-gray-900"
+                            >
+                              Right Sleeve
+                            </label>
+                          </div>
+                        </div>
+                      )}
 
                       {item.options.map((option, optionIndex) => (
                         <div
@@ -259,8 +489,26 @@ const VariableProduct = ({ active }: VariableProductProps) => {
                           <input
                             id={`radio-${optionIndex}`}
                             type="radio"
-                            value="{optionItem}"
-                            name={`default-radio-${optionIndex}`}
+                            name={item.name}
+                            value={option}
+                            onChange={(e) => setFormValues((prevFormValues) => {
+                              const updatedFormValues = [...prevFormValues];
+                              const attributeIndex = updatedFormValues[index].attributes.findIndex(attr => attr.name === e.target.name);
+                            
+                              if (attributeIndex !== -1) {
+                                // Update existing attribute
+                                updatedFormValues[index].attributes[attributeIndex].options = e.target.value.split(',').map(option => option.trim());
+                              } else {
+                                // Add a new attribute
+                                updatedFormValues[index].attributes.push({
+                                  name: e.target.name,
+                                  options: e.target.value.split(',').map(option => option.trim())
+                                });
+                              }
+                            
+                              return updatedFormValues;
+                            })}
+                            required
                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                           />
                           <label
@@ -281,12 +529,15 @@ const VariableProduct = ({ active }: VariableProductProps) => {
       ))}
 
       <hr />
-
+       <div className="flex gap-4">
+        <p>Total quantity: {getTotalQuantity()}</p>
+        <p>Total price: {getTotalPrice()}</p>
+        </div>
       <button
+      onClick={() => setProductValues(formValues)}
         type="button"
-        className="p-y m-4 text-white bg-blue-400 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-        disabled
-      >
+        className="p-y m-4 text-white bg-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        >
         Save attributes
       </button>
     </>

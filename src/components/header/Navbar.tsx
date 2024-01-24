@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { CgClose, CgMenuRight } from "react-icons/cg";
 import { useState } from "react";
-import dominoLogo from "../../assets/images/domino-logo.jpg";
+// import dominoLogo from "../../assets/images/domino-logo.jpg";
 
 const Navbar = () => {
   const [toggle, setToggle] = useState(false);
@@ -13,8 +13,8 @@ const Navbar = () => {
       <nav className="h-16 flex justify-between items-center relative px-4 pb-3">
         <div className="flex items-center justify-center">
           <NavLink to="/" className="flex text-3xl items-center">
-          <img src={dominoLogo} alt="logo image" className="h-10" />
-            {/* <span className="font-bold">D</span><span className="text-[#f01d52]">omino</span>  */}
+          {/* <img src={dominoLogo} alt="logo image" className="h-10" /> */}
+            <span className="font-bold">D</span><span className="text-[#f01d52]">omino</span> 
             </NavLink>
         </div>
         <button

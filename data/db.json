@@ -5,36 +5,55 @@
       "name": "T-Shirt",
       "price": 10,
       "description": "A simple T-Shirt",
-      "image":
-       "https://unblast.com/wp-content/uploads/2018/09/T-shirt-Mockup.jpg",
+      "image": "https://unblast.com/wp-content/uploads/2018/09/T-shirt-Mockup.jpg",
       "attributes": [
         {
           "name": "fabric",
-          "options": ["cotton", "polyester", "wool", "rayon", "linen"]
+          "options": [
+            "cotton",
+            "polyester",
+            "wool",
+            "rayon",
+            "linen"
+          ]
         },
         {
           "name": "size",
-          "options": ["small", "medium", "large"]
+          "options": [
+            "small",
+            "medium",
+            "large"
+          ]
         },
         {
           "name": "color",
-          "options": ["red", "blue", "green", "yellow", "white", "black"]
+          "options": [
+            "red",
+            "blue",
+            "green",
+            "yellow",
+            "white",
+            "black"
+          ]
         },
         {
           "name": "style",
-          "options": ["v-neck", "crew-neck"]
+          "options": [
+            "v-neck",
+            "crew-neck"
+          ]
         },
         {
           "name": "placement",
-          "options": ["front", "back", "left sleeve", "right sleeve"]
-        },
-        {
-          "name": "side",
-          "options": ["single", "double"]
+          "options": []
         },
         {
           "name": "purpose",
-          "options": ["business", "personal", "gift"]
+          "options": [
+            "business",
+            "personal",
+            "gift"
+          ]
         },
         {
           "name": "description",
@@ -45,34 +64,41 @@
         }
       ]
     },
-  
     {
       "id": 2,
       "name": "Banner",
       "price": 10,
       "description": "A simple Banner",
-      "image":
-       "https://unblast.com/wp-content/uploads/2018/10/Rollup-Mockup.jpg",
+      "image": "https://unblast.com/wp-content/uploads/2018/10/Rollup-Mockup.jpg",
       "attributes": [
         {
           "name": "material",
-          "options": ["vinyl", "fabric", "mesh"]
+          "options": [
+            "vinyl",
+            "fabric",
+            "mesh"
+          ]
         },
         {
-          "name": "height",
-          "options": [""]
-        },
-        {
-          "name": "width",
-          "options": [""]
+          "name": "dimensions",
+          "options": []
         },
         {
           "name": "unit",
-          "options": ["ft", "in", "cm", "m"]
+          "options": [
+            "ft",
+            "in",
+            "cm",
+            "m"
+          ]
         },
         {
           "name": "purpose",
-          "options": ["business", "personal", "gift"]
+          "options": [
+            "business",
+            "personal",
+            "gift"
+          ]
         },
         {
           "name": "description",
@@ -83,30 +109,44 @@
         },
         {
           "name": "side",
-          "options": ["single", "double"]
+          "options": [
+            "single",
+            "double"
+          ]
         }
       ]
     },
-  
     {
       "id": 3,
       "name": "Sticker",
       "price": 10,
       "description": "A simple Sticker",
-      "image":
-       "https://unblast.com/wp-content/uploads/2020/10/Red-Grey-Watercolor-Floral-Clipart-1.jpg",
+      "image": "https://unblast.com/wp-content/uploads/2020/10/Red-Grey-Watercolor-Floral-Clipart-1.jpg",
       "attributes": [
         {
           "name": "material",
-          "options": ["vinyl", "fabric", "mesh"]
+          "options": [
+            "vinyl",
+            "fabric",
+            "mesh"
+          ]
         },
         {
           "name": "unit",
-          "options": ["ft", "in", "cm", "m"]
+          "options": [
+            "ft",
+            "in",
+            "cm",
+            "m"
+          ]
         },
         {
           "name": "purpose",
-          "options": ["business", "personal", "gift"]
+          "options": [
+            "business",
+            "personal",
+            "gift"
+          ]
         },
         {
           "name": "description",
@@ -117,9 +157,13 @@
         },
         {
           "name": "side",
-          "options": ["single", "double"]
+          "options": [
+            "single",
+            "double"
+          ]
         }
       ]
     }
-  ]
+  ],
+  "orders": []
 }
