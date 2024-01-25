@@ -18,7 +18,7 @@ const Product = () => {
 
    useEffect(() => {
     dispatch(getProducts());
-   }, [dispatch]);
+   }, [dispatch]); 
 
    const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));

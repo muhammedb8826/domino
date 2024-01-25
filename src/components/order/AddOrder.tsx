@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import VariableProduct from "./VariableProduct";
 import { GoBack } from "../common/GoBack";
 import { getProducts } from "../../redux/features/user/productSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch} from "react-redux";
+
 import { createOrder } from "../../redux/features/user/orderSlice";
-import ErroPage from "../common/ErroPage";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 
 const AddOrder = () => {
-  const { products } = useSelector((state: RootState) => state.product);
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getProducts()).then((res) => 
@@ -20,7 +21,6 @@ const AddOrder = () => {
 
   const [active, setActive] = useState("");
   const [product, setProduct] = useState([]);
-  const [activeAddProductType, setAddActiveProductType] = useState(false);
   const [variableProduct, setVariableProduct] = useState<
     string[]
   >([]);
@@ -32,25 +32,12 @@ const AddOrder = () => {
     phoneNumber: "",
     order: [],
     productName: "",
+    status: "Received",
   });
-
-  const inputRef = useRef<HTMLInputElement>(null);
-  const getValue = () => {
-    if (inputRef.current) {
-      // Accessing the input value directly from the DOM element
-      const value = inputRef.current.value;
-      setAddActiveProductType(false);
-      setProduct([...productType, { id: Date.now(), name: value }]);
-    }
-  };
 
   const handleProduct = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setActive(e.target.value);
     setVariableProduct([...variableProduct, e.target.value]);
-  };
-
-  const handleActiveAddProductType = () => {
-    setAddActiveProductType(true);
   };
 
   const handleDeleteType = (element: string) => {
@@ -62,13 +49,33 @@ const AddOrder = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(productValues.length === 0) return alert("Please select a product");
-    else{
-      const newOrderData = {...orderValues, order: productValues, productName: active}
-      dispatch(createOrder(newOrderData));
-      console.log(newOrderData);
-    }
-    
+    if(productValues.length === 0) return alert("Please save a attributes of product");
+    const createdAt = new Date();
+    createdAt.setHours(createdAt.getHours() + 1);
+
+      const newOrderData = {...orderValues, order: productValues, productName: active, createdAt, status: "Received"}
+      dispatch(createOrder(newOrderData)).then((res) => {
+        if(res.payload) {
+          const message = "Order created successfully"
+          toast(message)
+          resetForm();
+          navigate("/dashboard");
+        }
+      })
+  };
+
+  const resetForm = () => {
+    setOrderValues({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phoneNumber: "",
+      order: [],
+      productName: "",
+    });
+    setActive("");
+    setVariableProduct([]);
+    setProductValues([]);
   };
 
   return (
@@ -179,42 +186,8 @@ const AddOrder = () => {
 
           <div className="md:flex">
             <div className="attributes w-full md:w-1/4 bg-slate-50 flex flex-col text-sky-500 border-r">
-              <div className="max-lg:p-4 lg:flex items-end my-4 relative">
-                <button
-                  onClick={handleActiveAddProductType}
-                  type="button"
-                  className="border-2 text-sky-500 border-sky-500 lg:mx-4 p-1.5 px-4 rounded"
-                >
-                  Add new
-                </button>
-                <div className="flex flex-col flex-1 pe-4">
-                  {activeAddProductType && (
-                    <div className="flex justify-center p-4 flex-col gap-4 absolute left-0 h-56 top-0 bg-white rounded shadow-lg w-full">
-                      <input
-                        type="text"
-                        ref={inputRef}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 "
-                        placeholder="e.g. Banner or Poster"
-                        required
-                      />
-                      <hr />
-                      <div className="flex justify-between">
-                        <button
-                          type="button"
-                          className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2"
-                        >
-                          Add new type
-                        </button>
-                        <button
-                          onClick={() => setAddActiveProductType(false)}
-                          type="button"
-                          className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
+              <div className="relative">
+                <div className="flex flex-col flex-1 p-4">
                   <label
                     htmlFor="product"
                     className="block mb-2 text-sm font-medium text-gray-900 "
@@ -226,7 +199,7 @@ const AddOrder = () => {
                     onChange={handleProduct}
                     id="product"
                     required
-                    className="max-md:1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    className="max-md:1/4 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   >
                     <option value="">Add existing</option>
                     {product.map((item) => (

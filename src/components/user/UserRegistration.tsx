@@ -88,12 +88,12 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-1/2 inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+      className="inline-block overflow-hidden text-center align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full mx-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-headline"
     >
-      <div className="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+      <div className="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4 mx-auto">
         <div className="sm:flex sm:items-start">
           <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <div className="flex justify-between items-center">
@@ -416,7 +416,7 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
           </div>
         </div>
       </div>
-      <div className="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+      <div className="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse mx-auto">
         <button
           type="submit"
           className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-700 border border-transparent rounded-md shadow-sm hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:ml-3 sm:w-auto sm:text-sm"

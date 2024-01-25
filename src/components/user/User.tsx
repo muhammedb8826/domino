@@ -232,33 +232,6 @@ const User = () => {
         </div>
       )}
 
-      {/* {isUpdateModalOpen &&  (
-        <div
-          className="fixed z-10 inset-0 overflow-y-auto"
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-              aria-hidden="true"
-            ></div>
-            <span
-              className="hidden sm:inline-block sm:align-middle sm:h-screen"
-              aria-hidden="true"
-            >
-              &#8203;
-            </span>
-            <UserUpdate
-              handleModalOpen={handleUpdateModal}
-              isUpdateModalOpen={isUpdateModalOpen}
-              userId={userId}
-            />
-          </div>
-        </div>
-      )} */}
-
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>

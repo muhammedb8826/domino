@@ -3,8 +3,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { orderURL } from "../../api/API";
 
+console.log(orderURL);
+
+
 interface OrderState {
   orders: [];
+  singleOrder:{},
   isLoading: boolean;
   error: string | null;
   message: string | null;
@@ -13,11 +17,25 @@ interface OrderState {
 
 const initialState: OrderState = {
   orders: [],
+  singleOrder:{},
   isLoading: false,
   error: null,
   errors: [],
   message: null,
 };
+
+export const getOrdersById = createAsyncThunk(
+  "order/getOrdersById",
+  async (orderId) => {
+    try {
+      const response = await axios.get(`${orderURL}/${orderId}`);     
+      return response.data;  // Return the response.data
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw error;
+    }
+  }
+);
 
 export const getOrders = createAsyncThunk("order/getOrders", async () => {
   try {
@@ -72,7 +90,7 @@ const orderSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getOrders.pending, (state, action) => {
+    builder.addCase(getOrders.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(getOrders.fulfilled, (state, action) => {
@@ -83,18 +101,18 @@ const orderSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message;
     });
-    builder.addCase(createOrder.pending, (state, action) => {
+    builder.addCase(createOrder.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(createOrder.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.orders = [...state.orders, action.payload];
+      state.orders = [action.payload,...state.orders];
     });
     builder.addCase(createOrder.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
-    builder.addCase(updateOrder.pending, (state, action) => {
+    builder.addCase(updateOrder.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(updateOrder.fulfilled, (state, action) => {
@@ -107,7 +125,7 @@ const orderSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message;
     });
-    builder.addCase(deleteOrder.pending, (state, action) => {
+    builder.addCase(deleteOrder.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(deleteOrder.fulfilled, (state, action) => {
@@ -120,5 +138,18 @@ const orderSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message;
     });
+    builder.addCase(getOrdersById.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getOrdersById.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.singleOrder = action.payload;
+    });
+    builder.addCase(getOrdersById.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
   },
 });
+
+export default orderSlice.reducer;
