@@ -1,123 +1,58 @@
-export const variableProducts = [
-  {
-    id: 1,
-    name: "T-Shirt",
-    price: 10,
-    description: "A simple T-Shirt",
-    image:
-      "https://images.unsplash.com/photo-1584308967182-0c1b0b3f0f1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dCUyMHRzaGlydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    attributes: [
+export const printingData = [
       {
-        name: "fabric",
-        options: ["cotton", "polyester", "wool", "rayon", "linen"],
-      },
-      {
-        name: "size",
-        options: ["small", "medium", "large"],
-      },
-      {
-        name: "color",
-        options: ["red", "blue", "green", "yellow", "white", "black"],
-      },
-      {
-        name: "style",
-        options: ["v-neck", "crew-neck"],
-      },
-      {
-        name: "placement",
-        options: ["front", "back", "left sleeve", "right sleeve"],
-      },
-      {
-        name: "side",
-        options: ["single", "double"],
-      },
-      {
-        name: "purpose",
-        options: ["business", "personal", "gift"],
-      },
-      {
-        name: "description",
-        options: [
-          "I want a picture of a cat on the front",
-          "I want a picture of a dog on the back",
+        type: "ULTRA VIOLET (UV)",
+        materials: [
+          {name: "Material1", "units": [{name: "cm", "value": 10}, {name: "m", "value": 1}]},
+          {name: "Material2", "units": [{name: "cm", "value": 15}, {name: "m", "value": 1.5}]}
         ],
-      },
-    ],
-  },
-
-  {
-    id: 2,
-    name: "Banner",
-    price: 10,
-    description: "A simple Banner",
-    image:
-      "https://images.unsplash.com/photo-1584308967182-0c1b0b3f0f1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dCUyMHRzaGlydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    attributes: [
-      {
-        name: "material",
-        options: ["vinyl", "fabric", "mesh"],
+        services: ["Print Only", "Print and Material", "Film"]
       },
       {
-        name: "height",
-        options: [""],
-      },
-      {
-        name: "width",
-        options: [""],
-      },
-      {
-        name: "unit",
-        options: ["ft", "in", "cm", "m"],
-      },
-      {
-        name: "purpose",
-        options: ["business", "personal", "gift"],
-      },
-      {
-        name: "description",
-        options: [
-          "I want a picture of a cat on the front",
-          "I want a picture of a dog on the back",
+        type: "BANNER",
+        materials: [
+          {name: "Mesh", "units": [{name: "cm", "value": 5}, {name: "m", "value": 0.5}]},
+          {name: "Vinyl", "units": [{name: "cm", "value": 8}, {name: "m", "value": 0.8}]}
         ],
+        services: ["Print Only", "Print and Material", "Film"]
       },
       {
-        name: "side",
-        options: ["single", "double"],
-      },
-    ],
-  },
-
-  {
-    id: 3,
-    name: "Sticker",
-    price: 10,
-    description: "A simple Sticker",
-    image:
-      "https://images.unsplash.com/photo-1584308967182-0c1b0b3f0f1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dCUyMHRzaGlydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    attributes: [
-      {
-        name: "material",
-        options: ["vinyl", "fabric", "mesh"],
-      },
-      {
-        name: "unit",
-        options: ["ft", "in", "cm", "m"],
-      },
-      {
-        name: "purpose",
-        options: ["business", "personal", "gift"],
-      },
-      {
-        name: "description",
-        options: [
-          "I want a picture of a cat on the front",
-          "I want a picture of a dog on the back",
+        type: "DTF",
+        materials: [
+          {name: "Material3", "units": [{name: "cm", "value": 12}, {name: "m", "value": 1.2}]},
+          {name: "Material4", "units": [{name: "cm", "value": 18}, {name: "m", "value": 1.8}]}
         ],
+        services: ["Print Only", "Print and Material", "Film"]
       },
       {
-        name: "side",
-        options: ["single", "double"],
+        type: "SILK SCREEN",
+        materials: [
+          {name: "Screen1", "units": [{name: "cm", "value": 20}, {name: "m", "value": 2}]},
+          {name: "Screen2", "units": [{name: "cm", "value": 25}, {name: "m", "value": 2.5}]}
+        ],
+        services: ["Print Only", "Print and Material", "Film"]
       },
-    ],
-  },
+      {
+        type: "CNC",
+        materials: [
+          {name: "Screen1", "units": [{name: "cm", "value": 20}, {name: "m", "value": 2}]},
+          {name: "Screen2", "units": [{name: "cm", "value": 25}, {name: "m", "value": 2.5}]}
+        ],
+        services: ["Print Only", "Print and Material", "Film"]
+      },
+      {
+        type: "SUBLIMATION",
+        materials: [
+          {name: "Screen1", "units": [{name: "cm", "value": 20}, {name: "m", "value": 2}]},
+          {name: "Screen2", "units": [{name: "cm", "value": 25}, {name: "m", "value": 2.5}]}
+        ],
+        services: ["Print Only", "Print and Material", "Film"]
+      },
+      {
+        type: "TESFI",
+        materials: [
+          {name: "Screen1", "units": [{name: "cm", "value": 20}, {name: "m", "value": 2}]},
+          {name: "Screen2", "units": [{name: "cm", "value": 25}, {name: "m", "value": 2.5}]}
+        ],
+        services: ["Print Only", "Print and Material", "Film"]
+      }
 ];

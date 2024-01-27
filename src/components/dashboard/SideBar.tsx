@@ -46,16 +46,6 @@ export const SideBar = ({
         </button>
         <button
           type="button"
-          onClick={() => handleButtonClick("customer")}
-          className={`${
-            active === "customer" ? "bg-white text-black" : ""
-          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
-        >
-          <FaUsers />
-          <span> Customer</span>
-        </button>
-        <button
-          type="button"
           onClick={() => handleButtonClick("product")}
           className={`${
             active === "product" ? "bg-white text-black" : ""
@@ -63,6 +53,16 @@ export const SideBar = ({
         >
           <FaProductHunt />
           <span> Product</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => handleButtonClick("customer")}
+          className={`${
+            active === "customer" ? "bg-white text-black" : ""
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
+        >
+          <FaUsers />
+          <span> Customer</span>
         </button>
         <button
           type="button"

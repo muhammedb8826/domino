@@ -311,6 +311,50 @@
       "productName": "T-Shirt",
       "status": "Received",
       "createdAt": "2024-01-25T03:55:56.611Z"
+    },
+    {
+      "id": "9dd4",
+      "firstName": "Nina",
+      "lastName": "Kassahun",
+      "email": "nina@gmail.com",
+      "phoneNumber": "905-078-826",
+      "order": [
+        {
+          "id": "a5ea9b34-080e-4108-9a0d-8280d0e1c585",
+          "quantity": "7",
+          "description": "I want this sticker for tomorrow",
+          "price": "45",
+          "attributes": [
+            {
+              "name": "material",
+              "options": [
+                "mesh"
+              ]
+            },
+            {
+              "name": "side",
+              "options": [
+                "double"
+              ]
+            },
+            {
+              "name": "unit",
+              "options": [
+                "cm"
+              ]
+            },
+            {
+              "name": "purpose",
+              "options": [
+                "gift"
+              ]
+            }
+          ]
+        }
+      ],
+      "productName": "Sticker",
+      "status": "Received",
+      "createdAt": "2024-01-25T21:25:50.314Z"
     }
   ]
 }
