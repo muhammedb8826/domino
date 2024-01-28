@@ -1,13 +1,24 @@
 import { MdDelete } from "react-icons/md";
 import { TfiLayoutMediaLeftAlt } from "react-icons/tfi";
-import { printingData } from "../../utils/data";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../common/Loading";
+import ErroPage from "../common/ErroPage";
+import { useEffect } from "react";
+import { getPrintingData } from "../../redux/features/print/printingSlice";
 
 export const Media = () => {
+  const {printingData, isLoading, error} = useSelector((state)=> state.printing );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getPrintingData());
+  }, [dispatch]);
+  if (isLoading) return <Loading />;
+  if(error) return (<ErroPage error={error} />);
   return (
-    <div className="flex flex-col gap-4 p-4 justify-between items-center border h-[550px] overflow-hidden overflow-y-scroll">
+    <div className="flex flex-col gap-4 p-4 justify-between items-center border h-[550px] overflow-hidden overflow-y-auto">
       <form className="w-1/2">
         <label
-          htmlFor="website-admin"
+          htmlFor="media-name"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
           Media Name
@@ -18,7 +29,7 @@ export const Media = () => {
           </span>
           <input
             type="text"
-            id="website-admin"
+            id="media-name"
             className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5"
             placeholder="Media type"
           />
@@ -33,7 +44,7 @@ export const Media = () => {
 
       <div className="w-1/2 p-4 bg-white border rounded-lg shadow sm:p-8">
         <div className="flex items-center justify-between mb-4">
-          <h5 className="text-xl font-bold leading-none text-gray-900 ">
+          <h5 className="text-l font-bold leading-none text-gray-900 ">
             List of Media Types
           </h5>
           <p className="text-sm font-medium text-blue-600 hover:underline">
@@ -43,20 +54,20 @@ export const Media = () => {
         <div className="flow-root">
           <ul role="list" className="divide-y divide-gray-200">
             {printingData.map((data, index) => (
-              <li className="py-2">
+              <li key={data.type} className="py-2">
                 <div className="flex items-center">
                   <div className="flex-1 min-w-0 ms-4">
                     <input
-                      title="UV"
+                      title={data.type}
                       value={data.type}
                       type="text"
-                      className="text-sm font-medium text-gray-900 truncate"
+                      className="text-sm font-medium text-gray-900 truncate h-full"
                     />
                   </div>
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <button
                       title="delete"
-                      className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-center me-2 mb-2"
+                      className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 my-2 text-center"
                       type="button"
                     >
                       <MdDelete className="w-5 h-5" />

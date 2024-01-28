@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Media } from "./Media";
+import Material from "./Material";
+import Unit from "./Unit";
+import { Services } from "./Services";
 
 const Setting = () => {
   const [active, setActive] = useState("medias");
@@ -59,21 +62,9 @@ const Setting = () => {
 
       <div className="rounded-lg bg-gray-100">
         {active === "medias" && <Media />}
-        {active === "materials" && (
-          <div className="w-full h-full">
-            <div className="w-full h-1/2 bg-gray-100 rounded-lg">Materials</div>
-          </div>
-        )}
-        {active === "units" && (
-          <div className="w-full h-full">
-            <div className="w-full h-1/2 bg-gray-100 rounded-lg">Units</div>
-          </div>
-        )}
-        {active === "services" && (
-          <div className="w-full h-full">
-            <div className="w-full h-1/2 bg-gray-100 rounded-lg">Serives</div>
-          </div>
-        )}
+        {active === "materials" && <Material />}
+        {active === "units" && <Unit />}
+        {active === "services" && <Services />}
       </div>
     </div>
   );

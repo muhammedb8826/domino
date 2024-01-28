@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../../redux/features/user/productSlice";
+import { getProducts } from "../../redux/features/product/productSlice";
 import { FaRegEdit, FaUserPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { CiMenuKebab } from "react-icons/ci";

@@ -1,8 +1,9 @@
 import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user/userSlice";
 import authReducer from "./features/user/authentication";
-import productReducer from "./features/user/productSlice";
-import orderReducer from "./features/user/orderSlice";
+import productReducer from "./features/product/productSlice";
+import orderReducer from "./features/order/orderSlice";
+import printingReducer from "./features/print/printingSlice";
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         auth: authReducer,
         product: productReducer,
         order: orderReducer,
+        printing: printingReducer,
     },
 });
 

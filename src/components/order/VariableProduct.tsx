@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { VscCollapseAll } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../../redux/features/user/productSlice";
+import { getProducts } from "../../redux/features/product/productSlice";
 import { v4 as uuidv4 } from "uuid";
 
 interface VariableProductProps {

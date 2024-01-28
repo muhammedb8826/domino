@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import VariableProduct from "./VariableProduct";
 import { GoBack } from "../common/GoBack";
-import { getProducts } from "../../redux/features/user/productSlice";
+import { getProducts } from "../../redux/features/product/productSlice";
 import { useDispatch} from "react-redux";
 
-import { createOrder } from "../../redux/features/user/orderSlice";
+import { createOrder } from "../../redux/features/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

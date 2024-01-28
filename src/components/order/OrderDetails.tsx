@@ -5,7 +5,7 @@ import { IoBagAdd } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getOrders } from "../../redux/features/user/orderSlice";
+import { getOrders } from "../../redux/features/order/orderSlice";
 import { RootState } from "./../../redux/store";
 import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
