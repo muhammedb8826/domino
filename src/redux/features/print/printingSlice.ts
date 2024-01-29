@@ -33,9 +33,9 @@ export const getPrintingData = createAsyncThunk(
 
 export const createPrintingData = createAsyncThunk(
     "printing/createPrintingData",
-    async (newPrintingData, { rejectWithValue }) => {
+    async (formData, { rejectWithValue }) => {
         try {
-        const response = await axios.post(printingDataURL, newPrintingData);
+        const response = await axios.post(printingDataURL, {type: formData.type, materials: formData.materials, services: formData.services});
         return response.data;
         } catch (error) {
         return rejectWithValue(error.response?.data);
@@ -45,9 +45,11 @@ export const createPrintingData = createAsyncThunk(
 
 export const updatePrintingData = createAsyncThunk(
     "printing/updatePrintingData",
-    async (printingData) => {
+    async (formData) => {
         try {
-        const response = await axios.put(`${printingDataURL}/${printingData.id}`, printingData);
+        const response = await axios.put(`${printingDataURL}/${formData.id}`, formData);
+        console.log(response.data);
+        
         return response.data;
         } catch (error) {
         console.error("Error updating printing data:", error);
@@ -58,9 +60,9 @@ export const updatePrintingData = createAsyncThunk(
 
 export const deletePrintingData = createAsyncThunk(
     "printing/deletePrintingData",
-    async (printingDataId) => {
+    async (id) => {
         try {
-        const response = await axios.delete(`${printingDataURL}/${printingDataId}`);
+        const response = await axios.delete(`${printingDataURL}/${id}`);
         return response.data;
         } catch (error) {
         console.error("Error deleting printing data:", error);
@@ -90,7 +92,8 @@ export const printingSlice = createSlice({
         });
         builder.addCase(createPrintingData.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.printingData = action.payload;
+            const newPrintingData = action.payload;
+            state.printingData.unshift(newPrintingData);
         });
         builder.addCase(createPrintingData.rejected, (state, action) => {
             state.isLoading = false;
@@ -101,7 +104,9 @@ export const printingSlice = createSlice({
         });
         builder.addCase(updatePrintingData.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.printingData = action.payload;
+            state.printingData = state.printingData.map((item) =>
+            item.id === action.payload.id ? action.payload : item
+          );
         });
         builder.addCase(updatePrintingData.rejected, (state, action) => {
             state.isLoading = false;
@@ -112,7 +117,9 @@ export const printingSlice = createSlice({
         });
         builder.addCase(deletePrintingData.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.printingData = action.payload;
+            const {id} = action.payload;
+            const filteredPrintingData = state.printingData.filter((printingData) => printingData.id !== id);
+            state.printingData = filteredPrintingData;
         });
         builder.addCase(deletePrintingData.rejected, (state, action) => {
             state.isLoading = false;

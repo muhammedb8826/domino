@@ -19,6 +19,7 @@ useEffect(() => {
   const [activeMaterial, setActiveMaterial] = useState("");
   const [units, setUnits] = useState([]);
   const [materials, setMaterials] = useState([]);
+  const [materialOptions, setMaterialOptions] = useState([]);
 
   useEffect(() => {
     if (printingData && printingData.length > 0) {
@@ -33,14 +34,13 @@ useEffect(() => {
     const index = printingData.findIndex(
       (data) => data.type === e.target.value
     );
-
-    setActiveMedia(e.target.value);
-    setMaterials(printingData[index].materials);
+    setMaterialOptions(printingData[index].materials);
   };
   const handleActiveMedia = (data, index) => {
     setActiveMedia(data);
     setMaterials(printingData[index].materials);
     setActiveMaterial(printingData[index].materials[0].name);
+    setUnits(printingData[index].materials[0].units);
   };
 
   const handleActiveMaterial = (material, index) => {
@@ -71,9 +71,9 @@ useEffect(() => {
                 id="media"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
-                <option selected>Choose a media</option>
+                <option>Choose a media</option>
                 {printingData.map((data, index) => (
-                  <option value={data.type} key={data.type}>
+                  <option value={data.type}>
                     {data.type}
                   </option>
                 ))}
@@ -91,9 +91,9 @@ useEffect(() => {
                 id="material"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
-                <option selected>Choose a material</option>
-                {materials &&
-                  materials.map((material) => (
+                <option>Choose a material</option>
+                {materialOptions &&
+                  materialOptions.map((material) => (
                     <option value={material.name}>{material.name}</option>
                   ))}
               </select>
@@ -164,7 +164,7 @@ useEffect(() => {
               className="divide-y divide-gray-200 overflow-y-auto h-full"
             >
               {printingData.map((data, index) => (
-                <li>
+                <li key={data.type}>
                   <button
                     onClick={() => handleActiveMedia(data.type, index)}
                     title={data.type}
@@ -194,7 +194,7 @@ useEffect(() => {
               className="divide-y divide-gray-200 overflow-y-auto h-full"
             >
               {materials.map((material, index) => (
-                <li>
+                <li key={material.name}>
                   <button
                     onClick={() => handleActiveMaterial(material.name, index)}
                     title={material.name}
@@ -227,7 +227,7 @@ useEffect(() => {
           <div className="flex items-center gap-4 justify-between overflow-hidden overflow-y-auto">
             <ul role="list" className="divide-y divide-gray-200">
               {units.map((unit, index) => (
-                <li className="mb-2 py-2">
+                <li className="mb-2 py-2" key={unit.name}>
                   <div className="flex items-center">
                     <div className="flex-1 min-w-0 ms-4">
                       <input
@@ -244,7 +244,7 @@ useEffect(() => {
 
             <ul role="list" className="divide-y divide-gray-200">
               {units.map((unit, index) => (
-                <li className="mb-2 py-2">
+                <li className="mb-2 py-2" key={unit.value}>
                   <div className="flex items-center">
                     <div className="flex-1 min-w-0 ms-4">
                       <input
@@ -260,7 +260,7 @@ useEffect(() => {
             </ul>
             <ul role="list" className="divide-y divide-gray-200">
            {units.map((unit, index) => (
-            <li className="mb-2">
+            <li className="mb-2" key={index}>
             <div className="inline-flex items-center text-base font-semibold text-gray-900">
               <button
                 title={`delete ${unit.name}, ${unit.value} `}

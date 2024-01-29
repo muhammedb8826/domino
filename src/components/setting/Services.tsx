@@ -50,9 +50,9 @@ export const Services = () => {
             id="media"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           >
-            <option selected>Choose a media</option>
+            <option>Choose a media</option>
             {printingData.map((data) => (
-              <option value={data.type}>{data.type}</option>
+              <option value={data.type} key={data.type}>{data.type}</option>
             ))}
           </select>
         </div>
@@ -94,7 +94,7 @@ export const Services = () => {
 
         <ul role="list" className="divide-y divide-gray-200 overflow-y-auto h-full">
           {printingData.map((data, index) => (
-            <li>
+            <li key={data.type}>
                   <button
                     onClick={() => handleActive(data.type, index)}
                     title={data.type}
@@ -119,7 +119,7 @@ export const Services = () => {
         </div>
         <ul role="list" className="divide-y divide-gray-200 overflow-y-auto h-full">
           {services.map((service, index) => (
-            <li className="py-2">
+            <li className="py-2" key={service}>
               <div className="flex items-center">
                 <div className="flex-1 min-w-0 ms-4">
                   <input

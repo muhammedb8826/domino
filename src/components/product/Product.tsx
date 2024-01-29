@@ -12,9 +12,7 @@ const Product = () => {
     const { products, isLoading, error } = useSelector((state: RootState) => state.product);
     const { user } = useSelector((state: RootState) => state.auth);
     const [showPopover, setShowPopover] = useState(null);
-    const dispatch = useDispatch();
-    console.log(products);
-    
+    const dispatch = useDispatch();   
 
    useEffect(() => {
     dispatch(getProducts());
@@ -27,8 +25,6 @@ const Product = () => {
     const handleDeleteProduct = (id: number) => {
         // dispatch(deleteProduct(id));
         }
-console.log(products);
-
 
     if (isLoading) {
       return  <Loading />
