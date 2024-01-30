@@ -47,9 +47,7 @@ export const updatePrintingData = createAsyncThunk(
     "printing/updatePrintingData",
     async (formData) => {
         try {
-        const response = await axios.put(`${printingDataURL}/${formData.id}`, formData);
-        console.log(response.data);
-        
+        const response = await axios.put(`${printingDataURL}/${formData.id}`, formData);        
         return response.data;
         } catch (error) {
         console.error("Error updating printing data:", error);

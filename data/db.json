@@ -359,7 +359,39 @@
   ],
   "printingData": [
     {
-      "type": "DTFFF",
+      "type": "DTF",
+      "materials": [
+        {
+          "name": "T-shirt",
+          "units": [
+            {
+              "name": "cm",
+              "value": 12
+            },
+            {
+              "name": "m",
+              "value": 1.2
+            },
+            {
+              "name": "liner",
+              "value": 0.6
+            },
+            {
+              "name": "meter-square",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "services": [
+        "Print Only",
+        "Print and Material",
+        "Film"
+      ],
+      "id": "58a5"
+    },
+    {
+      "type": "SILK SCREEN",
       "materials": [
         {
           "name": "T-shirt",
@@ -392,59 +424,6 @@
             {
               "name": "m",
               "value": 1.8
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
-        }
-      ],
-      "services": [
-        "Print Only",
-        "Print and Material",
-        "Film"
-      ],
-      "id": "58a5"
-    },
-    {
-      "type": "SILK SCREEN",
-      "materials": [
-        {
-          "name": "Screen1",
-          "units": [
-            {
-              "name": "cm",
-              "value": 20
-            },
-            {
-              "name": "m",
-              "value": 2
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
-        },
-        {
-          "name": "Screen2",
-          "units": [
-            {
-              "name": "cm",
-              "value": 25
-            },
-            {
-              "name": "m",
-              "value": 2.5
             },
             {
               "name": "liner",
@@ -573,7 +552,53 @@
     {
       "id": "8bb9",
       "type": "BANNER",
-      "materials": [],
+      "materials": [
+        {
+          "name": "T-shirt",
+          "units": [
+            {
+              "name": "cm",
+              "value": 12
+            },
+            {
+              "name": "m",
+              "value": 1.2
+            },
+            {
+              "name": "liner",
+              "value": 0.6
+            },
+            {
+              "name": "meter-square",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "name": "Cap",
+          "units": [
+            {
+              "name": "cm",
+              "value": 18
+            },
+            {
+              "name": "m",
+              "value": 1.8
+            },
+            {
+              "name": "liner",
+              "value": 0.6
+            },
+            {
+              "name": "meter-square",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "name": "Vinyl"
+        }
+      ],
       "services": []
     }
   ]

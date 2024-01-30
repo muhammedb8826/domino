@@ -113,12 +113,11 @@ export const Media = () => {
               <li key={data.id} className="py-2">
                 <div className="flex items-center">
                   <div className="flex-1 min-w-0 ms-4">
-                    <input
-                      title={data.type}
-                      value={data.type}
-                      type="text"
+                    <p
                       className="text-sm font-medium text-gray-900 truncate h-full"
-                    />
+                    >
+                      {data.type}
+                    </p>
                   </div>
                   <div className="inline-flex gap-4 items-center text-base font-semibold text-gray-900">
                   <button

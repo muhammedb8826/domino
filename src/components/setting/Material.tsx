@@ -1,12 +1,16 @@
 import { MdDelete } from "react-icons/md";
 import { TfiLayoutMediaLeftAlt } from "react-icons/tfi";
-import { useEffect, useState } from "react";
-import {  getPrintingData } from "../../redux/features/print/printingSlice";
+import { useEffect, useRef, useState } from "react";
+import {  getPrintingData, updatePrintingData } from "../../redux/features/print/printingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 const Material = () => {
+  const inputRef = useRef();
    const { printingData, isLoading, error } = useSelector((state)=> state.printing );
+   const [formData, setFormData] = useState({});
    const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getPrintingData());
@@ -20,11 +24,79 @@ const Material = () => {
         setMaterials(printingData[0].materials);
       }
     }, [printingData]);
+
     const handleActive = (type: string, index: number) => {
         setActive(type);
         setMaterials(printingData[index].materials);
     }
 
+
+    const handleSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const selected = e.target.value;
+
+      if (selected === "Choose a media") {
+        alert("Please select a media");
+        return;
+      }
+        const index = printingData.findIndex((data) => data.type === selected);
+        setFormData(printingData[index]);
+    };
+
+    const handleDeleMaterial = (name: string, index: number) => {
+      const findData = printingData.find((data) => data.type === active);
+       const filteredMaterials = materials.filter((material) => material.name !== name);
+        // setMaterials(filteredMaterials);
+        const oldData = findData;
+        const updatedData = {
+          ...oldData,
+          materials: filteredMaterials,
+        };
+
+        // setFormData(updatedData);
+
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You want to delete this material!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "The material has been deleted.",
+              icon: "success",
+            }).then(() => {
+              dispatch(updatePrintingData(updatedData))
+            });
+          }
+        });   
+    };
+    
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+        const oldData = formData;
+
+        const updatedData = {
+          ...oldData,
+          materials: [...oldData.materials, { name: inputRef.current.value }],
+        };
+        setFormData(updatedData);
+        dispatch(updatePrintingData(updatedData)).then((res) => {
+          if (res.payload) {
+            const message = "Material added successfully";
+            toast(message);
+            setFormData((prevData) => ({
+              ...prevData,
+              materials: [],
+            }));
+          }
+        });
+    };
     if (isLoading) return <Loading />;
     if(error) return (<ErroPage error={error} />);
   return (
@@ -33,7 +105,7 @@ const Material = () => {
         <legend className="bg-black text-white border px-2">
           Add new material
         </legend>
-        <form className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
           <div>
             <label
               htmlFor="media"
@@ -42,10 +114,12 @@ const Material = () => {
               Media Name
             </label>
             <select
+            onChange={handleSelected}
               id="media"
+              required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
-              <option>Choose a media</option>
+              <option disabled>Choose a media</option>
               {printingData.map((data) => (
                 <option value={data.type} key={data.type}>{data.type}</option>
               ))}
@@ -63,6 +137,8 @@ const Material = () => {
                 <TfiLayoutMediaLeftAlt />
               </span>
               <input
+              required
+                ref={inputRef}
                 type="text"
                 id="material-type"
                 className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5"
@@ -126,6 +202,7 @@ const Material = () => {
                   </div>
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <button
+                    onClick={() => {handleDeleMaterial(material.name, index)}}
                       title="delete"
                       className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-center"
                       type="button"
