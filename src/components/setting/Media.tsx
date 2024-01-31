@@ -8,7 +8,7 @@ import { createPrintingData, deletePrintingData, getPrintingData } from "../../r
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaRegEdit } from "react-icons/fa";
-import { Modal } from "../common/Modal";
+import { MediaEditModal } from "../common/MediaEditModal";
 
 export const Media = () => {
   const {printingData, isLoading, error} = useSelector((state)=> state.printing );
@@ -54,22 +54,25 @@ export const Media = () => {
     });
   }
 
+  const resetForm = () => {
+    setFormData({type: "", materials: [], services: []})
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(createPrintingData(formData)).then((res) => {
       if(res.payload) {
         const message = "Media created successfully"
         toast(message)
-        setFormData({type: "", materials: [], services: []})
-      }
-    });
+        resetForm();
+  }});
   };
 
   if (isLoading) return <Loading />;
   if(error) return (<ErroPage error={error} />);
 
   return (
-    <div className="flex flex-col gap-4 p-4 justify-between items-center border h-[550px] overflow-hidden overflow-y-auto">
+    <div className="flex flex-col gap-4 p-4 items-center border h-[550px] overflow-hidden overflow-y-auto">
       <form className="w-1/2" onSubmit={handleSubmit}>
         <label
           htmlFor="media-name"
@@ -109,7 +112,14 @@ export const Media = () => {
         </div>
         <div className="flow-root">
           <ul role="list" className="divide-y divide-gray-200">
-            {printingData.map((data, index) => (
+            {printingData.length === 0 && (
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-xl font-semibold text-gray-900">
+                  No data found
+                </p>
+              </div>
+            )}
+            {printingData && printingData.map((data, index) => (
               <li key={data.id} className="py-2">
                 <div className="flex items-center">
                   <div className="flex-1 min-w-0 ms-4">
@@ -143,7 +153,7 @@ export const Media = () => {
           </ul>
         </div>
       </div>
-     {modalOpen && <Modal handleModalOpen={handleModalOpen} data={data} />}
+     {modalOpen && <MediaEditModal handleModalOpen={handleModalOpen} data={data} />}
     </div>
   );
 };

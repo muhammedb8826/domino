@@ -7,6 +7,8 @@ import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { FaRegEdit } from "react-icons/fa";
+import { MaterialEditModal } from "../common/MaterialEditModal";
 const Material = () => {
   const inputRef = useRef();
    const { printingData, isLoading, error } = useSelector((state)=> state.printing );
@@ -17,43 +19,47 @@ const Material = () => {
       }, [dispatch]);
 
     const [active, setActive] = useState(""); 
+    const [modalOpen, setModalOpen] = useState(false);
     const [materials, setMaterials] = useState([]);
-    useEffect(() => {
-      if (printingData && printingData.length > 0) {
-        setActive(printingData[0].type);
-        setMaterials(printingData[0].materials);
-      }
-    }, [printingData]);
 
     const handleActive = (type: string, index: number) => {
         setActive(type);
         setMaterials(printingData[index].materials);
     }
 
+    const updateMaterial = (updatedMaterial, materialIndex) => {
+      // Update the material in the state or Redux store
+      const updatedMaterials = [...materials];
+      updatedMaterials[materialIndex] = updatedMaterial;
+      setMaterials(updatedMaterials);
+    };
 
     const handleSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selected = e.target.value;
-
-      if (selected === "Choose a media") {
-        alert("Please select a media");
-        return;
-      }
         const index = printingData.findIndex((data) => data.type === selected);
         setFormData(printingData[index]);
     };
 
+    const [data, setData] = useState({});
+    const [materialIndex, setMaterialIndex] = useState(0);
+
+const handleModalOpen = (index: number) => {
+      const findData = printingData.find((data) => data.type === active);      
+      setData(findData)
+      setMaterialIndex(index)
+      setModalOpen(!modalOpen);
+    };
+
+
     const handleDeleMaterial = (name: string, index: number) => {
       const findData = printingData.find((data) => data.type === active);
        const filteredMaterials = materials.filter((material) => material.name !== name);
-        // setMaterials(filteredMaterials);
+        
         const oldData = findData;
         const updatedData = {
           ...oldData,
           materials: filteredMaterials,
         };
-
-        // setFormData(updatedData);
-
         Swal.fire({
           title: "Are you sure?",
           text: "You want to delete this material!",
@@ -70,6 +76,7 @@ const Material = () => {
               icon: "success",
             }).then(() => {
               dispatch(updatePrintingData(updatedData))
+              setMaterials(filteredMaterials);
             });
           }
         });   
@@ -83,11 +90,12 @@ const Material = () => {
 
         const updatedData = {
           ...oldData,
-          materials: [...oldData.materials, { name: inputRef.current.value }],
+          materials: [...oldData.materials, { name: inputRef.current.value, units: []}],
         };
-        setFormData(updatedData);
+
         dispatch(updatePrintingData(updatedData)).then((res) => {
           if (res.payload) {
+            setMaterials(res.payload.materials);
             const message = "Material added successfully";
             toast(message);
             setFormData((prevData) => ({
@@ -100,7 +108,7 @@ const Material = () => {
     if (isLoading) return <Loading />;
     if(error) return (<ErroPage error={error} />);
   return (
-    <div className="flex flex-col gap-4 p-4 items-center border h-[550px] overflow-hidden">
+    <div className="flex flex-col gap-4 p-4 items-center h-[550px] overflow-hidden">
       <fieldset className="border border-black p-4 mb-2">
         <legend className="bg-black text-white border px-2">
           Add new material
@@ -119,7 +127,7 @@ const Material = () => {
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
-              <option disabled>Choose a media</option>
+              <option value="">Choose a media</option>
               {printingData.map((data) => (
                 <option value={data.type} key={data.type}>{data.type}</option>
               ))}
@@ -155,7 +163,7 @@ const Material = () => {
         </form>
       </fieldset>
 
-      <div className="grid grid-cols-2 gap-4 lg:w-[55%]">
+      <div className="grid grid-cols-2 gap-4 w-full lg:w-[65%]">
         <div className="p-4 bg-white border rounded-lg shadow sm:p-8 h-[370px] relative overflow-hidden">
           <div className="flex items-center justify-between mb-4">
             <h5 className="text-l font-bold leading-none text-gray-900 ">
@@ -189,18 +197,41 @@ const Material = () => {
             </p>
           </div>
           <ul role="list" className="divide-y divide-gray-200 overflow-y-auto h-full">
-            {materials.map((material, index) => (
+            {active? materials.length === 0 && (
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-gray-900">
+                  No data found
+                </p>
+              </div>
+            ): 
+            (
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-gray-900">
+                  please select media to see
+                </p>
+              </div>
+            )
+            }
+            {materials && materials.map((material, index) => (
               <li className="py-2" key={material.name}>
                 <div className="flex items-center">
-                  <div className="flex-1 min-w-0 ms-4">
-                    <input
-                      title={material.name}
-                      value={material.name}
-                      type="text"
+                <div className="flex-1 min-w-0 ms-4">
+                    <p
                       className="text-sm font-medium text-gray-900 truncate h-full"
-                    />
+                    >
+                      {material.name}
+                    </p>
                   </div>
-                  <div className="inline-flex items-center text-base font-semibold text-gray-900">
+                  <div className="inline-flex gap-4 items-center text-base font-semibold text-gray-900">
+                  <button
+                      title="edit"
+                      className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:blue-red-300 font-medium rounded-lg px-3 py-2 my-2 text-center"
+                      type="button"
+                      onClick={() => handleModalOpen(index)}
+                    >
+                      <FaRegEdit  className="w-5 h-5" />
+                    </button>
+
                     <button
                     onClick={() => {handleDeleMaterial(material.name, index)}}
                       title="delete"
@@ -216,6 +247,7 @@ const Material = () => {
           </ul>
         </div>
       </div>
+      {modalOpen && <MaterialEditModal handleModalOpen={handleModalOpen} data={data} index={materialIndex} updateMaterial={updateMaterial} />}
     </div>
   );
 };

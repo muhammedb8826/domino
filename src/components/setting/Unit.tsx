@@ -48,6 +48,11 @@ useEffect(() => {
     setUnits(materials[index].units);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+  };
+
   if(isLoading) return <Loading />;
   if(error) return (<ErroPage error={error} />);
 
@@ -57,7 +62,7 @@ useEffect(() => {
         <legend className="bg-black text-white border px-2">
           Add new material
         </legend>
-        <form className="md:grid grid-cols-2 gap-4">
+        <form className="md:grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label

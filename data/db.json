@@ -359,255 +359,38 @@
   ],
   "printingData": [
     {
+      "id": "797f",
       "type": "DTF",
       "materials": [
         {
           "name": "T-shirt",
-          "units": [
-            {
-              "name": "cm",
-              "value": 12,
-              "price": 45
-            },
-            {
-              "name": "m",
-              "value": 1.2,
-              "price": 45
-            },
-            {
-              "name": "liner",
-              "value": 0.6,
-              "price": 100
-            },
-            {
-              "name": "meter-square",
-              "value": 1,
-              "price": 100
-            }
-          ]
-        }
-      ],
-      "services": [
-        "Print Only",
-        "Print and Material",
-        "Film"
-      ],
-      "id": "58a5"
-    },
-    {
-      "type": "SILK SCREEN",
-      "materials": [
-        {
-          "name": "T-shirt",
-          "units": [
-            {
-              "name": "cm",
-              "value": 12
-            },
-            {
-              "name": "m",
-              "value": 1.2
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
+          "units": []
         },
         {
-          "name": "Cap",
-          "units": [
-            {
-              "name": "cm",
-              "value": 18
-            },
-            {
-              "name": "m",
-              "value": 1.8,
-              "price": 66
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
-        }
-      ],
-      "services": [
-        "Print Only",
-        "Print and Material",
-        "Film"
-      ],
-      "id": "9bbf"
-    },
-    {
-      "type": "CNC",
-      "materials": [
-        {
-          "name": "Screen1",
-          "units": [
-            {
-              "name": "cm",
-              "value": 20
-            },
-            {
-              "name": "m",
-              "value": 2
-            },
-            {
-              "name": "liner",
-              "value": 0.6,
-              "price": 50
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
+          "name": "Glass",
+          "units": []
         },
         {
-          "name": "Screen2",
-          "units": [
-            {
-              "name": "cm",
-              "value": 25
-            },
-            {
-              "name": "m",
-              "value": 2.5
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
-        }
-      ],
-      "services": [
-        "Print Only",
-        "Print and Material",
-        "Film"
-      ],
-      "id": "c66c"
-    },
-    {
-      "type": "SUBLIMATION",
-      "materials": [
-        {
-          "name": "Screen1",
-          "units": [
-            {
-              "name": "cm",
-              "value": 20
-            },
-            {
-              "name": "m",
-              "value": 2
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
+          "name": "No mesh",
+          "units": []
         },
         {
-          "name": "Screen2",
-          "units": [
-            {
-              "name": "cm",
-              "value": 25
-            },
-            {
-              "name": "m",
-              "value": 2.5
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
+          "name": "Mika",
+          "units": []
         }
       ],
-      "services": [
-        "Print Only",
-        "Print and Material",
-        "Film"
-      ],
-      "id": "4a3a"
+      "services": []
     },
     {
-      "id": "8bb9",
+      "id": "a37a",
+      "type": "UV",
+      "materials": [],
+      "services": []
+    },
+    {
+      "id": "39e1",
       "type": "BANNER",
-      "materials": [
-        {
-          "name": "T-shirt",
-          "units": [
-            {
-              "name": "cm",
-              "value": 12
-            },
-            {
-              "name": "m",
-              "value": 1.2
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
-        },
-        {
-          "name": "Cap",
-          "units": [
-            {
-              "name": "cm",
-              "value": 18
-            },
-            {
-              "name": "m",
-              "value": 1.8
-            },
-            {
-              "name": "liner",
-              "value": 0.6
-            },
-            {
-              "name": "meter-square",
-              "value": 1
-            }
-          ]
-        },
-        {
-          "name": "Vinyl"
-        },
-        {
-          "name": "Mesh"
-        }
-      ],
+      "materials": [],
       "services": []
     }
   ]
