@@ -366,19 +366,23 @@
           "units": [
             {
               "name": "cm",
-              "value": 12
+              "value": 12,
+              "price": 45
             },
             {
               "name": "m",
-              "value": 1.2
+              "value": 1.2,
+              "price": 45
             },
             {
               "name": "liner",
-              "value": 0.6
+              "value": 0.6,
+              "price": 100
             },
             {
               "name": "meter-square",
-              "value": 1
+              "value": 1,
+              "price": 100
             }
           ]
         }
@@ -423,7 +427,8 @@
             },
             {
               "name": "m",
-              "value": 1.8
+              "value": 1.8,
+              "price": 66
             },
             {
               "name": "liner",
@@ -459,7 +464,8 @@
             },
             {
               "name": "liner",
-              "value": 0.6
+              "value": 0.6,
+              "price": 50
             },
             {
               "name": "meter-square",
@@ -597,6 +603,9 @@
         },
         {
           "name": "Vinyl"
+        },
+        {
+          "name": "Mesh"
         }
       ],
       "services": []
