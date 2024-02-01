@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaRegEdit } from "react-icons/fa";
 import ServiceEditModal from "../common/ServiceEditModal";
+import Swal from "sweetalert2";
 
 export const Services = () => {
   const { printingData, isLoading, error } = useSelector(
@@ -56,6 +57,38 @@ export const Services = () => {
     setServiceIndex(index);
     setModalOpen(!modalOpen);
   };
+
+  const handleDeleteService = (service: string, index: number) => () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this service!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      const updatedServices = [...services];
+      updatedServices.splice(index, 1);
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The service has been deleted.",
+          icon: "success",
+        }).then(() => {
+          const data = printingData.find((data) => data.type === active);
+          const newData = { ...data, services: updatedServices };
+          dispatch(updatePrintingData(newData)).then((res) => {
+            if (res.payload) {
+              const message = "Service deleted successfully";
+              toast(message);
+            }
+            setServices(updatedServices);
+          });
+        });
+      }
+    });
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -199,6 +232,7 @@ export const Services = () => {
                       title="delete"
                       className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-center"
                       type="button"
+                      onClick={handleDeleteService(service, index)}
                     >
                       <MdDelete className="w-5 h-5" />
                     </button>

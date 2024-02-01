@@ -388,8 +388,8 @@
       ],
       "services": [
         "Print",
-        "Only print",
-        "Film"
+        "Film",
+        "Print and Materials"
       ]
     },
     {
@@ -423,7 +423,7 @@
           ]
         },
         {
-          "name": "Vinyl",
+          "name": "Antsebaraki",
           "units": []
         }
       ],
