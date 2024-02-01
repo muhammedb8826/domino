@@ -237,6 +237,23 @@ console.log(printingData);
               </Table.Cell>
               <Table.Cell>
               <select
+              
+              required
+                onChange={(e) => handleSelectedUnit(e, index)}
+                title="service type"
+                id={`unit-${index}`}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option value="">Choose a services</option>
+                {data.services.map((service) => (
+                  <option value={service} key={service}>
+                    {service}
+                  </option>
+                ))}
+              </select>
+              </Table.Cell>
+              <Table.Cell>
+              <select
               value={selectedUnits[index]?.name || ''}
               required
                 onChange={(e) => handleSelectedUnit(e, index)}
@@ -248,23 +265,6 @@ console.log(printingData);
                 {selectedMaterials[index]?.units?.map((unit) => (
                   <option value={unit.name} key={unit.name}>
                     {unit.name}
-                  </option>
-                ))}
-              </select>
-              </Table.Cell>
-              <Table.Cell>
-              <select
-              
-              required
-                onChange={(e) => handleSelectedUnit(e, index)}
-                title="service type"
-                id={`unit-${index}`}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="">Choose a unit</option>
-                {selectedMaterials[index]?.services?.map((service) => (
-                  <option value={service} key={service}>
-                    {service}
                   </option>
                 ))}
               </select>

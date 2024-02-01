@@ -364,14 +364,21 @@
       "materials": [
         {
           "name": "T-shirt",
-          "units": []
+          "units": [
+            {
+              "name": "M",
+              "value": "10x10",
+              "price": 100
+            },
+            {
+              "name": "CM",
+              "value": "100x100",
+              "price": 50
+            }
+          ]
         },
         {
           "name": "Glass",
-          "units": []
-        },
-        {
-          "name": "No mesh",
           "units": []
         },
         {
@@ -379,7 +386,11 @@
           "units": []
         }
       ],
-      "services": []
+      "services": [
+        "Print",
+        "Print and Material",
+        "Film"
+      ]
     },
     {
       "id": "a37a",
@@ -390,7 +401,32 @@
     {
       "id": "39e1",
       "type": "BANNER",
-      "materials": [],
+      "materials": [
+        {
+          "name": "Mesh",
+          "units": [
+            {
+              "name": "M",
+              "value": "1x1",
+              "price": 0
+            },
+            {
+              "name": "CM",
+              "value": "100x100",
+              "price": 0
+            },
+            {
+              "name": "pcs",
+              "value": "100x50",
+              "price": 0
+            }
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "units": []
+        }
+      ],
       "services": []
     }
   ]
