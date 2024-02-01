@@ -9,6 +9,8 @@ import {
 } from "../../redux/features/print/printingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { FaRegEdit } from "react-icons/fa";
+import ServiceEditModal from "../common/ServiceEditModal";
 
 export const Services = () => {
   const { printingData, isLoading, error } = useSelector(
@@ -17,6 +19,9 @@ export const Services = () => {
   const [selectedMedia, setSelectedMedia] = useState("");
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [data, setData] = useState({});
+  const [serviceIndex, setServiceIndex] = useState(0);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPrintingData());
@@ -35,6 +40,21 @@ export const Services = () => {
   const handleActive = (type: string, index: number) => {
     setActive(type);
     setServices(printingData[index].services);
+  };
+
+  const updateService = (updatedService, index: number) => {
+   const updatedServices = [...services];
+    updatedServices[index] = updatedService;
+    setServices(updatedServices);
+  };
+
+  const handleModalOpen = (index: number) => {
+    const findData = printingData.find((data) => data.type === active);
+    console.log(findData);
+    
+    setData(findData);
+    setServiceIndex(index);
+    setModalOpen(!modalOpen);
   };
 
   const handleSubmit = (e) => {
@@ -165,7 +185,16 @@ export const Services = () => {
                       {service}
                     </p>
                   </div>
-                  <div className="inline-flex items-center text-base font-semibold text-gray-900">
+                  <div className="inline-flex gap-2 items-center text-base font-semibold text-gray-900">
+                  <button
+                      title="edit"
+                      className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:blue-red-300 font-medium rounded-lg px-3 py-2 my-2 text-center"
+                      type="button"
+                      onClick={() => handleModalOpen(index)}
+                    >
+                      <FaRegEdit  className="w-5 h-5" />
+                    </button> 
+
                     <button
                       title="delete"
                       className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-center"
@@ -180,6 +209,7 @@ export const Services = () => {
           </ul>
         </div>
       </div>
+      {modalOpen && <ServiceEditModal handleModalOpen={handleModalOpen} data={data} index={serviceIndex} updateService={updateService} />}
     </div>
   );
 };

@@ -388,7 +388,7 @@
       ],
       "services": [
         "Print",
-        "Print and Material",
+        "Only print",
         "Film"
       ]
     },
