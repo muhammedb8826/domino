@@ -4,8 +4,12 @@ import { FaUserPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
-import { getPrintingData, updatePrintingData } from "../../redux/features/print/printingSlice";
+import {
+  getPrintingData,
+  updatePrintingData,
+} from "../../redux/features/print/printingSlice";
 import { toast } from "react-toastify";
+import PriceDetailsModal from "./PriceDetailsModal";
 
 const Pricing = () => {
   const { printingData, isLoading, error } = useSelector(
@@ -16,135 +20,112 @@ const Pricing = () => {
   useEffect(() => {
     dispatch(getPrintingData());
   }, [dispatch]);
-  // const [printingDataState, setPrintingDataState] = useState(printingData);
-  const [selectedMaterials, setSelectedMaterials] = useState([]);
-  const [selectedUnits, setSelectedUnits] = useState([]);
-  const [unitPrice, setUnitPrice] = useState(0);
 
-const handleSelectMaterial = (
-  e: React.ChangeEvent<HTMLSelectElement>,
-  index: number
-) => {
-  const selectedValue = e.target.value;
-  const material = printingData[index].materials.find(
-    (material) => material.name === selectedValue
-  );
+  const [selectedMaterial, setSelectedMaterial] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState({});
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [data, setData] = useState({});
 
-  // Create a copy of selectedMaterials array
-  const updatedSelectedMaterials = [...selectedMaterials];
-
-  // Update the selected material for the specific row
-  updatedSelectedMaterials[index] = material;
-
-  // Update the selected materials
-  setSelectedMaterials(updatedSelectedMaterials);
-};
-
-
-  
-const handleSelectedUnit = (e, index) => {
-  const selectedValue = e.target.value;
-
-  // Find the selected material
-  const selectedMaterial = selectedMaterials[index];
-
-  // Find the selected unit for the material
-  const selectedUnit = selectedMaterial?.units.find(
-    (unit) => unit.name === selectedValue
-  );
-
-  // Update the selected units
-  setSelectedUnits((prevSelectedUnits) => {
-    const updatedSelectedUnits = [...prevSelectedUnits];
-    updatedSelectedUnits[index] = selectedUnit;
-    return updatedSelectedUnits;
+  const [formData, setFormData] = useState({
+    type: "",
+    material: "",
+    service: "",
+    unitName: "",
+    unitValue: "",
+    price: "",
   });
-};
 
-const handleChange = (e) => {
-  setUnitPrice(e.target.value);
-};
-
-const handleSubmit = (e, index) => {
-  e.preventDefault();
-
-console.log(unitPrice);
-
-  if (selectedMaterials.length === 0 || selectedUnits.length === 0) {
-    alert('Please select a material and a unit');
-    return;
-  }
-
-  const material = selectedMaterials[index];
-  const {name: materialName} = material;
-  const findMaterialIndex = printingData.findIndex(
-    (data) => data.materials.some((m) => m.name === materialName)
-  );
-  console.log(findMaterialIndex);
-
-  if (findMaterialIndex === -1) {
-    alert('Material not found in printingData array');
-    return;
-  }
-
-
-const unit = selectedUnits[index];
-
-  const price = parseFloat(unitPrice);
-
-  const updatedUnit = { ...unit, price };
-
-  const { name } = updatedUnit;
-
-
-  const findUnitIndex = printingData[findMaterialIndex].materials
-    .find((m) => m.name === materialName)
-    .units.findIndex((u) => u.name === name);
-
-  if (findUnitIndex === -1) {
-    alert('Unit not found in material.units array');
-    return;
-  }
-
-  const updatedMaterial = {
-    ...printingData[findMaterialIndex],
-    materials: printingData[findMaterialIndex].materials.map((m) => {
-      if (m.name === materialName) {
-        return {
-          ...m,
-          units: m.units.map((u) => (u.name === name ? updatedUnit : u)),
-        };
-      }
-      return m;
-    }),
+  const handleSelectedMaterial = (e, index) => {
+    if(e.target.value === "") return;
+    const type = printingData[index].type;
+    setFormData({ ...formData, type, material: e.target.value });
+    
+    const data = printingData[index].materials.find(
+      (material) => material.name === e.target.value
+    );
+    setSelectedMaterial(data);
+    setSelectedRowIndex(index);
   };
-const formData = updatedMaterial;
-console.log(formData);
 
-  dispatch(updatePrintingData(formData)).then((res) => {
-    if(res.payload) {
-      const message = "price updated successfully"
-      toast(message)
-      setUnitPrice(0)
+
+  const handleModalOpen = (id) => {
+    setModalOpen(!modalOpen);
+    setData(printingData.find((data) => data.id === id));
+  };
+
+  const handleSelecteSerives = (e) => {
+    if(e.target.value === "") return;
+    setFormData({ ...formData, service: e.target.value });
+  };
+
+  const handleSelectUnit = (e, index) => {
+    if (e.target.value === "") return;
+  
+    setFormData({ ...formData, unitName: e.target.value });
+    
+  
+    const data = selectedMaterial && selectedMaterial.units
+      ? selectedMaterial.units.find((unit) => unit.name === e.target.value)
+      : null;
+  
+    if (data) {
+      setSelectedUnit(data);
+      setFormData({ ...formData, unitName: data.name, unitValue: data.value });
     }
-  }); 
+  };
+ 
+
+
   
+  const handlePriceChange = (e, index) => {
+    const newFormData = { ...formData };
+    newFormData.price = e.target.value;
 
-  // Creating a new array with the updated object
-  const updatedPrintingData = [
-    ...printingData.slice(0, findMaterialIndex),
-    updatedMaterial,
-    ...printingData.slice(findMaterialIndex + 1),
-  ];
+    // Assuming that you want to store the price in the state only for the selected row
+    if (selectedRowIndex === index) {
+      setFormData(newFormData);
+    }
 
-  console.log(updatedPrintingData);
+    // const calculatedUnitPrice = data.value * formData.price;
+
+  };
+
+  const resetForm = () => {
+    setFormData({
+      type: "",
+      material: "",
+      service: "",
+      unitName: "",
+      unitValue: "",
+      price: "",
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.material || !formData.service || !formData.unitName || !formData.price) {
+     alert("Please fill all the fields");
+      return;
+    }
+    const mediaType = printingData[selectedRowIndex].type;
+    const findData = printingData.find((data) => data.type === mediaType);
+
+    const updatedData = { ...findData };
+
+  // Append the new entry to the 'price' array
+  updatedData.price = [...updatedData.price, { ...formData }];
+    
+    dispatch(updatePrintingData(updatedData)).then((res) => {
+      if (res.payload) {
+        const message = "Pricing updated successfully";
+        toast(message);
+        resetForm();
+      }
+    });
+  };
+
   
-};
-
-console.log(printingData);
-
-
-
 
   if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
@@ -191,7 +172,6 @@ console.log(printingData);
           />
         </div>
       </div>
-
       <Table hoverable>
         <Table.Head>
           <Table.HeadCell className="p-4">
@@ -204,87 +184,87 @@ console.log(printingData);
           <Table.HeadCell>Unit name</Table.HeadCell>
           <Table.HeadCell>Unit value</Table.HeadCell>
           <Table.HeadCell>Price</Table.HeadCell>
-          <Table.HeadCell>Unit price</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {printingData.map((data, index) => (
             <Table.Row
               key={index}
-              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+              className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${
+                selectedRowIndex === index ? 'selected-row' : ''
+              }`}
             >
               <Table.Cell className="p-4">
                 <Checkbox />
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+              <button
+                  onClick={()=>handleModalOpen(data.id)}
+                   type="button" title="click to see details" className="text-blue-500 hover:underline">
                 {data.type}
+                </button>
               </Table.Cell>
               <Table.Cell>
-              <select
-              value={selectedMaterials[index]?.name || ''}
-              required
-                onChange={(e) => handleSelectMaterial(e, index)}
-                title="materials"
-                id={`material-${index}`}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="">Choose a material</option>
-                {data.materials?.map((material) => (
-                  <option value={material.name} key={material.name}>
-                    {material.name}
-                  </option>
-                ))}
-              </select>
+                <select
+                  onChange={(e)=>handleSelectedMaterial(e, index)}
+                  required
+                  title="materials"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option value="">Choose a material</option>
+                  {data.materials.map((material, index) => (
+                    <option value={material.name} key={index}>
+                      {material.name}
+                    </option>
+                  ))}
+                </select>
               </Table.Cell>
               <Table.Cell>
-              <select
-              
-              required
-                onChange={(e) => handleSelectedUnit(e, index)}
-                title="service type"
-                id={`unit-${index}`}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="">Choose a services</option>
-                {data.services.map((service) => (
-                  <option value={service} key={service}>
-                    {service}
-                  </option>
-                ))}
-              </select>
+                <select
+                onChange={handleSelecteSerives}
+                  required
+                  title="services"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option value="">Choose a services</option>
+                  {data.services.map((service, index) => (
+                    <option value={service} key={index}>
+                      {service}
+                    </option>
+                  ))}
+                </select>
               </Table.Cell>
               <Table.Cell>
-              <select
-              value={selectedUnits[index]?.name || ''}
-              required
-                onChange={(e) => handleSelectedUnit(e, index)}
-                title="units"
-                id={`unit-${index}`}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="">Choose a unit</option>
-                {selectedMaterials[index]?.units?.map((unit) => (
-                  <option value={unit.name} key={unit.name}>
-                    {unit.name}
-                  </option>
-                ))}
-              </select>
+                <select
+                  onChange={(e)=>handleSelectUnit(e, index)}
+                  title="unit"
+                  required
+                  id="unit"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option value="">Choose a unit</option>
+                  {selectedMaterial && selectedMaterial.units?.map((unit, index) => (
+                    <option value={unit.name} key={index}>
+                      {unit.name}
+                    </option>
+                  ))}
+                </select>
               </Table.Cell>
               <Table.Cell>
-              <p>{selectedUnits[index]?.value}</p>
+              {selectedRowIndex === index && <p>{selectedUnit?.value}</p>}
               </Table.Cell>
               <Table.Cell>
-                
-              <form onSubmit={(e) => handleSubmit(e, index)}>
+                <form onSubmit={handleSubmit}>
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex-1">
-                      <input
-                      onChange={handleChange}
-                        type="number"
-                        id="price"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="eg, 100"
-                        required
-                      />
+                    <input
+                    onChange={(e) => handlePriceChange(e, index)}
+                    value={selectedRowIndex === index ? formData.price : ''}
+                    type="number"
+                    id="price"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="eg, 100"
+                    required
+                  />
                     </div>
                     <div>
                       <button
@@ -295,15 +275,13 @@ console.log(printingData);
                       </button>
                     </div>
                   </div>
-                </form>
-              </Table.Cell>
-              <Table.Cell>
-                <p>{selectedUnits[index]?.price}</p>
+              </form>
               </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
+      {modalOpen && <PriceDetailsModal data={data} handleModalOpen={handleModalOpen} />}
     </div>
   );
 };

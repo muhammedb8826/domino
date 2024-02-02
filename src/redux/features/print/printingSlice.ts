@@ -35,7 +35,7 @@ export const createPrintingData = createAsyncThunk(
     "printing/createPrintingData",
     async (formData, { rejectWithValue }) => {
         try {
-        const response = await axios.post(printingDataURL, {type: formData.type, materials: formData.materials, services: formData.services});
+        const response = await axios.post(printingDataURL, {type: formData.type, materials: formData.materials, services: formData.services, price: formData.price});
         return response.data;
         } catch (error) {
         return rejectWithValue(error.response?.data);

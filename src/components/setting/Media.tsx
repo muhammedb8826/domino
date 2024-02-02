@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { FaRegEdit } from "react-icons/fa";
 import { MediaEditModal } from "../common/MediaEditModal";
 
+
 export const Media = () => {
   const {printingData, isLoading, error} = useSelector((state)=> state.printing );
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ export const Media = () => {
     type: "",
     materials: [],
     services: [],
+    price: []
   });
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,11 +57,13 @@ export const Media = () => {
   }
 
   const resetForm = () => {
-    setFormData({type: "", materials: [], services: []})
+    setFormData({type: "", materials: [], services: [], price: []})
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(formData);
+    
     dispatch(createPrintingData(formData)).then((res) => {
       if(res.payload) {
         const message = "Media created successfully"
@@ -72,7 +76,7 @@ export const Media = () => {
   if(error) return (<ErroPage error={error} />);
 
   return (
-    <div className="flex flex-col gap-4 p-4 items-center border h-[550px] overflow-hidden overflow-y-auto">
+    <div className="flex flex-col gap-4 p-4 items-center overflow-y-auto h-full" id="style-4">
       <form className="w-1/2" onSubmit={handleSubmit}>
         <label
           htmlFor="media-name"

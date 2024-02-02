@@ -359,47 +359,69 @@
   ],
   "printingData": [
     {
-      "id": "797f",
+      "id": "2eb3",
       "type": "DTF",
       "materials": [
         {
           "name": "T-shirt",
           "units": [
             {
-              "name": "M",
-              "value": "10x10",
-              "price": 100
-            },
-            {
-              "name": "CM",
-              "value": "100x100",
-              "price": 50
+              "name": "PCS",
+              "value": "1x1",
+              "price": 0
             }
           ]
         },
         {
-          "name": "Glass",
-          "units": []
-        },
-        {
           "name": "Mika",
-          "units": []
+          "units": [
+            {
+              "name": "M",
+              "value": "1x1",
+              "price": 0
+            },
+            {
+              "name": "LINEAR",
+              "value": "0.6x1",
+              "price": 0
+            }
+          ]
         }
       ],
       "services": [
         "Print",
-        "Film",
-        "Print and Materials"
+        "Print and Material",
+        "Film"
+      ],
+      "price": [
+        {
+          "type": "DTF",
+          "material": "T-shirt",
+          "service": "Print",
+          "unitName": "PCS",
+          "unitValue": "1x1",
+          "price": "100"
+        },
+        {
+          "type": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitName": "PCS",
+          "unitValue": "1x1",
+          "price": "200"
+        },
+        {
+          "type": "DTF",
+          "material": "Mika",
+          "service": "Print and Material",
+          "unitName": "LINEAR",
+          "unitValue": "0.6x1",
+          "price": "66"
+        }
       ]
     },
     {
-      "id": "a37a",
-      "type": "UV",
-      "materials": [],
-      "services": []
-    },
-    {
-      "id": "39e1",
+      "id": "2436",
       "type": "BANNER",
       "materials": [
         {
@@ -414,20 +436,27 @@
               "name": "CM",
               "value": "100x100",
               "price": 0
-            },
-            {
-              "name": "pcs",
-              "value": "100x50",
-              "price": 0
             }
           ]
         },
         {
-          "name": "Antsebaraki",
+          "name": "Vinyl",
           "units": []
         }
       ],
-      "services": []
+      "services": [
+        "Print",
+        "Print and Material",
+        "Film"
+      ],
+      "price": []
+    },
+    {
+      "id": "9079",
+      "type": "UV",
+      "materials": [],
+      "services": [],
+      "price": []
     }
   ]
 }

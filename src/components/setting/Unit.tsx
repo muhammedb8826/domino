@@ -109,7 +109,7 @@ const handleSelectedMaterial = (e)=>{
   if (error) return <ErroPage error={error} />;
 
   return (
-    <div className="flex flex-col gap-4 p-4 items-center border h-[550px] overflow-hidden">
+    <div className="flex flex-col gap-4 p-4 items-center border overflow-y-auto h-full" id="style-4">
       <fieldset className="border border-black p-4 mb-2">
         <legend className="bg-black text-white border px-2">
           Add new unit
