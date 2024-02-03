@@ -188,57 +188,140 @@
           "status": "Received"
         }
       ]
+    },
+    {
+      "id": "8024",
+      "orderId": "b6bde4f7-3591-4bfc-bd37-4d36e2e78f91",
+      "firstName": "Teshe",
+      "lastName": "Assefa",
+      "email": "teshe@gmail.com",
+      "phoneNumber": "911-17-7553",
+      "order": [
+        {
+          "media": "BANNER",
+          "material": "Mesh",
+          "service": "Print",
+          "unitName": "M",
+          "width": "10",
+          "height": "5",
+          "quantity": "3",
+          "price": 15000,
+          "dueDate": "2024-02-12",
+          "message": "I want this banner for tomorrow",
+          "status": "Received"
+        }
+      ]
+    },
+    {
+      "id": "c7ab",
+      "orderId": "7f16da03-e5ba-4d8f-b2de-8497e561b44e",
+      "firstName": "dir",
+      "lastName": "advert",
+      "email": "dir@gmail.com",
+      "phoneNumber": "911-55-4444",
+      "order": [
+        {
+          "media": "BANNER",
+          "material": "Mesh",
+          "service": "Print and Material",
+          "unitName": "M",
+          "width": "2",
+          "height": "2",
+          "quantity": "5",
+          "price": 4000,
+          "dueDate": "2024-02-14",
+          "message": "tftyftfyfytt",
+          "status": "Received"
+        }
+      ]
     }
   ],
   "printingData": [
     {
-      "id": "ce78",
-      "type": "BANNER",
+      "id": "8e92",
+      "type": "DTF",
       "materials": [
         {
-          "name": "Mesh",
+          "name": "Film",
           "units": [
             {
-              "name": "M",
+              "name": "msq",
+              "value": "0.6x1",
+              "price": 0
+            },
+            {
+              "name": "msq1",
+              "value": "0.6x1",
+              "price": 0
+            }
+          ]
+        }
+      ],
+      "services": [
+        "Print",
+        "Print and Heat press",
+        "Print and Material"
+      ],
+      "price": [
+        {
+          "type": "DTF",
+          "material": "Film",
+          "service": "Print",
+          "unitName": "msq",
+          "unitValue": "0.6x1",
+          "price": "1000"
+        },
+        {
+          "type": "DTF",
+          "material": "Film",
+          "service": "Print",
+          "unitName": "msq1",
+          "unitValue": "0.6x1",
+          "price": "1200"
+        }
+      ]
+    },
+    {
+      "id": "ce71",
+      "type": "crystal jet",
+      "materials": [
+        {
+          "name": "sticker",
+          "units": [
+            {
+              "name": "msq",
               "value": "1x1",
               "price": 0
             }
           ]
         },
         {
-          "name": "Vinyl",
+          "name": "Banner",
+          "units": [
+            {
+              "name": "msq",
+              "value": "1x1",
+              "price": 0
+            }
+          ]
+        },
+        {
+          "name": "Mesh",
           "units": []
         }
       ],
       "services": [
         "Print",
-        "Print and Material",
-        "Material"
+        "Print and Material"
       ],
       "price": [
         {
-          "type": "BANNER",
-          "material": "Mesh",
-          "service": "Print",
-          "unitName": "M",
-          "unitValue": "1x1",
-          "price": "100"
-        },
-        {
-          "type": "BANNER",
-          "material": "Mesh",
+          "type": "crystal jet",
+          "material": "sticker",
           "service": "Print and Material",
-          "unitName": "M",
+          "unitName": "msq",
           "unitValue": "1x1",
-          "price": "200"
-        },
-        {
-          "type": "BANNER",
-          "material": "Mesh",
-          "service": "Material",
-          "unitName": "M",
-          "unitValue": "1x1",
-          "price": "150"
+          "price": "220"
         }
       ]
     }

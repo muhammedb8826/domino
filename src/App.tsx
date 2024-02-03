@@ -11,7 +11,7 @@ import NotFound from "./components/header/NotFound"
 import Login from "./auth/Login"
 import Dashboard from "./pages/Dashboard"
 import OrderForm from "./components/order/OrderForm"
-import { OrderDetails } from "./components/order/OrderDetails"
+import OrderDetails from "./components/order/OrderDetails"
 
 const App = () => {
   return (

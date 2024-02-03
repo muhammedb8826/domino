@@ -137,21 +137,18 @@ const OrderForm = () => {
   const calculatePrice = () => {
     let getUnitValue = 0;
     const inputString = unitValue;
-    const numbersOnly = inputString.match(/\d+/g);
+    const numbersOnly = inputString.match(/\d+(\.\d+)?/g);
 
     if (numbersOnly) {
       const result = numbersOnly.map(Number);
-      getUnitValue = result[0] * result[1];
-      console.log(result); // Output: [1, 1]
+      getUnitValue = parseFloat(result[0]) * parseFloat(result[1]);      
     } else {
       console.log("No numbers found in the string");
     }
 
-    const basePrice = getUnitValue * unitPrice;
+    const basePrice = getUnitValue * unitPrice;    
     const totalPrice =
       formData.width * formData.height * formData.quantity * basePrice;
-    console.log(totalPrice, "totalPrice");
-
     setFormData({ ...formData, price: totalPrice });
   };
 
