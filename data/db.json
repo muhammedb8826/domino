@@ -167,261 +167,32 @@
   ],
   "orders": [
     {
-      "id": "21ec",
-      "firstName": "Muhammed ",
+      "id": "9531",
+      "orderId": "7d9de3af-e30d-4b9a-bb53-60fb8d19a5ec",
+      "firstName": "Muhammed",
       "lastName": "Berisso",
       "email": "muhammedb8826@gmail.com",
-      "phoneNumber": "905-078-826",
+      "phoneNumber": "905-07-8826",
       "order": [
         {
-          "id": "e3d61e8e-57cf-42f3-bd13-fad5c9b1c6ee",
-          "quantity": "1",
-          "description": "I want this banner printed within 1 week",
-          "price": "25",
-          "attributes": [
-            {
-              "name": "material",
-              "options": [
-                "vinyl"
-              ]
-            },
-            {
-              "name": "purpose",
-              "options": [
-                "personal"
-              ]
-            },
-            {
-              "name": "dimensions",
-              "options": []
-            },
-            {
-              "name": "width",
-              "options": [
-                "15"
-              ]
-            },
-            {
-              "name": "height",
-              "options": [
-                "10"
-              ]
-            }
-          ]
+          "media": "BANNER",
+          "material": "Mesh",
+          "service": "Print",
+          "unitName": "M",
+          "width": "5",
+          "height": "5",
+          "quantity": "2",
+          "price": 5000,
+          "dueDate": "2024-02-03",
+          "message": "I want this banner for saturday",
+          "status": "Received"
         }
-      ],
-      "productName": "Banner",
-      "status": "Received",
-      "createdAt": "2024-01-24T23:13:25.016Z"
-    },
-    {
-      "id": "456a",
-      "firstName": "Nina",
-      "lastName": "Kassahun",
-      "email": "nina@gmail.com",
-      "phoneNumber": "985-569-000",
-      "order": [
-        {
-          "id": "5931ed45-00c1-4c17-b73a-4a1afedcb31f",
-          "quantity": "5",
-          "description": "I want this t-shirt printed for my wedding it should be printed before monday",
-          "price": "44",
-          "attributes": [
-            {
-              "name": "fabric",
-              "options": [
-                "polyester"
-              ]
-            },
-            {
-              "name": "style",
-              "options": [
-                "crew-neck"
-              ]
-            },
-            {
-              "name": "purpose",
-              "options": [
-                "personal"
-              ]
-            },
-            {
-              "name": "size",
-              "options": [
-                "medium"
-              ]
-            }
-          ]
-        }
-      ],
-      "productName": "T-Shirt",
-      "status": "Received",
-      "createdAt": "2024-01-25T03:35:36.190Z"
-    },
-    {
-      "id": "93af",
-      "firstName": "Teshager",
-      "lastName": "Assefa",
-      "email": "teshe@gmail.com",
-      "phoneNumber": "911-078-826",
-      "order": [
-        {
-          "id": "7b7a9e8f-2cb8-423d-b62e-7975a6ea1f5d",
-          "quantity": "55",
-          "description": "I ordered this to receive it on Saturday",
-          "price": "800",
-          "attributes": [
-            {
-              "name": "fabric",
-              "options": [
-                "polyester"
-              ]
-            },
-            {
-              "name": "color",
-              "options": [
-                "blue"
-              ]
-            },
-            {
-              "name": "placement",
-              "options": []
-            },
-            {
-              "name": "back",
-              "options": [
-                "on"
-              ]
-            },
-            {
-              "name": "style",
-              "options": [
-                "v-neck"
-              ]
-            },
-            {
-              "name": "size",
-              "options": [
-                "large"
-              ]
-            }
-          ]
-        }
-      ],
-      "productName": "T-Shirt",
-      "status": "Received",
-      "createdAt": "2024-01-25T03:55:56.611Z"
-    },
-    {
-      "id": "9dd4",
-      "firstName": "Nina",
-      "lastName": "Kassahun",
-      "email": "nina@gmail.com",
-      "phoneNumber": "905-078-826",
-      "order": [
-        {
-          "id": "a5ea9b34-080e-4108-9a0d-8280d0e1c585",
-          "quantity": "7",
-          "description": "I want this sticker for tomorrow",
-          "price": "45",
-          "attributes": [
-            {
-              "name": "material",
-              "options": [
-                "mesh"
-              ]
-            },
-            {
-              "name": "side",
-              "options": [
-                "double"
-              ]
-            },
-            {
-              "name": "unit",
-              "options": [
-                "cm"
-              ]
-            },
-            {
-              "name": "purpose",
-              "options": [
-                "gift"
-              ]
-            }
-          ]
-        }
-      ],
-      "productName": "Sticker",
-      "status": "Received",
-      "createdAt": "2024-01-25T21:25:50.314Z"
+      ]
     }
   ],
   "printingData": [
     {
-      "id": "2eb3",
-      "type": "DTF",
-      "materials": [
-        {
-          "name": "T-shirt",
-          "units": [
-            {
-              "name": "PCS",
-              "value": "1x1",
-              "price": 0
-            }
-          ]
-        },
-        {
-          "name": "Mika",
-          "units": [
-            {
-              "name": "M",
-              "value": "1x1",
-              "price": 0
-            },
-            {
-              "name": "LINEAR",
-              "value": "0.6x1",
-              "price": 0
-            }
-          ]
-        }
-      ],
-      "services": [
-        "Print",
-        "Print and Material",
-        "Film"
-      ],
-      "price": [
-        {
-          "type": "DTF",
-          "material": "T-shirt",
-          "service": "Print",
-          "unitName": "PCS",
-          "unitValue": "1x1",
-          "price": "100"
-        },
-        {
-          "type": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitName": "PCS",
-          "unitValue": "1x1",
-          "price": "200"
-        },
-        {
-          "type": "DTF",
-          "material": "Mika",
-          "service": "Print and Material",
-          "unitName": "LINEAR",
-          "unitValue": "0.6x1",
-          "price": "66"
-        }
-      ]
-    },
-    {
-      "id": "2436",
+      "id": "ce78",
       "type": "BANNER",
       "materials": [
         {
@@ -430,11 +201,6 @@
             {
               "name": "M",
               "value": "1x1",
-              "price": 0
-            },
-            {
-              "name": "CM",
-              "value": "100x100",
               "price": 0
             }
           ]
@@ -447,16 +213,34 @@
       "services": [
         "Print",
         "Print and Material",
-        "Film"
+        "Material"
       ],
-      "price": []
-    },
-    {
-      "id": "9079",
-      "type": "UV",
-      "materials": [],
-      "services": [],
-      "price": []
+      "price": [
+        {
+          "type": "BANNER",
+          "material": "Mesh",
+          "service": "Print",
+          "unitName": "M",
+          "unitValue": "1x1",
+          "price": "100"
+        },
+        {
+          "type": "BANNER",
+          "material": "Mesh",
+          "service": "Print and Material",
+          "unitName": "M",
+          "unitValue": "1x1",
+          "price": "200"
+        },
+        {
+          "type": "BANNER",
+          "material": "Mesh",
+          "service": "Material",
+          "unitName": "M",
+          "unitValue": "1x1",
+          "price": "150"
+        }
+      ]
     }
   ]
 }

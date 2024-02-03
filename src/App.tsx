@@ -7,10 +7,11 @@ import Contact from "./pages/Contact"
 import GetStarted from "./pages/GetStarted"
 import Home from "./pages/Home"
 import "./assets/styles/main.css"
-import AddOrder from "./components/order/AddOrder"
 import NotFound from "./components/header/NotFound"
 import Login from "./auth/Login"
 import Dashboard from "./pages/Dashboard"
+import OrderForm from "./components/order/OrderForm"
+import { OrderDetails } from "./components/order/OrderDetails"
 
 const App = () => {
   return (
@@ -25,7 +26,8 @@ const App = () => {
         <Route path="/get-started" element={<GetStarted/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/sign-in" element={<Login />} />
-        <Route path="/add-order" element={<AddOrder />} />
+        <Route path="/add-order" element={<OrderForm />} />
+        <Route path="/order/:id" element={<OrderDetails />} />
         <Route path="*" element={<NotFound/>} />
         </Routes>
     </main>

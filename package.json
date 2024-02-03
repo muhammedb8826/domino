@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "axios": "^1.6.3",
+    "flowbite-datepicker": "^1.2.6",
     "flowbite-react": "^0.7.2",
     "json-server": "^1.0.0-alpha.16",
     "jsvectormap": "^1.5.3",

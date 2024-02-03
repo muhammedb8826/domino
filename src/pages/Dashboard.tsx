@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { SideBar } from "../components/dashboard/SideBar";
 import TopBar from "../components/dashboard/TopBar";
-import OrderDetails from "../components/order/OrderDetails";
+import OrderDetails from "../components/order/OrdersList";
 import { NavLink } from "react-router-dom";
 import User from "../components/user/User";
 import Product from "../components/product/Product";
