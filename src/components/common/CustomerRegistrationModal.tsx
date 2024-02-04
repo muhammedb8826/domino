@@ -1,14 +1,22 @@
 import { useState } from "react";
 import { FaRegWindowClose } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { createCustomer } from "../../redux/features/customer/customerSlice";
+import { toast } from "react-toastify";
 
 export const CustomerRegistration = ({ handleModalOpen }) => {
+const dispatch = useDispatch();
+
+
     const [formData, setFormData] = useState({
+        id: Date.now().toString(),
         phone: "",
         companyType: "",
         firstName: "",
         lastName: "",
         email: "",
     });
+
 
  const handleChange = (e)=> {
     const {name, value} = e.target;
@@ -18,10 +26,29 @@ export const CustomerRegistration = ({ handleModalOpen }) => {
         }));
  }
 
+ const resetForm = () => {
+    setFormData({
+        id: "",
+        phone: "",
+        companyType: "",
+        firstName: "",
+        lastName: "",
+        email: "" 
+    })
+ }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    dispatch(createCustomer(formData)).then((res)=>{
+        if(res.payload){
+            const message = "Customer registered successfully"
+            toast(message)
+            resetForm();
+            handleModalOpen()
+        }
+    })
   };
+  
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">

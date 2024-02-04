@@ -1,7 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomerRegistration } from "../common/CustomerRegistrationModal";
+import { useDispatch, useSelector } from "react-redux";
+import { getCustomers } from "../../redux/features/customer/customerSlice";
 
 const AddOrder = () => {
+  const {customers, isLoading, error} = useSelector((state) => state.customer);
+  const dispatch = useDispatch();
+
+useEffect(() => {
+  dispatch(getCustomers());
+},
+[dispatch]);
+
+console.log(customers, isLoading, error);
+
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false)
 

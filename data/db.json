@@ -325,5 +325,39 @@
         }
       ]
     }
+  ],
+  "customers": [
+    {
+      "id": 1707080341356,
+      "phone": "0905-07-8826",
+      "companyType": "individual",
+      "firstName": "Muhammed",
+      "lastName": "Berisso",
+      "email": "muhammedb8826@gmail.com"
+    },
+    {
+      "id": "1707080747266",
+      "phone": "0911-04-0506",
+      "companyType": "group",
+      "firstName": "Berisso",
+      "lastName": "Family",
+      "email": "berisso@gmail.com"
+    },
+    {
+      "id": "1707080841084",
+      "phone": "0919-26-9803",
+      "companyType": "",
+      "firstName": "",
+      "lastName": "",
+      "email": ""
+    },
+    {
+      "id": "1707080869403",
+      "phone": "0916-01-6212",
+      "companyType": "company",
+      "firstName": "Kuma",
+      "lastName": "Shark",
+      "email": "kuma@gmail.com"
+    }
   ]
 }
