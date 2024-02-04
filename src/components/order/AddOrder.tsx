@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { CustomerRegistration } from "../common/CustomerRegistrationModal";
 
 const AddOrder = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
 
   // const toggleDropdown = () => {
   //   setIsDropdownOpen((prevState) => !prevState);
@@ -13,6 +15,10 @@ const AddOrder = () => {
     } else {
       setIsDropdownOpen(true);
     }
+  }
+
+  const handleModalOpen = () => {
+    setModalOpen((prev)=>!prev)
   }
 
   return (
@@ -37,9 +43,9 @@ const AddOrder = () => {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                       />
                     </svg>
@@ -101,6 +107,7 @@ const AddOrder = () => {
                 </li>
               </ul>
               <button
+              onClick={handleModalOpen}
                 type="button"
                 className="w-full flex items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:blue-red-500 hover:underline"
               >
@@ -119,6 +126,8 @@ const AddOrder = () => {
           </div>
         </div>
       </form>
+      {modalOpen && <CustomerRegistration handleModalOpen={handleModalOpen}/>}
+          
     </section>
   );
 };
