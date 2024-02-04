@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    'node_modules/flowbite-react/lib/esm/**/*.js'
   ],
   darkMode: 'class', // Enable dark mode with class-based toggling
   variants: {
@@ -32,6 +33,6 @@ module.exports = {
     },
   },
   plugins: [
-    // Add any additional plugins you may need
+    require('flowbite/plugin')
   ],
 };

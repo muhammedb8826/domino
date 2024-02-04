@@ -1,263 +1,125 @@
-import { useEffect, useRef, useState } from "react";
-import VariableProduct from "./VariableProduct";
-import { GoBack } from "../common/GoBack";
-import { getProducts } from "../../redux/features/product/productSlice";
-import { useDispatch} from "react-redux";
-
-import { createOrder } from "../../redux/features/order/orderSlice";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-
+import { useState } from "react";
 
 const AddOrder = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    dispatch(getProducts()).then((res) => 
-    setProduct(res.payload));
-  }, [dispatch]);
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen((prevState) => !prevState);
+  // };
 
-
-  const [active, setActive] = useState("");
-  const [product, setProduct] = useState([]);
-  const [variableProduct, setVariableProduct] = useState<
-    string[]
-  >([]);
-  const [productValues, setProductValues] = useState<string[]>([]);
-  const [orderValues, setOrderValues] = useState<string[]>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    order: [],
-    productName: "",
-    status: "Received",
-  });
-
-  const handleProduct = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setActive(e.target.value);
-    setVariableProduct([...variableProduct, e.target.value]);
-  };
-
-  const handleDeleteType = (element: string) => {
-    const updatedVariableProduct = variableProduct.filter(
-      (item) => item !== element
-    );
-    setVariableProduct(updatedVariableProduct);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if(productValues.length === 0) return alert("Please save a attributes of product");
-    const createdAt = new Date();
-    createdAt.setHours(createdAt.getHours() + 1);
-
-      const newOrderData = {...orderValues, order: productValues, productName: active, createdAt, status: "Received"}
-      dispatch(createOrder(newOrderData)).then((res) => {
-        if(res.payload) {
-          const message = "Order created successfully"
-          toast(message)
-          resetForm();
-          navigate("/dashboard");
-        }
-      })
-  };
-
-  const resetForm = () => {
-    setOrderValues({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      order: [],
-      productName: "",
-    });
-    setActive("");
-    setVariableProduct([]);
-    setProductValues([]);
-  };
+  const handleSearchUser = (e) => {
+    if(e.target.value === "") {
+      setIsDropdownOpen(false);
+    } else {
+      setIsDropdownOpen(true);
+    }
+  }
 
   return (
-    <div className="wrapper p-4">
-      <GoBack goback="/dashboard" />
-      <h1 className="text-2xl font-bold">Add Order</h1>
+    <section className="wrapper p-4">
+      <form action="">
+        <div className="md:flex gap-4">
+          <div className="flex-1 border-r-2 border-blue-100">order</div>
+          <div className="md:w-1/4 border border-green-400">
 
-      <form className="py-4" onSubmit={handleSubmit}>
-        <div className="grid gap-6 mb-6 md:grid-cols-4">
-          <div>
-            <label
-              htmlFor="first_name"
-              className="block mb-2 text-sm font-medium text-gray-900 "
-            >
-              First name
-            </label>
-            <input
-              onChange={(e) =>
-                setOrderValues({
-                  ...orderValues,
-                  firstName: e.target.value,
-                })
-              }
-              type="text"
-              id="first_name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="John"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="last_name"
-              className="block mb-2 text-sm font-medium text-gray-900 "
-            >
-              Last name
-            </label>
-            <input
-              onChange={(e) =>
-                setOrderValues({
-                  ...orderValues,
-                  lastName: e.target.value,
-                })
-              }
-              type="text"
-              id="last_name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="Doe"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="phone"
-              className="block mb-2 text-sm font-medium text-gray-900"
-            >
-              Phone number
-            </label>
-            <input
-              onChange={(e) =>
-                setOrderValues({
-                  ...orderValues,
-                  phoneNumber: e.target.value,
-                })
-              }
-              type="tel"
-              id="phone"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="123-456-789"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
-              required
-            />
-          </div>
-
-          <div className="mb-2">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900"
-            >
-              Email address
-            </label>
-            <input
-              onChange={(e) =>
-                setOrderValues({
-                  ...orderValues,
-                  email: e.target.value,
-                })
-              }
-              type="email"
-              id="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="john.doe@company.com"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="border mb-6">
-          <div className="md:flex items-center p-4 gap-2">
-            <label
-              htmlFor="productType"
-              className="text-sm font-medium text-gray-900 "
-            >
-              Product type
-            </label>
-          </div>
-          <hr />
-
-          <div className="md:flex">
-            <div className="attributes w-full md:w-1/4 bg-slate-50 flex flex-col text-sky-500 border-r">
-              <div className="relative">
-                <div className="flex flex-col flex-1 p-4">
-                  <label
-                    htmlFor="product"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
-                    Select a product
-                  </label>
-                  <select
-                    value={active}
-                    onChange={handleProduct}
-                    id="product"
-                    required
-                    className="max-md:1/4 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  >
-                    <option value="">Add existing</option>
-                    {product.map((item) => (
-                      <option value={item.name} key={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
+             <div className="p-3">
+                <label htmlFor="input-group-search" className="sr-only">
+                  Search
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                  onChange={handleSearchUser}
+                    type="text"
+                    id="input-group-search"
+                    className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search user"
+                  />
                 </div>
               </div>
-              <hr />
-              {variableProduct.length > 0 &&
-                variableProduct.map((product) => (
-                  <div
-                    key={product}
-                    className={`${
-                      product === active ? "bg-gray-200" : ""
-                    } gap-4 flex justify-between items-center border-b-2`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setActive(product)}
-                      className="p-4 py-2 flex flex-1"
+
+            {/* <!-- Dropdown menu --> */}
+            <div
+              id="dropdownSearch"
+              className={`z-10 ${
+                isDropdownOpen ? "" : "hidden"
+              } bg-white rounded-lg shadow dark:bg-gray-700 w-full`}
+            >
+              <ul
+                className="px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
+                aria-labelledby="dropdownSearchButton"
+              >
+                <li>
+                  <div className="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <input
+                      id="checkbox-item-11"
+                      type="radio"
+                      name="user"
+                      value=""
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                    />
+                    <label
+                      htmlFor="checkbox-item-11"
+                      className="w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
                     >
-                      {product}{" "}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteType(product)}
-                      className="text-red-600 p-4 py-2"
-                    >
-                      Remove
-                    </button>
+                      Bonnie Green
+                    </label>
                   </div>
-                ))}
-            </div>
-
-            {/* attributes */}
-
-            <div className="w-full md:w-[75%] max-h-screen overflow-hidden overflow-y-scroll">
-              {
-                <VariableProduct
-                  setProductValues={setProductValues}
-                  active={active}
-                />
-              }
+                </li>
+                <li>
+                  <div className="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <input
+                      id="checkbox-item-12"
+                      type="radio"
+                      name="user"
+                      value=""
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                    />
+                    <label
+                      htmlFor="checkbox-item-12"
+                      className="w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                    >
+                      Mame Ber
+                    </label>
+                  </div>
+                </li>
+              </ul>
+              <button
+                type="button"
+                className="w-full flex items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:blue-red-500 hover:underline"
+              >
+                <svg
+                  className="w-4 h-4 me-2"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 18"
+                >
+                  <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-6a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2Z" />
+                </svg>
+                Add user
+              </button>
             </div>
           </div>
         </div>
-
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Submit
-        </button>
       </form>
-    </div>
+    </section>
   );
 };
 

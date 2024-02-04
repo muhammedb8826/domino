@@ -10,8 +10,12 @@ import "./assets/styles/main.css"
 import NotFound from "./components/header/NotFound"
 import Login from "./auth/Login"
 import Dashboard from "./pages/Dashboard"
-import OrderForm from "./components/order/OrderForm"
-import OrderDetails from "./components/order/OrderDetails"
+// import OrderForm from "./components/order/OrderForm"
+// import OrderDetails from "./components/order/OrderDetails"
+// import AddOrder from "./components/order/AddOrder"
+// import OrderForm from "./components/order/OrderForm"
+import AddOrder from "./components/order/AddOrder"
+// import OrderForm from "./components/order/OrderForm"d
 
 const App = () => {
   return (
@@ -26,8 +30,8 @@ const App = () => {
         <Route path="/get-started" element={<GetStarted/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/sign-in" element={<Login />} />
-        <Route path="/add-order" element={<OrderForm />} />
-        <Route path="/order/:id" element={<OrderDetails />} />
+        {/* <Route path="/add-order" element={<OrderForm />} /> */}
+        <Route path="/add-order" element={<AddOrder />} />
         <Route path="*" element={<NotFound/>} />
         </Routes>
     </main>

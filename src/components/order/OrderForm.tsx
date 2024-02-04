@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getPrintingData } from "../../redux/features/print/printingSlice";
 import { v4 as uuidv4 } from "uuid";
 import { GoBack } from "../common/GoBack";
@@ -19,8 +19,9 @@ const OrderForm = () => {
   useEffect(() => {
     dispatch(getPrintingData());
   }, [dispatch]);
+
   const [orderId, setOrderId] = useState(uuidv4());
-  const [selectedMedia, setSelectedMedia] = useState("");
+  const [medias, setMedias] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedMaterial, setSelectedMaterial] = useState("");
@@ -30,6 +31,7 @@ const OrderForm = () => {
   const [unitValue, setUnitValue] = useState("");
   const [mediaError, setError] = useState("");
   const [selectedService, setSelectedService] = useState("");
+  const [selectedMedia, setSelectedMedia] = useState("");
 
   const [formData, setFormData] = useState({
     media: "",
@@ -49,112 +51,143 @@ const OrderForm = () => {
   });
 
   const handleSelectedMedia = (e) => {
-    if (e.target.value === "") return setError("Please select a media type");
-    setSelectedMedia(e.target.value);
-    setFormData({ ...formData, media: e.target.value });
-    const selected = printingData.find(
-      (media) => media.type === e.target.value
-    );
-    setMaterials(selected.materials);
-    setServices(selected.services);
-    if (selected.price.length > 0) {
-      setUnitPrice(selected.price);
-      setError("");
-    } else {
-      setError(`This ${e.target.value} doesn't have unit price`);
+    if (e.target.value === "") {
+      setError("Please select a media");
+      setMaterials([]);
+      setServices([]);
+      setUnits([]);
+      setSelectedMedia("");
+      setFormData((prev) => ({ ...prev, media: "" }));
+    }
+    if (e.target.value) {
+      setSelectedMedia(e.target.value);
+      setFormData((prev) => ({ ...prev, media: e.target.value }));
+      const selected = printingData.find((media) => media.type === e.target.value);
+      setMaterials(selected.materials);
+      setServices(selected.services);
+      if (selected.price.length > 0 && Array.isArray(selected.price)) {
+        setUnitPrice(selected.price);
+        setError("");
+      } else {
+        setError(`This ${e.target.value} doesn't have unit price`);
+      }
     }
   };
-
+  
   const handleSelectedMaterial = (e) => {
-    if (e.target.value === "") return setError("Please select a material");
-    setSelectedMaterial(e.target.value);
-    setFormData({ ...formData, material: e.target.value });
-
-    if (unitPrice.length > 0) {
-      // Filter the unitPrice array based on formData values
-      const matchingUnits = unitPrice.filter((unit) => {
-        return unit.type === formData.media && unit.material === e.target.value;
-      });
-      if (matchingUnits.length === 0) {
-        setError(`This ${e.target.value} doesn't have unit price`);
-      } else {
-        setServices(matchingUnits);
-        setError("");
+    if (e.target.value === "") {
+      setError("Please select a material");
+      setServices([]);
+      setUnits([]);
+      setSelectedMaterial("");
+      setSelectedService("");
+      setSelectedUnit("");
+      setFormData((prev) => ({ ...prev, material: "" }));
+    }
+    if (e.target.value) {
+      setSelectedMaterial(e.target.value);
+      setFormData((prev) => ({ ...prev, material: e.target.value }));
+  
+      if (unitPrice.length > 0 && Array.isArray(unitPrice)) {
+        // Filter the unitPrice array based on formData values
+        const matchingUnits = unitPrice.filter((unit) => {
+          return unit.type === formData.media && unit.material === e.target.value;
+        });
+        if (matchingUnits.length === 0) {
+          setError(`This ${e.target.value} doesn't have unit price`);
+        } else {
+          setServices(matchingUnits);
+          setError("");
+        }
       }
     }
   };
-
+  
   const handleService = (e) => {
-    if (e.target.value === "") return setError("Please select a service");
-    setFormData({ ...formData, service: e.target.value });
-    setSelectedService(e.target.value);
-    if (unitPrice.length > 0) {
-      // Filter the unitPrice array based on formData values
-      const matchingUnits = unitPrice.filter((unit) => {
-        return (
-          unit.type === formData.media &&
-          unit.material === formData.material &&
-          unit.service === e.target.value
-        );
-      });
-      if (matchingUnits.length === 0) {
-        setError(`This ${e.target.value} doesn't have unit price`);
-      } else {
-        setUnits(matchingUnits);
-        setError("");
+    if (e.target.value === "") {
+      setError("Please select a service");
+      setUnits([]);
+      setSelectedService("");
+      setSelectedUnit("");
+      setFormData((prev) => ({ ...prev, service: "" }));
+    }
+    if (e.target.value) {
+      setFormData((prev) => ({ ...prev, service: e.target.value }));
+      setSelectedService(e.target.value);
+      if (unitPrice.length > 0 && Array.isArray(unitPrice)) {
+        // Filter the unitPrice array based on formData values
+        const matchingUnits = unitPrice.filter((unit) => {
+          return (
+            unit.type === formData.media &&
+            unit.material === formData.material &&
+            unit.service === e.target.value
+          );
+        });
+        if (matchingUnits.length === 0) {
+          setError(`This ${e.target.value} doesn't have unit price`);
+        } else {
+          setUnits(matchingUnits);
+          setError("");
+        }
       }
     }
   };
-
+  
   const handleUnit = (e) => {
-    if (e.target.value === "") return setError("Please select a unit");
-    setFormData({ ...formData, unitName: e.target.value });
+    if (e.target.value === "") {
+      setError("Please select a unit");
+      setSelectedUnit("");
+      setFormData((prev) => ({ ...prev, unitName: "" }));
+    }
+    if (e.target.value) {
+      setSelectedUnit(e.target.value);
+      setFormData((prev) => ({ ...prev, unitName: e.target.value }));
   
-    if (unitPrice.length > 0 && Array.isArray(unitPrice)) {
-      // Filter the unitPrice array based on formData values
-      const matchingUnits = unitPrice.filter((unit) => {
-        return (
-          unit.type === formData.media &&
-          unit.material === formData.material &&
-          unit.service === formData.service &&
-          unit.unitName === e.target.value
-        );
-      });
+      if (unitPrice.length > 0 && Array.isArray(unitPrice)) {
+        // Filter the unitPrice array based on formData values
+        const matchingUnits = unitPrice.filter((unit) => {
+          return (
+            unit.type === formData.media &&
+            unit.material === formData.material &&
+            unit.service === formData.service &&
+            unit.unitName === e.target.value
+          );
+        });
   
-      console.log(matchingUnits, "matchingUnits");
-  
-      if (matchingUnits.length === 0) {
-        setError(`This ${e.target.value} doesn't have unit price`);
-      } else {
-        setUnits(matchingUnits);
-        setUnitValue(matchingUnits[0].unitValue);
-        setUnitPrice(matchingUnits[0].price);
-        setError("");
+        if (matchingUnits.length === 0) {
+          setError(`This ${e.target.value} doesn't have unit price`);
+        } else {
+          setUnits(matchingUnits);
+          setUnitValue(matchingUnits[0].unitValue);
+          setUnitPrice(matchingUnits[0].price);
+          setError("");
+        }
       }
     }
   };
 
-  const calculatePrice = () => {
+  
+  const calculatePrice = useCallback(() => {
     let getUnitValue = 0;
     const inputString = unitValue;
     const numbersOnly = inputString.match(/\d+(\.\d+)?/g);
 
     if (numbersOnly) {
       const result = numbersOnly.map(Number);
-      getUnitValue = parseFloat(result[0]) * parseFloat(result[1]);      
+      getUnitValue = parseFloat(result[0].toString()) * parseFloat(result[1].toString());
     } else {
       console.log("No numbers found in the string");
     }
 
-    const basePrice = getUnitValue * unitPrice;    
+    const basePrice = getUnitValue * parseFloat(unitPrice.toString());
     const totalPrice =
       formData.width * formData.height * formData.quantity * basePrice;
-    setFormData({ ...formData, price: totalPrice });
-  };
+    setFormData((prev) => ({ ...prev, price: totalPrice.toString() }));
+  }, [formData.width, formData.height, formData.quantity, unitValue, unitPrice]);
 
   useEffect(() => {
     calculatePrice();
-  }, [formData.width, formData.height, formData.quantity, unitValue]);
+  }, [calculatePrice]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -173,7 +206,9 @@ const OrderForm = () => {
         message: formData.message,
         status: "Received",
       },
-    ]
+    ];
+
+    setOrderId(orderId);
 
     const orderValues = {
       orderId,
@@ -185,34 +220,33 @@ const OrderForm = () => {
     const newOrderData = { ...orderValues, order };
 
     dispatch(createOrder(newOrderData)).then((res) => {
-      if(res.payload) {
-        const message = "Order created successfully"
-        toast(message)
+      if (res.payload) {
+        const message = "Order created successfully";
+        toast(message);
         resetForm();
         navigate("/dashboard");
       }
-    })
-};
-    
-const resetForm = () => {
-  setFormData({
-    media: "",
-    material: "",
-    service: "",
-    unitName: "",
-    width: "",
-    height: "",
-    quantity: 1,
-    price: "",
-    dueDate: "",
-    message: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-  });
-}
+    });
+  };
 
+  const resetForm = () => {
+    setFormData({
+      media: "",
+      material: "",
+      service: "",
+      unitName: "",
+      width: "",
+      height: "",
+      quantity: 1,
+      price: "",
+      dueDate: "",
+      message: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+    });
+  };
 
   if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
@@ -253,6 +287,7 @@ const resetForm = () => {
                   </label>
                   <select
                     required
+                    value={selectedMedia}
                     onChange={handleSelectedMedia}
                     id="medias"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -272,19 +307,22 @@ const resetForm = () => {
                   >
                     Select Material
                   </label>
-                  <select
-                    required
-                    onChange={handleSelectedMaterial}
-                    id="material"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option value="">Choose material</option>
-                    {materials.map((material) => (
-                      <option key={material.name} value={material.name}>
-                        {material.name}
-                      </option>
-                    ))}
-                  </select>
+                  {selectedMedia && (
+                    <select
+                      value={selectedMaterial}
+                      required
+                      onChange={handleSelectedMaterial}
+                      id="material"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                      <option value="">Choose material</option>
+                      {materials.map((material) => (
+                        <option key={material.name} value={material.name}>
+                          {material.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
                 <div>
                   <label
@@ -293,22 +331,25 @@ const resetForm = () => {
                   >
                     Select Services
                   </label>
-                  <select
-                    required
-                    onChange={handleService}
-                    id="service"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option value="">Choose service</option>
-                    {services.map((service, index) => (
-                      <option
-                        key={`${service}-${index}`}
-                        value={service.service}
-                      >
-                        {service.service}
-                      </option>
-                    ))}
-                  </select>
+                  {selectedMedia && selectedMaterial && (
+                    <select
+                      value={selectedService}
+                      required
+                      onChange={handleService}
+                      id="service"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                      <option value="">Choose service</option>
+                      {services.map((service, index) => (
+                        <option
+                          key={`${service}-${index}`}
+                          value={service.service}
+                        >
+                          {service.service}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
                 <div>
                   <label
@@ -317,19 +358,22 @@ const resetForm = () => {
                   >
                     Select Units
                   </label>
-                  <select
-                    required
-                    onChange={handleUnit}
-                    id="unit"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option>Choose units</option>
-                    {units.map((unit) => (
-                      <option key={unit.unitName} value={unit.unitName}>
-                        {unit.unitName}
-                      </option>
-                    ))}
-                  </select>
+                  {selectedMedia && selectedMaterial && selectedService && (
+                    <select
+                      value={selectedUnit}
+                      required
+                      onChange={handleUnit}
+                      id="unit"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                      <option>Choose units</option>
+                      {units.map((unit) => (
+                        <option key={unit.unitName} value={unit.unitName}>
+                          {unit.unitName}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
                 <div>
                   <label
@@ -437,19 +481,21 @@ const resetForm = () => {
                     />
                   </div>
                 </div>
+                <div>
+                <label
+                    htmlFor="note"
+                    className="block mb-2 text-sm font-medium text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                  >
+                    Note!
+                  </label>
                 <div
                   className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
                   role="alert"
                 >
-                  {unitValue && (
-                    <>
-                      {" "}
-                      <span className="font-medium">Note!</span> The price is
-                      calculated from {"("} unit-name:{formData.unitName} *
-                      unit-value:{unitValue} * unit-price: {unitPrice} *
-                      quantity: 1 {")"}
-                    </>
-                  )}
+                      The price is
+                      calculated from  unit-name *
+                      unit-value * unit-price * quantity * width * height
+                </div>
                 </div>
               </div>
               <div className="mt-4">
