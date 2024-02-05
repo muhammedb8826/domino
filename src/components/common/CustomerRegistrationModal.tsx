@@ -48,7 +48,7 @@ const dispatch = useDispatch();
         }
     })
   };
-  
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -91,23 +91,6 @@ const dispatch = useDispatch();
                     Phone number (1234-45-7890)
                   </label>
                 </div>
-                <div className="relative z-0 w-full mb-5 group">
-                  <label htmlFor="underline_select" className="sr-only">
-                    Company Type
-                  </label>
-                  <select
-                  value={formData.companyType}
-                    name="companyType"
-                    id="underline_select"
-                    onChange={handleChange}
-                    className="block p-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                  >
-                    <option value="">Select type</option>
-                    <option value="individual">Individual</option>
-                    <option value="group">Group</option>
-                    <option value="company">Company</option>
-                  </select>
-                </div>
                 <div className="grid md:grid-cols-2 md:gap-6">
                   <div className="relative z-0 w-full mb-5 group">
                     <input
@@ -118,6 +101,7 @@ const dispatch = useDispatch();
                       placeholder=" "
                       onChange={handleChange}
                       value={formData.firstName}
+                      required
                     />
                     <label
                       htmlFor="floating_first_name"
@@ -144,7 +128,23 @@ const dispatch = useDispatch();
                     </label>
                   </div>
                 </div>
-
+                <div className="relative z-0 w-full mb-5 group">
+                  <label htmlFor="underline_select" className="sr-only">
+                    Company Type
+                  </label>
+                  <select
+                  value={formData.companyType}
+                    name="companyType"
+                    id="underline_select"
+                    onChange={handleChange}
+                    className="block p-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                  >
+                    <option value="">Select type</option>
+                    <option value="individual">Individual</option>
+                    <option value="group">Group</option>
+                    <option value="company">Company</option>
+                  </select>
+                </div>
                 <div className="relative z-0 w-full mb-5 group">
                   <input
                     type="email"

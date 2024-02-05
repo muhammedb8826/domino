@@ -6,6 +6,7 @@ import orderReducer from "./features/order/orderSlice";
 import printingReducer from "./features/print/printingSlice";
 import customerReducer  from "./features/customer/customerSlice";
 
+
 const store = configureStore({
     reducer: {
         user: userReducer,

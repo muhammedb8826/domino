@@ -6,12 +6,14 @@ interface CustomerState {
   customers: [];
   isLoading: boolean;
   error: string | null;
+  searchTerm: string;
 }
 
 const initialState: CustomerState = {
   customers: [],
   isLoading: false,
   error: null,
+  searchTerm: "",
 };
 
 export const getCustomers = createAsyncThunk("customer/getCustomers", async () => {
@@ -34,10 +36,16 @@ export const createCustomer = createAsyncThunk("customer/createCustomer", async 
   }
 })
 
+
 export const customerSlice = createSlice({
   name: "customer",
   initialState,
-  reducers: {},
+  reducers: {
+    searchUsers: (state, action) => {
+      const searchTerm = action.payload.toLowerCase();
+      state.searchTerm = searchTerm;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(getCustomers.pending, (state) => {
       state.isLoading = true;
@@ -69,3 +77,4 @@ export const customerSlice = createSlice({
 });
 
 export default customerSlice.reducer;
+export const { searchUsers } = customerSlice.actions;
