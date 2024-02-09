@@ -14,7 +14,9 @@ import Dashboard from "./pages/Dashboard"
 // import OrderDetails from "./components/order/OrderDetails"
 // import AddOrder from "./components/order/AddOrder"
 // import OrderForm from "./components/order/OrderForm"
-import AddOrder from "./components/order/AddOrder"
+// import AddOrder from "./components/order/AddOrder"
+import { OrderRegistration } from "./components/order/OrderRegistration"
+import OrderForm from "./components/order/OrderForm"
 // import OrderForm from "./components/order/OrderForm"d
 
 const App = () => {
@@ -31,7 +33,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/sign-in" element={<Login />} />
         {/* <Route path="/add-order" element={<OrderForm />} /> */}
-        <Route path="/add-order" element={<AddOrder />} />
+        <Route path="/add-order" element={<OrderRegistration />} />
         <Route path="*" element={<NotFound/>} />
         </Routes>
     </main>

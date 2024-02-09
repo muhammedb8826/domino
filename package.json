@@ -24,6 +24,7 @@
     "react-router-dom": "^6.21.0",
     "react-scroll-parallax": "^3.4.5",
     "sweetalert2": "^11.10.3",
+    "tailwind-datepicker-react": "^1.4.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

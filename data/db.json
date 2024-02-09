@@ -255,6 +255,18 @@
               "price": 0
             }
           ]
+        },
+        {
+          "name": "ooooo",
+          "units": []
+        },
+        {
+          "name": "uuuu",
+          "units": []
+        },
+        {
+          "name": "screen 4",
+          "units": []
         }
       ],
       "services": [
@@ -262,7 +274,7 @@
         "Print and Heat press",
         "Print and Material"
       ],
-      "price": [
+      "prices": [
         {
           "type": "DTF",
           "material": "Film",
@@ -314,7 +326,7 @@
         "Print",
         "Print and Material"
       ],
-      "price": [
+      "prices": [
         {
           "type": "crystal jet",
           "material": "sticker",

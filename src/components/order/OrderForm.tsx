@@ -304,8 +304,9 @@ const OrderForm = () => {
                   >
                     Select Material
                   </label>
-                  {selectedMedia && (
+                  
                     <select
+                    disabled={!selectedMedia}
                       value={selectedMaterial}
                       required
                       onChange={handleSelectedMaterial}
@@ -319,7 +320,6 @@ const OrderForm = () => {
                         </option>
                       ))}
                     </select>
-                  )}
                 </div>
                 <div>
                   <label
@@ -328,8 +328,9 @@ const OrderForm = () => {
                   >
                     Select Services
                   </label>
-                  {selectedMedia && selectedMaterial && (
+                  
                     <select
+                      disabled={!(selectedMedia && selectedMaterial)}
                       value={selectedService}
                       required
                       onChange={handleService}
@@ -346,7 +347,6 @@ const OrderForm = () => {
                         </option>
                       ))}
                     </select>
-                  )}
                 </div>
                 <div>
                   <label
@@ -355,8 +355,9 @@ const OrderForm = () => {
                   >
                     Select Units
                   </label>
-                  {selectedMedia && selectedMaterial && selectedService && (
+                  
                     <select
+                    disabled={!(selectedMedia && selectedMaterial && selectedService)}
                       value={selectedUnit}
                       required
                       onChange={handleUnit}
@@ -370,7 +371,7 @@ const OrderForm = () => {
                         </option>
                       ))}
                     </select>
-                  )}
+     
                 </div>
                 <div>
                   <label

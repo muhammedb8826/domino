@@ -9,6 +9,7 @@ import Product from "../components/product/Product";
 import Pricing from "../components/pricing/Pricing";
 import { RootState } from "../redux/store";
 import Setting from "../components/setting/Setting";
+import  {CustomerList} from "../components/customer/CustomerList";
 
 const Dashboard = () => {
 
@@ -47,7 +48,7 @@ const Dashboard = () => {
         {active === "customer" && (
           <>
             <TopBar />
-            <div>customer</div>
+            <CustomerList/>
           </>
         )}
 
