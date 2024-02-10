@@ -1,4 +1,4 @@
-import { FaRegWindowClose } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 
 const PriceDetailsModal = ({ data, handleModalOpen }) => {
   console.log(data);
@@ -22,7 +22,7 @@ const PriceDetailsModal = ({ data, handleModalOpen }) => {
                   onClick={() => handleModalOpen(false)}
                 >
                   <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                    <FaRegWindowClose />
+                  <IoMdClose />
                   </span>
                 </button>
               </div>

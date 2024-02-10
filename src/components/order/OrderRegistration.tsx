@@ -82,7 +82,10 @@ export const OrderRegistration = () => {
     setTableRows((prev) => [...prev, `row-${count + 1}`]);
   };
 
-  const handleSelectedMedia = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectedMedia = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -114,7 +117,10 @@ export const OrderRegistration = () => {
     }
   };
 
-  const handleSelectedMaterial = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectedMaterial = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -136,7 +142,10 @@ export const OrderRegistration = () => {
     }
   };
 
-  const handleSelectedService = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectedService = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -163,7 +172,10 @@ export const OrderRegistration = () => {
     }
   };
 
-  const handleSelectedUnit = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectedUnit = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -200,7 +212,10 @@ export const OrderRegistration = () => {
     }
   };
 
-  const handleInputChanges = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChanges = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -215,17 +230,16 @@ export const OrderRegistration = () => {
   const totalBirrCalculator = useCallback(() => {
     const length = formData.length;
     const newArray = unitPriceUpdated.splice(0, length);
-     const total = newArray.reduce((acc, curr) => acc + parseFloat(curr), 0);
-     const quantity = formData.map((item) => item.quantity)
-     const numberArray = quantity.map(Number);
-     const totalQuantity = numberArray.reduce((acc, curr) => acc + curr, 0);
+    const total = newArray.reduce((acc, curr) => acc + parseFloat(curr), 0);
+    const quantity = formData.map((item) => item.quantity);
+    const numberArray = quantity.map(Number);
+    const totalQuantity = numberArray.reduce((acc, curr) => acc + curr, 0);
     setTotalBirr(total);
     setTotalQuantity(totalQuantity);
     setCalculatedUnitPrices(newArray);
   }, [formData, unitPriceUpdated]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     totalBirrCalculator();
   }, [formData, totalBirrCalculator]);
 
@@ -277,7 +291,9 @@ export const OrderRegistration = () => {
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
-      customerPhone: customer.phone, customerFirstName: customer.firstName, customerEmail: customer.email
+      customerPhone: customer.phone,
+      customerFirstName: customer.firstName,
+      customerEmail: customer.email,
     }));
   };
 
@@ -298,7 +314,6 @@ export const OrderRegistration = () => {
       deliveryDate: formattedDate,
     }));
   };
-
 
   const resetForm = () => {
     setOrderInfo({
@@ -339,31 +354,32 @@ export const OrderRegistration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(formData.length === 0) {
+    if (formData.length === 0) {
       alert("Please add order items");
       return;
     }
-    if(orderInfo.customerPhone === "") {
+    if (orderInfo.customerPhone === "") {
       alert("Please add customer phone or name");
       return;
     }
-    if(orderInfo.orderType === ""){
+    if (orderInfo.orderType === "") {
       alert("Please add order type");
       return;
-    } 
-    if(orderInfo.deliveryDate === "") {
+    }
+    if (orderInfo.deliveryDate === "") {
       alert("Please add delivery date");
       return;
     }
     const unitPrice = formData.map((item, index) => {
       item.unitPrice = calculatedUnitPrices[index];
       return item;
-    }
-    );
+    });
 
     const orderData = {
       ...orderInfo,
-      orderItems: unitPrice, totalBirr, totalQuantity 
+      orderItems: unitPrice,
+      totalBirr,
+      totalQuantity,
     };
     dispatch(createOrder(orderData)).then((res) => {
       if (res.payload) {
@@ -375,16 +391,15 @@ export const OrderRegistration = () => {
     });
   };
 
-
   const tableRow = "row-";
   if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
 
   return (
     <>
-      <section className="bg-white dark:bg-gray-900 wrapper py-4">
+      <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0">
         <GoBack goback="/dashboard" />
-        <h2 className="my-4 text-2xl font-bold text-gray-900 dark:text-white">
+        <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
           Add a new order
         </h2>
         {/* {mediaError && (
@@ -396,80 +411,77 @@ export const OrderRegistration = () => {
           a few things up and try submitting again.
         </div>
       )} */}
-        <form action="#" className="border" onSubmit={handleSubmit}>
-          <div className="grid gap-4 sm:grid-cols-3 sm:gap-6 mb-4 p-4">
-            <div className="w-full">
-              <label
-                htmlFor="name"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Series
-              </label>
-              <input
-                type="text"
-                name="name"
-                value="SAL-ORD-YYYY-"
-                readOnly
-                id="name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type product name"
-                required
-              />
-            </div>
-            <div className="w-full">
-              <label
-                htmlFor="date"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Date
-              </label>
-              <Datepicker
-                title="Registration date"
-                name="date"
-                onSelectedDateChanged={handleDatePickerChange}
-                value={orderInfo.date}
-                required
-              />
-            </div>
-            <div className="w-full relative">
-              <CustomerSearchInput handleCustomerInfo={handleCustomerInfo} />
-            </div>
-            <div>
-              <label
-                htmlFor="orderType"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Order Type
-              </label>
-              <select
-                name="orderType"
-                onChange={handleOrderInfo}
-                value={orderInfo.orderType}
-                id="orderType"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              >
-                <option>Choose type</option>
-                <option value="phone">Phone</option>
-                <option value="telegram">Telegram</option>
-                <option value="telegram">In person</option>
-              </select>
-            </div>
-            <div className="w-full">
-              <label
-                htmlFor="deliveryDate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Delivery date
-              </label>
-              <Datepicker
-                title="Delivery date"
-                onSelectedDateChanged={handleDeliveryDatePickerChange}
-                value={orderInfo.deliveryDate}
-                required
-              />
-            </div>
+
+        <div className="grid gap-4 sm:grid-cols-3 sm:gap-6 mb-4 p-4">
+          <div className="w-full">
+            <label
+              htmlFor="name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Series
+            </label>
+            <input
+              type="text"
+              name="name"
+              value="SAL-ORD-YYYY-"
+              readOnly
+              id="name"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Type product name"
+            />
           </div>
+          <div className="w-full">
+            <label
+              htmlFor="date"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Date
+            </label>
+            <Datepicker
+              title="Registration date"
+              name="date"
+              onSelectedDateChanged={handleDatePickerChange}
+              value={orderInfo.date}
+            />
+          </div>
+          <div className="w-full relative">
+            <CustomerSearchInput handleCustomerInfo={handleCustomerInfo} />
+          </div>
+          <div>
+            <label
+              htmlFor="orderType"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Order Type
+            </label>
+            <select
+              name="orderType"
+              onChange={handleOrderInfo}
+              value={orderInfo.orderType}
+              id="orderType"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            >
+              <option>Choose type</option>
+              <option value="phone">Phone</option>
+              <option value="telegram">Telegram</option>
+              <option value="telegram">In person</option>
+            </select>
+          </div>
+          <div className="w-full">
+            <label
+              htmlFor="deliveryDate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Delivery date
+            </label>
+            <Datepicker
+              title="Delivery date"
+              onSelectedDateChanged={handleDeliveryDatePickerChange}
+              value={orderInfo.deliveryDate}
+            />
+          </div>
+        </div>
+        <form onSubmit={handleSubmit}>
           <div>
             <button
               onClick={handleIsCollapsed}
@@ -609,7 +621,7 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option value="">Choose machine</option>
-                          {printingData.map((media:string) => (
+                          {printingData.map((media: string) => (
                             <option key={media.id} value={media.type}>
                               {media.type}
                             </option>
@@ -627,7 +639,7 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option value="">Choose materials</option>
-                          {materials[index]?.map((material:string) => (
+                          {materials[index]?.map((material: string) => (
                             <option key={material.name} value={material.name}>
                               {material.name}
                             </option>
@@ -645,11 +657,16 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option value="">Choose services</option>
-                          {services[index]?.map((service:string, index:number) => (
-                            <option key={`${service}-${index}`} value={service}>
-                              {service}
-                            </option>
-                          ))}
+                          {services[index]?.map(
+                            (service: string, index: number) => (
+                              <option
+                                key={`${service}-${index}`}
+                                value={service}
+                              >
+                                {service}
+                              </option>
+                            )
+                          )}
                         </select>
                       </td>
                       <td className="px-2 py-2 border border-gray-300">
@@ -663,7 +680,7 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option>Choose units</option>
-                          {units[index]?.map((unit:string, index:number) => (
+                          {units[index]?.map((unit: string, index: number) => (
                             <option key={`${unit}-${index}`} value={unit}>
                               {unit}
                             </option>
@@ -750,7 +767,7 @@ export const OrderRegistration = () => {
                   Total Quantity
                 </label>
                 <input
-                value={totalQuantity}
+                  value={totalQuantity}
                   readOnly
                   type="number"
                   name="totalQuantity"
@@ -768,7 +785,7 @@ export const OrderRegistration = () => {
                   Total(Birr)
                 </label>
                 <input
-                 value={totalBirr}
+                  value={totalBirr}
                   readOnly
                   type="number"
                   name="totalBirr"

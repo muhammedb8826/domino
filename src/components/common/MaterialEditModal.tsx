@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { FaRegWindowClose } from "react-icons/fa"
 import { updatePrintingData } from "../../redux/features/print/printingSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { IoMdClose } from "react-icons/io";
 
 export const MaterialEditModal = ({handleModalOpen, data, index, updateMaterial}) => {
     const dispatch = useDispatch();
@@ -52,7 +52,7 @@ export const MaterialEditModal = ({handleModalOpen, data, index, updateMaterial}
             onClick={() => handleModalOpen(false)}
           >
             <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-            <FaRegWindowClose />
+            <IoMdClose />
             </span>
           </button>
         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CustomerRegistration } from "../common/CustomerRegistrationModal";
+import { CustomerRegistration } from "./CustomerRegistrationModal";
 import { getCustomers, searchUsers } from "../../redux/features/customer/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
 

@@ -1,14 +1,19 @@
 import { IoBagAdd } from "react-icons/io5"
 import { useDispatch, useSelector } from "react-redux"
-import { NavLink } from "react-router-dom"
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCustomers } from "../../redux/features/customer/customerSlice";
+import { CustomerRegistration } from "./CustomerRegistrationModal";
 
 export const CustomerList = () => {
     const {customers, isLoading, error} = useSelector((state)=>state.customer);
     const dispatch = useDispatch();
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleModalOpen = () => {
+        setOpenModal((prev)=>!prev);
+    }
     useEffect(()=>{
      dispatch(getCustomers());
     },[dispatch])
@@ -20,13 +25,14 @@ export const CustomerList = () => {
 <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
 <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div>
-        <NavLink
-            to="/add-customer"
+        <button
+        type="button"
+            onClick={handleModalOpen}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <IoBagAdd />
             <span className="ml-2">Add New Customer</span>
-          </NavLink>
+          </button>
         </div>
         <label htmlFor="table-search" className="sr-only">Search</label>
         <div className="relative">
@@ -118,6 +124,7 @@ export const CustomerList = () => {
             </li>
         </ul>
     </nav>
+    {openModal && <CustomerRegistration handleModalOpen={handleModalOpen}/>}
 </div>
 
   )

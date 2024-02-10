@@ -1,4 +1,5 @@
-import { FaEdit, FaRegHandPointRight, FaRegWindowClose } from "react-icons/fa";
+import { FaEdit, FaRegHandPointRight } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 const ModalPage = ({ handleModalOpen, id, orders }) => {
   const order = orders.find((order) => order.id === id);
   console.log(order);
@@ -35,7 +36,7 @@ const ModalPage = ({ handleModalOpen, id, orders }) => {
                 title="close"
                 className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:ml-3 sm:w-auto"
               >
-                <FaRegWindowClose />
+                <IoMdClose />
               </button>
             </div>
 
