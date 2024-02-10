@@ -77,7 +77,9 @@ export const deleteOrder = createAsyncThunk(
   async (orderId) => {
     try {
       const response = await axios.delete(`${orderURL}/${orderId}`);
-      return response.data;
+      console.log(response.data+"response");
+      
+      return orderId;
     } catch (error) {
       console.error("Error deleting order:", error);
       throw error;

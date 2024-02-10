@@ -5,13 +5,14 @@ import { IoBagAdd } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getOrders } from "../../redux/features/order/orderSlice";
+import { deleteOrder, getOrders } from "../../redux/features/order/orderSlice";
 import { RootState } from "../../redux/store";
 import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
 import { FaFirstOrderAlt, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import ModalPage from "../common/ModalPage";
+import Swal from "sweetalert2";
 
 const OrdersList = () => {
   const { orders, isLoading, error } = useSelector(
@@ -25,6 +26,7 @@ const OrdersList = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [id, setId] = useState(null);
+  const pendingOrders = orders.filter((order) => order.status === "pending");
 
   useEffect(() => {
     dispatch(getOrders());
@@ -34,6 +36,29 @@ const OrdersList = () => {
     setShowModal(!showModal);
     setId(id);
   };
+
+  const handleDeleteOrder = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this order!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The order has been deleted.",
+          icon: "success",
+        }).then(() => {
+          dispatch(deleteOrder(id));
+        });
+      }
+      setShowPopover(null);
+    });
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -45,7 +70,7 @@ const OrdersList = () => {
 
   const orderListContent = orders
     ? orders.map((order, index: number) => (
-        <tbody key={index}>
+        <tbody key={order.id}>
           <tr className="bg-white border-b hover:bg-gray-50">
             <td className="w-4 p-4">
               <div className="flex items-center">
@@ -71,26 +96,30 @@ const OrdersList = () => {
               /> */}
               <div className="ps-3">
                 <div className="text-base font-semibold">
-                  <NavLink to={`/order/${order.orderId}`} className="text-blue-500">
-                    {order.order.map((o) => o.media)}
+                  <NavLink to={`/order/${order.id}`} className="text-blue-500">
+                    {order.series}
                   </NavLink>{" "}
-                  by {order.firstName} {order.lastName}
+                  by {order.customerFirstName}
                 </div>
-                <div className="font-normal text-gray-500">{order.email}</div>
+                <div className="font-normal text-gray-500">{order.customerPhone}</div>
               </div>
             </th>
-            <td className="px-6 py-4">{order.order.map((o) => o.status)}</td>
-            <td className="px-6 py-4">
-              {order.orderId}-{order.phoneNumber}
+            <td className="px-6 py-4">{order.orderItems.map((item, index)=>(
+              <span key={index}>{item.material}{","}</span>
+            ))}
             </td>
-            <td className="px-6 py-4">{order.order.map((o) => o.dueDate)}</td>
+            <td className="px-6 py-4">{order.status}</td>
+            <td className="px-6 py-4">
+              {order.id}-{order.customerPhone}
+            </td>
+            <td className="px-6 py-4">{order.deliveryDate}</td>
             <td className="px-6 py-4">
               <button
                 onClick={() => handleAction(index)}
                 title="action"
                 data-popover-target={`popover-bottom-${index}`}
                 data-popover-trigger="click"
-                id={`dropdownAvatarNameButton-${order.orderId}-${index}`}
+                id={`dropdownAvatarNameButton-${order.id}-${index}`}
                 type="button"
                 className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
@@ -101,7 +130,7 @@ const OrdersList = () => {
                   {/* Dropdown content */}
                   <div className="px-4 py-3 text-sm text-gray-900">
                     <div className="font-medium">Pro User</div>
-                    <div className="truncate">{order.email}</div>
+                    <div className="truncate">email</div>
                   </div>
                   <ul className="py-2 text-sm text-gray-700">
                     <li>
@@ -115,6 +144,7 @@ const OrdersList = () => {
                     </li>
                     <li>
                       <button
+                        onClick={() => handleDeleteOrder(order.id)}
                         type="button"
                         className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
                       >
@@ -155,8 +185,8 @@ const OrdersList = () => {
             <MdOutlinePendingActions />
           </p>
           <div className="">
-            <p className="font-bold text-2xl">34</p>
-            <p className="text-gray-400">Total Order Pending</p>
+            <p className="font-bold text-2xl">{pendingOrders.length}</p>
+            <p className="text-gray-400">Total pending orders</p>
           </div>
           <div className="progress ml-auto">
             <div className="relative w-14 h-14">
@@ -335,13 +365,16 @@ const OrdersList = () => {
                   Order name
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Orders
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Status
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Order Id
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Created At
+                  Delivery Date
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Action

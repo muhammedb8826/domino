@@ -17,6 +17,12 @@ const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
 const formattedDate = date.toLocaleDateString("en-US", options);
 
+interface CustomerType {
+  phone: string;
+  firstName: string;
+  email: string;
+}
+
 export const OrderRegistration = () => {
   const { printingData, isLoading, error } = useSelector(
     (state) => state.printing
@@ -26,9 +32,6 @@ export const OrderRegistration = () => {
   useEffect(() => {
     dispatch(getPrintingData());
   }, [dispatch]);
-
-  console.log(printingData);
-  
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [tableRows, setTableRows] = useState(["row-1"]);
@@ -40,6 +43,9 @@ export const OrderRegistration = () => {
     orderType: "",
     description: "",
     customerPhone: "",
+    customerFirstName: "",
+    customerEmail: "",
+    status: "pending",
   });
 
   const [formData, setFormData] = useState([
@@ -76,7 +82,7 @@ export const OrderRegistration = () => {
     setTableRows((prev) => [...prev, `row-${count + 1}`]);
   };
 
-  const handleSelectedMedia = (index, e) => {
+  const handleSelectedMedia = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -108,7 +114,7 @@ export const OrderRegistration = () => {
     }
   };
 
-  const handleSelectedMaterial = (index, e) => {
+  const handleSelectedMaterial = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -116,7 +122,7 @@ export const OrderRegistration = () => {
       return updatedFormData;
     });
     if (unitPrices.length > 0) {
-      const matchingUnits = unitPrices[index].filter((price) => {
+      const matchingUnits = unitPrices[index].filter((price: any) => {
         return price.type === formData[index].media && price.material === value;
       });
       if (matchingUnits.length > 0) {
@@ -130,10 +136,7 @@ export const OrderRegistration = () => {
     }
   };
 
-  console.log(unitPrices);
-  
-
-  const handleSelectedService = (index, e) => {
+  const handleSelectedService = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -160,7 +163,7 @@ export const OrderRegistration = () => {
     }
   };
 
-  const handleSelectedUnit = (index, e) => {
+  const handleSelectedUnit = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -197,7 +200,7 @@ export const OrderRegistration = () => {
     }
   };
 
-  const handleInputChanges = (index, e) => {
+  const handleInputChanges = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
@@ -212,10 +215,12 @@ export const OrderRegistration = () => {
   const totalBirrCalculator = useCallback(() => {
     const length = formData.length;
     const newArray = unitPriceUpdated.splice(0, length);
-    console.log(newArray);
-
-     const total = newArray.reduce((acc, curr) => acc + curr, 0);
+     const total = newArray.reduce((acc, curr) => acc + parseFloat(curr), 0);
+     const quantity = formData.map((item) => item.quantity)
+     const numberArray = quantity.map(Number);
+     const totalQuantity = numberArray.reduce((acc, curr) => acc + curr, 0);
     setTotalBirr(total);
+    setTotalQuantity(totalQuantity);
     setCalculatedUnitPrices(newArray);
   }, [formData, unitPriceUpdated]);
 
@@ -261,9 +266,6 @@ export const OrderRegistration = () => {
     setUnitPriceUpdated(savedPricesArray);
   }, [formData]);
 
-  console.log(calculatedUnitPrices);
-  console.log(formData);
-
   const handleOrderInfo = (e) => {
     const { name, value } = e.target;
     setOrderInfo((prevOrderInfo) => ({
@@ -272,14 +274,14 @@ export const OrderRegistration = () => {
     }));
   };
 
-  const handleCustomerInfo = (customer) => {
+  const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
-      customerPhone: customer.phone,
+      customerPhone: customer.phone, customerFirstName: customer.firstName, customerEmail: customer.email
     }));
   };
 
-  const handleDatePickerChange = (date) => {
+  const handleDatePickerChange = (date: Date) => {
     const options = { month: "short", day: "numeric", year: "numeric" };
     const formattedDate = date.toLocaleDateString("en-US", options);
     setOrderInfo((prevOrderInfo) => ({
@@ -288,7 +290,7 @@ export const OrderRegistration = () => {
     }));
   };
 
-  const handleDeliveryDatePickerChange = (date) => {
+  const handleDeliveryDatePickerChange = (date: Date) => {
     const options = { month: "short", day: "numeric", year: "numeric" };
     const formattedDate = date.toLocaleDateString("en-US", options);
     setOrderInfo((prevOrderInfo) => ({
@@ -297,22 +299,82 @@ export const OrderRegistration = () => {
     }));
   };
 
+
+  const resetForm = () => {
+    setOrderInfo({
+      series: "SAL-ORD-YYYY-",
+      date: formattedDate,
+      deliveryDate: formattedDate,
+      orderType: "",
+      description: "",
+      customerPhone: "",
+      customerFirstName: "",
+      customerEmail: "",
+      status: "pending",
+    });
+    setFormData([
+      {
+        media: "",
+        material: "",
+        service: "",
+        unitName: "",
+        width: "",
+        height: "",
+        quantity: 0,
+        message: "",
+        unitPrice: 0,
+      },
+    ]);
+    setMaterials([]);
+    setServices([]);
+    setUnitPrices([0]);
+    setUnits([]);
+    setUnitPrice([]);
+    setUnitValue([]);
+    setUnitPriceUpdated([]);
+    setCalculatedUnitPrices([]);
+    setTotalQuantity(0);
+    setTotalBirr(0);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(formData.length === 0) {
+      alert("Please add order items");
+      return;
+    }
+    if(orderInfo.customerPhone === "") {
+      alert("Please add customer phone or name");
+      return;
+    }
+    if(orderInfo.orderType === ""){
+      alert("Please add order type");
+      return;
+    } 
+    if(orderInfo.deliveryDate === "") {
+      alert("Please add delivery date");
+      return;
+    }
     const unitPrice = formData.map((item, index) => {
       item.unitPrice = calculatedUnitPrices[index];
       return item;
     }
     );
 
-    
     const orderData = {
       ...orderInfo,
-      orderItems: unitPrice,
+      orderItems: unitPrice, totalBirr, totalQuantity 
     };
-    console.log(orderData);
-    
+    dispatch(createOrder(orderData)).then((res) => {
+      if (res.payload) {
+        const message = "Order created successfully";
+        toast(message);
+        resetForm();
+        navigate("/dashboard");
+      }
+    });
   };
+
 
   const tableRow = "row-";
   if (isLoading) return <Loading />;
@@ -366,6 +428,7 @@ export const OrderRegistration = () => {
                 name="date"
                 onSelectedDateChanged={handleDatePickerChange}
                 value={orderInfo.date}
+                required
               />
             </div>
             <div className="w-full relative">
@@ -383,6 +446,7 @@ export const OrderRegistration = () => {
                 onChange={handleOrderInfo}
                 value={orderInfo.orderType}
                 id="orderType"
+                required
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               >
                 <option>Choose type</option>
@@ -402,6 +466,7 @@ export const OrderRegistration = () => {
                 title="Delivery date"
                 onSelectedDateChanged={handleDeliveryDatePickerChange}
                 value={orderInfo.deliveryDate}
+                required
               />
             </div>
           </div>
@@ -544,7 +609,7 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option value="">Choose machine</option>
-                          {printingData.map((media) => (
+                          {printingData.map((media:string) => (
                             <option key={media.id} value={media.type}>
                               {media.type}
                             </option>
@@ -562,7 +627,7 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option value="">Choose materials</option>
-                          {materials[index]?.map((material) => (
+                          {materials[index]?.map((material:string) => (
                             <option key={material.name} value={material.name}>
                               {material.name}
                             </option>
@@ -580,7 +645,7 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option value="">Choose services</option>
-                          {services[index]?.map((service, index) => (
+                          {services[index]?.map((service:string, index:number) => (
                             <option key={`${service}-${index}`} value={service}>
                               {service}
                             </option>
@@ -598,7 +663,7 @@ export const OrderRegistration = () => {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option>Choose units</option>
-                          {units[index]?.map((unit, index) => (
+                          {units[index]?.map((unit:string, index:number) => (
                             <option key={`${unit}-${index}`} value={unit}>
                               {unit}
                             </option>
@@ -685,6 +750,7 @@ export const OrderRegistration = () => {
                   Total Quantity
                 </label>
                 <input
+                value={totalQuantity}
                   readOnly
                   type="number"
                   name="totalQuantity"
@@ -723,7 +789,10 @@ export const OrderRegistration = () => {
               Description
             </label>
             <textarea
+              onChange={handleOrderInfo}
+              value={orderInfo.description}
               id="description"
+              name="description"
               rows={8}
               className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Your description here"

@@ -167,73 +167,51 @@
   ],
   "orders": [
     {
-      "id": "9531",
-      "orderId": "7d9de3af-e30d-4b9a-bb53-60fb8d19a5ec",
-      "firstName": "Muhammed",
-      "lastName": "Berisso",
-      "email": "muhammedb8826@gmail.com",
-      "phoneNumber": "905-07-8826",
-      "order": [
+      "id": "b987",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 10, 2024",
+      "deliveryDate": "Feb 13, 2024",
+      "orderType": "telegram",
+      "description": "I want this order to be printed and ready for delivery on sunday",
+      "customerPhone": "0905-07-8826",
+      "customerFirstName": "Muhammed",
+      "customerEmail": "muhammedb8826@gmail.com",
+      "status": "pending",
+      "orderItems": [
         {
           "media": "BANNER",
           "material": "Mesh",
+          "service": "Print",
+          "unitName": "M",
+          "width": "2",
+          "height": "4",
+          "quantity": "2",
+          "message": "",
+          "unitPrice": 16000
+        },
+        {
+          "media": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitName": "PCS",
+          "width": "5",
+          "height": "5",
+          "quantity": "4",
+          "unitPrice": 100000
+        },
+        {
+          "media": "UV",
+          "material": "Glass",
           "service": "Print",
           "unitName": "M",
           "width": "5",
-          "height": "5",
-          "quantity": "2",
-          "price": 5000,
-          "dueDate": "2024-02-03",
-          "message": "I want this banner for saturday",
-          "status": "Received"
+          "height": "4",
+          "quantity": "22",
+          "unitPrice": 440000
         }
-      ]
-    },
-    {
-      "id": "8024",
-      "orderId": "b6bde4f7-3591-4bfc-bd37-4d36e2e78f91",
-      "firstName": "Teshe",
-      "lastName": "Assefa",
-      "email": "teshe@gmail.com",
-      "phoneNumber": "911-17-7553",
-      "order": [
-        {
-          "media": "BANNER",
-          "material": "Mesh",
-          "service": "Print",
-          "unitName": "M",
-          "width": "10",
-          "height": "5",
-          "quantity": "3",
-          "price": 15000,
-          "dueDate": "2024-02-12",
-          "message": "I want this banner for tomorrow",
-          "status": "Received"
-        }
-      ]
-    },
-    {
-      "id": "c7ab",
-      "orderId": "7f16da03-e5ba-4d8f-b2de-8497e561b44e",
-      "firstName": "dir",
-      "lastName": "advert",
-      "email": "dir@gmail.com",
-      "phoneNumber": "911-55-4444",
-      "order": [
-        {
-          "media": "BANNER",
-          "material": "Mesh",
-          "service": "Print and Material",
-          "unitName": "M",
-          "width": "2",
-          "height": "2",
-          "quantity": "5",
-          "price": 4000,
-          "dueDate": "2024-02-14",
-          "message": "tftyftfyfytt",
-          "status": "Received"
-        }
-      ]
+      ],
+      "totalBirr": 556000,
+      "totalQuantity": 28
     }
   ],
   "printingData": [

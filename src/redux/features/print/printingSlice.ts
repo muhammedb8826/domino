@@ -16,7 +16,6 @@ const initialState: PrintingState = {
   error: null,
   errors: [],
   message: null,
-  prices: []
 };
 
 export const getPrintingData = createAsyncThunk(
@@ -129,5 +128,5 @@ export const printingSlice = createSlice({
     });
 
     export default printingSlice.reducer;
-    export const { setPrices } = printingSlice.actions;
+
     
