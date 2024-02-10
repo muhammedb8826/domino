@@ -22,7 +22,7 @@ export const Media = () => {
     type: "",
     materials: [],
     services: [],
-    price: []
+    prices: []
   });
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -57,7 +57,7 @@ export const Media = () => {
   }
 
   const resetForm = () => {
-    setFormData({type: "", materials: [], services: [], price: []})
+    setFormData({type: "", materials: [], services: [], prices: []})
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

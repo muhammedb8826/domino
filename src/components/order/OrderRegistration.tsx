@@ -9,11 +9,9 @@ import { createOrder } from "../../redux/features/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getPrintingData } from "../../redux/features/print/printingSlice";
-import { CiEdit, CiSettings } from "react-icons/ci";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { GoBack } from "../common/GoBack";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
-
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -28,6 +26,9 @@ export const OrderRegistration = () => {
   useEffect(() => {
     dispatch(getPrintingData());
   }, [dispatch]);
+
+  console.log(printingData);
+  
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [tableRows, setTableRows] = useState(["row-1"]);
@@ -50,10 +51,8 @@ export const OrderRegistration = () => {
       width: "",
       height: "",
       quantity: 0,
-      price: 0,
-      dueDate: "",
       message: "",
-      unitPrice: 0
+      unitPrice: 0,
     },
   ]);
 
@@ -63,10 +62,10 @@ export const OrderRegistration = () => {
   const [units, setUnits] = useState([]);
   const [unitPrice, setUnitPrice] = useState([]);
   const [unitValue, setUnitValue] = useState([]);
+  const [unitPriceUpdated, setUnitPriceUpdated] = useState([]);
+  const [calculatedUnitPrices, setCalculatedUnitPrices] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
-  const [getIndex, setGetIndex] = useState(0);
-
 
   const handleIsCollapsed = () => {
     setIsCollapsed((prev) => !prev);
@@ -77,167 +76,194 @@ export const OrderRegistration = () => {
     setTableRows((prev) => [...prev, `row-${count + 1}`]);
   };
 
-const handleSelectedMedia = (index, e) => {
+  const handleSelectedMedia = (index, e) => {
     const { value } = e.target;
     setFormData((prevFormData) => {
-        const updatedFormData = [...prevFormData];
-        if (!updatedFormData[index]) {
-            updatedFormData[index] = {}; // Initialize object at index if undefined
-        }
-        updatedFormData[index].media = value;
-        return updatedFormData;
+      const updatedFormData = [...prevFormData];
+      if (!updatedFormData[index]) {
+        updatedFormData[index] = {}; // Initialize object at index if undefined
+      }
+      updatedFormData[index].media = value;
+      return updatedFormData;
     });
     const selectedMedia = printingData.find((item) => item.type === value);
     if (selectedMedia) {
-        setMaterials((prevMaterials) => {
-            const updatedMaterials = [...prevMaterials];
-            updatedMaterials[index] = selectedMedia.materials;
-            return updatedMaterials;
+      setMaterials((prevMaterials) => {
+        const updatedMaterials = [...prevMaterials];
+        updatedMaterials[index] = selectedMedia.materials;
+        return updatedMaterials;
+      });
+      setServices((prevServices) => {
+        const updatedServices = [...prevServices];
+        updatedServices[index] = selectedMedia.services;
+        return updatedServices;
+      });
+      if (selectedMedia.prices.length > 0) {
+        setUnitPrices((prevUnitPrices) => {
+          const updatedUnitPrices = [...prevUnitPrices];
+          updatedUnitPrices[index] = selectedMedia.prices;
+          return updatedUnitPrices;
         });
+      }
+    }
+  };
+
+  const handleSelectedMaterial = (index, e) => {
+    const { value } = e.target;
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index].material = value;
+      return updatedFormData;
+    });
+    if (unitPrices.length > 0) {
+      const matchingUnits = unitPrices[index].filter((price) => {
+        return price.type === formData[index].media && price.material === value;
+      });
+      if (matchingUnits.length > 0) {
+        const allServices = matchingUnits.map((unit) => unit.service);
         setServices((prevServices) => {
-            const updatedServices = [...prevServices];
-            updatedServices[index] = selectedMedia.services;
-            return updatedServices;
-        });       
-        if (selectedMedia.prices.length > 0) {
-            setUnitPrices((prevUnitPrices) => {
-                const updatedUnitPrices = [...prevUnitPrices];
-                updatedUnitPrices[index] = selectedMedia.prices;
-                return updatedUnitPrices;
-            });
-        }
+          const updatedServices = [...prevServices];
+          updatedServices[index] = allServices;
+          return updatedServices;
+        });
+      }
     }
-}
+  };
 
-const handleSelectedMaterial = (index, e) => {
-  const {value} = e.target;
-  setFormData((prevFormData)=>{
-    const updatedFormData = [...prevFormData];
-    updatedFormData[index].material = value
-    return updatedFormData
-  })
-  if(unitPrices.length > 0) {
-    const matchingUnits = unitPrices[index].filter((price)=>{
-      return price.type === formData[index].media && price.material === value
-    })
-   if(matchingUnits.length > 0) {
-    const allServices = matchingUnits.map(unit => unit.service);
-    setServices((prevServices) => {
-      const updatedServices = [...prevServices];
-      updatedServices[index] = allServices;
-      return updatedServices;
-  });
-}
-}
-}
-
-const handleSelectedService = (index, e) => {
-  const {value} = e.target;
-  setFormData((prevFormData)=>{
-    const updatedFormData = [...prevFormData];
-    updatedFormData[index].service = value
-    return updatedFormData
-  })
-
-  if(unitPrices.length > 0) {
-    const matchingUnits = unitPrices[index].filter((price)=>{
-      return price.type === formData[index].media && price.material === formData[index].material && price.service === value
-    })
-    console.log(matchingUnits);
-    if(matchingUnits.length > 0) {
-      const allUnits = matchingUnits.map(unit => unit.unitName);
-      setUnits((prevUnits) => {
-        const updatedUnits = [...prevUnits];
-        updatedUnits[index] = allUnits;
-        return updatedUnits;
-      });
-    }
-  }
-}
-
-const handleSelectedUnit = (index, e) => {
-  const {value} = e.target;
-  setFormData((prevFormData)=>{
-    const updatedFormData = [...prevFormData];
-    updatedFormData[index].unitName = value
-    return updatedFormData
-  })
-  if(unitPrices.length > 0) {
-    const matchingUnits = unitPrices[index].filter((price)=>{
-      return price.type === formData[index].media && price.material === formData[index].material && price.service === formData[index].service && price.unitName === value
-    })
-    console.log(matchingUnits);
-    
-    if (matchingUnits.length > 0) {
-      setUnits((prevUnits) => {
-        const updatedUnits = [...prevUnits];
-        updatedUnits[index] = matchingUnits.map((unit) => unit.unitName); // Assuming unitName is what you want to set
-        return updatedUnits;
-      });
-      setUnitPrice((prevUnitPrice) => {
-        const updatedUnitPrice = [...prevUnitPrice];
-        updatedUnitPrice[index] = matchingUnits.map((unit) => unit.price);
-        return updatedUnitPrice;
-      });
-      setUnitValue((prevUnitValue) => {
-        const updatedUnitValue = [...prevUnitValue];
-        updatedUnitValue[index] = matchingUnits.map((unit) => unit.unitValue);
-        return updatedUnitValue;
-      });
-    }
-}
-}
-
-
-const handleInputChanges = (index, e) => {
-  const { name, value } = e.target;
-  setFormData((prevFormData) => {
-    const updatedFormData = [...prevFormData];
-    if (!updatedFormData[index]) {
-      updatedFormData[index] = {}; // Initialize object at index if undefined
-    }
-    updatedFormData[index][name] = value;
-    return updatedFormData;
-  });   
-}
-
-
-
-
-
-  // const calculateUnitPrice = (index) => {
-  //   let getUnitValue = 0;
-  //   const price = unitPrice[0] ? unitPrice[0].toString() : '';
-  //   const value = unitValue[0] ? unitValue[0].toString() : '';
-
-  //   const numbersOnly = value.match(/\d+(\.\d+)?/g);
-  //   console.log(numbersOnly);
-  //   if(numbersOnly) {
-  //     const result = numbersOnly.map(Number);
-  //     console.log(result);
-  //     getUnitValue =  parseFloat(result[0])*parseFloat(result[1]);
-  //     console.log(getUnitValue);
-  //   } else {
-  //     console.log('No match');
-  //   }
-
-  //   const basePrice = parseFloat(price) * getUnitValue;
-  //   const totalUnitPrice = basePrice * (formData[index]?.quantity || 0) * (formData[index]?.width || 0) * (formData[index]?.height || 0);
-  //   setAdditional((prevAdditional) => {
-  //     const updatedAdditional = [...prevAdditional];
-  //     updatedAdditional[index] = totalUnitPrice;
-  //     return updatedAdditional;
-  //   });
-
-  //   return totalUnitPrice;
-  // }
-  //   console.log(additional);
-
+  console.log(unitPrices);
   
-      
 
-    
-    
+  const handleSelectedService = (index, e) => {
+    const { value } = e.target;
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index].service = value;
+      return updatedFormData;
+    });
+
+    if (unitPrices.length > 0) {
+      const matchingUnits = unitPrices[index].filter((price) => {
+        return (
+          price.type === formData[index].media &&
+          price.material === formData[index].material &&
+          price.service === value
+        );
+      });
+      if (matchingUnits.length > 0) {
+        const allUnits = matchingUnits.map((unit) => unit.unitName);
+        setUnits((prevUnits) => {
+          const updatedUnits = [...prevUnits];
+          updatedUnits[index] = allUnits;
+          return updatedUnits;
+        });
+      }
+    }
+  };
+
+  const handleSelectedUnit = (index, e) => {
+    const { value } = e.target;
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index].unitName = value;
+      return updatedFormData;
+    });
+    if (unitPrices.length > 0) {
+      const matchingUnits = unitPrices[index].filter((price) => {
+        return (
+          price.type === formData[index].media &&
+          price.material === formData[index].material &&
+          price.service === formData[index].service &&
+          price.unitName === value
+        );
+      });
+
+      if (matchingUnits.length > 0) {
+        setUnits((prevUnits) => {
+          const updatedUnits = [...prevUnits];
+          updatedUnits[index] = matchingUnits.map((unit) => unit.unitName); // Assuming unitName is what you want to set
+          return updatedUnits;
+        });
+        setUnitPrice((prevUnitPrice) => {
+          const updatedUnitPrice = [...prevUnitPrice];
+          updatedUnitPrice[index] = matchingUnits.map((unit) => unit.prices);
+          return updatedUnitPrice;
+        });
+        setUnitValue((prevUnitValue) => {
+          const updatedUnitValue = [...prevUnitValue];
+          updatedUnitValue[index] = matchingUnits.map((unit) => unit.unitValue);
+          return updatedUnitValue;
+        });
+      }
+    }
+  };
+
+  const handleInputChanges = (index, e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      if (!updatedFormData[index]) {
+        updatedFormData[index] = {}; // Initialize object at index if undefined
+      }
+      updatedFormData[index][name] = value;
+      return updatedFormData;
+    });
+  };
+
+  const totalBirrCalculator = useCallback(() => {
+    const length = formData.length;
+    const newArray = unitPriceUpdated.splice(0, length);
+    console.log(newArray);
+
+     const total = newArray.reduce((acc, curr) => acc + curr, 0);
+    setTotalBirr(total);
+    setCalculatedUnitPrices(newArray);
+  }, [formData, unitPriceUpdated]);
+
+
+  useEffect(()=>{
+    totalBirrCalculator();
+  }, [formData, totalBirrCalculator]);
+
+  const calculateUnitPrice = (index) => {
+    let getUnitValue = 0;
+    const price = unitPrice[0] ? unitPrice[0].toString() : "";
+    const value = unitValue[0] ? unitValue[0].toString() : "";
+
+    const numbersOnly = value.match(/\d+(\.\d+)?/g);
+    if (numbersOnly) {
+      const result = numbersOnly.map(Number);
+      getUnitValue = parseFloat(result[0]) * parseFloat(result[1]);
+    } else {
+      console.log("No match");
+    }
+
+    const basePrice = parseFloat(price) * getUnitValue;
+    const totalUnitPrice =
+      basePrice *
+      (formData[index]?.quantity || 0) *
+      (formData[index]?.width || 0) *
+      (formData[index]?.height || 0);
+
+    // Get existing prices from localStorage
+    const savedPrices = JSON.parse(localStorage.getItem("unitPrices")) || {};
+
+    // Update savedPrices with new totalUnitPrice
+    savedPrices[index] = totalUnitPrice;
+
+    // Save updated savedPrices to localStorage
+    localStorage.setItem("unitPrices", JSON.stringify(savedPrices));
+    return totalUnitPrice;
+  };
+
+  useEffect(() => {
+    const savedPrices = JSON.parse(localStorage.getItem("unitPrices")) || {};
+    const savedPricesArray = Object.values(savedPrices);
+    setUnitPriceUpdated(savedPricesArray);
+  }, [formData]);
+
+  console.log(calculatedUnitPrices);
+  console.log(formData);
+
   const handleOrderInfo = (e) => {
     const { name, value } = e.target;
     setOrderInfo((prevOrderInfo) => ({
@@ -245,7 +271,7 @@ const handleInputChanges = (index, e) => {
       [name]: value,
     }));
   };
-  
+
   const handleCustomerInfo = (customer) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
@@ -271,6 +297,22 @@ const handleInputChanges = (index, e) => {
     }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const unitPrice = formData.map((item, index) => {
+      item.unitPrice = calculatedUnitPrices[index];
+      return item;
+    }
+    );
+
+    
+    const orderData = {
+      ...orderInfo,
+      orderItems: unitPrice,
+    };
+    console.log(orderData);
+    
+  };
 
   const tableRow = "row-";
   if (isLoading) return <Loading />;
@@ -292,7 +334,7 @@ const handleInputChanges = (index, e) => {
           a few things up and try submitting again.
         </div>
       )} */}
-        <form action="#" className="border">
+        <form action="#" className="border" onSubmit={handleSubmit}>
           <div className="grid gap-4 sm:grid-cols-3 sm:gap-6 mb-4 p-4">
             <div className="w-full">
               <label
@@ -521,11 +563,10 @@ const handleInputChanges = (index, e) => {
                         >
                           <option value="">Choose materials</option>
                           {materials[index]?.map((material) => (
-                              <option key={material.name} value={material.name}>
-                                {material.name}
-                              </option>
-                            )
-                          )}
+                            <option key={material.name} value={material.name}>
+                              {material.name}
+                            </option>
+                          ))}
                         </select>
                       </td>
                       <td className="px-2 py-2 border border-gray-300">
@@ -540,11 +581,10 @@ const handleInputChanges = (index, e) => {
                         >
                           <option value="">Choose services</option>
                           {services[index]?.map((service, index) => (
-                              <option key={`${service}-${index}`} value={service}>
-                                {service}
-                              </option>
-                            )
-                          )}
+                            <option key={`${service}-${index}`} value={service}>
+                              {service}
+                            </option>
+                          ))}
                         </select>
                       </td>
                       <td className="px-2 py-2 border border-gray-300">
@@ -559,11 +599,10 @@ const handleInputChanges = (index, e) => {
                         >
                           <option>Choose units</option>
                           {units[index]?.map((unit, index) => (
-                              <option key={`${unit}-${index}`} value={unit}>
-                                {unit}
-                              </option>
-                            )
-                          )}
+                            <option key={`${unit}-${index}`} value={unit}>
+                              {unit}
+                            </option>
+                          ))}
                         </select>
                       </td>
                       <td className="px-2 py-2 border border-gray-300">
@@ -575,6 +614,7 @@ const handleInputChanges = (index, e) => {
                           className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="1,2,3..."
                           required
+                          min={0}
                         />
                       </td>
                       <td className="px-2 py-2 border border-gray-300">
@@ -586,6 +626,7 @@ const handleInputChanges = (index, e) => {
                           className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="1,2,3..."
                           required
+                          min={0}
                         />
                       </td>
                       <td className="px-2 py-2 border border-gray-300">
@@ -597,10 +638,15 @@ const handleInputChanges = (index, e) => {
                           className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="1,2,3.."
                           required
+                          min={0}
                         />
                       </td>
                       <td className="px-2 py-2 border border-gray-300">
-                        <p>{formData[index]?.unitPrice || 0}</p>
+                        <p>
+                          {isNaN(calculateUnitPrice(index))
+                            ? 0
+                            : calculateUnitPrice(index)}
+                        </p>
                       </td>
                       {/* <td className="px-2 py-2 border border-gray-300">
                         <button
@@ -656,6 +702,7 @@ const handleInputChanges = (index, e) => {
                   Total(Birr)
                 </label>
                 <input
+                 value={totalBirr}
                   readOnly
                   type="number"
                   name="totalBirr"

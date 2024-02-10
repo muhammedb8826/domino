@@ -238,87 +238,100 @@
   ],
   "printingData": [
     {
-      "id": "8e92",
+      "id": "2bb9",
       "type": "DTF",
       "materials": [
+        {
+          "name": "T-shirt",
+          "units": [
+            {
+              "name": "PCS",
+              "value": "1x1"
+            }
+          ]
+        },
+        {
+          "name": "Bottle",
+          "units": [
+            {
+              "name": "CM",
+              "value": "50x50"
+            }
+          ]
+        },
         {
           "name": "Film",
           "units": [
             {
-              "name": "msq",
-              "value": "0.6x1",
-              "price": 0
-            },
-            {
-              "name": "msq1",
-              "value": "0.6x1",
-              "price": 0
+              "name": "M",
+              "value": "0.6x1"
             }
           ]
-        },
-        {
-          "name": "ooooo",
-          "units": []
-        },
-        {
-          "name": "uuuu",
-          "units": []
-        },
-        {
-          "name": "screen 4",
-          "units": []
         }
       ],
       "services": [
         "Print",
-        "Print and Heat press",
-        "Print and Material"
+        "Print and Material",
+        "Print and Heat press"
       ],
       "prices": [
         {
           "type": "DTF",
-          "material": "Film",
+          "material": "T-shirt",
           "service": "Print",
-          "unitName": "msq",
-          "unitValue": "0.6x1",
-          "price": "1000"
+          "unitName": "PCS",
+          "unitValue": "1x1",
+          "prices": "100"
+        },
+        {
+          "type": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitName": "PCS",
+          "unitValue": "1x1",
+          "prices": "200"
+        },
+        {
+          "type": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Heat press",
+          "unitName": "PCS",
+          "unitValue": "1x1",
+          "prices": "300"
+        },
+        {
+          "type": "DTF",
+          "material": "Bottle",
+          "service": "Print",
+          "unitName": "CM",
+          "unitValue": "50x50",
+          "prices": "50"
         },
         {
           "type": "DTF",
           "material": "Film",
           "service": "Print",
-          "unitName": "msq1",
+          "unitName": "M",
           "unitValue": "0.6x1",
-          "price": "1200"
+          "prices": "500"
         }
       ]
     },
     {
-      "id": "ce71",
-      "type": "crystal jet",
+      "id": "ac23",
+      "type": "BANNER",
       "materials": [
         {
-          "name": "sticker",
-          "units": [
-            {
-              "name": "msq",
-              "value": "1x1",
-              "price": 0
-            }
-          ]
-        },
-        {
-          "name": "Banner",
-          "units": [
-            {
-              "name": "msq",
-              "value": "1x1",
-              "price": 0
-            }
-          ]
-        },
-        {
           "name": "Mesh",
+          "units": [
+            {
+              "name": "M",
+              "value": "1x1"
+            }
+          ]
+        },
+        {
+          "name": "Vinyl",
           "units": []
         }
       ],
@@ -328,14 +341,74 @@
       ],
       "prices": [
         {
-          "type": "crystal jet",
-          "material": "sticker",
-          "service": "Print and Material",
-          "unitName": "msq",
+          "type": "BANNER",
+          "material": "Mesh",
+          "service": "Print",
+          "unitName": "M",
           "unitValue": "1x1",
-          "price": "220"
+          "prices": "1000"
+        },
+        {
+          "type": "BANNER",
+          "material": "Mesh",
+          "service": "Print and Material",
+          "unitName": "M",
+          "unitValue": "1x1",
+          "prices": "200"
         }
       ]
+    },
+    {
+      "id": "79c5",
+      "type": "UV",
+      "materials": [
+        {
+          "name": "Glass",
+          "units": [
+            {
+              "name": "M",
+              "value": "0.5x1"
+            }
+          ]
+        },
+        {
+          "name": "Screen 1",
+          "units": [
+            {
+              "name": "CM",
+              "value": "50x100"
+            }
+          ]
+        }
+      ],
+      "services": [
+        "Print"
+      ],
+      "prices": [
+        {
+          "type": "UV",
+          "material": "Glass",
+          "service": "Print",
+          "unitName": "M",
+          "unitValue": "0.5x1",
+          "prices": "1500"
+        },
+        {
+          "type": "UV",
+          "material": "Screen 1",
+          "service": "Print",
+          "unitName": "CM",
+          "unitValue": "50x100",
+          "prices": "100"
+        }
+      ]
+    },
+    {
+      "id": "b4ac",
+      "type": "SUBLIMATION",
+      "materials": [],
+      "services": [],
+      "prices": []
     }
   ],
   "customers": [

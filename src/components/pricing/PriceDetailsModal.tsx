@@ -1,7 +1,7 @@
 import { FaRegWindowClose } from "react-icons/fa";
 
 const PriceDetailsModal = ({ data, handleModalOpen }) => {
-  console.log();
+  console.log(data);
 
   return (
     <>
@@ -32,7 +32,14 @@ const PriceDetailsModal = ({ data, handleModalOpen }) => {
                 <hr className="mb-4" />
 
                 <ul className="space-y-4 text-left text-gray-500 dark:text-gray-400">
-                  {data.price.map((price, index) => (
+                  {data.prices.length === 0 && (
+                    <li>
+                      <p className="text-l font-semibold text-gray-900">
+                        No prices found
+                      </p>
+                        </li>
+                        )}
+                  {data.prices.length > 0  && data.prices.map((price, index) => (
                     <li key={index} className="flex items-center space-x-3 rtl:space-x-reverse">
                       <svg
                         className="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400"
@@ -53,7 +60,7 @@ const PriceDetailsModal = ({ data, handleModalOpen }) => {
                       <span>Service: <strong>{price.service}</strong></span>
                       <span>Unit name: <strong>{price.unitName}</strong></span>
                       <span>Unit value: <strong>{price.unitValue}</strong></span>
-                      <span>Price: <strong>{price.price}</strong></span>
+                      <span>Price: <strong>{price.prices}</strong></span>
                     </li>
                   ))}
                 </ul>

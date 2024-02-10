@@ -16,6 +16,7 @@ const initialState: PrintingState = {
   error: null,
   errors: [],
   message: null,
+  prices: []
 };
 
 export const getPrintingData = createAsyncThunk(
@@ -35,7 +36,7 @@ export const createPrintingData = createAsyncThunk(
     "printing/createPrintingData",
     async (formData, { rejectWithValue }) => {
         try {
-        const response = await axios.post(printingDataURL, {type: formData.type, materials: formData.materials, services: formData.services, price: formData.price});
+        const response = await axios.post(printingDataURL, {type: formData.type, materials: formData.materials, services: formData.services, prices: formData.prices});
         return response.data;
         } catch (error) {
         return rejectWithValue(error.response?.data);
@@ -72,7 +73,8 @@ export const deletePrintingData = createAsyncThunk(
 export const printingSlice = createSlice({
     name: "printing",
     initialState,
-    reducers: {},
+    reducers: {
+    },
     extraReducers: (builder) => {
         builder.addCase(getPrintingData.pending, (state, action) => {
         state.isLoading = true;
@@ -127,4 +129,5 @@ export const printingSlice = createSlice({
     });
 
     export default printingSlice.reducer;
+    export const { setPrices } = printingSlice.actions;
     

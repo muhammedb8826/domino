@@ -28,15 +28,12 @@ const Unit = () => {
     unitName:"",
     width: "",
     height: "",
-    price: 0
   }
   )
 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Update the specific property in the formData object
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -54,15 +51,12 @@ const handleSelectedMaterial = (e)=>{
     );
 
     setSelectedMedia(e.target.value);
-    // setting the materials options of selected media
     setMaterialOptions(printingData[index].materials);
   };
 
   const handleActiveMedia = (data, index) => {
     setActiveMedia(data);
     setMaterials(printingData[index].materials);
-    // setActiveMaterial(printingData[index].materials[0].name);
-    // setUnits(printingData[index].materials[0].units);
   };
 
   const handleActiveMaterial = (material, index) => {
@@ -80,7 +74,6 @@ const handleSelectedMaterial = (e)=>{
     const unit = {
       name: formData.unitName,
       value: `${formData.width}x${formData.height}`,
-      price: formData.price
     }
     const newUnit = [...material.units, unit];
     const newMaterial = {...material, units: newUnit};
@@ -88,17 +81,13 @@ const handleSelectedMaterial = (e)=>{
     newMaterials[findMaterialIndex] = newMaterial;
     const newMedia = {...media, materials: newMaterials};
     console.log(newMedia);
-    
-    // const newPrintingData = [...printingData];
-    // newPrintingData[findMediaIndex] = newMedia;
-    // console.log(newPrintingData);
-    
+
     dispatch(updatePrintingData(newMedia)).then((res) => {
       if (res.payload) {
         setMaterials(res.payload.materials);
         const message = "Unit added successfully";
         toast(message);
-        setFormData({unitName:"", width: "", height: "", price: 0});
+        setFormData({unitName:"", width: "", height: ""});
       }
     });
     

@@ -33,7 +33,7 @@ const Pricing = () => {
     service: "",
     unitName: "",
     unitValue: "",
-    price: "",
+    prices: "",
   });
 
   const handleSelectedMaterial = (e, index) => {
@@ -80,7 +80,7 @@ const Pricing = () => {
   
   const handlePriceChange = (e, index) => {
     const newFormData = { ...formData };
-    newFormData.price = e.target.value;
+    newFormData.prices = e.target.value;
 
     // Assuming that you want to store the price in the state only for the selected row
     if (selectedRowIndex === index) {
@@ -98,13 +98,13 @@ const Pricing = () => {
       service: "",
       unitName: "",
       unitValue: "",
-      price: "",
+      prices: "",
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.material || !formData.service || !formData.unitName || !formData.price) {
+    if (!formData.material || !formData.service || !formData.unitName || !formData.prices) {
      alert("Please fill all the fields");
       return;
     }
@@ -114,7 +114,7 @@ const Pricing = () => {
     const updatedData = { ...findData };
 
   // Append the new entry to the 'price' array
-  updatedData.price = [...updatedData.price, { ...formData }];
+  updatedData.prices = [...updatedData.prices, { ...formData }];
     
     dispatch(updatePrintingData(updatedData)).then((res) => {
       if (res.payload) {
@@ -258,8 +258,9 @@ const Pricing = () => {
                     <div className="flex-1">
                     <input
                     onChange={(e) => handlePriceChange(e, index)}
-                    value={selectedRowIndex === index ? formData.price : ''}
+                    value={selectedRowIndex === index ? formData.prices : ''}
                     type="number"
+                    min={0}
                     id="price"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="eg, 100"
