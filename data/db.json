@@ -167,12 +167,11 @@
   ],
   "orders": [
     {
-      "id": "5dab",
       "series": "SAL-ORD-YYYY-",
       "date": "Feb 10, 2024",
       "deliveryDate": "Feb 14, 2024",
-      "orderType": "telegram",
-      "description": "This t-shirt should have the quality printing ",
+      "orderType": "Telegram",
+      "description": "This t-shirt should have the quality printing duuc",
       "customerPhone": "0988-45-6666",
       "customerFirstName": "Babi",
       "customerEmail": "",
@@ -191,15 +190,15 @@
         }
       ],
       "totalBirr": 150000,
-      "totalQuantity": 20
+      "totalQuantity": 20,
+      "id": "5dab"
     },
     {
-      "id": "e2e2",
       "series": "SAL-ORD-YYYY-",
       "date": "Feb 10, 2024",
       "deliveryDate": "Feb 10, 2024",
-      "orderType": "telegram",
-      "description": "I want this order quickly printed ready for my birthday",
+      "orderType": "phone",
+      "description": "I want this order quickly printed ready for my birthday ducccc",
       "customerPhone": "0911-88-9696",
       "customerFirstName": "Teshe",
       "customerEmail": "",
@@ -238,34 +237,8 @@
         }
       ],
       "totalBirr": 194000,
-      "totalQuantity": 25
-    },
-    {
-      "id": "23eb",
-      "series": "SAL-ORD-YYYY-",
-      "date": "Feb 10, 2024",
-      "deliveryDate": "Feb 10, 2024",
-      "orderType": "phone",
-      "description": "",
-      "customerPhone": "0911-88-9696",
-      "customerFirstName": "Teshe",
-      "customerEmail": "",
-      "status": "pending",
-      "orderItems": [
-        {
-          "media": "DTF",
-          "material": "T-shirt",
-          "service": "Print",
-          "unitName": "PCS",
-          "width": "1",
-          "height": "1",
-          "quantity": "1",
-          "message": "",
-          "unitPrice": 100
-        }
-      ],
-      "totalBirr": 100,
-      "totalQuantity": "1"
+      "totalQuantity": 25,
+      "id": "e2e2"
     },
     {
       "id": "91af",
@@ -293,6 +266,80 @@
       ],
       "totalBirr": 800,
       "totalQuantity": 2
+    },
+    {
+      "id": "2060",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 11, 2024",
+      "deliveryDate": "Feb 14, 2024",
+      "orderType": "telegram",
+      "description": "I want this order to be finished with in 1 day, ready to delivery",
+      "customerPhone": "0916-11-5252",
+      "customerFirstName": "Muktar",
+      "customerEmail": "muktar@gmail.com",
+      "status": "pending",
+      "orderItems": [
+        {
+          "media": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitName": "PCS",
+          "width": "4",
+          "height": "5",
+          "quantity": "10",
+          "message": "",
+          "unitPrice": 40000
+        },
+        {
+          "media": "BANNER",
+          "material": "Mesh",
+          "service": "Print and Material",
+          "unitName": "M",
+          "width": "2",
+          "height": "1",
+          "quantity": "2",
+          "unitPrice": 800
+        }
+      ],
+      "totalBirr": 40800,
+      "totalQuantity": 12
+    },
+    {
+      "id": "cddf",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 12, 2024",
+      "deliveryDate": "Feb 12, 2024",
+      "orderType": "telegram",
+      "description": "something is nedde",
+      "customerPhone": "0910-11-1111",
+      "customerFirstName": "Duche",
+      "customerEmail": "duche@gmail.com",
+      "status": "pending",
+      "orderItems": [
+        {
+          "media": "BANNER",
+          "material": "Mesh",
+          "service": "Print and Material",
+          "unitName": "M",
+          "width": "2",
+          "height": "5",
+          "quantity": "2",
+          "message": "",
+          "unitPrice": 4000
+        },
+        {
+          "media": "UV",
+          "material": "Glass",
+          "service": "Print",
+          "unitName": "M",
+          "width": "2",
+          "height": "3",
+          "quantity": "4",
+          "unitPrice": 4800
+        }
+      ],
+      "totalBirr": 8800,
+      "totalQuantity": 6
     }
   ],
   "printingData": [
@@ -468,6 +515,13 @@
       "materials": [],
       "services": [],
       "prices": []
+    },
+    {
+      "id": "f847",
+      "type": "CNC",
+      "materials": [],
+      "services": [],
+      "prices": []
     }
   ],
   "customers": [
@@ -542,6 +596,22 @@
       "firstName": "Mamila",
       "lastName": "",
       "email": "mamila@gmail.com"
+    },
+    {
+      "id": "1707603896773",
+      "phone": "0916-11-5252",
+      "companyType": "individual",
+      "firstName": "Muktar",
+      "lastName": "",
+      "email": "muktar@gmail.com"
+    },
+    {
+      "id": "1707706533313",
+      "phone": "0910-11-1111",
+      "companyType": "company",
+      "firstName": "Duche",
+      "lastName": "",
+      "email": "duche@gmail.com"
     }
   ]
 }
