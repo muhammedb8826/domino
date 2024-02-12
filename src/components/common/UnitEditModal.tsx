@@ -2,22 +2,26 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
-import { updateService } from "../../redux/features/service/servicesSlice";
+import { updateUnits } from "../../redux/features/unit/unitSlice";
 
-const ServiceEditModal = ({ handleModalOpen, data = { name: '' } }) => {
+const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
   const dispatch = useDispatch();
-  const [serviceName, setServiceName] = useState(data);
+  const [formData, setFormData] = useState(data);
   const handleChange = (e) => {
-    setServiceName({...serviceName, name: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateService(serviceName)).then((res) => {
+    dispatch(updateUnits(formData)).then((res) => {
       if (res.payload) {
         const message = "Service updated successfully";
         toast.success(message);
-        setServiceName({ name: "" });
+        setFormData({ name: "" });
         handleModalOpen(false);
       }
     });
@@ -48,19 +52,53 @@ const ServiceEditModal = ({ handleModalOpen, data = { name: '' } }) => {
               <div className="relative p-6 flex-auto">
                 <div>
                   <label
-                    htmlFor="service-name"
+                    htmlFor="unit-name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Service name
+                    Unit name
                   </label>
                   <input
                     onChange={handleChange}
                     type="text"
-                    value={serviceName.name}
-                    name="service"
-                    id="service-name"
+                    value={formData.name}
+                    name="name"
+                    id="unit-name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="eg, Print"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="width"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Width
+                  </label>
+                  <input
+                    onChange={handleChange}
+                    type="number"
+                    value={formData.width}
+                    name="width"
+                    id="width"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="eg, 10"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="height"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Height
+                  </label>
+                  <input
+                    onChange={handleChange}
+                    type="text"
+                    value={formData.height}
+                    name="height"
+                    id="height"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="eg, 10"
                   />
                 </div>
               </div>
@@ -89,4 +127,4 @@ const ServiceEditModal = ({ handleModalOpen, data = { name: '' } }) => {
   );
 };
 
-export default ServiceEditModal;
+export default UnitEditModal;

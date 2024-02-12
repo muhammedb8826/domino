@@ -1,7 +1,6 @@
 import { MdDelete } from "react-icons/md";
 import { TfiLayoutMediaLeftAlt } from "react-icons/tfi";
-import { useEffect, useRef, useState } from "react";
-import {  getPrintingData, updatePrintingData } from "../../redux/features/print/printingSlice";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
@@ -9,57 +8,32 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaRegEdit } from "react-icons/fa";
 import { MaterialEditModal } from "../common/MaterialEditModal";
-const Material = () => {
-  const inputRef = useRef();
-   const { printingData, isLoading, error } = useSelector((state)=> state.printing );
-   const [formData, setFormData] = useState({});
+import { createMaterial, deleteMaterial, getMaterials, updateMaterial } from "../../redux/features/material/materialSlice";
+const Material = () => {   
+  const { materials, isLoading, error } = useSelector((state)=> state.material );
    const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getPrintingData());
+        dispatch(getMaterials());
       }, [dispatch]);
 
-    const [active, setActive] = useState(""); 
     const [modalOpen, setModalOpen] = useState(false);
-    const [materials, setMaterials] = useState([]);
+    const [data, setData] = useState({});
+    const [formData, setFormData] = useState({
+      name: "",
+    });
 
-    const handleActive = (type: string, index: number) => {
-        setActive(type);
-        setMaterials(printingData[index].materials);
+
+const handleModalOpen = (id) => {
+      const findData = materials.find((data) => data.id === id);      
+      setData(findData)
+      setModalOpen((prev)=>!prev);
+    };
+
+    const handleChange = (e) => {
+        setFormData((prev)=>({...prev, name: e.target.value}));
     }
 
-    const updateMaterial = (updatedMaterial, materialIndex) => {
-      // Update the material in the state or Redux store
-      const updatedMaterials = [...materials];
-      updatedMaterials[materialIndex] = updatedMaterial;
-      setMaterials(updatedMaterials);
-    };
-
-    const handleSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selected = e.target.value;
-        const index = printingData.findIndex((data) => data.type === selected);
-        setFormData(printingData[index]);
-    };
-
-    const [data, setData] = useState({});
-    const [materialIndex, setMaterialIndex] = useState(0);
-
-const handleModalOpen = (index: number) => {
-      const findData = printingData.find((data) => data.type === active);      
-      setData(findData)
-      setMaterialIndex(index)
-      setModalOpen(!modalOpen);
-    };
-
-
-    const handleDeleMaterial = (name: string, index: number) => {
-      const findData = printingData.find((data) => data.type === active);
-       const filteredMaterials = materials.filter((material) => material.name !== name);
-        
-        const oldData = findData;
-        const updatedData = {
-          ...oldData,
-          materials: filteredMaterials,
-        };
+    const handleDeleteMaterial = (id) => {
         Swal.fire({
           title: "Are you sure?",
           text: "You want to delete this material!",
@@ -75,8 +49,7 @@ const handleModalOpen = (index: number) => {
               text: "The material has been deleted.",
               icon: "success",
             }).then(() => {
-              dispatch(updatePrintingData(updatedData))
-              setMaterials(filteredMaterials);
+              dispatch(deleteMaterial(id));
             });
           }
         });   
@@ -85,23 +58,11 @@ const handleModalOpen = (index: number) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-
-        const oldData = formData;
-
-        const updatedData = {
-          ...oldData,
-          materials: [...oldData.materials, { name: inputRef.current.value, units: []}],
-        };
-
-        dispatch(updatePrintingData(updatedData)).then((res) => {
+        dispatch(createMaterial(formData)).then((res) => {
           if (res.payload) {
-            setMaterials(res.payload.materials);
             const message = "Material added successfully";
-            toast(message);
-            setFormData((prevData) => ({
-              ...prevData,
-              materials: [],
-            }));
+            toast.success(message);
+            setFormData({ name: "" });
           }
         });
     };
@@ -109,30 +70,12 @@ const handleModalOpen = (index: number) => {
     if(error) return (<ErroPage error={error} />);
   return (
     <div className="flex flex-col gap-4 p-4 items-center overflow-y-auto h-full" id="style-4">
-      <fieldset className="border border-black p-4 mb-2">
+      <fieldset className="border border-black p-4 mb-2 w-full sm:w-1/2">
         <legend className="bg-black text-white border px-2">
           Add new material
         </legend>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="media"
-              className="block mb-2 text-sm font-medium text-gray-900"
-            >
-              Media Name
-            </label>
-            <select
-            onChange={handleSelected}
-              id="media"
-              required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            >
-              <option value="">Choose a media</option>
-              {printingData.map((data) => (
-                <option value={data.type} key={data.type}>{data.type}</option>
-              ))}
-            </select>
-          </div>
+        <form onSubmit={handleSubmit}>
+    
           <div>
             <label
               htmlFor="material-type"
@@ -146,11 +89,12 @@ const handleModalOpen = (index: number) => {
               </span>
               <input
               required
-                ref={inputRef}
+                name="material"
                 type="text"
                 id="material-type"
                 className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5"
-                placeholder="Material type"
+                placeholder="Material name"
+                onChange={handleChange}
               />
               <button
                 type="submit"
@@ -163,30 +107,7 @@ const handleModalOpen = (index: number) => {
         </form>
       </fieldset>
 
-      <div className="grid grid-cols-2 gap-4 w-full lg:w-[65%]">
-        <div className="p-4 bg-white border rounded-lg shadow sm:p-8 h-[370px] relative overflow-hidden">
-          <div className="flex items-center justify-between mb-4">
-            <h5 className="text-l font-bold leading-none text-gray-900 ">
-              List of Media Types
-            </h5>
-          </div>
-
-          <ul role="list" className="divide-y divide-gray-200 overflow-y-auto h-full">
-            {printingData.map((data, index) => (
-              <li key={data.type}>
-                    <button
-                      onClick={() => handleActive(data.type, index)}
-                      title={data.type}
-                      type="button"
-                      className={`${data.type === active? "bg-black text-white" : "text-gray-900"} text-sm font-medium truncate h-full px-3 py-4 w-full flex items-center me-2`}
-                    >
-                      {data.type}
-                    </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
+      <div className="grid grid-cols-1 gap-4 w-full sm:w-1/2">
         <div className="p-4 bg-white border rounded-lg shadow sm:p-8 h-[370px] relative overflow-hidden">
           <div className="flex items-center justify-between mb-4">
             <h5 className="text-l font-bold leading-none text-gray-900 ">
@@ -197,23 +118,15 @@ const handleModalOpen = (index: number) => {
             </p>
           </div>
           <ul role="list" className="divide-y divide-gray-200 overflow-y-auto h-full">
-            {active? materials.length === 0 && (
+            { materials.length === 0 && (
               <div className="flex flex-col items-center justify-center">
                 <p className="text-gray-900">
                   No data found
                 </p>
               </div>
-            ): 
-            (
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-gray-900">
-                  please select media to see
-                </p>
-              </div>
-            )
-            }
-            {materials && materials.map((material, index) => (
-              <li className="py-2" key={material.name}>
+            )}
+            {materials && materials.map((material) => (
+              <li className="py-2" key={material.id}>
                 <div className="flex items-center">
                 <div className="flex-1 min-w-0 ms-4">
                     <p
@@ -227,13 +140,13 @@ const handleModalOpen = (index: number) => {
                       title="edit"
                       className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:blue-red-300 font-medium rounded-lg px-3 py-2 my-2 text-center"
                       type="button"
-                      onClick={() => handleModalOpen(index)}
+                      onClick={() => handleModalOpen(material.id)}
                     >
                       <FaRegEdit  className="w-5 h-5" />
                     </button>
 
                     <button
-                    onClick={() => {handleDeleMaterial(material.name, index)}}
+                    onClick={() => {handleDeleteMaterial(material.id)}}
                       title="delete"
                       className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-center"
                       type="button"
@@ -247,7 +160,7 @@ const handleModalOpen = (index: number) => {
           </ul>
         </div>
       </div>
-      {modalOpen && <MaterialEditModal handleModalOpen={handleModalOpen} data={data} index={materialIndex} updateMaterial={updateMaterial} />}
+      {modalOpen && <MaterialEditModal handleModalOpen={handleModalOpen} data={data} />}
     </div>
   );
 };

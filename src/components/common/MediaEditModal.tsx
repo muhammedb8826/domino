@@ -3,22 +3,23 @@ import { useDispatch } from "react-redux";
 import { updatePrintingData } from "../../redux/features/print/printingSlice";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
+import { updateMachines } from "../../redux/features/machine/machineSlice";
 
-export const MediaEditModal = ({ handleModalOpen, data }) => {
+export const MediaEditModal = ({ handleModalOpen, data={name: ''} }) => {
     const dispatch = useDispatch();
     
     const [formData, setFormData] = useState(data);
     const handleChange = (e) => {
-        setFormData({...formData, type: e.target.value});
+        setFormData({...formData, name: e.target.value});
     }
 
 const handleSubmit = (e) => {
     e.preventDefault();
-   dispatch(updatePrintingData(formData)).then((res) => {
+   dispatch(updateMachines(formData)).then((res) => {
     if(res.payload) {
       const message = "Media updated successfully"
-      toast(message)
-      setFormData({type: ""})
+      toast.success(message)
+      setFormData({name: ""})
       handleModalOpen(false);
     }
   }); 
@@ -35,7 +36,7 @@ const handleSubmit = (e) => {
         {/*header*/}
         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
           <h3 className="text-3xl font-semibold">
-            Edit {data.type}
+            Edit {data.name}
           </h3>
           <button
           title="close"
@@ -52,7 +53,7 @@ const handleSubmit = (e) => {
         <div className="relative p-6 flex-auto">
         <div>
             <label htmlFor="media-name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Media name</label>
-            <input onChange={handleChange} type="text" value={formData.type} id="media-name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="eg, Banner" required/>
+            <input onChange={handleChange} type="text" value={formData.name} id="media-name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="eg, Banner" required/>
         </div>
         </div>
         {/*footer*/}

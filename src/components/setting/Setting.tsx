@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Media } from "./Media";
+import { Machine } from "./Machine";
 import Material from "./Material";
 import Unit from "./Unit";
 import { Services } from "./Services";
 import '../../assets/styles/scroll.css';
 
 const Setting = () => {
-  const [active, setActive] = useState("medias");
+  const [active, setActive] = useState("machines");
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
@@ -17,12 +17,12 @@ const Setting = () => {
           <li>
             <button
               type="button"
-              onClick={() => handleButtonClick("medias")}
+              onClick={() => handleButtonClick("machines")}
               className={`${
-                active === "medias" ? "text-white bg-gray-900" : ""
+                active === "machines" ? "text-white bg-gray-900" : ""
               } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
             >
-              Medias
+              Machines
             </button>
           </li>
           <li>
@@ -62,7 +62,7 @@ const Setting = () => {
       </nav>
 
       <div className="rounded-lg bg-gray-100 h-[80%] overflow-hidden">
-        {active === "medias" && <Media />}
+        {active === "machines" && <Machine />}
         {active === "materials" && <Material />}
         {active === "units" && <Unit />}
         {active === "services" && <Services />}

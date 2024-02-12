@@ -340,188 +340,65 @@
       ],
       "totalBirr": 8800,
       "totalQuantity": 6
+    },
+    {
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 12, 2024",
+      "deliveryDate": "Feb 12, 2024",
+      "orderType": "telegram",
+      "description": "kkkkkkooo",
+      "customerPhone": "1234-56-7890",
+      "customerFirstName": "ahadu",
+      "customerEmail": "admin@domino.com",
+      "status": "pending",
+      "orderItems": [
+        {
+          "media": "BANNER",
+          "material": "Mesh",
+          "service": "Print",
+          "unitName": "M",
+          "width": "2",
+          "height": "2",
+          "quantity": "1",
+          "message": "",
+          "unitPrice": 4000
+        },
+        {
+          "media": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitName": "PCS",
+          "width": "1",
+          "height": "1",
+          "quantity": "1",
+          "unitPrice": 1000
+        }
+      ],
+      "totalBirr": 5000,
+      "totalQuantity": 2,
+      "id": "7260"
     }
   ],
   "printingData": [
     {
-      "id": "2bb9",
+      "id": "9944",
       "type": "DTF",
       "materials": [
         {
           "name": "T-shirt",
-          "units": [
-            {
-              "name": "PCS",
-              "value": "1x1"
-            }
-          ]
-        },
-        {
-          "name": "Bottle",
-          "units": [
-            {
-              "name": "CM",
-              "value": "50x50"
-            }
-          ]
-        },
-        {
-          "name": "Film",
-          "units": [
-            {
-              "name": "M",
-              "value": "0.6x1"
-            }
-          ]
-        }
-      ],
-      "services": [
-        "Print",
-        "Print and Material",
-        "Print and Heat press"
-      ],
-      "prices": [
-        {
-          "type": "DTF",
-          "material": "T-shirt",
-          "service": "Print",
-          "unitName": "PCS",
-          "unitValue": "1x1",
-          "prices": "100"
-        },
-        {
-          "type": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitName": "PCS",
-          "unitValue": "1x1",
-          "prices": "200"
-        },
-        {
-          "type": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Heat press",
-          "unitName": "PCS",
-          "unitValue": "1x1",
-          "prices": "300"
-        },
-        {
-          "type": "DTF",
-          "material": "Bottle",
-          "service": "Print",
-          "unitName": "CM",
-          "unitValue": "50x50",
-          "prices": "50"
-        },
-        {
-          "type": "DTF",
-          "material": "Film",
-          "service": "Print",
-          "unitName": "M",
-          "unitValue": "0.6x1",
-          "prices": "500"
-        }
-      ]
-    },
-    {
-      "id": "ac23",
-      "type": "BANNER",
-      "materials": [
-        {
-          "name": "Mesh",
-          "units": [
-            {
-              "name": "M",
-              "value": "1x1"
-            }
-          ]
-        },
-        {
-          "name": "Vinyl",
           "units": []
         }
       ],
-      "services": [
-        "Print",
-        "Print and Material"
-      ],
-      "prices": [
-        {
-          "type": "BANNER",
-          "material": "Mesh",
-          "service": "Print",
-          "unitName": "M",
-          "unitValue": "1x1",
-          "prices": "1000"
-        },
-        {
-          "type": "BANNER",
-          "material": "Mesh",
-          "service": "Print and Material",
-          "unitName": "M",
-          "unitValue": "1x1",
-          "prices": "200"
-        }
-      ]
-    },
-    {
-      "id": "79c5",
-      "type": "UV",
-      "materials": [
-        {
-          "name": "Glass",
-          "units": [
-            {
-              "name": "M",
-              "value": "0.5x1"
-            }
-          ]
-        },
-        {
-          "name": "Screen 1",
-          "units": [
-            {
-              "name": "CM",
-              "value": "50x100"
-            }
-          ]
-        }
-      ],
-      "services": [
-        "Print"
-      ],
-      "prices": [
-        {
-          "type": "UV",
-          "material": "Glass",
-          "service": "Print",
-          "unitName": "M",
-          "unitValue": "0.5x1",
-          "prices": "1500"
-        },
-        {
-          "type": "UV",
-          "material": "Screen 1",
-          "service": "Print",
-          "unitName": "CM",
-          "unitValue": "50x100",
-          "prices": "100"
-        }
-      ]
-    },
-    {
-      "id": "b4ac",
-      "type": "SUBLIMATION",
-      "materials": [],
-      "services": [],
       "prices": []
     },
     {
-      "id": "f847",
-      "type": "CNC",
+      "id": "f84f",
+      "type": "BANNER",
       "materials": [],
-      "services": [],
       "prices": []
+    },
+    {
+      "id": "3ca7"
     }
   ],
   "customers": [
@@ -612,6 +489,70 @@
       "firstName": "Duche",
       "lastName": "",
       "email": "duche@gmail.com"
+    },
+    {
+      "id": "1707746857768",
+      "phone": "1234-56-7890",
+      "companyType": "individual",
+      "firstName": "ahadu",
+      "lastName": "teshager",
+      "email": "admin@domino.com"
+    }
+  ],
+  "services": [
+    {
+      "id": "e4b1",
+      "name": "Print and Material"
+    },
+    {
+      "id": "1324",
+      "name": "Print and Heat press"
+    },
+    {
+      "id": "b664",
+      "name": "Print"
+    }
+  ],
+  "machines": [
+    {
+      "id": "54dd",
+      "name": "DTF"
+    },
+    {
+      "id": "f084",
+      "name": "BANNER"
+    },
+    {
+      "id": "8b9a",
+      "name": "UV"
+    }
+  ],
+  "materials": [
+    {
+      "id": "9944",
+      "name": "T-shirt"
+    },
+    {
+      "id": "e4b1",
+      "name": "Film"
+    },
+    {
+      "id": "1f8f",
+      "name": "Screen"
+    }
+  ],
+  "units": [
+    {
+      "id": "90fc",
+      "name": "M",
+      "width": "10",
+      "height": "10"
+    },
+    {
+      "id": "1bd6",
+      "name": "Linear",
+      "width": "0.6",
+      "height": "1"
     }
   ]
 }

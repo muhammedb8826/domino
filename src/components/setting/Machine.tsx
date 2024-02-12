@@ -4,25 +4,22 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { useEffect, useState } from "react";
-import { createPrintingData, deletePrintingData, getPrintingData } from "../../redux/features/print/printingSlice";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaRegEdit } from "react-icons/fa";
 import { MediaEditModal } from "../common/MediaEditModal";
+import { createMachines, deleteMachines, getMachines } from "../../redux/features/machine/machineSlice";
 
 
-export const Media = () => {
-  const {printingData, isLoading, error} = useSelector((state)=> state.printing );
+export const Machine = () => {
+  const {machines, isLoading, error} = useSelector((state)=> state.machine );
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPrintingData());
+    dispatch(getMachines());
   }, [dispatch]);
 
   const [formData, setFormData] = useState({
-    type: "",
-    materials: [],
-    services: [],
-    prices: []
+    name: "",
   });
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -30,14 +27,14 @@ export const Media = () => {
 
   const handleModalOpen = (id) => {
     setModalOpen(!modalOpen);
-    setData(printingData.find((data) => data.id === id));
+    setData(machines.find((data) => data.id === id));
         
   }
 
   const handleDeleteType = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You want to delete this media!",
+      text: "You want to delete this machine!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -50,24 +47,22 @@ export const Media = () => {
           text: "The media has been deleted.",
           icon: "success",
         }).then(() => {
-          dispatch(deletePrintingData(id));
+          dispatch(deleteMachines(id));
         });
       }
     });
   }
 
   const resetForm = () => {
-    setFormData({type: "", materials: [], services: [], prices: []})
+    setFormData({name: ""})
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
-    
-    dispatch(createPrintingData(formData)).then((res) => {
+    dispatch(createMachines(formData)).then((res) => {
       if(res.payload) {
-        const message = "Media created successfully"
-        toast(message)
+        const message = "Machine created successfully"
+        toast.success(message)
         resetForm();
   }});
   };
@@ -89,12 +84,12 @@ export const Media = () => {
             <TfiLayoutMediaLeftAlt />
           </span>
           <input
-          onChange={(e) =>setFormData({...formData, type: e.target.value})}
+          onChange={(e) =>setFormData({...formData, name: e.target.value})}
             type="text"
             id="media-name"
             className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5"
             placeholder="Media type"
-            value={formData.type}
+            value={formData.name}
             required
           />
           <button
@@ -117,21 +112,21 @@ export const Media = () => {
         </div>
         <div className="flow-root">
           <ul role="list" className="divide-y divide-gray-200">
-            {printingData.length === 0 && (
+            {machines.length === 0 && (
               <div className="flex flex-col items-center justify-center">
                 <p className="text-xl font-semibold text-gray-900">
                   No data found
                 </p>
               </div>
             )}
-            {printingData && printingData.map((data, index) => (
+            {machines && machines.map((data) => (
               <li key={data.id} className="py-2">
                 <div className="flex items-center">
                   <div className="flex-1 min-w-0 ms-4">
                     <p
                       className="text-sm font-medium text-gray-900 truncate h-full"
                     >
-                      {data.type}
+                      {data.name}
                     </p>
                   </div>
                   <div className="inline-flex gap-4 items-center text-base font-semibold text-gray-900">
