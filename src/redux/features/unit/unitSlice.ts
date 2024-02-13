@@ -14,9 +14,7 @@ export const getUnits = createAsyncThunk(
     "machines/getUnits",
     async () => {
         try{
-        const response = await axios.get(unitURL);
-        console.log(response.data);
-        
+        const response = await axios.get(unitURL); 
         return response.data;
         } catch (error) {
             console.log(error);

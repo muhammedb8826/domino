@@ -9,6 +9,7 @@ import serviceReducer from "./features/service/servicesSlice";
 import machineReducer from "./features/machine/machineSlice";
 import materialReducer from "./features/material/materialSlice";
 import unitReducer from "./features/unit/unitSlice";
+import priceReducer from "./features/price/pricingSlice";
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -21,6 +22,7 @@ const store = configureStore({
         machine: machineReducer,
         material: materialReducer,
         unit: unitReducer,
+        price: priceReducer,
     },
 });
 

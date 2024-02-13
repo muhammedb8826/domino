@@ -14,9 +14,7 @@ export const getServices = createAsyncThunk(
     "services/getServices",
     async () => {
         try{
-        const response = await axios.get(serviceURL);
-        console.log(response.data);
-        
+        const response = await axios.get(serviceURL);   
         return response.data;
         } catch (error) {
             console.log(error);

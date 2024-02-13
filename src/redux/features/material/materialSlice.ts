@@ -14,9 +14,7 @@ export const getMaterials = createAsyncThunk(
     "material/getMaterials",
     async () => {
         try{
-        const response = await axios.get(materialURL);
-        console.log(response.data);
-        
+        const response = await axios.get(materialURL);    
         return response.data;
         } catch (error) {
             console.log(error);

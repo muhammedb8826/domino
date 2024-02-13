@@ -553,6 +553,124 @@
       "name": "Linear",
       "width": "0.6",
       "height": "1"
+    },
+    {
+      "id": "8dd4",
+      "name": "PCS",
+      "width": "1",
+      "height": "1"
+    }
+  ],
+  "prices": [
+    {
+      "id": "234a",
+      "machine": {
+        "value": "54dd",
+        "label": "DTF"
+      },
+      "material": {
+        "value": "e4b1",
+        "label": "Film"
+      },
+      "service": {
+        "value": "e4b1",
+        "label": "Print and Material"
+      },
+      "unit": {
+        "id": "90fc",
+        "name": "M",
+        "width": "10",
+        "height": "10"
+      },
+      "unitPrice": "100"
+    },
+    {
+      "id": "6218",
+      "machine": {
+        "value": "f084",
+        "label": "BANNER"
+      },
+      "material": {
+        "value": "9944",
+        "label": "T-shirt"
+      },
+      "service": {
+        "value": "1324",
+        "label": "Print and Heat press"
+      },
+      "unit": {
+        "id": "1bd6",
+        "name": "Linear",
+        "width": "0.6",
+        "height": "1"
+      },
+      "unitPrice": "100"
+    },
+    {
+      "id": "3f53",
+      "machine": {
+        "value": "8b9a",
+        "label": "UV"
+      },
+      "material": {
+        "value": "1f8f",
+        "label": "Screen"
+      },
+      "service": {
+        "value": "1324",
+        "label": "Print and Heat press"
+      },
+      "unit": {
+        "id": "90fc",
+        "name": "M",
+        "width": "10",
+        "height": "10"
+      },
+      "unitPrice": "200"
+    },
+    {
+      "id": "7ec7",
+      "machine": {
+        "value": "8b9a",
+        "label": "UV"
+      },
+      "material": {
+        "value": "e4b1",
+        "label": "Film"
+      },
+      "service": {
+        "value": "1324",
+        "label": "Print and Heat press"
+      },
+      "unit": {
+        "id": "1bd6",
+        "name": "Linear",
+        "width": "0.6",
+        "height": "1"
+      },
+      "unitPrice": "100"
+    },
+    {
+      "id": "09f6",
+      "machine": {
+        "value": "54dd",
+        "label": "DTF"
+      },
+      "material": {
+        "value": "9944",
+        "label": "T-shirt"
+      },
+      "service": {
+        "value": "b664",
+        "label": "Print"
+      },
+      "unit": {
+        "id": "8dd4",
+        "name": "PCS",
+        "width": "1",
+        "height": "1"
+      },
+      "unitPrice": "100"
     }
   ]
 }

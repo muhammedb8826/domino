@@ -15,8 +15,6 @@ export const getMachines = createAsyncThunk(
     async () => {
         try{
         const response = await axios.get(machineURL);
-        console.log(response.data);
-        
         return response.data;
         } catch (error) {
             console.log(error);
@@ -26,7 +24,7 @@ export const getMachines = createAsyncThunk(
 );
 
 export const createMachines = createAsyncThunk(
-    "services/createService",
+    "machines/createMachines",
     async (data) => {
         const response = await axios.post(machineURL, data);
         return response.data;
@@ -34,7 +32,7 @@ export const createMachines = createAsyncThunk(
 );
 
 export const updateMachines = createAsyncThunk(
-    "services/updateService",
+    "machines/updateMachines",
     async (data) => {
         const response = await axios.put(`${machineURL}/${data.id}`, data);
         return response.data;
@@ -42,7 +40,7 @@ export const updateMachines = createAsyncThunk(
 );
 
 export const deleteMachines = createAsyncThunk(
-    "services/deleteService",
+    "machines/deleteMachines",
     async (id: string) => {
         const response = await axios.delete(`${machineURL}/${id}`);
         return response.data;
@@ -50,7 +48,7 @@ export const deleteMachines = createAsyncThunk(
 );
 
 const machineSlice = createSlice({
-    name: "services",
+    name: "machines",
     initialState,
     reducers: {},
     extraReducers: (builder) => {

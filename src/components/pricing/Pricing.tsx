@@ -1,288 +1,148 @@
-import { Checkbox, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaUserPlus } from "react-icons/fa";
+import { RiPriceTag2Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
-import {
-  getPrintingData,
-  updatePrintingData,
-} from "../../redux/features/print/printingSlice";
-import { toast } from "react-toastify";
+import { getprice } from "../../redux/features/price/pricingSlice";
 import PriceDetailsModal from "./PriceDetailsModal";
 
 const Pricing = () => {
-  const { printingData, isLoading, error } = useSelector(
-    (state) => state.printing
+  const { prices, isLoading, error } = useSelector(
+    (state) => state.price
   );
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPrintingData());
+    dispatch(getprice());
   }, [dispatch]);
 
-  const [selectedMaterial, setSelectedMaterial] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState({});
-  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [data, setData] = useState({});
-
-  const [formData, setFormData] = useState({
-    type: "",
-    material: "",
-    service: "",
-    unitName: "",
-    unitValue: "",
-    prices: "",
-  });
-
-  const handleSelectedMaterial = (e, index) => {
-    if(e.target.value === "") return;
-    const type = printingData[index].type;
-    setFormData({ ...formData, type, material: e.target.value });
-    
-    const data = printingData[index].materials.find(
-      (material) => material.name === e.target.value
-    );
-    setSelectedMaterial(data);
-    setSelectedRowIndex(index);
-  };
+  const [openModal, setOpenModal] = useState(false);
 
 
-  const handleModalOpen = (id) => {
-    setModalOpen(!modalOpen);
-    setData(printingData.find((data) => data.id === id));
-  };
-
-  const handleSelecteSerives = (e) => {
-    if(e.target.value === "") return;
-    setFormData({ ...formData, service: e.target.value });
-  };
-
-  const handleSelectUnit = (e, index) => {
-    if (e.target.value === "") return;
-  
-    setFormData({ ...formData, unitName: e.target.value });
-    
-  
-    const data = selectedMaterial && selectedMaterial.units
-      ? selectedMaterial.units.find((unit) => unit.name === e.target.value)
-      : null;
-  
-    if (data) {
-      setSelectedUnit(data);
-      setFormData({ ...formData, unitName: data.name, unitValue: data.value });
-    }
-  };
- 
-
-
-  
-  const handlePriceChange = (e, index) => {
-    const newFormData = { ...formData };
-    newFormData.prices = e.target.value;
-
-    // Assuming that you want to store the price in the state only for the selected row
-    if (selectedRowIndex === index) {
-      setFormData(newFormData);
-    }
-
-    // const calculatedUnitPrice = data.value * formData.price;
-
-  };
-
-  const resetForm = () => {
-    setFormData({
-      type: "",
-      material: "",
-      service: "",
-      unitName: "",
-      unitValue: "",
-      prices: "",
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.material || !formData.service || !formData.unitName || !formData.prices) {
-     alert("Please fill all the fields");
-      return;
-    }
-    const mediaType = printingData[selectedRowIndex].type;
-    const findData = printingData.find((data) => data.type === mediaType);
-
-    const updatedData = { ...findData };
-
-  // Append the new entry to the 'price' array
-  updatedData.prices = [...updatedData.prices, { ...formData }];
-    
-    dispatch(updatePrintingData(updatedData)).then((res) => {
-      if (res.payload) {
-        const message = "Pricing updated successfully";
-        toast(message);
-        resetForm();
-      }
-    });
-  };
-
-  
+  const handleModalOpen = () => {
+    setOpenModal((prev)=>!prev);
+}
 
   if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
 
   return (
-    <div className="overflow-x-auto p-4">
-      <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
-        <div>
-          <button
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+    <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+            <div>
+            <button
             type="button"
-          >
-            <FaUserPlus />
-            <span className="ml-2">Add New User</span>
-          </button>
+                onClick={handleModalOpen}
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+              <RiPriceTag2Line />
+                <span className="ml-2">Add Unit Price</span>
+              </button>
+            </div>
+            <label htmlFor="table-search" className="sr-only">Search</label>
+            <div className="relative">
+                <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path></svg>
+                </div>
+                <input type="text" id="table-search" className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for customers"/>
+            </div>
         </div>
-
-        <label htmlFor="table-search" className="sr-only">
-          Search
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-500"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            type="text"
-            id="table-search-users"
-            className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search for users"
-          />
-        </div>
-      </div>
-      <Table hoverable>
-        <Table.Head>
-          <Table.HeadCell className="p-4">
-            <Checkbox />
-          </Table.HeadCell>
-          <Table.HeadCell>Media name</Table.HeadCell>
-          <Table.HeadCell>Material</Table.HeadCell>
-          <Table.HeadCell>Services</Table.HeadCell>
-
-          <Table.HeadCell>Unit name</Table.HeadCell>
-          <Table.HeadCell>Unit value</Table.HeadCell>
-          <Table.HeadCell>Price</Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {printingData.map((data, index) => (
-            <Table.Row
-              key={index}
-              className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${
-                selectedRowIndex === index ? 'selected-row' : ''
-              }`}
-            >
-              <Table.Cell className="p-4">
-                <Checkbox />
-              </Table.Cell>
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              <button
-                  onClick={()=>handleModalOpen(data.id)}
-                   type="button" title="click to see details" className="text-blue-500 hover:underline">
-                {data.type}
-                </button>
-              </Table.Cell>
-              <Table.Cell>
-                <select
-                  onChange={(e)=>handleSelectedMaterial(e, index)}
-                  required
-                  title="materials"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option value="">Choose a material</option>
-                  {data.materials.map((material, index) => (
-                    <option value={material.name} key={index}>
-                      {material.name}
-                    </option>
-                  ))}
-                </select>
-              </Table.Cell>
-              <Table.Cell>
-                <select
-                onChange={handleSelecteSerives}
-                  required
-                  title="services"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option value="">Choose a services</option>
-                  {data.services.map((service, index) => (
-                    <option value={service} key={index}>
-                      {service}
-                    </option>
-                  ))}
-                </select>
-              </Table.Cell>
-              <Table.Cell>
-                <select
-                  onChange={(e)=>handleSelectUnit(e, index)}
-                  title="unit"
-                  required
-                  id="unit"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option value="">Choose a unit</option>
-                  {selectedMaterial && selectedMaterial.units?.map((unit, index) => (
-                    <option value={unit.name} key={index}>
-                      {unit.name}
-                    </option>
-                  ))}
-                </select>
-              </Table.Cell>
-              <Table.Cell>
-              {selectedRowIndex === index && <p>{selectedUnit?.value}</p>}
-              </Table.Cell>
-              <Table.Cell>
-                <form onSubmit={handleSubmit}>
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex-1">
-                    <input
-                    onChange={(e) => handlePriceChange(e, index)}
-                    value={selectedRowIndex === index ? formData.prices : ''}
-                    type="number"
-                    min={0}
-                    id="price"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="eg, 100"
-                    required
-                  />
-                    </div>
-                    <div>
-                      <button
-                        type="submit"
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-              </form>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-      {modalOpen && <PriceDetailsModal data={data} handleModalOpen={handleModalOpen} />}
+    
+    
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" className="p-4">
+                        <div className="flex items-center">
+                            <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                            <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
+                        </div>
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                        Machine
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                        Material
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                        Service
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                        Unit
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                        Measures(wxh)
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                        price
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+              {prices && prices.length === 0 && <tr><td colSpan={7} className="text-center">No data found</td></tr>}
+                {prices && prices.map((price)=>
+                <tr key={price.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td className="w-4 p-4">
+                        <div className="flex items-center">
+                            <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                            <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
+                        </div>
+                    </td>
+                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {price.machine && price.machine.label}
+                    </th>
+                    <td className="px-6 py-4">
+                        {price.material && price.material.label}
+                    </td>
+                    <td className="px-6 py-4">
+                        {price && price.service.label}
+                    </td>
+                    <td className="px-6 py-4">
+                        {price.unit && price.unit.name}
+                    </td>
+                    <td className="px-6 py-4">
+                        {price.unit && price.unit.width}x{price.unit.height}
+                    </td>
+                    <td className="px-6 py-4">
+                        {price.unitPrice}
+                    </td>
+                    <td className="px-6 py-4">
+                        <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    </td>
+                </tr>
+                )}
+            </tbody>
+        </table>
+        <nav className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span className="font-semibold text-gray-900 dark:text-white">1-10</span> of <span className="font-semibold text-gray-900 dark:text-white">1000</span></span>
+            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                <li>
+                    <a href="#" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                </li>
+                <li>
+                    <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                </li>
+                <li>
+                    <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                </li>
+                <li>
+                    <a href="#" aria-current="page" className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
+                </li>
+                <li>
+                    <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
+                </li>
+                <li>
+                    <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
+                </li>
+                <li>
+            <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                </li>
+            </ul>
+        </nav>
+        {openModal && <PriceDetailsModal handleModalOpen={handleModalOpen}/>}
     </div>
   );
 };
