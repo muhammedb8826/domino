@@ -2,8 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { useEffect, useState } from "react";
-import { getPrintingData } from "../../redux/features/print/printingSlice";
-import { v4 as uuidv4 } from "uuid";
 import { GoBack } from "../common/GoBack";
 import { FaArrowRight, FaEdit } from "react-icons/fa";
 import { createOrder, getOrders, getOrdersById, updateOrder } from "../../redux/features/order/orderSlice";

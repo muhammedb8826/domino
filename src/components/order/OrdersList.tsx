@@ -113,7 +113,7 @@ const OrdersList = () => {
               {order.id}-{order.customerPhone}
             </td>
             <td className="px-6 py-4">{order.deliveryDate}</td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4 relative">
               <button
                 onClick={() => handleAction(index)}
                 title="action"
@@ -126,7 +126,7 @@ const OrdersList = () => {
                 <CiMenuKebab />
               </button>
               {showPopover === index && (
-                <div className="absolute z-10 right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                <div className=" absolute z-10 right-40 -top-14 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                   {/* Dropdown content */}
                   <div className="px-4 py-3 text-sm text-gray-900">
                     <div className="font-medium">Pro User</div>

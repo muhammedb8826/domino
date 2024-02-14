@@ -4,17 +4,21 @@ import { getCustomers, searchUsers } from "../../redux/features/customer/custome
 import { useDispatch, useSelector } from "react-redux";
 
 
-const CustomerSearchInput = ({ handleCustomerInfo }) => {
+const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
     const dispatch = useDispatch();
     const { customers, searchTerm } = useSelector((state) => state.customer);
 
-    const [searchInput, setSearchInput] = useState("");
+    const [searchInput, setSearchInput] = useState(value || "");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
-        dispatch(getCustomers());
-      }, [dispatch]);
+      setSearchInput(value || "");
+  }, [value]);
+
+  useEffect(() => {
+      dispatch(getCustomers());
+  }, [dispatch]);
     
       const filteredCustomers = customers.filter(
         (customer) =>

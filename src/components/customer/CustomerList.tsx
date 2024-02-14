@@ -1,3 +1,4 @@
+'use client';
 import { IoBagAdd } from "react-icons/io5"
 import { useDispatch, useSelector } from "react-redux"
 import Loading from "../common/Loading";
@@ -5,11 +6,17 @@ import ErroPage from "../common/ErroPage";
 import { useEffect, useState } from "react";
 import { getCustomers } from "../../redux/features/customer/customerSlice";
 import { CustomerRegistration } from "./CustomerRegistrationModal";
+import { CiMenuKebab } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import Swal from "sweetalert2";
+
 
 export const CustomerList = () => {
     const {customers, isLoading, error} = useSelector((state)=>state.customer);
     const dispatch = useDispatch();
     const [openModal, setOpenModal] = useState(false);
+    const [showPopover, setShowPopover] = useState(null);
 
     const handleModalOpen = () => {
         setOpenModal((prev)=>!prev);
@@ -18,6 +25,34 @@ export const CustomerList = () => {
      dispatch(getCustomers());
     },[dispatch])
     console.log(customers);
+
+    const handleAction = (index: number) => {
+        setShowPopover((prevIndex) => (prevIndex === index ? null : index));
+      };
+
+    // const handleCustomer = (id) => {
+    //     Swal.fire({
+    //       title: "Are you sure?",
+    //       text: "You want to delete this order!",
+    //       icon: "warning",
+    //       showCancelButton: true,
+    //       confirmButtonColor: "#3085d6",
+    //       cancelButtonColor: "#d33",
+    //       confirmButtonText: "Yes, delete it!",
+    //     }).then((result) => {
+    //       if (result.isConfirmed) {
+    //         Swal.fire({
+    //           title: "Deleted!",
+    //           text: "The order has been deleted.",
+    //           icon: "success",
+    //         }).then(() => {
+    //           dispatch(deleteCustomer(id));
+    //         });
+    //       }
+    //       setShowPopover(null);
+    //     });
+    //   }
+ 
     
     if(isLoading) return <Loading/>
     if(error) return <ErroPage error={error}/>
@@ -71,7 +106,7 @@ export const CustomerList = () => {
             </tr>
         </thead>
         <tbody>
-            {customers.map((customer)=>
+            {customers.map((customer, index)=>
             <tr key={customer.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                     <div className="flex items-center">
@@ -91,8 +126,47 @@ export const CustomerList = () => {
                 <td className="px-6 py-4">
                     customer orders
                 </td>
-                <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                <td className="px-6 py-4 relative">
+                <button
+                onClick={() => handleAction(index)}
+                title="action"
+                data-popover-target={`popover-bottom-${index}`}
+                data-popover-trigger="click"
+                id={`dropdownAvatarNameButton-${customer.id}-${index}`}
+                type="button"
+                className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              >
+                <CiMenuKebab />
+              </button>
+              {showPopover === index && (
+                <div className="absolute z-40 right-40 -top-14 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                  {/* Dropdown content */}
+                  <div className="px-4 py-3 text-sm text-gray-900">
+                    <div className="font-medium">Pro User</div>
+                    <div className="truncate">email</div>
+                  </div>
+                  <ul className="py-2 text-sm text-gray-700">
+                    <li>
+                      <button
+                        type="button"
+                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                      >
+                        <FaRegEdit />
+                        Edit
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        // onClick={() => handleDeleteOrder(customer.id)}
+                        type="button"
+                        className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                      >
+                        <MdDelete /> Delete
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
                 </td>
             </tr>
             )}

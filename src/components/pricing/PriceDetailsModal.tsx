@@ -12,10 +12,10 @@ import { RiPriceTag2Line } from "react-icons/ri";
 // import options from "tailwind-datepicker-react/types/Options";
 
 const PriceDetailsModal = ({ handleModalOpen }) => {
-  const { machines, isLoading, error } = useSelector((state) => state.machine);
-  const { materials } = useSelector((state) => state.material);
-  const { units } = useSelector((state) => state.unit);
-  const { services } = useSelector((state) => state.service);
+  const { machines, isLoading: machineLoading, error: machineError } = useSelector((state) => state.machine);
+  const { materials, isLoading: materialLoading, error: materialError } = useSelector((state) => state.material);
+  const { units, isLoading: unitLoading, error: unitError } = useSelector((state) => state.unit);
+  const { services, isLoading: serviceLoading, error: serviceError } = useSelector((state) => state.service);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -37,8 +37,6 @@ const PriceDetailsModal = ({ handleModalOpen }) => {
     unitPrice: "",
   });
 
-  console.log(machineOptions);
-
   const mapOptions = (data) => {
     return data.map((item) => ({
       value: item.id,
@@ -47,11 +45,20 @@ const PriceDetailsModal = ({ handleModalOpen }) => {
   };
 
   useEffect(() => {
-    setMachineOptions(mapOptions(machines));
-    setMaterialOptions(mapOptions(materials));
-    setServiceOptions(mapOptions(services));
-    setUnitOptions(mapOptions(units));
-  }, [machines, materials, services, units]);
+    if (!machineLoading && machines) setMachineOptions(mapOptions(machines));
+  }, [machineLoading, machines]);
+  
+  useEffect(() => {
+    if (!materialLoading && materials) setMaterialOptions(mapOptions(materials));
+  }, [materialLoading, materials]);
+  
+  useEffect(() => {
+    if (!serviceLoading && services) setServiceOptions(mapOptions(services));
+  }, [serviceLoading, services]);
+  
+  useEffect(() => {
+    if (!unitLoading && units) setUnitOptions(mapOptions(units));
+  }, [unitLoading, units]);
 
   const loadOptions = (inputValue: string, callback) => {
     setTimeout(() => {
@@ -116,10 +123,12 @@ const PriceDetailsModal = ({ handleModalOpen }) => {
 
     console.log(formData);
 const {machine, material, service, unit, unitPrice} = formData;
-const machineName = machineOptions.find((item) => item.value === machine);
-const materialName = materialOptions.find((item) => item.value === material);
-const serviceName = serviceOptions.find((item) => item.value === service);
+const machineName = machines.find((item) => item.id === machine);
+const materialName = materials.find((item) => item.id === material);
+const serviceName = services.find((item) => item.id === service);
 const unitName = units.find((item) => item.id === unit);
+
+
 
 const data = {
   machine: machineName,
@@ -127,8 +136,7 @@ const data = {
   service: serviceName,
   unit: unitName,
   unitPrice
-}
-    
+}    
     dispatch(createprice(data)).then((res) => {
       if (res.payload) {
         const message = "Price added successfully";
@@ -145,8 +153,8 @@ const data = {
     });
   }
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (machineLoading) return <div>Loading...</div>;
+  if (machineError) return <div>Error: {machineError}</div>;
 
   return (
     <>
@@ -256,9 +264,6 @@ const data = {
                 </div>
               </div>
               </div>
-
-              
-
               {/*footer*/}
               <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                 <button

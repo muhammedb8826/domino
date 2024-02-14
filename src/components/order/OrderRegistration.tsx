@@ -1,17 +1,21 @@
 "use client";
 
 import { Datepicker } from "flowbite-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { createOrder } from "../../redux/features/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { getPrintingData } from "../../redux/features/print/printingSlice";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { GoBack } from "../common/GoBack";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
+import { CiSettings } from "react-icons/ci";
+import { getprice } from "../../redux/features/price/pricingSlice";
+import { getServices } from "../../redux/features/service/servicesSlice";
+import Select from "react-select";
+import { IoMdClose } from "react-icons/io";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -24,18 +28,17 @@ interface CustomerType {
 }
 
 export const OrderRegistration = () => {
-  const { printingData, isLoading, error } = useSelector(
-    (state) => state.printing
-  );
+  const { prices, isLoading, error } = useSelector((state) => state.price);
+  const { services } = useSelector((state) => state.service);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(getPrintingData());
+    dispatch(getprice());
+    dispatch(getServices());
   }, [dispatch]);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [tableRows, setTableRows] = useState(["row-1"]);
-  const [count, setCount] = useState(1);
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
@@ -50,166 +53,52 @@ export const OrderRegistration = () => {
 
   const [formData, setFormData] = useState([
     {
-      media: "",
+      machine: "",
       material: "",
       service: "",
-      unitName: "",
-      width: "",
-      height: "",
-      quantity: 0,
-      message: "",
-      unitPrice: 0,
+      unitPrice: null
     },
   ]);
 
-  const [materials, setMaterials] = useState([]);
-  const [services, setServices] = useState([]);
-  const [unitPrices, setUnitPrices] = useState([0]);
-  const [units, setUnits] = useState([]);
-  const [unitPrice, setUnitPrice] = useState([]);
-  const [unitValue, setUnitValue] = useState([]);
-  const [unitPriceUpdated, setUnitPriceUpdated] = useState([]);
+  const [measuresFormData, setMeasuresFormData] = useState([
+    {
+        unitName: null,
+        width: null,
+        height: null,
+        quantity: null,
+        unitPrice: null
+    },
+  ]);
+
   const [calculatedUnitPrices, setCalculatedUnitPrices] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
 
   const handleIsCollapsed = () => {
     setIsCollapsed((prev) => !prev);
   };
 
   const handleAddRow = () => {
-    setCount((prev) => prev + 1);
-    setTableRows((prev) => [...prev, `row-${count + 1}`]);
-  };
-
-  const handleSelectedMedia = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = e.target;
-    setFormData((prevFormData) => {
-      const updatedFormData = [...prevFormData];
-      if (!updatedFormData[index]) {
-        updatedFormData[index] = {}; // Initialize object at index if undefined
-      }
-      updatedFormData[index].media = value;
-      return updatedFormData;
-    });
-    const selectedMedia = printingData.find((item) => item.type === value);
-    if (selectedMedia) {
-      setMaterials((prevMaterials) => {
-        const updatedMaterials = [...prevMaterials];
-        updatedMaterials[index] = selectedMedia.materials;
-        return updatedMaterials;
-      });
-      setServices((prevServices) => {
-        const updatedServices = [...prevServices];
-        updatedServices[index] = selectedMedia.services;
-        return updatedServices;
-      });
-      if (selectedMedia.prices.length > 0) {
-        setUnitPrices((prevUnitPrices) => {
-          const updatedUnitPrices = [...prevUnitPrices];
-          updatedUnitPrices[index] = selectedMedia.prices;
-          return updatedUnitPrices;
-        });
-      }
-    }
-  };
-
-  const handleSelectedMaterial = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = e.target;
-    setFormData((prevFormData) => {
-      const updatedFormData = [...prevFormData];
-      updatedFormData[index].material = value;
-      return updatedFormData;
-    });
-    if (unitPrices.length > 0) {
-      const matchingUnits = unitPrices[index].filter((price: any) => {
-        return price.type === formData[index].media && price.material === value;
-      });
-      if (matchingUnits.length > 0) {
-        const allServices = matchingUnits.map((unit) => unit.service);
-        setServices((prevServices) => {
-          const updatedServices = [...prevServices];
-          updatedServices[index] = allServices;
-          return updatedServices;
-        });
-      }
-    }
-  };
-
-  const handleSelectedService = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = e.target;
-    setFormData((prevFormData) => {
-      const updatedFormData = [...prevFormData];
-      updatedFormData[index].service = value;
-      return updatedFormData;
-    });
-
-    if (unitPrices.length > 0) {
-      const matchingUnits = unitPrices[index].filter((price) => {
-        return (
-          price.type === formData[index].media &&
-          price.material === formData[index].material &&
-          price.service === value
-        );
-      });
-      if (matchingUnits.length > 0) {
-        const allUnits = matchingUnits.map((unit) => unit.unitName);
-        setUnits((prevUnits) => {
-          const updatedUnits = [...prevUnits];
-          updatedUnits[index] = allUnits;
-          return updatedUnits;
-        });
-      }
-    }
-  };
-
-  const handleSelectedUnit = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = e.target;
-    setFormData((prevFormData) => {
-      const updatedFormData = [...prevFormData];
-      updatedFormData[index].unitName = value;
-      return updatedFormData;
-    });
-    if (unitPrices.length > 0) {
-      const matchingUnits = unitPrices[index].filter((price) => {
-        return (
-          price.type === formData[index].media &&
-          price.material === formData[index].material &&
-          price.service === formData[index].service &&
-          price.unitName === value
-        );
-      });
-
-      if (matchingUnits.length > 0) {
-        setUnits((prevUnits) => {
-          const updatedUnits = [...prevUnits];
-          updatedUnits[index] = matchingUnits.map((unit) => unit.unitName); // Assuming unitName is what you want to set
-          return updatedUnits;
-        });
-        setUnitPrice((prevUnitPrice) => {
-          const updatedUnitPrice = [...prevUnitPrice];
-          updatedUnitPrice[index] = matchingUnits.map((unit) => unit.prices);
-          return updatedUnitPrice;
-        });
-        setUnitValue((prevUnitValue) => {
-          const updatedUnitValue = [...prevUnitValue];
-          updatedUnitValue[index] = matchingUnits.map((unit) => unit.unitValue);
-          return updatedUnitValue;
-        });
-      }
-    }
+    setFormData((prevFormData) => [
+      ...prevFormData,
+      {
+        machine: "",
+        material: "",
+        service: "",
+        unitPrice: null
+      },
+    ]);
+    setMeasuresFormData((prevFormData) => [
+      ...prevFormData,
+      {
+        unitName: null,
+        width: null,
+        height: null,
+        quantity: null,
+        unitPrice: null
+      },
+    ]);
   };
 
   const handleInputChanges = (
@@ -217,69 +106,46 @@ export const OrderRegistration = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => {
+    setMeasuresFormData((prevFormData) => {
       const updatedFormData = [...prevFormData];
-      if (!updatedFormData[index]) {
-        updatedFormData[index] = {}; // Initialize object at index if undefined
-      }
       updatedFormData[index][name] = value;
       return updatedFormData;
     });
   };
 
-  const totalBirrCalculator = useCallback(() => {
-    const length = formData.length;
-    const newArray = unitPriceUpdated.splice(0, length);
-    const total = newArray.reduce((acc, curr) => acc + parseFloat(curr), 0);
-    const quantity = formData.map((item) => item.quantity);
-    const numberArray = quantity.map(Number);
-    const totalQuantity = numberArray.reduce((acc, curr) => acc + curr, 0);
-    setTotalBirr(total);
+  // calculate unit price and total quantity
+
+  useEffect(() => {
+    const totalQuantity = measuresFormData.reduce(
+      (acc, { quantity }) => acc + Number(quantity || 0),
+      0
+    );
     setTotalQuantity(totalQuantity);
-    setCalculatedUnitPrices(newArray);
-  }, [formData, unitPriceUpdated]);
+  }, [measuresFormData]);
 
   useEffect(() => {
-    totalBirrCalculator();
-  }, [formData, totalBirrCalculator]);
-
-  const calculateUnitPrice = (index) => {
-    let getUnitValue = 0;
-    const price = unitPrice[0] ? unitPrice[0].toString() : "";
-    const value = unitValue[0] ? unitValue[0].toString() : "";
-
-    const numbersOnly = value.match(/\d+(\.\d+)?/g);
-    if (numbersOnly) {
-      const result = numbersOnly.map(Number);
-      getUnitValue = parseFloat(result[0]) * parseFloat(result[1]);
-    } else {
-      console.log("No match");
-    }
-
-    const basePrice = parseFloat(price) * getUnitValue;
-    const totalUnitPrice =
-      basePrice *
-      (formData[index]?.quantity || 0) *
-      (formData[index]?.width || 0) *
-      (formData[index]?.height || 0);
-
-    // Get existing prices from localStorage
-    const savedPrices = JSON.parse(localStorage.getItem("unitPrices")) || {};
-
-    // Update savedPrices with new totalUnitPrice
-    savedPrices[index] = totalUnitPrice;
-
-    // Save updated savedPrices to localStorage
-    localStorage.setItem("unitPrices", JSON.stringify(savedPrices));
-    return totalUnitPrice;
-  };
+    const totalBirr = calculatedUnitPrices.reduce(
+      (acc, c) => acc + c || 0,
+      0
+    );
+    setTotalBirr(totalBirr);
+  }, [calculatedUnitPrices]);
 
   useEffect(() => {
-    const savedPrices = JSON.parse(localStorage.getItem("unitPrices")) || {};
-    const savedPricesArray = Object.values(savedPrices);
-    setUnitPriceUpdated(savedPricesArray);
-  }, [formData]);
+    const calculatedUnitPrices = measuresFormData.map((data, index) => {
+      const matchingPrice = filteredData[index];
+      if (!matchingPrice) {
+        return 0;
+      }
+      const { width, height, quantity } = data;
+      const { unitPrice } = matchingPrice;
+      const calculatedUnitPrice = unitPrice * (width * height) * quantity;
+      return calculatedUnitPrice;
+    });
+    setCalculatedUnitPrices(calculatedUnitPrices);
+  }, [measuresFormData, filteredData]);
 
+  // customer and order info handling
   const handleOrderInfo = (e) => {
     const { name, value } = e.target;
     setOrderInfo((prevOrderInfo) => ({
@@ -315,6 +181,88 @@ export const OrderRegistration = () => {
     }));
   };
 
+  // setting options for material and machine
+
+  const uniqueMachineMaterialCombinations = new Set();
+  prices.forEach(({ machine, material }) => {
+    const combination = `${material.name}-(${machine.name})`;
+    uniqueMachineMaterialCombinations.add(combination);
+  });
+
+  const uniqueOptions = Array.from(uniqueMachineMaterialCombinations).map(
+    (combination) => ({
+      value: combination,
+      label: combination,
+    })
+  );
+
+  const serviceName = services.map((data) => {
+    return data.name;
+  });
+
+  const serviceOptions = [];
+  for (let i = 0; i < services.length; i++) {
+    const serviceLabel = `${serviceName[i]}`;
+    const serviceValue = `${serviceName[i]}`;
+    serviceOptions.push({ value: serviceValue, label: serviceLabel });
+  }
+
+  const handleCancel = (index) => {
+    const updatedFormData = [...formData];
+    const filteredData = updatedFormData.filter((_, i) => i !== index);
+    setFormData(filteredData);
+  };
+
+  const handleMaterialSelect = (selectedOption, index) => {
+    const { value } = selectedOption;
+    const str = value;
+    const parts = str.split("-("); // Split the string at "-("
+
+    // parts[0] will contain "T-shirt" and parts[1] will contain "DTF)"
+    const material = parts[0]; // Extract "T-shirt"
+    const machine = parts[1].substring(0, parts[1].length - 1); // Extract "DTF" by removing the last character ")"
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index].machine = machine;
+      updatedFormData[index].material = material;
+      return updatedFormData;
+    });
+    setMeasuresFormData((prevFormData) => [
+      ...prevFormData,
+      {
+        unitName: null,
+        width: null,
+        height: null,
+        quantity: null,
+        unitPrice: null
+      },
+    ]);
+  };
+
+  const handleServiceSelect = (selectedOption, index) => {
+    const { value } = selectedOption;
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index].service = value;
+      return updatedFormData;
+    });
+  };
+
+    useEffect(() => {
+      const matchingPriceData = formData.map((unitPrice) => {
+        // Find the matching price data in the prices array
+        const matchingPrice = prices.find((price) => (
+            price.machine?.name === unitPrice.machine &&
+            price.material?.name === unitPrice.material &&
+            price.service?.name === unitPrice.service
+        ));
+        return matchingPrice;
+    });
+    setFilteredData(matchingPriceData);
+  }, [formData, prices]);
+
+  // form submission
+
   const resetForm = () => {
     setOrderInfo({
       series: "SAL-ORD-YYYY-",
@@ -329,24 +277,21 @@ export const OrderRegistration = () => {
     });
     setFormData([
       {
-        media: "",
+        machine: "",
         material: "",
         service: "",
-        unitName: "",
-        width: "",
-        height: "",
-        quantity: 0,
-        message: "",
-        unitPrice: 0,
+        unitPrice: null
       },
     ]);
-    setMaterials([]);
-    setServices([]);
-    setUnitPrices([0]);
-    setUnits([]);
-    setUnitPrice([]);
-    setUnitValue([]);
-    setUnitPriceUpdated([]);
+    setMeasuresFormData([
+      {
+        unitName: null,
+        width: null,
+        height: null,
+        quantity: null,
+        unitPrice: null
+      },
+    ]);
     setCalculatedUnitPrices([]);
     setTotalQuantity(0);
     setTotalBirr(0);
@@ -378,26 +323,26 @@ export const OrderRegistration = () => {
     const orderData = {
       ...orderInfo,
       orderItems: unitPrice,
+      orderMeasures: measuresFormData,
       totalBirr,
       totalQuantity,
     };
     dispatch(createOrder(orderData)).then((res) => {
       if (res.payload) {
         const message = "Order created successfully";
-        toast(message);
+        toast.success(message);
         resetForm();
         navigate("/dashboard");
       }
     });
   };
 
-  const tableRow = "row-";
   if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
 
   return (
     <>
-      <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0">
+      <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0 min-h-screen">
         <GoBack goback="/dashboard" />
         <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
           Add a new order
@@ -494,18 +439,15 @@ export const OrderRegistration = () => {
               </span>{" "}
             </button>
 
-            <div
-              className={`${
-                isCollapsed ? "hidden" : ""
-              } relative overflow-x-auto sm:rounded-lg px-4 py-2 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400`}
-            >
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <div className="px-4">
+              <table
+                className={`${
+                  isCollapsed ? "hidden" : ""
+                } w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
+              >
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
+                    <th scope="col" className="p-4">
                       <div className="flex items-center">
                         <input
                           id="checkbox-all-search"
@@ -520,236 +462,172 @@ export const OrderRegistration = () => {
                         </label>
                       </div>
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
+                    <th scope="col" className="px-4 py-3 w-4">
                       No
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
-                      Machine
+                    <th scope="col" className="px-4 py-3">
+                      Material
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
-                      Material{" "}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
+                    <th scope="col" className="px-4 py-3">
                       Services
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
-                      Unit
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
+                    <th scope="col" className="px-4 py-3">
                       Width
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
+                    <th scope="col" className="px-4 py-3">
                       Height
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
+                    <th scope="col" className="px-4 py-3">
                       Quantity
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
-                    >
+                    <th scope="col" className="px-4 py-3">
                       Amount
                     </th>
-                    {/* <th
+                    <th
                       scope="col"
-                      className="px-4 py-2 bg-gray-200 border border-gray-300"
+                      className="w-10 flex justify-center px-4 py-3"
                     >
-                      <span className="sr-only">edit</span>
-                      <CiSettings className="text-xl" />
-                    </th> */}
+                      {/* Action */}
+                      <div className="font-bold">
+                        <CiSettings className="text-2xl" />
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {tableRows.map((row, index) => (
-                    <tr
-                      key={row}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                    >
-                      <td className="w-4 px-2 py-2 border border-gray-300">
-                        <div className="flex items-center">
-                          <input
-                            id={`checkbox-table-search-${index + 1}`}
-                            type="checkbox"
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                          />
-                          <label
-                            htmlFor={`checkbox-table-search-${index + 1}`}
-                            className="sr-only"
-                          >
-                            checkbox
-                          </label>
-                        </div>
+                  {formData && formData.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center">
+                        No data found
                       </td>
-                      <th
-                        scope="row"
-                        className="px-4 py-2 border border-gray-300 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        {row.replace(tableRow, "")}
-                      </th>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <select
-                          title="media"
-                          name="media"
-                          required
-                          value={formData[index]?.media || ""}
-                          onChange={(e) => handleSelectedMedia(index, e)}
-                          id="medias"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                          <option value="">Choose machine</option>
-                          {printingData.map((media: string) => (
-                            <option key={media.id} value={media.type}>
-                              {media.type}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <select
-                          title="material"
-                          value={formData[index]?.material || ""}
-                          required
-                          name="material"
-                          onChange={(e) => handleSelectedMaterial(index, e)}
-                          id="material"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                          <option value="">Choose materials</option>
-                          {materials[index]?.map((material: string) => (
-                            <option key={material.name} value={material.name}>
-                              {material.name}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <select
-                          title="service"
-                          value={formData[index]?.service || ""}
-                          required
-                          name="service"
-                          onChange={(e) => handleSelectedService(index, e)}
-                          id="service"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                          <option value="">Choose services</option>
-                          {services[index]?.map(
-                            (service: string, index: number) => (
-                              <option
-                                key={`${service}-${index}`}
-                                value={service}
-                              >
-                                {service}
-                              </option>
-                            )
-                          )}
-                        </select>
-                      </td>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <select
-                          title="unit"
-                          value={formData[index]?.unitName || ""}
-                          required
-                          name="unitName"
-                          onChange={(e) => handleSelectedUnit(index, e)}
-                          id="unit"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                          <option>Choose units</option>
-                          {units[index]?.map((unit: string, index: number) => (
-                            <option key={`${unit}-${index}`} value={unit}>
-                              {unit}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <input
-                          onChange={(e) => handleInputChanges(index, e)}
-                          value={formData[index]?.width || ""}
-                          type="number"
-                          name="width"
-                          className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="1,2,3..."
-                          required
-                          min={0}
-                        />
-                      </td>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <input
-                          onChange={(e) => handleInputChanges(index, e)}
-                          value={formData[index]?.height || ""}
-                          type="number"
-                          name="height"
-                          className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="1,2,3..."
-                          required
-                          min={0}
-                        />
-                      </td>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <input
-                          value={formData[index]?.quantity || ""}
-                          onChange={(e) => handleInputChanges(index, e)}
-                          type="number"
-                          name="quantity"
-                          className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="1,2,3.."
-                          required
-                          min={0}
-                        />
-                      </td>
-                      <td className="px-2 py-2 border border-gray-300">
-                        <p>
-                          {isNaN(calculateUnitPrice(index))
-                            ? 0
-                            : calculateUnitPrice(index)}
-                        </p>
-                      </td>
-                      {/* <td className="px-2 py-2 border border-gray-300">
-                        <button
-                          type="button"
-                          className="flex items-center gap-2"
-                        >
-                          <CiEdit /> Edit
-                        </button>
-                      </td> */}
                     </tr>
-                  ))}
+                  )}
+                  {formData &&
+                    formData.map((data, index) => (
+                      <tr
+                        key={index}
+                        className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      >
+                        <td className="w-4 p-4">
+                          <div className="flex items-center">
+                            <input
+                              id="checkbox-table-search-1"
+                              type="checkbox"
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <label
+                              htmlFor="checkbox-table-search-1"
+                              className="sr-only"
+                            >
+                              checkbox
+                            </label>
+                          </div>
+                        </td>
+                        <th
+                          scope="row"
+                          className="w-4 px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          {index + 1}
+                        </th>
+                        <td
+                          scope="row"
+                          className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          <Select
+                            options={uniqueOptions}
+                            onChange={(selectedOption) =>
+                              handleMaterialSelect(selectedOption, index)
+                            }
+                            className="w-full"
+                          />
+                        </td>
+                        <td className="px-4 py-4">
+                          <Select
+                            options={serviceOptions}
+                            onChange={(selectedOption) =>
+                              handleServiceSelect(selectedOption, index)
+                            }
+                          />
+                        </td>
+                        <td className="px-4 py-4 w-32">
+                          <input
+                            title="width"
+                            type="number"
+                            name="width"
+                            id="width"
+                            onChange={(e) => handleInputChanges(index, e)}
+                            value={data.width}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="0"
+                            required
+                            min={0}
+                          />
+                        </td>
+                        <td className="px-4 py-4 w-32">
+                          <input
+                            title="height"
+                            type="number"
+                            name="height"
+                            id="height"
+                            onChange={(e) => handleInputChanges(index, e)}
+                            value={data.height}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="0"
+                            required
+                            min={0}
+                          />
+                        </td>
+                        <td className="px-4 py-4 w-32">
+                          <input
+                            title="quantity"
+                            type="number"
+                            name="quantity"
+                            id="quantity"
+                            onChange={(e) => handleInputChanges(index, e)}
+                            value={data.quantity}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="0"
+                            required
+                            min={0}
+                          />
+                        </td>
+                        <td className="px-4 py-4 w-32">
+                          <input
+                            readOnly
+                            title="price"
+                            type="number"
+                            name="price"
+                            id="price"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="0"
+                            required
+                            min={0}
+                            value={calculatedUnitPrices[index] || 0}
+                          />
+                        </td>
+                        <td className="px-4 py-4 w-10 flex items-center justify-center">
+                          <button
+                            onClick={() => handleCancel(index)}
+                            title="action"
+                            type="button"
+                            className="flex items-center justify-between gap-2 text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-2.5 py-2.5 text-center"
+                          >
+                            <IoMdClose />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
+
             <div className="p-4 flex items-center justify-between">
               <button
                 onClick={handleAddRow}
                 type="button"
                 className="bg-gray-200 rounded p-4 py-2 font-semibold flex items-center gap-4"
               >
-                Add row
+                New order
               </button>
               <button
                 type="button"
