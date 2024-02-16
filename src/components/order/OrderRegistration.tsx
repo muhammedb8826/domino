@@ -74,6 +74,7 @@ export const OrderRegistration = () => {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
+  const [fileName, setFileName] = useState([]);
 
   const handleIsCollapsed = () => {
     setIsCollapsed((prev) => !prev);
@@ -232,6 +233,15 @@ export const OrderRegistration = () => {
       return updatedFormData;
     });
   };
+
+  useEffect(() => {
+    const data = [...formData]
+    const units = [...measuresFormData];
+    const combination = data.map((item, index) => {
+      return `${item.machine}-${item.material}-${units[index].width}x${units[index].height}`;
+    });
+    setFileName(combination) 
+  }, [formData,measuresFormData]);
 
   useEffect(() => {
     const matchingPriceData = formData.map((unitPrice) => {
@@ -702,11 +712,7 @@ export const OrderRegistration = () => {
               </p>
               <ul className="space-y-4 text-left text-gray-500 dark:text-gray-400">
                 {
-                  measuresFormData.map(
-                    (
-                      measure,
-                      index // Added index for unique key
-                    ) => (
+                  fileName.map((item, index) => (
                       <li
                         key={index}
                         className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -727,7 +733,7 @@ export const OrderRegistration = () => {
                           />
                         </svg>
                         <span>
-                          {formData && formData[index]?.machine} - {formData[index]?.material} - {measuresFormData && measure.width}x{measure.height}
+                          {item}
                         </span>
                       </li>
                     )
