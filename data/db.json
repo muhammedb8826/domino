@@ -167,38 +167,25 @@
   ],
   "orders": [
     {
-      "id": "82bc",
+      "id": "7a12",
       "series": "SAL-ORD-YYYY-",
-      "date": "Feb 14, 2024",
-      "deliveryDate": "Feb 15, 2024",
-      "orderType": "phone",
-      "description": "",
-      "customerPhone": "0911-88-9696",
-      "customerFirstName": "Teshe",
-      "customerEmail": "",
+      "date": "Feb 15, 2024",
+      "deliveryDate": "Feb 16, 2024",
+      "orderType": "telegram",
+      "description": "shgjksdfhgkjfdgfdgdf",
+      "customerPhone": "1234-56-7890",
+      "customerFirstName": "Teshager",
+      "customerEmail": "teshagerass@gmail.com",
       "status": "pending",
       "orderItems": [
         {
           "machine": "DTF",
           "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 400
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
           "service": "Print and Heat press",
-          "unitPrice": 25600
+          "unitPrice": 12800
         }
       ],
       "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "2",
-          "height": "2",
-          "quantity": "1",
-          "unitPrice": null
-        },
         {
           "unitName": null,
           "width": "4",
@@ -219,32 +206,134 @@
           "height": null,
           "quantity": null,
           "unitPrice": null
-        }
-      ],
-      "totalBirr": 26000,
-      "totalQuantity": 5
-    }
-  ],
-  "printingData": [
-    {
-      "id": "9944",
-      "type": "DTF",
-      "materials": [
+        },
         {
-          "name": "T-shirt",
-          "units": []
+          "unitName": null,
+          "width": null,
+          "height": null,
+          "quantity": null,
+          "unitPrice": null
         }
       ],
-      "prices": []
+      "totalBirr": 12800,
+      "totalQuantity": 4
     },
     {
-      "id": "f84f",
-      "type": "BANNER",
-      "materials": [],
-      "prices": []
+      "id": "3c3f",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 16, 2024",
+      "deliveryDate": "Feb 23, 2024",
+      "orderType": "telegram",
+      "description": "I want this order to be delivered on Sunday afternoon",
+      "customerPhone": "0905-07-8826",
+      "customerFirstName": "Muhammed",
+      "customerEmail": "muhammedb8826@gmail.com",
+      "status": "pending",
+      "orderItems": [
+        {
+          "machine": "UV",
+          "material": "Film",
+          "service": "Print and Material",
+          "unitPrice": 16000
+        },
+        {
+          "machine": "BANNER",
+          "material": "Screen",
+          "service": "Print and Heat press",
+          "unitPrice": 48000
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "4",
+          "height": "5",
+          "quantity": "4",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "4",
+          "height": "5",
+          "quantity": "6",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": null,
+          "height": null,
+          "quantity": null,
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": null,
+          "height": null,
+          "quantity": null,
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 64000,
+      "totalQuantity": 10
     },
     {
-      "id": "3ca7"
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 16, 2024",
+      "deliveryDate": "Feb 17, 2024",
+      "orderType": "telegram",
+      "description": "spmoethinf",
+      "customerPhone": "0910-11-1111",
+      "customerFirstName": "Duche",
+      "customerEmail": "duche@gmail.com",
+      "status": "pending",
+      "orderItems": [
+        {
+          "machine": "BANNER",
+          "material": "sticker",
+          "service": "Print",
+          "unitPrice": 25000
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": null,
+          "height": null,
+          "quantity": null,
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": null,
+          "height": null,
+          "quantity": null,
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": null,
+          "height": null,
+          "quantity": null,
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": null,
+          "height": null,
+          "quantity": null,
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 25000,
+      "totalQuantity": 5,
+      "id": "3aca"
     }
   ],
   "customers": [
@@ -342,6 +431,14 @@
       "companyType": "individual",
       "firstName": "ahadu",
       "lastName": "teshager",
+      "email": "admin@domino.com"
+    },
+    {
+      "id": "1707883674950",
+      "phone": "9856-59-8000",
+      "companyType": "individual",
+      "firstName": "test",
+      "lastName": "test",
       "email": "admin@domino.com"
     }
   ],

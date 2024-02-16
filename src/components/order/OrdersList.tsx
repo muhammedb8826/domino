@@ -4,7 +4,7 @@ import { MdApproval } from "react-icons/md";
 import { IoBagAdd } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { deleteOrder, getOrders } from "../../redux/features/order/orderSlice";
 import { RootState } from "../../redux/store";
 import ErroPage from "../common/ErroPage";
@@ -19,7 +19,28 @@ const OrdersList = () => {
     (state: RootState) => state.order
   );
   const dispatch = useDispatch();
-  const [showPopover, setShowPopover] = useState(null);
+  const [showPopover, setShowPopover] = useState<number | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(null);
+      }
+    };
+
+    if (showPopover !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPopover]);
+
   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
@@ -58,7 +79,7 @@ const OrdersList = () => {
       }
       setShowPopover(null);
     });
-  }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -70,47 +91,43 @@ const OrdersList = () => {
 
   const orderListContent = orders
     ? orders.map((order, index: number) => (
-        <tbody key={order.id}>
-          <tr className="bg-white border-b hover:bg-gray-50">
-            <td className="w-4 p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-table-1"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                />
-                <label htmlFor="checkbox-table-1" className="sr-only">
-                  checkbox
-                </label>
-              </div>
+        <tbody>
+          <tr
+            key={order.id}
+            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          >
+            <td className="px-6 py-4">
+            <NavLink to={`/order/${order.id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                    {order.series}
+                  </NavLink>{" "}
             </td>
             <th
               scope="row"
-              className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
+              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center"
             >
-              <FaFirstOrderAlt className="w-10 h-10 rounded-full" />
-              {/* <img
-                className="w-10 h-10 rounded-full"
-                src="hhh"
-                alt="Jese image"
-              /> */}
+              <FaFirstOrderAlt className="w-8 h-8 rounded-full" />
               <div className="ps-3">
                 <div className="text-base font-semibold">
-                  <NavLink to={`/order/${order.id}`} className="text-blue-500">
-                    {order.series}
-                  </NavLink>{" "}
-                  by {order.customerFirstName}
+                  {order.customerFirstName}
                 </div>
-                <div className="font-normal text-gray-500">{order.customerPhone}</div>
+                <div className="font-normal text-gray-500">
+                  {order.customerPhone}
+                </div>
               </div>
             </th>
-            <td className="px-6 py-4">{order.orderItems.map((item, index)=>(
-              <span key={index}>{item.material}{","}</span>
-            ))}
-            </td>
-            <td className="px-6 py-4">{order.status}</td>
             <td className="px-6 py-4">
-              {order.id}-{order.customerPhone}
+              {order.orderItems.map((item, index) => (
+                <span key={index}>
+                  {item.material}
+                  {","}
+                </span>
+              ))}
+            </td>
+            <td className="px-6 py-4">
+            {order.totalBirr.toLocaleString()}
+              </td>
+            <td className="px-6 py-4">
+            <span className="bg-red-100 text-red-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Not paid</span>
             </td>
             <td className="px-6 py-4">{order.deliveryDate}</td>
             <td className="px-6 py-4 relative">
@@ -126,21 +143,19 @@ const OrdersList = () => {
                 <CiMenuKebab />
               </button>
               {showPopover === index && (
-                <div className=" absolute z-10 right-40 -top-14 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                  {/* Dropdown content */}
-                  <div className="px-4 py-3 text-sm text-gray-900">
-                    <div className="font-medium">Pro User</div>
-                    <div className="truncate">email</div>
-                  </div>
+                <div
+                  ref={popoverRef}
+                  className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                >
                   <ul className="py-2 text-sm text-gray-700">
                     <li>
-                      <button
-                        type="button"
+                      <NavLink
+                        to={`/order/${order.id}`}
                         className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
                       >
                         <FaRegEdit />
                         Edit
-                      </button>
+                      </NavLink>{" "}
                     </li>
                     <li>
                       <button
@@ -161,7 +176,7 @@ const OrdersList = () => {
     : null;
 
   return (
-    <div className="p-4 overflow-y-scroll">
+    <div className="p-4 overflow-y-scroll h-screen">
       <h1 className="flex items-center gap-4">
         <span className="text-2xl font-bold">Order Details</span>
         <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
@@ -337,7 +352,7 @@ const OrdersList = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M16 16l20 20m0-20L16 36"
+                d="M16 16l20 20m0 0l-20-20"
               ></path>
             </svg>
             <p className="text-gray-600">No orders found</p>
@@ -346,35 +361,26 @@ const OrdersList = () => {
       )}
       {orders.length > 0 && (
         <>
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" className="p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-all"
-                      type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  "
-                    />
-                    <label htmlFor="checkbox-all" className="sr-only">
-                      checkbox
-                    </label>
-                  </div>
+                <th scope="col" className="px-6 py-3">
+                  id
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Order name
+                  Name
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Orders
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Status
+                Price
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Order Id
+                payment
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Delivery Date
+                Delivery Date
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Action
@@ -383,122 +389,80 @@ const OrdersList = () => {
             </thead>
             {orderListContent}
           </table>
-
-          {showModal && (
-            <div
-              className="fixed z-10 inset-0 overflow-y-auto"
-              aria-labelledby="modal-title"
-              role="dialog"
-              aria-modal="true"
-            >
-              <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                <div
-                  className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-                  aria-hidden="true"
-                ></div>
-                <span
-                  className="hidden sm:inline-block sm:align-middle sm:h-screen"
-                  aria-hidden="true"
+          <nav
+            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            aria-label="Table navigation"
+          >
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+              Showing{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1-10
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1000
+              </span>
+            </span>
+            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
-                  &#8203;
-                </span>
-
-                <ModalPage
-                  handleModalOpen={handleModalOpen}
-                  id={id}
-                  orders={orders}
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center gap-4 mt-4">
-            <button
-              disabled
-              className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                aria-hidden="true"
-                className="w-4 h-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-                ></path>
-              </svg>
-              Previous
-            </button>
-            <div className="flex items-center gap-2">
-              <button
-                className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg bg-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-              >
-                <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                  Previous
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
                   1
-                </span>
-              </button>
-              <button
-                className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-              >
-                <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
                   2
-                </span>
-              </button>
-              <button
-                className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-              >
-                <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  aria-current="page"
+                  className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                >
                   3
-                </span>
-              </button>
-              <button
-                className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-              >
-                <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
                   4
-                </span>
-              </button>
-              <button
-                className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-              >
-                <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
                   5
-                </span>
-              </button>
-            </div>
-            <button
-              className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                aria-hidden="true"
-                className="w-4 h-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                ></path>
-              </svg>
-            </button>
-          </div>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
+          </nav>
         </>
       )}
     </div>

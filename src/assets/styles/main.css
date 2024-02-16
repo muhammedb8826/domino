@@ -129,3 +129,7 @@ color: var(--primary-color);
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
   }
+
+  .flowbite-datepicker-icon {
+    display: none;
+  }

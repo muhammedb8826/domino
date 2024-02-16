@@ -88,7 +88,7 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
                   type="text"
                   name="customerName"
                   id="input-group-search"
-                  className="block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block w-full p-1 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search by name, phone, or company type"
                 />
               </div>
@@ -99,7 +99,7 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
               id="dropdownSearch"
               className={`z-10 ${
                 isDropdownOpen ? "" : "hidden"
-              } bg-white rounded-lg shadow dark:bg-gray-700 w-full absolute`}
+              } bg-white rounded-lg rounded-t-none shadow dark:bg-gray-700 w-full absolute top-15 border border-gray-200 dark:border-gray-600 dark:border-opacity-50`}
             >
               <ul
                 className="max-h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"

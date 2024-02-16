@@ -8,7 +8,7 @@ import ErroPage from "../common/ErroPage";
 import { createOrder } from "../../redux/features/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaCalendarAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { GoBack } from "../common/GoBack";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
 import { CiSettings } from "react-icons/ci";
@@ -56,17 +56,17 @@ export const OrderRegistration = () => {
       machine: "",
       material: "",
       service: "",
-      unitPrice: null
+      unitPrice: null,
     },
   ]);
 
   const [measuresFormData, setMeasuresFormData] = useState([
     {
-        unitName: null,
-        width: null,
-        height: null,
-        quantity: null,
-        unitPrice: null
+      unitName: null,
+      width: null,
+      height: null,
+      quantity: null,
+      unitPrice: null,
     },
   ]);
 
@@ -86,7 +86,7 @@ export const OrderRegistration = () => {
         machine: "",
         material: "",
         service: "",
-        unitPrice: null
+        unitPrice: null,
       },
     ]);
     setMeasuresFormData((prevFormData) => [
@@ -96,7 +96,7 @@ export const OrderRegistration = () => {
         width: null,
         height: null,
         quantity: null,
-        unitPrice: null
+        unitPrice: null,
       },
     ]);
   };
@@ -124,10 +124,7 @@ export const OrderRegistration = () => {
   }, [measuresFormData]);
 
   useEffect(() => {
-    const totalBirr = calculatedUnitPrices.reduce(
-      (acc, c) => acc + c || 0,
-      0
-    );
+    const totalBirr = calculatedUnitPrices.reduce((acc, c) => acc + c || 0, 0);
     setTotalBirr(totalBirr);
   }, [calculatedUnitPrices]);
 
@@ -217,8 +214,6 @@ export const OrderRegistration = () => {
     const { value } = selectedOption;
     const str = value;
     const parts = str.split("-("); // Split the string at "-("
-
-    // parts[0] will contain "T-shirt" and parts[1] will contain "DTF)"
     const material = parts[0]; // Extract "T-shirt"
     const machine = parts[1].substring(0, parts[1].length - 1); // Extract "DTF" by removing the last character ")"
     setFormData((prevFormData) => {
@@ -227,16 +222,6 @@ export const OrderRegistration = () => {
       updatedFormData[index].material = material;
       return updatedFormData;
     });
-    setMeasuresFormData((prevFormData) => [
-      ...prevFormData,
-      {
-        unitName: null,
-        width: null,
-        height: null,
-        quantity: null,
-        unitPrice: null
-      },
-    ]);
   };
 
   const handleServiceSelect = (selectedOption, index) => {
@@ -248,15 +233,16 @@ export const OrderRegistration = () => {
     });
   };
 
-    useEffect(() => {
-      const matchingPriceData = formData.map((unitPrice) => {
-        // Find the matching price data in the prices array
-        const matchingPrice = prices.find((price) => (
-            price.machine?.name === unitPrice.machine &&
-            price.material?.name === unitPrice.material &&
-            price.service?.name === unitPrice.service
-        ));
-        return matchingPrice;
+  useEffect(() => {
+    const matchingPriceData = formData.map((unitPrice) => {
+      // Find the matching price data in the prices array
+      const matchingPrice = prices.find(
+        (price) =>
+          price.machine?.name === unitPrice.machine &&
+          price.material?.name === unitPrice.material &&
+          price.service?.name === unitPrice.service
+      );
+      return matchingPrice;
     });
     setFilteredData(matchingPriceData);
   }, [formData, prices]);
@@ -280,7 +266,7 @@ export const OrderRegistration = () => {
         machine: "",
         material: "",
         service: "",
-        unitPrice: null
+        unitPrice: null,
       },
     ]);
     setMeasuresFormData([
@@ -289,7 +275,7 @@ export const OrderRegistration = () => {
         width: null,
         height: null,
         quantity: null,
-        unitPrice: null
+        unitPrice: null,
       },
     ]);
     setCalculatedUnitPrices([]);
@@ -357,7 +343,7 @@ export const OrderRegistration = () => {
         </div>
       )} */}
 
-        <div className="grid gap-4 sm:grid-cols-3 sm:gap-6 mb-4 p-4">
+        <div className="grid sm:grid-cols-3 sm:gap-6 mb-4 p-4">
           <div className="w-full">
             <label
               htmlFor="name"
@@ -371,7 +357,7 @@ export const OrderRegistration = () => {
               value="SAL-ORD-YYYY-"
               readOnly
               id="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Type product name"
             />
           </div>
@@ -387,10 +373,19 @@ export const OrderRegistration = () => {
               name="date"
               onSelectedDateChanged={handleDatePickerChange}
               value={orderInfo.date}
+              style={{
+                padding: "0.25rem",
+                paddingLeft: "2.5rem",
+                border: "1px solid #ccc",
+                color: "#333",
+              }}
             />
           </div>
           <div className="w-full relative">
-            <CustomerSearchInput handleCustomerInfo={handleCustomerInfo} />
+            <CustomerSearchInput
+              handleCustomerInfo={handleCustomerInfo}
+              value={orderInfo.customerFirstName}
+            />
           </div>
           <div>
             <label
@@ -404,12 +399,12 @@ export const OrderRegistration = () => {
               onChange={handleOrderInfo}
               value={orderInfo.orderType}
               id="orderType"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             >
               <option>Choose type</option>
               <option value="phone">Phone</option>
               <option value="telegram">Telegram</option>
-              <option value="telegram">In person</option>
+              <option value="In person">In person</option>
             </select>
           </div>
           <div className="w-full">
@@ -423,6 +418,12 @@ export const OrderRegistration = () => {
               title="Delivery date"
               onSelectedDateChanged={handleDeliveryDatePickerChange}
               value={orderInfo.deliveryDate}
+              style={{
+                padding: "0.25rem",
+                paddingLeft: "2.5rem",
+                border: "1px solid #ccc",
+                color: "#333",
+              }}
             />
           </div>
         </div>
@@ -445,52 +446,55 @@ export const OrderRegistration = () => {
                   isCollapsed ? "hidden" : ""
                 } w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
               >
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th scope="col" className="p-4">
-                      <div className="flex items-center">
-                        <input
-                          id="checkbox-all-search"
-                          type="checkbox"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                          htmlFor="checkbox-all-search"
-                          className="sr-only"
-                        >
-                          checkbox
-                        </label>
-                      </div>
-                    </th>
-                    <th scope="col" className="px-4 py-3 w-4">
+                    <th scope="col" className="p-4 w-4 border border-gray-300">
                       No
                     </th>
-                    <th scope="col" className="px-4 py-3">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
                       Material
                     </th>
-                    <th scope="col" className="px-4 py-3">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
                       Services
                     </th>
-                    <th scope="col" className="px-4 py-3">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
                       Width
                     </th>
-                    <th scope="col" className="px-4 py-3">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
                       Height
                     </th>
-                    <th scope="col" className="px-4 py-3">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
                       Quantity
                     </th>
-                    <th scope="col" className="px-4 py-3">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
                       Amount
                     </th>
                     <th
                       scope="col"
-                      className="w-10 flex justify-center px-4 py-3"
+                      className="px-4 py-3 border border-gray-300"
                     >
                       {/* Action */}
-                      <div className="font-bold">
-                        <CiSettings className="text-2xl" />
-                      </div>
+                      <span className="font-semibold flex justify-center items-center">
+                        <CiSettings className="text-xl font-bold" />
+                      </span>
                     </th>
                   </tr>
                 </thead>
@@ -508,32 +512,21 @@ export const OrderRegistration = () => {
                         key={index}
                         className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
-                        <td className="w-4 p-4">
-                          <div className="flex items-center">
-                            <input
-                              id="checkbox-table-search-1"
-                              type="checkbox"
-                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                            />
-                            <label
-                              htmlFor="checkbox-table-search-1"
-                              className="sr-only"
-                            >
-                              checkbox
-                            </label>
-                          </div>
-                        </td>
-                        <th
-                          scope="row"
-                          className="w-4 px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
+                        <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                           {index + 1}
-                        </th>
+                        </td>
                         <td
                           scope="row"
-                          className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                          className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
                         >
                           <Select
+                            styles={{
+                              control: (baseStyles, state) => ({
+                                ...baseStyles,
+                                border: "none",
+                                borderColor: state.isFocused ? "grey" : "none",
+                              }),
+                            }}
                             options={uniqueOptions}
                             onChange={(selectedOption) =>
                               handleMaterialSelect(selectedOption, index)
@@ -541,15 +534,25 @@ export const OrderRegistration = () => {
                             className="w-full"
                           />
                         </td>
-                        <td className="px-4 py-4">
+                        <td
+                          scope="row"
+                          className="font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
                           <Select
+                            styles={{
+                              control: (baseStyles, state) => ({
+                                ...baseStyles,
+                                border: "none",
+                                borderColor: state.isFocused ? "grey" : "none",
+                              }),
+                            }}
                             options={serviceOptions}
                             onChange={(selectedOption) =>
                               handleServiceSelect(selectedOption, index)
                             }
                           />
                         </td>
-                        <td className="px-4 py-4 w-32">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
                           <input
                             title="width"
                             type="number"
@@ -557,13 +560,13 @@ export const OrderRegistration = () => {
                             id="width"
                             onChange={(e) => handleInputChanges(index, e)}
                             value={data.width}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
                             placeholder="0"
                             required
                             min={0}
                           />
                         </td>
-                        <td className="px-4 py-4 w-32">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
                           <input
                             title="height"
                             type="number"
@@ -571,13 +574,13 @@ export const OrderRegistration = () => {
                             id="height"
                             onChange={(e) => handleInputChanges(index, e)}
                             value={data.height}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
                             placeholder="0"
                             required
                             min={0}
                           />
                         </td>
-                        <td className="px-4 py-4 w-32">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
                           <input
                             title="quantity"
                             type="number"
@@ -585,32 +588,32 @@ export const OrderRegistration = () => {
                             id="quantity"
                             onChange={(e) => handleInputChanges(index, e)}
                             value={data.quantity}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
                             placeholder="0"
                             required
                             min={0}
                           />
                         </td>
-                        <td className="px-4 py-4 w-32">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
                           <input
                             readOnly
                             title="price"
                             type="number"
                             name="price"
                             id="price"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
                             placeholder="0"
                             required
                             min={0}
                             value={calculatedUnitPrices[index] || 0}
                           />
                         </td>
-                        <td className="px-4 py-4 w-10 flex items-center justify-center">
+                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10">
                           <button
                             onClick={() => handleCancel(index)}
                             title="action"
                             type="button"
-                            className="flex items-center justify-between gap-2 text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-2.5 py-2.5 text-center"
+                            className="flex items-center justify-between gap-2 text-black font-medium rounded-lg text-lg px-2.5 py-2.5 text-center"
                           >
                             <IoMdClose />
                           </button>
@@ -625,13 +628,13 @@ export const OrderRegistration = () => {
               <button
                 onClick={handleAddRow}
                 type="button"
-                className="bg-gray-200 rounded p-4 py-2 font-semibold flex items-center gap-4"
+                className="bg-gray-200 rounded px-2 font-semibold flex items-center gap-4"
               >
                 New order
               </button>
               <button
                 type="button"
-                className="bg-gray-200 rounded p-4 py-2 font-semibold flex items-center gap-4"
+                className="bg-gray-200 rounded px-2 font-semibold flex items-center gap-4"
               >
                 Download
               </button>
@@ -650,7 +653,7 @@ export const OrderRegistration = () => {
                   type="number"
                   name="totalQuantity"
                   id="totalQuantity"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="0"
                   required
                 />
@@ -668,7 +671,7 @@ export const OrderRegistration = () => {
                   type="number"
                   name="totalBirr"
                   id="totalBirr"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="0"
                   required
                 />
@@ -676,22 +679,61 @@ export const OrderRegistration = () => {
             </div>
           </div>
 
-          <div className="p-4">
-            <label
-              htmlFor="description"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Description
-            </label>
-            <textarea
-              onChange={handleOrderInfo}
-              value={orderInfo.description}
-              id="description"
-              name="description"
-              rows={8}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              placeholder="Your description here"
-            ></textarea>
+          <div className="p-4 flex justify-between">
+            <div className="w-1/2">
+              <label
+                htmlFor="message"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Your message
+              </label>
+              <textarea
+                onChange={handleOrderInfo}
+                value={orderInfo.description}
+                id="message"
+                rows={4}
+                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Leave a comment..."
+              ></textarea>
+            </div>
+            <div>
+              <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                File Names
+              </p>
+              <ul className="space-y-4 text-left text-gray-500 dark:text-gray-400">
+                {
+                  measuresFormData.map(
+                    (
+                      measure,
+                      index // Added index for unique key
+                    ) => (
+                      <li
+                        key={index}
+                        className="flex items-center space-x-3 rtl:space-x-reverse"
+                      >
+                        <svg
+                          className="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 16 12"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round" // Changed to camelCase
+                            strokeLinejoin="round" // Changed to camelCase
+                            strokeWidth="2" // Changed to camelCase
+                            d="M1 5.917 5.724 10.5 15 1.5"
+                          />
+                        </svg>
+                        <span>
+                          {formData && formData[index]?.machine} - {formData[index]?.material} - {measuresFormData && measure.width}x{measure.height}
+                        </span>
+                      </li>
+                    )
+                  )}
+              </ul>
+            </div>
           </div>
           <button
             type="submit"
