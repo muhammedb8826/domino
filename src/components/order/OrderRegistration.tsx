@@ -315,12 +315,18 @@ export const OrderRegistration = () => {
       item.unitPrice = calculatedUnitPrices[index];
       return item;
     });
+    
+    const appendName = fileName.map((item)=>{
+      const nameAndFile =   `${orderInfo.customerFirstName}-${item}`;
+      return nameAndFile
+    })    
 
     const orderData = {
       ...orderInfo,
       orderItems: unitPrice,
       orderMeasures: measuresFormData,
       totalBirr,
+      fileNames: appendName,
       totalQuantity,
     };
     dispatch(createOrder(orderData)).then((res) => {
@@ -700,6 +706,7 @@ export const OrderRegistration = () => {
               <textarea
                 onChange={handleOrderInfo}
                 value={orderInfo.description}
+                name="description"
                 id="message"
                 rows={4}
                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -714,7 +721,7 @@ export const OrderRegistration = () => {
                 {
                   fileName.map((item, index) => (
                       <li
-                        key={index}
+                        key={index} 
                         className="flex items-center space-x-3 rtl:space-x-reverse"
                       >
                         <svg

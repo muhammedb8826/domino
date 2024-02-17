@@ -167,102 +167,42 @@
   ],
   "orders": [
     {
-      "id": "7a12",
-      "series": "SAL-ORD-YYYY-",
-      "date": "Feb 15, 2024",
-      "deliveryDate": "Feb 16, 2024",
-      "orderType": "telegram",
-      "description": "shgjksdfhgkjfdgfdgdf",
-      "customerPhone": "1234-56-7890",
-      "customerFirstName": "Teshager",
-      "customerEmail": "teshagerass@gmail.com",
-      "status": "pending",
-      "orderItems": [
-        {
-          "machine": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Heat press",
-          "unitPrice": 12800
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "4",
-          "height": "4",
-          "quantity": "4",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 12800,
-      "totalQuantity": 4
-    },
-    {
-      "id": "3c3f",
       "series": "SAL-ORD-YYYY-",
       "date": "Feb 16, 2024",
-      "deliveryDate": "Feb 23, 2024",
-      "orderType": "telegram",
-      "description": "I want this order to be delivered on Sunday afternoon",
+      "deliveryDate": "Feb 20, 2024",
+      "orderType": "phone",
+      "description": "mamilan",
       "customerPhone": "0905-07-8826",
       "customerFirstName": "Muhammed",
       "customerEmail": "muhammedb8826@gmail.com",
       "status": "pending",
       "orderItems": [
         {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitPrice": 3600
+        },
+        {
           "machine": "UV",
           "material": "Film",
           "service": "Print and Material",
-          "unitPrice": 16000
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print and Heat press",
-          "unitPrice": 48000
+          "unitPrice": 200
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
           "width": "4",
-          "height": "5",
-          "quantity": "4",
+          "height": "3",
+          "quantity": "3",
           "unitPrice": null
         },
         {
           "unitName": null,
-          "width": "4",
-          "height": "5",
-          "quantity": "6",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
+          "width": "1",
+          "height": "1",
+          "quantity": "1",
           "unitPrice": null
         },
         {
@@ -273,67 +213,13 @@
           "unitPrice": null
         }
       ],
-      "totalBirr": 64000,
-      "totalQuantity": 10
-    },
-    {
-      "series": "SAL-ORD-YYYY-",
-      "date": "Feb 16, 2024",
-      "deliveryDate": "Feb 17, 2024",
-      "orderType": "telegram",
-      "description": "spmoethinf",
-      "customerPhone": "0910-11-1111",
-      "customerFirstName": "Duche",
-      "customerEmail": "duche@gmail.com",
-      "status": "pending",
-      "orderItems": [
-        {
-          "machine": "BANNER",
-          "material": "sticker",
-          "service": "Print",
-          "unitPrice": 25000
-        }
+      "totalBirr": 3800,
+      "fileNames": [
+        "Muhammed-DTF-T-shirt-4x3",
+        "Muhammed-UV-Film-1x1"
       ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "5",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 25000,
-      "totalQuantity": 5,
-      "id": "3aca"
+      "totalQuantity": 4,
+      "id": "a7ff"
     }
   ],
   "customers": [

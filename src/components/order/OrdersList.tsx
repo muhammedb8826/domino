@@ -134,9 +134,6 @@ const OrdersList = () => {
               <button
                 onClick={() => handleAction(index)}
                 title="action"
-                data-popover-target={`popover-bottom-${index}`}
-                data-popover-trigger="click"
-                id={`dropdownAvatarNameButton-${order.id}-${index}`}
                 type="button"
                 className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
@@ -148,7 +145,7 @@ const OrdersList = () => {
                   className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                 >
                   <ul className="py-2 text-sm text-gray-700">
-                    <li>
+                    <li key={order.id}>
                       <NavLink
                         to={`/order/${order.id}`}
                         className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
@@ -157,7 +154,7 @@ const OrdersList = () => {
                         Edit
                       </NavLink>{" "}
                     </li>
-                    <li>
+                    <li key={order.id}>
                       <button
                         onClick={() => handleDeleteOrder(order.id)}
                         type="button"
@@ -359,7 +356,7 @@ const OrdersList = () => {
           </div>
         </div>
       )}
-      {orders.length > 0 && (
+      {orders && (
         <>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
