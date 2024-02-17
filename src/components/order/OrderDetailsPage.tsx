@@ -5,18 +5,20 @@ import {
   getOrdersById,
   updateOrder,
 } from "../../redux/features/order/orderSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Datepicker } from "flowbite-react";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { CiSettings } from "react-icons/ci";
+import { FaChevronDown, FaChevronUp, FaRegEdit } from "react-icons/fa";
+import { CiMenuKebab, CiSettings } from "react-icons/ci";
 import Select from "react-select";
 import { IoMdClose } from "react-icons/io";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import { getprice } from "../../redux/features/price/pricingSlice";
+import { MdDelete } from "react-icons/md";
+import { StatusEditModal } from "./StatusEditModal";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -61,8 +63,6 @@ const OrderDetailsPage = () => {
           setMeasuresFormData(order.orderMeasures);
           setTotalBirr(order.totalBirr);
           setTotalQuantity(order.totalQuantity);
-          console.log(order.fileNames);
-          
           setFileName(order.fileNames);
         }
       })
@@ -71,8 +71,7 @@ const OrderDetailsPage = () => {
       });
   }, [dispatch, id]);
 
-
-const [fileName, setFileName] = useState([]);
+  const [fileName, setFileName] = useState([]);
   const [tooltipMessages, setTooltipMessages] = useState(
     Array(fileName.length).fill("Copy to clipboard")
   );
@@ -116,6 +115,31 @@ const [fileName, setFileName] = useState([]);
     }, 1500);
   };
 
+  const [showPopover, setShowPopover] = useState<number | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(null);
+      }
+    };
+
+    if (showPopover !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPopover]);
+
+  const handleAction = (index: number) => {
+    setShowPopover((prevIndex) => (prevIndex === index ? null : index));
+  };
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [orderInfo, setOrderInfo] = useState({
@@ -127,15 +151,15 @@ const [fileName, setFileName] = useState([]);
     customerPhone: "",
     customerFirstName: "",
     customerEmail: "",
-    status: "pending",
   });
-
+  
   const [formData, setFormData] = useState([
     {
       machine: "",
       material: "",
       service: "",
       unitPrice: null,
+      status: "recieved",
     },
   ]);
 
@@ -153,6 +177,29 @@ const [fileName, setFileName] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [dataIndex, setDataIndex] = useState(0);
+  const [statusUpdateFormData, setStatusUpdateFormData] = useState(formData);
+
+  const handleModalOpen = (index) => {
+
+    setModalOpen((prev) => !prev);
+    setDataIndex(index);
+  };
+
+  const handleStatusUpdate = (dataIndex, status) => {
+    // Update the status in the form data
+    const updatedFormData = formData.map((item, i) => {
+      if (i === dataIndex) {
+        return {
+          ...item,
+          status,
+        };
+      }
+      return item;
+    });
+    setFormData(updatedFormData);
+  };
 
   const handleIsCollapsed = () => {
     setIsCollapsed((prev) => !prev);
@@ -166,6 +213,7 @@ const [fileName, setFileName] = useState([]);
         material: "",
         service: "",
         unitPrice: null,
+        status: "recieved",
       },
     ]);
     setMeasuresFormData((prevFormData) => [
@@ -304,7 +352,7 @@ const [fileName, setFileName] = useState([]);
     // parts[0] will contain "T-shirt" and parts[1] will contain "DTF)"
     const material = parts[0]; // Extract "T-shirt"
     const machine = parts[1].substring(0, parts[1].length - 1); // Extract "DTF" by removing the last character ")"
-    console.log(material, machine); // Output: T-shirt DTF
+    // console.log(material, machine); // Output: T-shirt DTF
     setFormData((prevFormData) => {
       const updatedFormData = prevFormData.map((item, i) => {
         if (i === index) {
@@ -389,6 +437,7 @@ const [fileName, setFileName] = useState([]);
         material: "",
         service: "",
         unitPrice: null,
+        status: "recieved",
       },
     ]);
     setMeasuresFormData([
@@ -628,6 +677,12 @@ const [fileName, setFileName] = useState([]);
                       scope="col"
                       className="px-4 py-3 border border-gray-300"
                     >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
                       {/* Action */}
                       <span className="font-semibold flex justify-center items-center">
                         <CiSettings className="text-xl font-bold" />
@@ -750,15 +805,74 @@ const [fileName, setFileName] = useState([]);
                             value={calculatedUnitPrices[index] || 0}
                           />
                         </td>
-                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10">
+                        <td>
+                          <div className="flex items-center justify-center w-full">
+                            {data.status === "recieved" && (
+                              <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                                {data.status}
+                              </span>
+                            )}
+                            {data.status === "edited" && (
+                              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                {data.status}
+                              </span>
+                            )}
+                            {data.status === "rejected" && (
+                              <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                {data.status}
+                              </span>
+                            )}
+                            {/* <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                              {data.status}
+                            </span> */}
+                          </div>
+                        </td>
+                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
                           <button
+                            onClick={() => handleAction(index)}
+                            title="action"
+                            type="button"
+                            className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                          >
+                            <CiMenuKebab />
+                          </button>
+                          {showPopover === index && (
+                            <div
+                              ref={popoverRef}
+                              className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                            >
+                              <ul className="py-2 text-sm text-gray-700">
+                                <li key={index}>
+                                  <button
+                                  type="button"
+                                  onClick={() => handleModalOpen(index)}
+                                    className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                                  >
+                                    <FaRegEdit />
+                                    Edit
+                                  </button>
+                                </li>
+                                <li key={index}>
+                                  <button
+                                    onClick={() => handleCancel(index)}
+                                    type="button"
+                                    className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                                  >
+                                    <MdDelete /> Delete
+                                  </button>
+                                </li>
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* <button
                             onClick={() => handleCancel(index)}
                             title="action"
                             type="button"
                             className="flex items-center justify-between gap-2 text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-2.5 py-2.5 text-center"
                           >
                             <IoMdClose />
-                          </button>
+                          </button> */}
                         </td>
                       </tr>
                     ))}
@@ -923,6 +1037,7 @@ const [fileName, setFileName] = useState([]);
           </button>
         </form>
       </section>
+      {modalOpen && <StatusEditModal handleModalOpen={handleModalOpen} dataIndex={dataIndex} handleStatusUpdate={handleStatusUpdate} />}
     </>
   );
 };

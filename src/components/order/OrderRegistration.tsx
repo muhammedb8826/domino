@@ -48,15 +48,15 @@ export const OrderRegistration = () => {
     customerPhone: "",
     customerFirstName: "",
     customerEmail: "",
-    status: "pending",
   });
-
+  
   const [formData, setFormData] = useState([
     {
       machine: "",
       material: "",
       service: "",
       unitPrice: null,
+      status: "recieved",
     },
   ]);
 
@@ -88,6 +88,7 @@ export const OrderRegistration = () => {
         material: "",
         service: "",
         unitPrice: null,
+        status: "recieved",
       },
     ]);
     setMeasuresFormData((prevFormData) => [
@@ -277,6 +278,7 @@ export const OrderRegistration = () => {
         material: "",
         service: "",
         unitPrice: null,
+        status: "recieved",
       },
     ]);
     setMeasuresFormData([
@@ -315,7 +317,7 @@ export const OrderRegistration = () => {
       item.unitPrice = calculatedUnitPrices[index];
       return item;
     });
-    
+
     const appendName = fileName.map((item)=>{
       const nameAndFile =   `${orderInfo.customerFirstName}-${item}`;
       return nameAndFile

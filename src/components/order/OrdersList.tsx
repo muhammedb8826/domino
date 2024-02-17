@@ -11,7 +11,6 @@ import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
 import { FaFirstOrderAlt, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
-import ModalPage from "../common/ModalPage";
 import Swal from "sweetalert2";
 
 const OrdersList = () => {
@@ -19,6 +18,9 @@ const OrdersList = () => {
     (state: RootState) => state.order
   );
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getOrders());
+  }, [dispatch]);
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -45,18 +47,9 @@ const OrdersList = () => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const [showModal, setShowModal] = useState(false);
-  const [id, setId] = useState(null);
-  const pendingOrders = orders.filter((order) => order.status === "pending");
-
-  useEffect(() => {
-    dispatch(getOrders());
-  }, [dispatch]);
-
-  const handleModalOpen = (id) => {
-    setShowModal(!showModal);
-    setId(id);
-  };
+  const receivedStatus = orders && orders.map((item, index)=>{
+    return item.orderItems.filter((order)=> order.status === "recieved")
+  });
 
   const handleDeleteOrder = (id) => {
     Swal.fire({
@@ -89,9 +82,9 @@ const OrdersList = () => {
     return <ErroPage error={error} />;
   }
 
-  const orderListContent = orders
-    ? orders.map((order, index: number) => (
-        <tbody>
+
+    const orderListContent = orders
+          ? orders.map((order, index: number) => (
           <tr
             key={order.id}
             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -145,7 +138,7 @@ const OrdersList = () => {
                   className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                 >
                   <ul className="py-2 text-sm text-gray-700">
-                    <li key={order.id}>
+                    <li key={`${order.id}-${index}-1`}>
                       <NavLink
                         to={`/order/${order.id}`}
                         className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
@@ -154,7 +147,7 @@ const OrdersList = () => {
                         Edit
                       </NavLink>{" "}
                     </li>
-                    <li key={order.id}>
+                    <li key={`${order.id}-${index}-2`}>
                       <button
                         onClick={() => handleDeleteOrder(order.id)}
                         type="button"
@@ -168,7 +161,6 @@ const OrdersList = () => {
               )}
             </td>
           </tr>
-        </tbody>
       ))
     : null;
 
@@ -197,8 +189,8 @@ const OrdersList = () => {
             <MdOutlinePendingActions />
           </p>
           <div className="">
-            <p className="font-bold text-2xl">{pendingOrders.length}</p>
-            <p className="text-gray-400">Total pending orders</p>
+            <p className="font-bold text-2xl">{receivedStatus.length}</p>
+            <p className="text-gray-400">Total recieved orders</p>
           </div>
           <div className="progress ml-auto">
             <div className="relative w-14 h-14">
@@ -329,33 +321,6 @@ const OrdersList = () => {
           />
         </div>
       </div>
-      {orders.length === 0 && (
-        <div className="flex items-center justify-center w-full">
-          <div className="flex flex-col items-center justify-center">
-            <svg
-              className="w-16 h-16 text-gray-400"
-              stroke="currentColor"
-              viewBox="0 0 52 52"
-            >
-              <circle
-                className="fill-transparent stroke-current stroke-2"
-                cx="26"
-                cy="26"
-                r="25"
-              ></circle>
-              <path
-                className="stroke-current stroke-2"
-                fill="transparent"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M16 16l20 20m0 0l-20-20"
-              ></path>
-            </svg>
-            <p className="text-gray-600">No orders found</p>
-          </div>
-        </div>
-      )}
       {orders && (
         <>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -384,7 +349,9 @@ const OrdersList = () => {
                 </th>
               </tr>
             </thead>
+            <tbody>
             {orderListContent}
+            </tbody>
           </table>
           <nav
             className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
@@ -462,6 +429,34 @@ const OrdersList = () => {
           </nav>
         </>
       )}
+      {orders.length === 0 && (
+        <div className="flex items-center justify-center w-full">
+          <div className="flex flex-col items-center justify-center">
+            <svg
+              className="w-16 h-16 text-gray-400"
+              stroke="currentColor"
+              viewBox="0 0 52 52"
+            >
+              <circle
+                className="fill-transparent stroke-current stroke-2"
+                cx="26"
+                cy="26"
+                r="25"
+              ></circle>
+              <path
+                className="stroke-current stroke-2"
+                fill="transparent"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M16 16l20 20m0 0l-20-20"
+              ></path>
+            </svg>
+            <p className="text-gray-600">No orders found</p>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 };

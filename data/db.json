@@ -168,41 +168,56 @@
   "orders": [
     {
       "series": "SAL-ORD-YYYY-",
-      "date": "Feb 16, 2024",
-      "deliveryDate": "Feb 20, 2024",
+      "date": "Feb 17, 2024",
+      "deliveryDate": "Feb 21, 2024",
       "orderType": "phone",
-      "description": "mamilan",
+      "description": "ይህ ትዕዛዝ በሚቀጥለው ሳምንት እንዲታተም እና እንዲደርስ እፈልጋለሁ",
       "customerPhone": "0905-07-8826",
       "customerFirstName": "Muhammed",
       "customerEmail": "muhammedb8826@gmail.com",
-      "status": "pending",
       "orderItems": [
+        {
+          "machine": "BANNER",
+          "material": "Screen",
+          "service": "Print and Heat press",
+          "unitPrice": 50000,
+          "status": "rejected"
+        },
         {
           "machine": "DTF",
           "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 3600
+          "service": "Print and Heat press",
+          "unitPrice": 1600,
+          "status": "edited"
         },
         {
           "machine": "UV",
           "material": "Film",
           "service": "Print and Material",
-          "unitPrice": 200
+          "unitPrice": 1600,
+          "status": "recieved"
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
-          "width": "4",
-          "height": "3",
-          "quantity": "3",
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
           "unitPrice": null
         },
         {
           "unitName": null,
-          "width": "1",
-          "height": "1",
-          "quantity": "1",
+          "width": "2",
+          "height": "2",
+          "quantity": "2",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "2",
+          "height": "2",
+          "quantity": "2",
           "unitPrice": null
         },
         {
@@ -213,13 +228,48 @@
           "unitPrice": null
         }
       ],
-      "totalBirr": 3800,
+      "totalBirr": 53200,
       "fileNames": [
-        "Muhammed-DTF-T-shirt-4x3",
-        "Muhammed-UV-Film-1x1"
+        "Muhammed-Muhammed-BANNER-Screen-5x5",
+        "Muhammed-Muhammed-DTF-T-shirt-2x2",
+        "Muhammed-Muhammed-UV-Film-2x2"
       ],
-      "totalQuantity": 4,
-      "id": "a7ff"
+      "totalQuantity": 9,
+      "id": "2ed2"
+    },
+    {
+      "id": "bea3",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 17, 2024",
+      "deliveryDate": "Feb 22, 2024",
+      "orderType": "telegram",
+      "description": "",
+      "customerPhone": "0988-45-6666",
+      "customerFirstName": "Babi",
+      "customerEmail": "",
+      "orderItems": [
+        {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitPrice": 800,
+          "status": "recieved"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "2",
+          "height": "2",
+          "quantity": "2",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 800,
+      "fileNames": [
+        "Babi-DTF-T-shirt-2x2"
+      ],
+      "totalQuantity": 2
     }
   ],
   "customers": [
