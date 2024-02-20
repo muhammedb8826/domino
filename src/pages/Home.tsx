@@ -1,7 +1,12 @@
+import HeroSection from "../components/header/hero-section/HeroSection"
+import ScrollablePages from "../components/scrollable/ScrollablePages"
 
 const Home = () => {
   return (
-    <div>Home</div>
+ <>
+ <HeroSection/>
+ <ScrollablePages />
+ </>
   )
 }
 

@@ -8,9 +8,11 @@ import Contact from "./pages/Contact"
 import GetStarted from "./pages/GetStarted"
 import Home from "./pages/Home"
 import "./assets/styles/main.css"
+import { ParallaxProvider } from "react-scroll-parallax"
 
 const App = () => {
   return (
+    <ParallaxProvider>
     <main>
       <Navbar />
       <Routes>
@@ -23,6 +25,7 @@ const App = () => {
         <Route path="/get-started" element={<GetStarted/>} />
       </Routes>
     </main>
+    </ParallaxProvider>
   )
 }
 

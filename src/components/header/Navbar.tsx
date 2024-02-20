@@ -9,13 +9,13 @@ const Navbar = () => {
   };
   return (
     <header>
-      <nav className="h-16 border flex justify-between items-center relative px-4">
+      <nav className="h-16 flex justify-between items-center relative px-4">
         <div>
-          <NavLink to="/">Logo</NavLink>
+          <NavLink to="/" className="flex text-3xl items-center"><span className="font-bold">D</span><span className="text-[#f01d52]">omino</span> </NavLink>
         </div>
         <button
           type="button"
-          className="absolute right-4 max-md:block hidden"
+          className="absolute right-4 max-md:block hidden text-2xl"
           title="toggle button"
           onClick={handleToggle}
         >
