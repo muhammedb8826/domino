@@ -40,9 +40,7 @@ const ScrollablePages = () => {
       ]}
       className="aspect-[2/1] h-screen"
     />
-    <div className="h-screen flex justify-center items-center">
-      <h1>Getting Started section</h1>
-    </div>
+    {/* <GetStarted /> */}
     </>
   );
 };

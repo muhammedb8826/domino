@@ -5,6 +5,13 @@
     --quaternary-color : #EBE9EA;
 }
 
+
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 header{
     background-color: var(--primary-color);
     color: var(--tertiary-color);
@@ -104,4 +111,25 @@ nav ul li a:hover::after{
   @keyframes typing {
     from { width: 0 }
     to { width: 100% }
+  }
+
+input[type=text],input[type=email],input[type=tel] {
+color: var(--primary-color);
+}
+
+#projectType option:disabled {
+   font-weight: 500;
+    color: black; 
+    padding: 0;
+  }
+
+  .progress-ring__circle {
+    stroke-dasharray: 400, 400;
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+
+  .flowbite-datepicker-icon {
+    display: none;
   }
