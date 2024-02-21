@@ -9,3 +9,5 @@ export const machineURL = "http://127.0.0.1:3000/machines";
 export const materialURL = "http://127.0.0.1:3000/materials";
 export const priceURL = "http://127.0.0.1:3000/prices";
 export const unitURL = "http://127.0.0.1:3000/units";
+export const roleURL = "http://127.0.0.1:3000/roles";
+export const permissionURL = "http://127.0.0.1:3000/permissions";

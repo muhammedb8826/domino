@@ -270,6 +270,40 @@
         "Babi-DTF-T-shirt-2x2"
       ],
       "totalQuantity": 2
+    },
+    {
+      "id": "3360",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 21, 2024",
+      "deliveryDate": "Feb 22, 2024",
+      "orderType": "In person",
+      "description": "sfgfss",
+      "customerPhone": "0911-88-9696",
+      "customerFirstName": "Teshe",
+      "customerEmail": "",
+      "orderItems": [
+        {
+          "machine": "UV",
+          "material": "Film",
+          "service": "Print and Material",
+          "unitPrice": 1600,
+          "status": "recieved"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "2",
+          "height": "2",
+          "quantity": "2",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 1600,
+      "fileNames": [
+        "Teshe-UV-Film-2x2"
+      ],
+      "totalQuantity": 2
     }
   ],
   "customers": [
@@ -601,5 +635,23 @@
       },
       "unitPrice": "200"
     }
+  ],
+  "roles": [
+    {
+      "id": "2a00",
+      "name": "admin",
+      "description": "can do all things"
+    },
+    {
+      "id": "e74a",
+      "name": "Graphic designer",
+      "description": "He can edit the order status"
+    }
+  ],
+  "permissions": [
+    { "id": 1, "name": "create", "description": "Can create items" },
+    { "id": 2, "name": "read", "description": "Can read items" },
+    { "id": 3, "name": "update", "description": "Can update items" },
+    { "id": 4, "name": "delete", "description": "Can delete items" }
   ]
 }
