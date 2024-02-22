@@ -7,16 +7,18 @@ interface User {
 interface AuthState {
   isLoading: boolean;
   error: string;
-  isAuthenticated: boolean;
   user: User | null;
   token: string | null;
 }
 
+const storedUser = localStorage.getItem("user");
+const storedToken = localStorage.getItem("token");
+
+
 const initialState: AuthState = {
-  user: null,
+  user: storedUser ? JSON.parse(storedUser) : null,
+  token: storedToken,
   isLoading: false,
-  isAuthenticated: false,
-  token: null,
   error: "",
 };
 
@@ -31,7 +33,6 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      state.isAuthenticated = true;
       localStorage.setItem("user", JSON.stringify(action.payload));
     },
     setToken: (state, action) => {
@@ -41,7 +42,6 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      state.isAuthenticated = false;
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
@@ -53,7 +53,6 @@ const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.user = action.payload.user;
       state.isLoading = false;
-      state.isAuthenticated = true;
       state.token = action.payload.token;
       state.error = "";
     });

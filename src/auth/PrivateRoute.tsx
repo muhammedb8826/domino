@@ -4,9 +4,7 @@ import {  selectToken } from "../redux/features/user/authentication";
 
 
 const PrivateRoute = () => {
-    const  token  = useSelector(selectToken);
-    console.log(token);
-    
+    const  token  = useSelector(selectToken);    
     return token ? (
       <>
         <Outlet />
