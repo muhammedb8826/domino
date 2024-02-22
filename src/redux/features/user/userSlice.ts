@@ -10,6 +10,7 @@ interface UserState {
   error: string | null;
   message: string | null;
   errors: string[] | null;
+  registrationErrors: {} | null;
 }
 
 const initialState: UserState = {
@@ -43,7 +44,6 @@ export const getUsers = createAsyncThunk("user/getUser", async (_, { getState })
 
 export const createUser = createAsyncThunk('user/createUser', async (newUserData, { getState, rejectWithValue }) => {
   const token = selectToken(getState());
-  
   try {
     const response = await axios.post(usersURL, newUserData, {
       headers: {
@@ -57,7 +57,6 @@ export const createUser = createAsyncThunk('user/createUser', async (newUserData
 });
 
 export const updateUser = createAsyncThunk("user/updateUser", async (user) => {
-  
   const response = await axios.put(usersURL, user);
   return response.data;
 });

@@ -1,12 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { loginURL } from "../../api/API";
-
-
 interface User {
   token: string;
 }
-
 interface AuthState {
   isLoading: boolean;
   error: string;
@@ -15,21 +12,16 @@ interface AuthState {
   token: string | null;
 }
 
-
-
-const userItem = localStorage.getItem("user");
-const user = userItem ? JSON.parse(userItem) : null;
-
 const initialState: AuthState = {
-  user,
+  user: null,
   isLoading: false,
-  isAuthenticated: !!localStorage.getItem("token"),
-  token: localStorage.getItem("token") || null,
+  isAuthenticated: false,
+  token: null,
   error: "",
 };
 
-export const loginUser = createAsyncThunk("user/loginUser", async (user) => {
-  const response = await axios.post(loginURL, user);
+export const loginUser = createAsyncThunk("user/loginUser", async (userData) => {
+  const response = await axios.post(loginURL, userData);
   return response.data;
 });
 
@@ -40,9 +32,11 @@ const authSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = true;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     setToken: (state, action) => {
       state.token = action.payload;
+      localStorage.setItem("token", action.payload);
     },
     logout: (state) => {
       state.user = null;
@@ -61,7 +55,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isAuthenticated = true;
       state.token = action.payload.token;
-      state.error = "something went wrong";
+      state.error = "";
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.isLoading = false;
@@ -71,6 +65,5 @@ const authSlice = createSlice({
 });
 
 export const { setUser, setToken, logout } = authSlice.actions;
-export const selectToken = (state: AuthState) => state.user?.token;
-// export const selectAuth = (state) => state.auth;
+export const selectToken = (state: { auth: { token: string } }) => state.auth.token;
 export default authSlice.reducer;

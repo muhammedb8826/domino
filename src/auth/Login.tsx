@@ -7,7 +7,7 @@ import {
   setUser,
 } from "../redux/features/user/authentication";
 import { ThunkDispatch } from "@reduxjs/toolkit";
-import { RootState } from "../redux//store";
+import { RootState } from "../redux/store";
 
 interface ILogin {
   email: string | undefined;
@@ -25,32 +25,26 @@ const Login = () => {
     if (user && token) {
       dispatch(setUser(user));
       dispatch(setToken(token));
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
-    }
-  }, [user, token, dispatch]);
+      navigate("/dashboard");
+   }
+  }, [user, token, dispatch, navigate]);
 
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const userData: ILogin = {
       email: email.current?.value,
       password: password.current?.value,
     };
-    dispatch(loginUser(userData)).then((resultAction) => {
-      const { payload } = resultAction;
-      if (loginUser.fulfilled.match(resultAction) && payload) {
-        const { user, token } = payload;
-        dispatch(setUser(user));
-        dispatch(setToken(token));
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-        navigate("/dashboard");
-      }
-    });
+    try {
+      await dispatch(loginUser(userData));
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
+
   return (
     <section className="flex items-center justify-center w-full h-screen">
       <div className="w-full max-w-xs">

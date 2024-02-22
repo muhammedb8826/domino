@@ -1,21 +1,12 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import {  Navigate, Outlet } from 'react-router-dom';
-import { setToken } from '../redux/features/user/authentication';
-import { RootState } from '../redux/store';
+import {  selectToken } from "../redux/features/user/authentication";
 
 
 const PrivateRoute = () => {
-    const {  token } = useSelector(
-        (state: RootState) => state.auth
-      );
-      const dispatch = useDispatch();
-      useEffect(() => {
-        if (token) {
-          dispatch(setToken(token));
-        }
-      }, [token, dispatch]);
-
+    const  token  = useSelector(selectToken);
+    console.log(token);
+    
     return token ? (
       <>
         <Outlet />
