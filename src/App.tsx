@@ -27,9 +27,9 @@ const App = () => {
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/sign-in" element={<Login />} />
         <Route element={<PrivateRoute/>}>
-
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-order" element={<OrderRegistration/>} />
+          <Route path="/order/:id" element={<OrderDetailsPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
