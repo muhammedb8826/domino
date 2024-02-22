@@ -86,9 +86,6 @@ export const deleteUser = createAsyncThunk('user/deleteUser', async (id, { getSt
   }
 });
 
-
-
-
 const user = createSlice({
   name: "users",
   initialState,
@@ -161,7 +158,6 @@ const user = createSlice({
   },
 });
 
-export const { setToken } = user.actions;
-export const { clearSuccessMessage } = user.actions;
+export const { setToken, clearSuccessMessage } = user.actions;
 export default user.reducer;
 

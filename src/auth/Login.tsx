@@ -39,8 +39,14 @@ const Login = () => {
       email: email.current?.value,
       password: password.current?.value,
     };
-    dispatch(loginUser(userData)).then((res) => {
-      if (res.payload) {
+    dispatch(loginUser(userData)).then((resultAction) => {
+      const { payload } = resultAction;
+      if (loginUser.fulfilled.match(resultAction) && payload) {
+        const { user, token } = payload;
+        dispatch(setUser(user));
+        dispatch(setToken(token));
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
         navigate("/dashboard");
       }
     });

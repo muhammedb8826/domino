@@ -1,30 +1,20 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { SideBar } from "../components/dashboard/SideBar";
 import TopBar from "../components/dashboard/TopBar";
 import OrderDetails from "../components/order/OrdersList";
-import { NavLink } from "react-router-dom";
 import User from "../components/user/User";
 import Product from "../components/product/Product";
 import Pricing from "../components/pricing/Pricing";
-import { RootState } from "../redux/store";
 import Setting from "../components/setting/Setting";
 import  {CustomerList} from "../components/customer/CustomerList";
 
 const Dashboard = () => {
 
-  const { isAuthenticated, isLoading } = useSelector((state: RootState) => state.auth);
-
   const [active, setActive] = useState("order");
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  return isAuthenticated ? (
+  return (
     <section className="w-screen h-screen flex justify-between bg-[#EBE9EA] overflow-hidden box-border relative">
       <div className="w-[15%] static">
         <SideBar handleButtonClick={handleButtonClick} active={active} />
@@ -74,9 +64,10 @@ const Dashboard = () => {
         )}
       </div>
     </section>
-  ) : (
-    <div>Not authenticated user <NavLink to="/sign-in" className="text-sky-400 decoration-black">Please contact your admin</NavLink></div>
-    );
+  );
+  // ) : (
+  //   <div>Not authenticated user <NavLink to="/sign-in" className="text-sky-400 decoration-black">Please contact your admin</NavLink></div>
+  //   );
 };
 
 export default Dashboard;

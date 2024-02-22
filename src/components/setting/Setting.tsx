@@ -5,6 +5,7 @@ import Unit from "./Unit";
 import { Services } from "./Services";
 import '../../assets/styles/scroll.css';
 import Role from "./Role";
+import Permission from "./Permission";
 
 const Setting = () => {
   const [active, setActive] = useState("machines");
@@ -70,15 +71,27 @@ const Setting = () => {
               Roles
             </button>
           </li>
+          <li>
+            <button
+              type="button"
+              onClick={() => handleButtonClick("permissions")}
+              className={`${
+                active === "permissions" ? "text-white bg-gray-900" : ""
+              } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
+            >
+              Permissions
+            </button>
+          </li>
         </ul>
       </nav>
 
-      <div className="rounded-lg bg-gray-100 h-[80%] overflow-hidden">
+      <div className="rounded-lg h-[80%] overflow-hidden">
         {active === "machines" && <Machine />}
         {active === "materials" && <Material />}
         {active === "units" && <Unit />}
         {active === "services" && <Services />}
         {active === "roles" && <Role />}
+        {active === "permissions" && <Permission />}
       </div>
     </div>
   );

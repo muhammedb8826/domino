@@ -638,20 +638,41 @@
   ],
   "roles": [
     {
-      "id": "2a00",
-      "name": "admin",
-      "description": "can do all things"
-    },
-    {
       "id": "e74a",
       "name": "Graphic designer",
       "description": "He can edit the order status"
+    },
+    {
+      "id": "e3b6",
+      "name": "Operator",
+      "description": "he can print"
+    },
+    {
+      "id": "5932",
+      "name": " Reception",
+      "description": "She can create an order"
     }
   ],
   "permissions": [
-    { "id": 1, "name": "create", "description": "Can create items" },
-    { "id": 2, "name": "read", "description": "Can read items" },
-    { "id": 3, "name": "update", "description": "Can update items" },
-    { "id": 4, "name": "delete", "description": "Can delete items" }
+    {
+      "id": 1,
+      "name": "create",
+      "description": "Can create items"
+    },
+    {
+      "id": 2,
+      "name": "read",
+      "description": "Can read items"
+    },
+    {
+      "id": 3,
+      "name": "update",
+      "description": "Can update items"
+    },
+    {
+      "id": 4,
+      "name": "delete",
+      "description": "Can delete items"
+    }
   ]
 }
