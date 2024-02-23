@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { usersURL } from "../../api/API";
-import { selectToken } from "./authentication";
+import api from "../../api/apiUtils";
 
 interface UserState {
   users: [];
@@ -24,61 +24,48 @@ const initialState: UserState = {
 
 };
 
-
-
-export const getUsers = createAsyncThunk("user/getUser", async (_, { getState }) => {
-  const token = selectToken(getState()); // Pass the state as the first argument
+export const getUsers = createAsyncThunk("user/getUsers", async (_, { getState }) => {
   try {
-    const response = await axios.get(usersURL, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { token } = getState().auth; // Access token from Redux state
+    const response = await api.get("/users", { token });
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error; // Re-throw the error so that it can be caught in the rejected case
+    console.error("Error fetching users:", error);
+    throw error;
   }
 });
 
-
 export const createUser = createAsyncThunk('user/createUser', async (newUserData, { getState, rejectWithValue }) => {
-  const token = selectToken(getState());
+  const { token } = getState().auth;
   try {
-    const response = await axios.post(usersURL, newUserData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data; // Return the created user data
+    const response = await api.post(usersURL, newUserData, { token });
+    return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data);
   }
 });
 
-export const updateUser = createAsyncThunk("user/updateUser", async (user) => {
-  const response = await axios.put(usersURL, user);
+export const updateUser = createAsyncThunk("user/updateUser", async (user, {getState, rejectWithValue}) => {
+ const {token} = getState().auth;
+ try {
+  const response = await api.put(usersURL, user, { token});
   return response.data;
+ } catch (error) {
+    return rejectWithValue(error.response?.data);
+  }
 });
 
 export const deleteUser = createAsyncThunk('user/deleteUser', async (id, { getState, rejectWithValue }) => { 
   try {
-    const token = selectToken(getState());
-    const response = await axios.delete(`${usersURL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const {token} = getState().auth
+    const response = await api.delete(`${usersURL}/${id}`, { token });
     console.log(response.data+"response");
-    
     return id;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
-      // Handle 404 Not Found error
       console.error('User not found:', error.response.data);
       return rejectWithValue('User not found');
     } else {
-      // Handle other errors
       console.error('Error deleting user:', error.message);
       throw error;
     }

@@ -181,7 +181,7 @@
           "material": "Screen",
           "service": "Print and Heat press",
           "unitPrice": 50000,
-          "status": "rejected"
+          "status": "edited"
         },
         {
           "machine": "DTF",
@@ -637,16 +637,6 @@
     }
   ],
   "roles": [
-    {
-      "id": "e74a",
-      "name": "Graphic designer",
-      "description": "He can edit the order status"
-    },
-    {
-      "id": "e3b6",
-      "name": "Operator",
-      "description": "he can print"
-    },
     {
       "id": "5932",
       "name": " Reception",

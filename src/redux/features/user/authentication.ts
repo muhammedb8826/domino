@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { loginURL } from "../../api/API";
+import api from "../../api/apiUtils";
 interface User {
   token: string;
 }
@@ -22,9 +21,14 @@ const initialState: AuthState = {
   error: "",
 };
 
-export const loginUser = createAsyncThunk("user/loginUser", async (userData) => {
-  const response = await axios.post(loginURL, userData);
-  return response.data;
+export const loginUser = createAsyncThunk("auth/loginUser", async (userData) => {
+  try {
+    const response = await api.post("/login", userData);
+    return response.data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
 });
 
 const authSlice = createSlice({
