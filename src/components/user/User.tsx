@@ -204,7 +204,7 @@ const User = () => {
           />
         </div>
       </div>
-
+{/* 
       {isModalOpen && (
         <div
           className="fixed z-10 inset-0 overflow-y-auto"
@@ -230,7 +230,7 @@ const User = () => {
             />
           </div>
         </div>
-      )}
+      )} */}
 
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -355,6 +355,7 @@ const User = () => {
           </svg>
         </button>
       </div>
+      {isModalOpen && <UserRegistration handleModalOpen={handleModalOpen} errors={registrationError} />}
     </>
   );
 };
