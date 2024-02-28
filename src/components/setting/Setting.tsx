@@ -5,7 +5,7 @@ import Unit from "./Unit";
 import { Services } from "./Services";
 import '../../assets/styles/scroll.css';
 import Role from "./Role";
-import Permission from "./Permission";
+import Discount from "./Discount";
 
 const Setting = () => {
   const [active, setActive] = useState("machines");
@@ -74,12 +74,12 @@ const Setting = () => {
           <li>
             <button
               type="button"
-              onClick={() => handleButtonClick("permissions")}
+              onClick={() => handleButtonClick("discounts")}
               className={`${
-                active === "permissions" ? "text-white bg-gray-900" : ""
+                active === "discounts" ? "text-white bg-gray-900" : ""
               } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
             >
-              Permissions
+              Discounts
             </button>
           </li>
         </ul>
@@ -91,7 +91,7 @@ const Setting = () => {
         {active === "units" && <Unit />}
         {active === "services" && <Services />}
         {active === "roles" && <Role />}
-        {active === "permissions" && <Permission />}
+        {active === "discounts" && <Discount />}
       </div>
     </div>
   );

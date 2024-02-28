@@ -46,6 +46,7 @@ const UserRegistration = ({
     profileImage: "",
     roles: "",
     machinePermissions: [],
+    isActice: true,
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,9 +65,8 @@ const UserRegistration = ({
       profile_image: userData.profileImage,
       roles: userData.roles,
       machine_permissions: userData.machinePermissions,
+      is_active: userData.isActice,
     };
-
-    console.log(newUserData);
 
     dispatch(createUser(newUserData)).then((res) => {
       if (res.payload.data) {
@@ -90,6 +90,7 @@ const UserRegistration = ({
       profileImage: "",
       roles: "user",
       machinePermissions: [],
+      isActice: true,
     });
   };
 

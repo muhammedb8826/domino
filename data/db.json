@@ -304,6 +304,55 @@
         "Teshe-UV-Film-2x2"
       ],
       "totalQuantity": 2
+    },
+    {
+      "id": "d31d",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Feb 27, 2024",
+      "deliveryDate": "Feb 27, 2024",
+      "orderType": "telegram",
+      "description": "",
+      "customerPhone": "0905-07-8826",
+      "customerFirstName": "Muhammed",
+      "customerEmail": "muhammedb8826@gmail.com",
+      "orderItems": [
+        {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Heat press",
+          "unitPrice": 25000,
+          "status": "recieved"
+        },
+        {
+          "machine": "BANNER",
+          "material": "Screen",
+          "service": "Print and Material",
+          "unitPrice": 68750,
+          "status": "recieved"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "5",
+          "height": "55",
+          "quantity": "5",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 93750,
+      "fileNames": [
+        "Muhammed-DTF-T-shirt-5x5",
+        "Muhammed-BANNER-Screen-5x55"
+      ],
+      "totalQuantity": 10
     }
   ],
   "customers": [
@@ -664,5 +713,6 @@
       "name": "delete",
       "description": "Can delete items"
     }
-  ]
+  ],
+  "dicounts": []
 }

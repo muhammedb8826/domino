@@ -1,3 +1,4 @@
+import { getRoles } from './../role/roleSlice';
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { usersURL } from "../../api/API";
@@ -11,6 +12,7 @@ interface UserState {
   message: string | null;
   errors: string[] | null;
   registrationErrors: {} | null;
+  roles: string;
 }
 
 const initialState: UserState = {
@@ -21,7 +23,7 @@ const initialState: UserState = {
   errors:[],
   message: null,
   registrationErrors: {},
-
+ roles: "",
 };
 
 export const getUsers = createAsyncThunk("user/getUsers", async (_, { getState }) => {
@@ -31,6 +33,19 @@ export const getUsers = createAsyncThunk("user/getUsers", async (_, { getState }
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
+    throw error;
+  }
+});
+
+export const getRoles = createAsyncThunk("user/getRoles", async (_, { getState }) => {
+  try {
+    const { token } = getState().auth; // Access token from Redux state
+    const response = await api.get("/roles", { token });
+    console.log(response.data+"response");
+    return response.data;
+    
+  } catch (error) {
+    console.error("Error fetching roles:", error);
     throw error;
   }
 });
@@ -91,6 +106,8 @@ const user = createSlice({
     })
     builder.addCase(getUsers.fulfilled, (state, action) => {
        state.users =action.payload.data;
+       console.log(JSON.stringify(action.payload.data));
+       
       state.isLoading = false;
       state.error = null;
     })
@@ -98,6 +115,20 @@ const user = createSlice({
       state.isLoading = false;
       state.error = action.error.message || null;
     })
+    
+    builder.addCase(getRoles.pending, (state) => {
+      state.isLoading = true;
+    })
+    builder.addCase(getRoles.fulfilled, (state, action) => {
+      state.roles = action.payload;
+      state.isLoading = false;
+      state.error = null;
+    })
+    builder.addCase(getRoles.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message || null;
+    })
+
     builder.addCase(createUser.pending, (state) => {
       state.isLoading = true;
     })
