@@ -7,7 +7,7 @@ import {
 } from "../../redux/features/order/orderSlice";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Datepicker } from "flowbite-react";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
@@ -19,6 +19,7 @@ import { getServices } from "../../redux/features/service/servicesSlice";
 import { getprice } from "../../redux/features/price/pricingSlice";
 import { MdDelete } from "react-icons/md";
 import { StatusEditModal } from "./StatusEditModal";
+import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -35,12 +36,14 @@ const OrderDetailsPage = () => {
   const { singleOrder, isLoading, error } = useSelector((state) => state.order);
   const { prices } = useSelector((state) => state.price);
   const { services } = useSelector((state) => state.service);
+  const { discounts } = useSelector((state) => state.discount);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(getprice());
     dispatch(getServices());
+    dispatch(getDiscounts());
   }, [dispatch]);
 
   useEffect(() => {
@@ -142,6 +145,7 @@ const OrderDetailsPage = () => {
   };
 
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [collapseDisount, setCollapseDiscount] = useState(false)
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
@@ -152,7 +156,7 @@ const OrderDetailsPage = () => {
     customerFirstName: "",
     customerEmail: "",
   });
-  
+
   const [formData, setFormData] = useState([
     {
       machine: "",
@@ -174,15 +178,18 @@ const OrderDetailsPage = () => {
   ]);
 
   const [calculatedUnitPrices, setCalculatedUnitPrices] = useState([]);
+  const [totalUnits, setTotalUnits] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [dataIndex, setDataIndex] = useState(0);
-  const [statusUpdateFormData, setStatusUpdateFormData] = useState(formData);
+  const [discountPerItem, setDiscountPerItem] = useState([]);
+  const [levels, setLevels] = useState([]);
+  const [grandTotal, setGrandTotal] = useState(0);
+  const [tax, setTax] = useState(0);
 
   const handleModalOpen = (index) => {
-
     setModalOpen((prev) => !prev);
     setDataIndex(index);
   };
@@ -204,6 +211,10 @@ const OrderDetailsPage = () => {
   const handleIsCollapsed = () => {
     setIsCollapsed((prev) => !prev);
   };
+
+  const handleCollapseDicount = () => {
+    setCollapseDiscount((prev)=> !prev);
+  }
 
   const handleAddRow = () => {
     setFormData((prevFormData) => [
@@ -275,6 +286,64 @@ const OrderDetailsPage = () => {
     });
     setCalculatedUnitPrices(calculatedUnitPrices);
   }, [measuresFormData, filteredData]);
+
+  useEffect(() => {
+    const totalUnits = measuresFormData.map((data, index) => {
+      const matchingPrice = filteredData[index];
+      if (!matchingPrice) {
+        return 0;
+      }
+      const { width, height, quantity } = data;
+      const calculatedUnitPrice =  (width * height) * quantity;
+      return calculatedUnitPrice;
+    });
+    setTotalUnits(totalUnits);
+  }, [measuresFormData, filteredData]);
+
+  // calculate discount
+
+  const calculateDiscount = useCallback((price, totalUnit) => {
+    if (!price) {
+      return { discount: 0, level: null };
+    }
+  
+    // Iterate through discounts array to find the appropriate discount level
+    let discountPercentage = 0;
+    let level = null;
+    for (const discount of discounts) {
+      if (totalUnit >= discount.minumumMeterSquare) {
+        discountPercentage = parseFloat(discount.discountPercentage) / 100; // Convert percentage string to number       
+        level = discount.level;
+      } else {
+        break; // Break the loop when the first applicable discount level is found
+      }
+    }
+  
+    // Calculate discount based on discount percentage
+    const discount = discountPercentage * price;
+    return { discount, level };
+  }, [discounts]); // Include discounts in the dependency array
+  
+  useEffect(() => {
+    const updatedDiscounts = totalUnits.map((totalUnit, index) => {
+      const totalUnitNum = parseFloat(totalUnit);
+      const price = calculatedUnitPrices[index];
+      const { discount, level } = calculateDiscount(price, totalUnitNum);
+      setLevels(prevLevels => {
+        const updatedLevels = [...prevLevels];
+        updatedLevels[index] = level;
+        return updatedLevels;
+      });
+      return discount;
+    }); 
+    setDiscountPerItem(updatedDiscounts);
+  }, [calculatedUnitPrices, totalUnits, calculateDiscount]);
+
+  useEffect(() => {
+    const totaldiscount = discountPerItem.reduce((acc, c) => acc + c || 0, 0);
+    setGrandTotal(totalBirr - totaldiscount);
+  }, [discountPerItem, totalBirr]);
+
 
   // customer and order info handling
   const handleOrderInfo = (e) => {
@@ -614,7 +683,7 @@ const OrderDetailsPage = () => {
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className="pb-4">
             <button
               onClick={handleIsCollapsed}
               type="button"
@@ -672,6 +741,18 @@ const OrderDetailsPage = () => {
                       className="px-4 py-3 border border-gray-300"
                     >
                       Amount
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
+                      Total sqm
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
+                      Discount
                     </th>
                     <th
                       scope="col"
@@ -749,7 +830,7 @@ const OrderDetailsPage = () => {
                             }
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           <input
                             title="width"
                             type="number"
@@ -763,7 +844,7 @@ const OrderDetailsPage = () => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           <input
                             title="height"
                             type="number"
@@ -777,7 +858,7 @@ const OrderDetailsPage = () => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           <input
                             title="quantity"
                             type="number"
@@ -791,7 +872,7 @@ const OrderDetailsPage = () => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           <input
                             readOnly
                             title="price"
@@ -805,20 +886,49 @@ const OrderDetailsPage = () => {
                             value={calculatedUnitPrices[index] || 0}
                           />
                         </td>
-                        <td>
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                          <input
+                            readOnly
+                            title="totalUnits"
+                            type="number"
+                            name="totalUnits"
+                            id="totalUnits"
+                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
+                            placeholder="0"
+                            required
+                            min={0}
+                            value={totalUnits[index] || 0}
+                          />
+                        </td>
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        {/* <input
+                            readOnly
+                            title="totaldiscount"
+                            type="number"
+                            name="totaldiscount"
+                            id="totaldiscount"
+                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
+                            placeholder="0".
+                            required
+                            min={0}
+                            value={discountPerItem[index] || 0}
+                          /> */}
+                          <p className="text-gray-900 sm:text-sm border-0 block w-full p-2.5">{discountPerItem[index] || 0 } : {levels[index] > 0? <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-2 py-0.5 text-center">Level <sup>{levels[index]}</sup></span>: 0}</p>
+                        </td>
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           <div className="flex items-center justify-center w-full">
                             {data.status === "recieved" && (
-                              <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                              <span className="bg-blue-100 text-blue-800 text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                 {data.status}
                               </span>
                             )}
                             {data.status === "edited" && (
-                              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
                                 {data.status}
                               </span>
                             )}
                             {data.status === "rejected" && (
-                              <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                              <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
                                 {data.status}
                               </span>
                             )}
@@ -844,8 +954,8 @@ const OrderDetailsPage = () => {
                               <ul className="py-2 text-sm text-gray-700">
                                 <li key={index}>
                                   <button
-                                  type="button"
-                                  onClick={() => handleModalOpen(index)}
+                                    type="button"
+                                    onClick={() => handleModalOpen(index)}
                                     className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
                                   >
                                     <FaRegEdit />
@@ -934,6 +1044,78 @@ const OrderDetailsPage = () => {
               </div>
             </div>
           </div>
+           <hr />
+
+             <div className="px-4 w-1/2">
+                <label
+                  htmlFor="tax"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Tax
+                </label>
+                <input
+                  // value={tax}
+                  readOnly
+                  type="number"
+                  name="tax"
+                  id="tax"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  required
+                />
+              </div>
+
+
+          <div className="pt-4">
+            <button
+              onClick={handleCollapseDicount}
+              type="button"
+              className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+            >
+              Addition Discount{" "}
+              <span className="font-thin">
+                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
+              </span>{" "}
+            </button>
+          </div>
+
+          <div className={`${collapseDisount? 'hidden': ''} grid md:grid-cols-2 gap-4 pb-4`}>
+            <div className="px-4">
+                <label
+                  htmlFor="grandTotal"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Grand Total
+                </label>
+                <input
+                  value={grandTotal}
+                  readOnly
+                  type="number"
+                  name="grandTotal"
+                  id="grandTotal"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  required
+                />
+              </div>
+              <div className="px-4">
+                <label
+                  htmlFor="discount"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Dicount 
+                </label>
+                <input
+                  type="number"
+                  name="discount"
+                  id="discount"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  required
+                />
+              </div>
+            </div>
+            <hr />
 
           <div className="p-4 flex justify-between">
             <div className="w-1/2">
@@ -1037,7 +1219,13 @@ const OrderDetailsPage = () => {
           </button>
         </form>
       </section>
-      {modalOpen && <StatusEditModal handleModalOpen={handleModalOpen} dataIndex={dataIndex} handleStatusUpdate={handleStatusUpdate} />}
+      {modalOpen && (
+        <StatusEditModal
+          handleModalOpen={handleModalOpen}
+          dataIndex={dataIndex}
+          handleStatusUpdate={handleStatusUpdate}
+        />
+      )}
     </>
   );
 };

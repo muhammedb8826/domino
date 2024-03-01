@@ -483,6 +483,10 @@
     {
       "id": "f084",
       "name": "BANNER"
+    },
+    {
+      "id": "5b90",
+      "name": "vvvv"
     }
   ],
   "materials": [
@@ -714,5 +718,30 @@
       "description": "Can delete items"
     }
   ],
-  "dicounts": []
+  "dicounts": [
+    {
+      "id": "2b12",
+      "level": "1",
+      "minumumMeterSquare": "100",
+      "discountPercentage": "15"
+    },
+    {
+      "id": "a09d",
+      "level": "2",
+      "minumumMeterSquare": "150",
+      "discountPercentage": "20"
+    },
+    {
+      "id": "a88c",
+      "level": "3",
+      "minumumMeterSquare": "500",
+      "discountPercentage": "30"
+    },
+    {
+      "id": "b8b8",
+      "level": "4",
+      "minumumMeterSquare": "1000",
+      "discountPercentage": "50"
+    }
+  ]
 }
