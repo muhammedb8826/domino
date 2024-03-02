@@ -5,7 +5,7 @@ import {
   getOrdersById,
   updateOrder,
 } from "../../redux/features/order/orderSlice";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -14,7 +14,6 @@ import CustomerSearchInput from "../customer/CustomerSearchInput";
 import { FaChevronDown, FaChevronUp, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab, CiSettings } from "react-icons/ci";
 import Select from "react-select";
-import { IoMdClose } from "react-icons/io";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import { getprice } from "../../redux/features/price/pricingSlice";
 import { MdDelete } from "react-icons/md";
@@ -67,6 +66,14 @@ const OrderDetailsPage = () => {
           setTotalBirr(order.totalBirr);
           setTotalQuantity(order.totalQuantity);
           setFileName(order.fileNames);
+          setDiscountPerItem(order.discounts);
+          setLevels(order.levels);
+          setIsDiscounted(order.isDiscounted);
+          setTotalBirrAfterDiscount(order.totalBirrAfterDiscount);
+          setGrandTotal(order.grandTotal);
+          setVat(order.vat);
+          setLastGrandTotal(order.lastGrandTotal);
+          setUserInputDiscount(order.userInputDiscount);
         }
       })
       .catch((error) => {
@@ -76,10 +83,17 @@ const OrderDetailsPage = () => {
 
   const [fileName, setFileName] = useState([]);
   const [tooltipMessages, setTooltipMessages] = useState(
-    Array(fileName.length).fill("Copy to clipboard")
+    []
   );
-  const [icons, setIcons] = useState(Array(fileName.length).fill("default"));
+
+  const [icons, setIcons] = useState([]);
   const inputRefs = useRef(Array(fileName.length).fill(null));
+
+  useEffect(() => {
+    setIcons(Array(fileName.length).fill("default"));
+    setTooltipMessages(Array(fileName.length).fill("Copy to clipboard"));
+  }, [fileName]);
+
 
   const copyToClipboard = (index) => {
     inputRefs.current[index].select();
@@ -145,7 +159,7 @@ const OrderDetailsPage = () => {
   };
 
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [collapseDisount, setCollapseDiscount] = useState(false)
+  const [collapseDisount, setCollapseDiscount] = useState(false);
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
@@ -184,10 +198,21 @@ const OrderDetailsPage = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [dataIndex, setDataIndex] = useState(0);
-  const [discountPerItem, setDiscountPerItem] = useState([]);
+  const [discountPerItem, setDiscountPerItem] = useState([
+    formData.length ? Array(formData.length).fill(0) : [],
+  ]);
   const [levels, setLevels] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
-  const [tax, setTax] = useState(0);
+  const [lastGrandTotal, setLastGrandTotal] = useState(0);
+  const [vat, setVat] = useState(0);
+  const [userInputDiscount, setUserInputDiscount] = useState(0);
+  const [isDiscounted, setIsDiscounted] = useState();
+  const [totalBirrAfterDiscount, setTotalBirrAfterDiscount] = useState([]);
+
+
+  useEffect(() => {
+    setIsDiscounted(Array(formData.length).fill(true));
+  }, [formData]);
 
   const handleModalOpen = (index) => {
     setModalOpen((prev) => !prev);
@@ -213,8 +238,8 @@ const OrderDetailsPage = () => {
   };
 
   const handleCollapseDicount = () => {
-    setCollapseDiscount((prev)=> !prev);
-  }
+    setCollapseDiscount((prev) => !prev);
+  };
 
   const handleAddRow = () => {
     setFormData((prevFormData) => [
@@ -257,6 +282,7 @@ const OrderDetailsPage = () => {
       return updatedFormData;
     });
   };
+  
 
   // calculate unit price and total quantity
 
@@ -269,9 +295,16 @@ const OrderDetailsPage = () => {
   }, [measuresFormData]);
 
   useEffect(() => {
-    const totalBirr = calculatedUnitPrices.reduce((acc, c) => acc + c || 0, 0);
+if(totalBirrAfterDiscount){
+  const totalBirr = totalBirrAfterDiscount.reduce(
+      (acc, c) => acc + c || 0,
+      0
+    );
+    const vat = totalBirr * 0.15;
     setTotalBirr(totalBirr);
-  }, [calculatedUnitPrices]);
+    setVat(vat);
+}
+  }, [totalBirrAfterDiscount]);
 
   useEffect(() => {
     const calculatedUnitPrices = measuresFormData.map((data, index) => {
@@ -294,7 +327,7 @@ const OrderDetailsPage = () => {
         return 0;
       }
       const { width, height, quantity } = data;
-      const calculatedUnitPrice =  (width * height) * quantity;
+      const calculatedUnitPrice = width * height * quantity;
       return calculatedUnitPrice;
     });
     setTotalUnits(totalUnits);
@@ -302,48 +335,97 @@ const OrderDetailsPage = () => {
 
   // calculate discount
 
-  const calculateDiscount = useCallback((price, totalUnit) => {
-    if (!price) {
-      return { discount: 0, level: null };
-    }
-  
-    // Iterate through discounts array to find the appropriate discount level
-    let discountPercentage = 0;
-    let level = null;
-    for (const discount of discounts) {
-      if (totalUnit >= discount.minumumMeterSquare) {
-        discountPercentage = parseFloat(discount.discountPercentage) / 100; // Convert percentage string to number       
-        level = discount.level;
-      } else {
-        break; // Break the loop when the first applicable discount level is found
+  const calculateDiscount = useCallback(
+    (price, totalUnit) => {
+      if (!price) {
+        return { discount: 0, level: null };
       }
-    }
-  
-    // Calculate discount based on discount percentage
-    const discount = discountPercentage * price;
-    return { discount, level };
-  }, [discounts]); // Include discounts in the dependency array
-  
+
+      // Iterate through discounts array to find the appropriate discount level
+      let discountPercentage = 0;
+      let level = null;
+      for (const discount of discounts) {
+        if (totalUnit >= discount.minumumMeterSquare) {
+          discountPercentage = parseFloat(discount.discountPercentage) / 100; // Convert percentage string to number
+          level = discount.level;
+        } else {
+          break; // Break the loop when the first applicable discount level is found
+        }
+      }
+      const discount = discountPercentage * price;
+      return { discount, level };
+    },
+    [discounts]
+  ); // Include discounts in the dependency array
+
   useEffect(() => {
     const updatedDiscounts = totalUnits.map((totalUnit, index) => {
       const totalUnitNum = parseFloat(totalUnit);
       const price = calculatedUnitPrices[index];
       const { discount, level } = calculateDiscount(price, totalUnitNum);
-      setLevels(prevLevels => {
+      setLevels((prevLevels=[]) => {
         const updatedLevels = [...prevLevels];
         updatedLevels[index] = level;
         return updatedLevels;
       });
       return discount;
-    }); 
+    });
     setDiscountPerItem(updatedDiscounts);
   }, [calculatedUnitPrices, totalUnits, calculateDiscount]);
 
-  useEffect(() => {
-    const totaldiscount = discountPerItem.reduce((acc, c) => acc + c || 0, 0);
-    setGrandTotal(totalBirr - totaldiscount);
-  }, [discountPerItem, totalBirr]);
+  const handleDiscountChange = (index, e) => {
 
+    setIsDiscounted(prevToggles => [
+      ...prevToggles.slice(0, index),
+      e.target.checked,
+      ...prevToggles.slice(index + 1)
+    ]);
+
+
+    //     setIsDiscounted((prevIsDiscounted) => {
+    //         // Create a new array with updated values based on index and checked state
+    //         const updatedIsDiscounted = prevIsDiscounted?.map((discounted, i) =>
+    //             i === index ? !e.target.checked : discounted
+    //         );
+    //         return updatedIsDiscounted;
+    // });
+
+    if (!e.target.checked) {
+      setDiscountPerItem((prevDiscounts) => {
+        const updatedDiscounts = [...prevDiscounts];
+        updatedDiscounts[index] = 0;
+        return updatedDiscounts;
+      });
+    } else {
+      const price = calculatedUnitPrices[index];
+      const totalUnit = totalUnits[index];
+      const { discount, level } = calculateDiscount(price, totalUnit);
+      setLevels((prevLevels) => {
+        const updatedLevels = [...prevLevels];
+        updatedLevels[index] = level;
+        return updatedLevels;
+      });
+      setDiscountPerItem((prevDiscounts) => {
+        const updatedDiscounts = [...prevDiscounts];
+        updatedDiscounts[index] = discount;
+        return updatedDiscounts;
+      });
+    }
+  };
+
+  useEffect(() => {
+    if(discountPerItem){
+    const totalBirrAfterDiscount = calculatedUnitPrices.map((price, index) => {
+      return price - discountPerItem[index];
+    });
+    setTotalBirrAfterDiscount(totalBirrAfterDiscount);     
+    const grandTotal =
+      totalBirr + vat;
+      const lastGrandTotal = grandTotal - userInputDiscount
+    setGrandTotal(grandTotal);
+    setLastGrandTotal(lastGrandTotal);
+  }
+  }, [discountPerItem, totalBirr, calculatedUnitPrices, vat, userInputDiscount]);
 
   // customer and order info handling
   const handleOrderInfo = (e) => {
@@ -498,7 +580,6 @@ const OrderDetailsPage = () => {
       customerPhone: "",
       customerFirstName: "",
       customerEmail: "",
-      status: "pending",
     });
     setFormData([
       {
@@ -521,6 +602,11 @@ const OrderDetailsPage = () => {
     setCalculatedUnitPrices([]);
     setTotalQuantity(0);
     setTotalBirr(0);
+    setDiscountPerItem([]);
+    setLevels([]);
+    setVat(0);
+    // setIsDiscounted(Array(discountPerItem.length).fill(true));
+    setTotalBirrAfterDiscount([]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -561,6 +647,14 @@ const OrderDetailsPage = () => {
       totalBirr,
       fileNames: appendName,
       totalQuantity,
+      grandTotal,
+      lastGrandTotal,
+      vat,
+      discounts: discountPerItem,
+      levels,
+      isDiscounted,
+      userInputDiscount,
+      totalBirrAfterDiscount,
       id: singleOrder.id,
     };
 
@@ -572,6 +666,7 @@ const OrderDetailsPage = () => {
         navigate("/dashboard");
       }
     });
+    setGrandTotal(grandTotal);
   };
 
   if (isLoading) {
@@ -708,61 +803,67 @@ const OrderDetailsPage = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Material
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Services
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Width
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Height
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Quantity
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Amount
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Total sqm
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Discount
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
+                    >
+                      Total
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 border border-gray-300"
+                      className="px-4 py-2 border border-gray-300"
                     >
                       {/* Action */}
                       <span className="font-semibold flex justify-center items-center">
@@ -873,7 +974,7 @@ const OrderDetailsPage = () => {
                           />
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
-                          <input
+                          {/* <input
                             readOnly
                             title="price"
                             type="number"
@@ -884,10 +985,13 @@ const OrderDetailsPage = () => {
                             required
                             min={0}
                             value={calculatedUnitPrices[index] || 0}
-                          />
+                          /> */}
+                          <span className="px-2">
+                            {calculatedUnitPrices[index] || 0}
+                          </span>
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
-                          <input
+                          {/* <input
                             readOnly
                             title="totalUnits"
                             type="number"
@@ -898,22 +1002,55 @@ const OrderDetailsPage = () => {
                             required
                             min={0}
                             value={totalUnits[index] || 0}
-                          />
+                          /> */}
+                          <span className="px-2">{totalUnits[index] || 0}</span>
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
-                        {/* <input
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-40">
+                          <div className="flex items-center gap-2">
+                            <span className="flex-1 px-2">
+                            {discountPerItem?.[index] !== undefined ? discountPerItem[index] : null}
+                            </span>
+                            <p className="text-gray-900 sm:text-sm flex items-center justify-center w-1/4">
+                              {levels ? levels[index] > 0 ? (
+                                <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
+                                  Level <sup>{levels[index]}</sup>
+                                </span>
+                              ) : (
+                                0
+                              ): 0}
+                            </p>
+
+                              <label
+                                key={index}
+                                className="inline-flex items-center cursor-pointer w-1/4"
+                              >
+                                <input
+                                  onChange={(e) =>
+                                    handleDiscountChange(index, e)
+                                  }
+                                  type="checkbox"
+                                  name="isDiscounted"
+                                  id={`isDiscounted-${index}`}
+                                  checked={isDiscounted ? isDiscounted[index] : false}
+                                  className="sr-only peer"
+                                />
+                                <div className="relative w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                              </label>
+                          </div>
+                        </td>
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-20">
+                          <input
                             readOnly
-                            title="totaldiscount"
+                            title="total"
                             type="number"
-                            name="totaldiscount"
-                            id="totaldiscount"
-                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
-                            placeholder="0".
+                            name="total"
+                            id="total"
+                            className="text-gray-900 sm:text-sm border-0 block w-full"
+                            placeholder="0"
                             required
                             min={0}
-                            value={discountPerItem[index] || 0}
-                          /> */}
-                          <p className="text-gray-900 sm:text-sm border-0 block w-full p-2.5">{discountPerItem[index] || 0 } : {levels[index] > 0? <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-2 py-0.5 text-center">Level <sup>{levels[index]}</sup></span>: 0}</p>
+                            value={totalBirrAfterDiscount ? totalBirrAfterDiscount[index] : 0}
+                          />
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           <div className="flex items-center justify-center w-full">
@@ -1044,27 +1181,26 @@ const OrderDetailsPage = () => {
               </div>
             </div>
           </div>
-           <hr />
+          <hr />
 
-             <div className="px-4 w-1/2">
-                <label
-                  htmlFor="tax"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Tax
-                </label>
-                <input
-                  // value={tax}
-                  readOnly
-                  type="number"
-                  name="tax"
-                  id="tax"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="0"
-                  required
-                />
-              </div>
-
+          <div className="px-4 w-1/2">
+            <label
+              htmlFor="tax"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Vat
+            </label>
+            <input
+              value={vat}
+              readOnly
+              type="number"
+              name="tax"
+              id="tax"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="0"
+              required
+            />
+          </div>
 
           <div className="pt-4">
             <button
@@ -1079,43 +1215,50 @@ const OrderDetailsPage = () => {
             </button>
           </div>
 
-          <div className={`${collapseDisount? 'hidden': ''} grid md:grid-cols-2 gap-4 pb-4`}>
+          <div
+            className={`${
+              collapseDisount ? "hidden" : ""
+            } grid md:grid-cols-2 gap-4 pb-4`}
+          >
             <div className="px-4">
-                <label
-                  htmlFor="grandTotal"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Grand Total
-                </label>
-                <input
-                  value={grandTotal}
-                  readOnly
-                  type="number"
-                  name="grandTotal"
-                  id="grandTotal"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="0"
-                  required
-                />
-              </div>
-              <div className="px-4">
-                <label
-                  htmlFor="discount"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Dicount 
-                </label>
-                <input
-                  type="number"
-                  name="discount"
-                  id="discount"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="0"
-                  required
-                />
-              </div>
+              <label
+                htmlFor="grandTotalNumber"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Grand Total
+              </label>
+              <input
+                value={userInputDiscount ? lastGrandTotal : grandTotal}
+                readOnly
+                type="number"
+                name="grandTotalNumber"
+                id="grandTotalNumber"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0"
+                required
+              />
             </div>
-            <hr />
+            <div className="px-4">
+              <label
+                htmlFor="userInputDiscount"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Dicount
+              </label>
+              <input
+                type="number"
+                
+                name="userInputDiscount"
+                value={userInputDiscount}
+                id="userInputDiscount"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0"
+                required
+                onChange={(e)=>setUserInputDiscount(e.target.value)}
+              />
+            </div>
+          </div>
+          <hr />
 
           <div className="p-4 flex justify-between">
             <div className="w-1/2">
