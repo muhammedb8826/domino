@@ -60,6 +60,14 @@ export const OrderRegistration = () => {
     },
   ]);
 
+  const [paymentInfo, setPaymentInfo] = useState({
+    paymentMethod: "cash",
+    paymentReference: "",
+    paymentAmount: 0,
+    paymentStatus: "not paid",
+  });
+  const [grandTotal, setGrandTotal] = useState(0);
+
   const [measuresFormData, setMeasuresFormData] = useState([
     {
       unitName: null,
@@ -128,6 +136,8 @@ export const OrderRegistration = () => {
   useEffect(() => {
     const totalBirr = calculatedUnitPrices.reduce((acc, c) => acc + c || 0, 0);
     setTotalBirr(totalBirr);
+    const granTotal = totalBirr + (totalBirr * 0.15)
+    setGrandTotal(granTotal);
   }, [calculatedUnitPrices]);
 
   useEffect(() => {
@@ -270,7 +280,6 @@ export const OrderRegistration = () => {
       customerPhone: "",
       customerFirstName: "",
       customerEmail: "",
-      status: "pending",
     });
     setFormData([
       {
@@ -293,6 +302,7 @@ export const OrderRegistration = () => {
     setCalculatedUnitPrices([]);
     setTotalQuantity(0);
     setTotalBirr(0);
+    setGrandTotal(0);
   };
 
   const handleSubmit = (e) => {
@@ -328,8 +338,10 @@ export const OrderRegistration = () => {
       orderItems: unitPrice,
       orderMeasures: measuresFormData,
       totalBirr,
+      grandTotal,
       fileNames: appendName,
       totalQuantity,
+      paymentInfo,
     };
     dispatch(createOrder(orderData)).then((res) => {
       if (res.payload) {

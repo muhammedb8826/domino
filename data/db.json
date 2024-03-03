@@ -167,10 +167,9 @@
   ],
   "orders": [
     {
-      "id": "bea3",
       "series": "SAL-ORD-YYYY-",
-      "date": "Feb 17, 2024",
-      "deliveryDate": "Feb 22, 2024",
+      "date": "Mar 3, 2024",
+      "deliveryDate": "Mar 3, 2024",
       "orderType": "telegram",
       "description": "",
       "customerPhone": "0988-45-6666",
@@ -178,141 +177,24 @@
       "customerEmail": "",
       "orderItems": [
         {
-          "machine": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 800,
-          "status": "recieved"
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "2",
-          "height": "2",
-          "quantity": "2",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 800,
-      "fileNames": [
-        "Babi-DTF-T-shirt-2x2"
-      ],
-      "totalQuantity": 2
-    },
-    {
-      "id": "3360",
-      "series": "SAL-ORD-YYYY-",
-      "date": "Feb 21, 2024",
-      "deliveryDate": "Feb 22, 2024",
-      "orderType": "In person",
-      "description": "sfgfss",
-      "customerPhone": "0911-88-9696",
-      "customerFirstName": "Teshe",
-      "customerEmail": "",
-      "orderItems": [
-        {
           "machine": "UV",
           "material": "Film",
           "service": "Print and Material",
-          "unitPrice": 1600,
-          "status": "recieved"
-        }
-      ],
-      "orderMeasures": [
+          "unitPrice": 10000,
+          "status": "edited"
+        },
         {
-          "unitName": null,
-          "width": "2",
-          "height": "2",
-          "quantity": "2",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 1600,
-      "fileNames": [
-        "Teshe-UV-Film-2x2"
-      ],
-      "totalQuantity": 2
-    },
-    {
-      "id": "d31d",
-      "series": "SAL-ORD-YYYY-",
-      "date": "Feb 27, 2024",
-      "deliveryDate": "Feb 27, 2024",
-      "orderType": "telegram",
-      "description": "",
-      "customerPhone": "0905-07-8826",
-      "customerFirstName": "Muhammed",
-      "customerEmail": "muhammedb8826@gmail.com",
-      "orderItems": [
-        {
-          "machine": "DTF",
-          "material": "T-shirt",
+          "machine": "BANNER",
+          "material": "Screen",
           "service": "Print and Heat press",
-          "unitPrice": 25000,
-          "status": "recieved"
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print and Material",
-          "unitPrice": 68750,
-          "status": "recieved"
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "5",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "55",
-          "quantity": "5",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 93750,
-      "fileNames": [
-        "Muhammed-DTF-T-shirt-5x5",
-        "Muhammed-BANNER-Screen-5x55"
-      ],
-      "totalQuantity": 10
-    },
-    {
-      "id": "7822",
-      "series": "SAL-ORD-YYYY-",
-      "date": "Mar 2, 2024",
-      "deliveryDate": "Mar 13, 2024",
-      "orderType": "telegram",
-      "description": "uttrutrutryuryru",
-      "customerPhone": "0911-88-9696",
-      "customerFirstName": "Teshe",
-      "customerEmail": "",
-      "orderItems": [
-        {
-          "machine": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 100000,
-          "status": "recieved"
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print and Material",
-          "unitPrice": 67500,
-          "status": "recieved"
+          "unitPrice": 20000,
+          "status": "rejected"
         },
         {
           "machine": "BANNER",
           "material": "sticker",
           "service": "Print",
-          "unitPrice": 140800,
+          "unitPrice": 10000,
           "status": "recieved"
         }
       ],
@@ -321,100 +203,60 @@
           "unitName": null,
           "width": "5",
           "height": "5",
-          "quantity": "40",
+          "quantity": "2",
           "unitPrice": null
         },
         {
           "unitName": null,
           "width": "5",
-          "height": "45",
-          "quantity": "6",
+          "height": "2",
+          "quantity": "5",
           "unitPrice": null
         },
-        {
-          "unitName": null,
-          "width": "44",
-          "height": "4",
-          "quantity": "4",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 308300,
-      "fileNames": [
-        "Teshe-DTF-T-shirt-5x5",
-        "Teshe-BANNER-Screen-5x45",
-        "Teshe-BANNER-sticker-44x4"
-      ],
-      "totalQuantity": 50
-    },
-    {
-      "series": "SAL-ORD-YYYY-",
-      "date": "Mar 2, 2024",
-      "deliveryDate": "Mar 8, 2024",
-      "orderType": "In person",
-      "description": "hfdskjghjkhgkjdfhhfhhgf",
-      "customerPhone": "0988-45-6666",
-      "customerFirstName": "Babi",
-      "customerEmail": "",
-      "orderItems": [
-        {
-          "machine": "UV",
-          "material": "Film",
-          "service": "Print and Material",
-          "unitPrice": 25000,
-          "status": "recieved"
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print",
-          "unitPrice": 187500,
-          "status": "recieved"
-        }
-      ],
-      "orderMeasures": [
         {
           "unitName": null,
           "width": "5",
           "height": "5",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "25",
-          "quantity": "5",
+          "quantity": "2",
           "unitPrice": null
         }
       ],
-      "totalBirr": 152500,
+      "totalBirr": 40000,
       "fileNames": [
         "Babi-Babi-UV-Film-5x5",
-        "Babi-Babi-BANNER-Screen-5x25"
+        "Babi-Babi-BANNER-Screen-5x2",
+        "Babi-Babi-BANNER-sticker-5x5"
       ],
-      "totalQuantity": 10,
-      "grandTotal": 175375,
-      "lastGrandTotal": 175000,
-      "vat": 22875,
+      "totalQuantity": 9,
+      "grandTotal": 46000,
+      "vat": 6000,
       "discounts": [
-        3750,
-        56250
+        0,
+        0,
+        0
       ],
       "levels": [
-        "1",
-        "3"
+        null,
+        null,
+        null
       ],
       "isDiscounted": [
         true,
+        true,
         true
       ],
-      "userInputDiscount": "375",
       "totalBirrAfterDiscount": [
-        21250,
-        131250
+        10000,
+        20000,
+        10000
       ],
-      "id": "d03b"
+      "paymentInfo": {
+        "paymentMethod": "bank-transfer",
+        "paymentReference": "444444",
+        "paymentAmount": "46000",
+        "paymentStatus": "paid"
+      },
+      "id": "11aa"
     }
   ],
   "customers": [

@@ -72,8 +72,8 @@ const OrderDetailsPage = () => {
           setTotalBirrAfterDiscount(order.totalBirrAfterDiscount);
           setGrandTotal(order.grandTotal);
           setVat(order.vat);
-          setLastGrandTotal(order.lastGrandTotal);
           setUserInputDiscount(order.userInputDiscount);
+          setPaymentInfo(order.paymentInfo);
         }
       })
       .catch((error) => {
@@ -82,9 +82,7 @@ const OrderDetailsPage = () => {
   }, [dispatch, id]);
 
   const [fileName, setFileName] = useState([]);
-  const [tooltipMessages, setTooltipMessages] = useState(
-    []
-  );
+  const [tooltipMessages, setTooltipMessages] = useState([]);
 
   const [icons, setIcons] = useState([]);
   const inputRefs = useRef(Array(fileName.length).fill(null));
@@ -93,7 +91,6 @@ const OrderDetailsPage = () => {
     setIcons(Array(fileName.length).fill("default"));
     setTooltipMessages(Array(fileName.length).fill("Copy to clipboard"));
   }, [fileName]);
-
 
   const copyToClipboard = (index) => {
     inputRefs.current[index].select();
@@ -158,8 +155,13 @@ const OrderDetailsPage = () => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [collapseDisount, setCollapseDiscount] = useState(false);
+  const [paymentInfo, setPaymentInfo] = useState({
+    paymentMethod: "cash",
+    paymentReference: "",
+    paymentAmount: 0,
+    paymentStatus: "not paid",
+  });
+  // const [collapseDisount, setCollapseDiscount] = useState(false);
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
@@ -203,16 +205,15 @@ const OrderDetailsPage = () => {
   ]);
   const [levels, setLevels] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
-  const [lastGrandTotal, setLastGrandTotal] = useState(0);
   const [vat, setVat] = useState(0);
   const [userInputDiscount, setUserInputDiscount] = useState(0);
-  const [isDiscounted, setIsDiscounted] = useState();
+  const [isDiscounted, setIsDiscounted] = useState([]);
   const [totalBirrAfterDiscount, setTotalBirrAfterDiscount] = useState([]);
-
+  const [togglePayment, setTogglePayment] = useState(false);
 
   useEffect(() => {
     setIsDiscounted(Array(formData.length).fill(true));
-  }, [formData]);
+  }, [formData, measuresFormData]);
 
   const handleModalOpen = (index) => {
     setModalOpen((prev) => !prev);
@@ -233,12 +234,8 @@ const OrderDetailsPage = () => {
     setFormData(updatedFormData);
   };
 
-  const handleIsCollapsed = () => {
-    setIsCollapsed((prev) => !prev);
-  };
-
-  const handleCollapseDicount = () => {
-    setCollapseDiscount((prev) => !prev);
+  const handlePaymentStatus = () => {
+    setTogglePayment((prev) => !prev);
   };
 
   const handleAddRow = () => {
@@ -282,7 +279,6 @@ const OrderDetailsPage = () => {
       return updatedFormData;
     });
   };
-  
 
   // calculate unit price and total quantity
 
@@ -295,16 +291,20 @@ const OrderDetailsPage = () => {
   }, [measuresFormData]);
 
   useEffect(() => {
-if(totalBirrAfterDiscount){
-  const totalBirr = totalBirrAfterDiscount.reduce(
-      (acc, c) => acc + c || 0,
-      0
-    );
-    const vat = totalBirr * 0.15;
-    setTotalBirr(totalBirr);
-    setVat(vat);
-}
-  }, [totalBirrAfterDiscount]);
+    if (totalBirrAfterDiscount) {
+      const totalBirr = totalBirrAfterDiscount.reduce(
+        (acc, c) => acc + c || 0,
+        0
+      );
+      let discount = 0;
+      if (userInputDiscount > 0) {
+        discount = userInputDiscount;
+      }
+      const vat = (totalBirr - discount) * 0.15;
+      setTotalBirr(totalBirr);
+      setVat(vat);
+    }
+  }, [totalBirrAfterDiscount, userInputDiscount]);
 
   useEffect(() => {
     const calculatedUnitPrices = measuresFormData.map((data, index) => {
@@ -363,7 +363,7 @@ if(totalBirrAfterDiscount){
       const totalUnitNum = parseFloat(totalUnit);
       const price = calculatedUnitPrices[index];
       const { discount, level } = calculateDiscount(price, totalUnitNum);
-      setLevels((prevLevels=[]) => {
+      setLevels((prevLevels = []) => {
         const updatedLevels = [...prevLevels];
         updatedLevels[index] = level;
         return updatedLevels;
@@ -374,13 +374,11 @@ if(totalBirrAfterDiscount){
   }, [calculatedUnitPrices, totalUnits, calculateDiscount]);
 
   const handleDiscountChange = (index, e) => {
-
-    setIsDiscounted(prevToggles => [
+    setIsDiscounted((prevToggles) => [
       ...prevToggles.slice(0, index),
       e.target.checked,
-      ...prevToggles.slice(index + 1)
+      ...prevToggles.slice(index + 1),
     ]);
-
 
     //     setIsDiscounted((prevIsDiscounted) => {
     //         // Create a new array with updated values based on index and checked state
@@ -414,18 +412,29 @@ if(totalBirrAfterDiscount){
   };
 
   useEffect(() => {
-    if(discountPerItem){
-    const totalBirrAfterDiscount = calculatedUnitPrices.map((price, index) => {
-      return price - discountPerItem[index];
-    });
-    setTotalBirrAfterDiscount(totalBirrAfterDiscount);     
-    const grandTotal =
-      totalBirr + vat;
-      const lastGrandTotal = grandTotal - userInputDiscount
-    setGrandTotal(grandTotal);
-    setLastGrandTotal(lastGrandTotal);
-  }
-  }, [discountPerItem, totalBirr, calculatedUnitPrices, vat, userInputDiscount]);
+    if (discountPerItem) {
+      const totalBirrAfterDiscount = calculatedUnitPrices.map(
+        (price, index) => {
+          return price - discountPerItem[index];
+        }
+      );
+      setTotalBirrAfterDiscount(totalBirrAfterDiscount);
+      let discount = 0;
+      if (userInputDiscount > 0) {
+        discount = userInputDiscount;
+      }
+      const grandTotal = totalBirr - discount + vat;
+      // const lastGrandTotal = grandTotal - userInputDiscount;
+      setGrandTotal(grandTotal);
+      // setLastGrandTotal(lastGrandTotal);
+    }
+  }, [
+    discountPerItem,
+    totalBirr,
+    calculatedUnitPrices,
+    vat,
+    userInputDiscount,
+  ]);
 
   // customer and order info handling
   const handleOrderInfo = (e) => {
@@ -435,6 +444,40 @@ if(totalBirrAfterDiscount){
       [name]: value,
     }));
   };
+
+  const handlePaymentInfo = (e) => {
+    const { name, value } = e.target;
+    setPaymentInfo((prevPaymentInfo) => ({
+      ...prevPaymentInfo,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    if (
+      Number(paymentInfo?.paymentAmount) >= 1 &&
+      Number(paymentInfo?.paymentAmount) < grandTotal
+    ) {
+      setPaymentInfo((prev) => ({
+        ...prev,
+        paymentStatus: "partial",
+      }));
+    }
+    if (Number(paymentInfo?.paymentAmount) === grandTotal) {
+      setPaymentInfo((prev) => ({
+        ...prev,
+        paymentStatus: "paid",
+      }));
+    }
+    if (Number(paymentInfo?.paymentAmount) === 0) {
+      setPaymentInfo((prev) => ({
+        ...prev,
+        paymentStatus: "not paid",
+      }));
+    }
+  }, [paymentInfo?.paymentAmount, grandTotal]);
+
+  console.log("paymentInfo", paymentInfo);
 
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
@@ -607,6 +650,14 @@ if(totalBirrAfterDiscount){
     setVat(0);
     // setIsDiscounted(Array(discountPerItem.length).fill(true));
     setTotalBirrAfterDiscount([]);
+    setGrandTotal(0);
+    setUserInputDiscount(0);
+    setPaymentInfo({
+      paymentMethod: "cash",
+      paymentReference: "",
+      paymentAmount: 0,
+      paymentStatus: "not paid",
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -640,6 +691,8 @@ if(totalBirrAfterDiscount){
       return nameAndFile;
     });
 
+    console.log(paymentInfo);
+
     const orderData = {
       ...orderInfo,
       orderItems: updatedFormData,
@@ -648,13 +701,13 @@ if(totalBirrAfterDiscount){
       fileNames: appendName,
       totalQuantity,
       grandTotal,
-      lastGrandTotal,
       vat,
       discounts: discountPerItem,
       levels,
       isDiscounted,
       userInputDiscount,
       totalBirrAfterDiscount,
+      paymentInfo,
       id: singleOrder.id,
     };
 
@@ -780,21 +833,20 @@ if(totalBirrAfterDiscount){
         <form onSubmit={handleSubmit}>
           <div className="pb-4">
             <button
-              onClick={handleIsCollapsed}
+              // onClick={handleIsCollapsed}
               type="button"
               className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
             >
               Orders List{" "}
-              <span className="font-thin">
+              {/* <span className="font-thin">
                 {isCollapsed ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "}
+              </span>{" "} */}
             </button>
 
             <div className="px-4">
               <table
-                className={`${
-                  isCollapsed ? "hidden" : ""
-                } w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
+                className="
+               w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
               >
                 <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
@@ -1008,49 +1060,48 @@ if(totalBirrAfterDiscount){
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-40">
                           <div className="flex items-center gap-2">
                             <span className="flex-1 px-2">
-                            {discountPerItem?.[index] !== undefined ? discountPerItem[index] : null}
+                              {discountPerItem?.[index] !== undefined
+                                ? discountPerItem[index]
+                                : null}
                             </span>
                             <p className="text-gray-900 sm:text-sm flex items-center justify-center w-1/4">
-                              {levels ? levels[index] > 0 ? (
-                                <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
-                                  Level <sup>{levels[index]}</sup>
-                                </span>
+                              {levels ? (
+                                levels[index] > 0 ? (
+                                  <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
+                                    Level <sup>{levels[index]}</sup>
+                                  </span>
+                                ) : (
+                                  0
+                                )
                               ) : (
                                 0
-                              ): 0}
+                              )}
                             </p>
 
-                              <label
-                                key={index}
-                                className="inline-flex items-center cursor-pointer w-1/4"
-                              >
-                                <input
-                                  onChange={(e) =>
-                                    handleDiscountChange(index, e)
-                                  }
-                                  type="checkbox"
-                                  name="isDiscounted"
-                                  id={`isDiscounted-${index}`}
-                                  checked={isDiscounted ? isDiscounted[index] : false}
-                                  className="sr-only peer"
-                                />
-                                <div className="relative w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                              </label>
+                            <label
+                              key={index}
+                              className="inline-flex items-center cursor-pointer w-1/4"
+                            >
+                              <input
+                                onChange={(e) => handleDiscountChange(index, e)}
+                                type="checkbox"
+                                name="isDiscounted"
+                                id={`isDiscounted-${index}`}
+                                checked={
+                                  isDiscounted ? isDiscounted[index] : false
+                                }
+                                className="sr-only peer"
+                              />
+                              <div className="relative w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            </label>
                           </div>
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-20">
-                          <input
-                            readOnly
-                            title="total"
-                            type="number"
-                            name="total"
-                            id="total"
-                            className="text-gray-900 sm:text-sm border-0 block w-full"
-                            placeholder="0"
-                            required
-                            min={0}
-                            value={totalBirrAfterDiscount ? totalBirrAfterDiscount[index] : 0}
-                          />
+                          <p className="p-1">
+                            {totalBirrAfterDiscount
+                              ? totalBirrAfterDiscount[index]
+                              : 0}
+                          </p>
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           <div className="flex items-center justify-center w-full">
@@ -1166,7 +1217,7 @@ if(totalBirrAfterDiscount){
                   htmlFor="totalQuantity"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Total(Birr)
+                  Sub Total
                 </label>
                 <input
                   value={totalBirr}
@@ -1183,82 +1234,180 @@ if(totalBirrAfterDiscount){
           </div>
           <hr />
 
-          <div className="px-4 w-1/2">
-            <label
-              htmlFor="tax"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Vat
-            </label>
-            <input
-              value={vat}
-              readOnly
-              type="number"
-              name="tax"
-              id="tax"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="0"
-              required
-            />
+          <div className="px-4 grid grid-cols-2">
+            <div>
+              <strong>Totals</strong>
+            </div>
+            <div className="flex flex-col gap-4 py-4">
+              <div className="flex justify-between gap-4 items-center">
+                <label
+                  htmlFor="tax"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-[15%]"
+                >
+                  Vat
+                </label>
+                <input
+                  value={vat}
+                  readOnly
+                  type="number"
+                  name="tax"
+                  id="tax"
+                  className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  required
+                />
+              </div>
+              <div className="flex justify-between gap-4 items-center">
+                <label
+                  htmlFor="totalQuantity"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-[15%]"
+                >
+                  Total (Birr)
+                </label>
+                <input
+                  value={grandTotal}
+                  readOnly
+                  type="number"
+                  name="totalBirr"
+                  id="totalBirr"
+                  className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  required
+                />
+              </div>
+            </div>
           </div>
 
           <div className="pt-4">
             <button
-              onClick={handleCollapseDicount}
+              // onClick={handleCollapseDicount}
               type="button"
               className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
             >
               Addition Discount{" "}
-              <span className="font-thin">
+              {/* <span className="font-thin">
                 {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "}
+              </span>{" "} */}
             </button>
           </div>
 
           <div
-            className={`${
-              collapseDisount ? "hidden" : ""
-            } grid md:grid-cols-2 gap-4 pb-4`}
+            className="
+            flex justify-end items-center gap-4 pb-4"
           >
-            <div className="px-4">
-              <label
-                htmlFor="grandTotalNumber"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Grand Total
-              </label>
-              <input
-                value={userInputDiscount ? lastGrandTotal : grandTotal}
-                readOnly
-                type="number"
-                name="grandTotalNumber"
-                id="grandTotalNumber"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="0"
-                required
-              />
-            </div>
-            <div className="px-4">
+            <div className="px-4 flex md:w-1/2">
               <label
                 htmlFor="userInputDiscount"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="w-[15%] gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Dicount
               </label>
               <input
                 type="number"
-                
                 name="userInputDiscount"
                 value={userInputDiscount}
                 id="userInputDiscount"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="0"
                 required
-                onChange={(e)=>setUserInputDiscount(e.target.value)}
+                onChange={(e) => setUserInputDiscount(e.target.value)}
               />
             </div>
           </div>
-          <hr />
+          <div className="pt-4">
+            <button
+              // onClick={handleCollapseDicount}
+              type="button"
+              className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+            >
+              Payment{" "}
+              {/* <span className="font-thin">
+                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
+              </span>{" "} */}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 px-4">
+            <div className="flex items-center justify-start ps-4 border border-gray-200 rounded dark:border-gray-700">
+              <input
+                id="bordered-checkbox-1"
+                onChange={handlePaymentStatus}
+                checked={togglePayment}
+                type="checkbox"
+                name="bordered-checkbox"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                htmlFor="bordered-checkbox-1"
+                className="w-full py-1 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Recieve payment
+              </label>
+            </div>
+            <div className={`${togglePayment ? "" : "hidden"}`}>
+              <div className="px-4">
+                <label
+                  htmlFor="paymentMethod"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Select an option
+                </label>
+                <select
+                  onChange={handlePaymentInfo}
+                  name="paymentMethod"
+                  value={paymentInfo?.paymentMethod}
+                  id="paymentMethod"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option value="cash">Cash</option>
+                  <option value="bank-transfer">Bank Transfer</option>
+                </select>
+              </div>
+
+              <div className="px-4">
+                <label
+                  htmlFor="paymentAmount"
+                  className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Amount
+                </label>
+                <input
+                  type="number"
+                  name="paymentAmount"
+                  value={paymentInfo?.paymentAmount}
+                  id="paymentAmount"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  onChange={handlePaymentInfo}
+                  // min={1}
+                  max={grandTotal}
+                  required={togglePayment}
+                />
+              </div>
+
+              <div
+                className={`${
+                  paymentInfo?.paymentMethod === "bank-transfer" ? "" : "hidden"
+                } px-4`}
+              >
+                <label
+                  htmlFor="paymentReference"
+                  className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Reference Number
+                </label>
+                <input
+                  type="number"
+                  name="paymentReference"
+                  value={paymentInfo?.paymentReference}
+                  id="paymentReference"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  onChange={handlePaymentInfo}
+                />
+              </div>
+            </div>
+          </div>
 
           <div className="p-4 flex justify-between">
             <div className="w-1/2">

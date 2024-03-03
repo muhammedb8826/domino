@@ -47,9 +47,11 @@ const OrdersList = () => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const receivedStatus = orders && orders.map((item, index)=>{
-    return item.orderItems.filter((order)=> order.status === "recieved")
-  });
+  const receivedStatus =
+    orders &&
+    orders.map((item, index) => {
+      return item.orderItems.filter((order) => order.status === "recieved");
+    });
 
   const handleDeleteOrder = (id) => {
     Swal.fire({
@@ -82,85 +84,99 @@ const OrdersList = () => {
     return <ErroPage error={error} />;
   }
 
-
-    const orderListContent = orders
-          ? orders.map((order, index: number) => (
-          <tr
-            key={order.id}
-            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-          >
-            <td className="px-6 py-4">
-            <NavLink to={`/order/${order.id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    {order.series}
-                  </NavLink>{" "}
-            </td>
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center"
+  const orderListContent = orders
+    ? orders.map((order, index: number) => (
+        <tr
+          key={order.id}
+          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        >
+          <td className="px-6 py-4">
+            <NavLink
+              to={`/order/${order.id}`}
+              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
             >
-              <FaFirstOrderAlt className="w-8 h-8 rounded-full" />
-              <div className="ps-3">
-                <div className="text-base font-semibold">
-                  {order.customerFirstName}
-                </div>
-                <div className="font-normal text-gray-500">
-                  {order.customerPhone}
-                </div>
+              {order.series}
+            </NavLink>{" "}
+          </td>
+          <th
+            scope="row"
+            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center"
+          >
+            <FaFirstOrderAlt className="w-8 h-8 rounded-full" />
+            <div className="ps-3">
+              <div className="text-base font-semibold">
+                {order.customerFirstName}
               </div>
-            </th>
-            <td className="px-6 py-4">
-              {order.orderItems.map((item, index) => (
-                <span key={index}>
-                  {item.material}
-                  {","}
-                </span>
-              ))}
-            </td>
-            <td className="px-6 py-4">
-            {order.totalBirr.toLocaleString()}
-              </td>
-            <td className="px-6 py-4">
-            <span className="bg-red-100 text-red-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Not paid</span>
-            </td>
-            <td className="px-6 py-4">{order.deliveryDate}</td>
-            <td className="px-6 py-4 relative">
-              <button
-                onClick={() => handleAction(index)}
-                title="action"
-                type="button"
-                className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              <div className="font-normal text-gray-500">
+                {order.customerPhone}
+              </div>
+            </div>
+          </th>
+          <td className="px-6 py-4">
+            {order.orderItems.map((item, index) => (
+              <span key={index}>
+                {item.material}
+                {","}
+              </span>
+            ))}
+          </td>
+          <td className="px-6 py-4">{order.grandTotal?.toLocaleString()}</td>
+          <td className="px-6 py-4">
+          {order.paymentInfo?.paymentStatus === "not paid" && (
+            <span className="bg-red-100 text-red-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+              {order.paymentInfo?.paymentStatus}
+            </span>
+          )}
+          {order.paymentInfo?.paymentStatus === "partial" && (
+            <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+              {order.paymentInfo?.paymentStatus}
+            </span>
+          )}
+          {order.paymentInfo?.paymentStatus === "paid" && (
+            <span className="bg-green-100 text-green-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+              {order.paymentInfo?.paymentStatus}
+            </span>
+          )}
+          </td>
+          <td className="px-6 py-4">{order.deliveryDate}</td>
+          <td className="px-6 py-4 relative">
+            <button
+              onClick={() => handleAction(index)}
+              title="action"
+              type="button"
+              className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              <CiMenuKebab />
+            </button>
+            {showPopover === index && (
+              <div
+                ref={popoverRef}
+                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
               >
-                <CiMenuKebab />
-              </button>
-              {showPopover === index && (
-                <div
-                  ref={popoverRef}
-                  className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-                >
-                  <ul className="py-2 text-sm text-gray-700">
-                    <li key={`${order.id}-${index}-1`}>
-                      <NavLink
-                        to={`/order/${order.id}`}
-                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                      >
-                        <FaRegEdit />
-                        Edit
-                      </NavLink>{" "}
-                    </li>
-                    <li key={`${order.id}-${index}-2`}>
-                      <button
-                        onClick={() => handleDeleteOrder(order.id)}
-                        type="button"
-                        className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        <MdDelete /> Delete
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </td>
-          </tr>
+                <ul className="py-2 text-sm text-gray-700">
+                  <li key={`${order.id}-${index}-1`}>
+                    <NavLink
+                      to={`/order/${order.id}`}
+                      className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                    >
+                      <FaRegEdit />
+                      Edit
+                    </NavLink>{" "}
+                  </li>
+                  <li key={`${order.id}-${index}-2`}>
+                    <button
+                      onClick={() => handleDeleteOrder(order.id)}
+                      type="button"
+                      className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <MdDelete /> Delete
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </td>
+        </tr>
       ))
     : null;
 
@@ -336,22 +352,20 @@ const OrdersList = () => {
                   Orders
                 </th>
                 <th scope="col" className="px-6 py-3">
-                Price
+                  Price
                 </th>
                 <th scope="col" className="px-6 py-3">
-                payment
+                  payment
                 </th>
                 <th scope="col" className="px-6 py-3">
-                Delivery Date
+                  Delivery Date
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
             </thead>
-            <tbody>
-            {orderListContent}
-            </tbody>
+            <tbody>{orderListContent}</tbody>
           </table>
           <nav
             className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
@@ -456,7 +470,6 @@ const OrdersList = () => {
           </div>
         </div>
       )}
-      
     </div>
   );
 };
