@@ -82,8 +82,8 @@ const Discount = () => {
   if (error) return <ErroPage error={error} />;
 
   return (
-    <>
-     <fieldset className="border border-black p-4 mb-2 w-full sm:w-1/2 mx-auto">
+    <div className="flex flex-col gap-4 p-4 items-center border overflow-y-auto h-full" id="style-4">
+     <fieldset className="border border-black p-4 mb-2 w-full mx-auto">
         <legend className="bg-black text-white border px-2">
           Add new dicount
         </legend>
@@ -155,7 +155,7 @@ const Discount = () => {
         </form>
       </fieldset> 
 
-    <div className="flex flex-col gap-4 p-4 items-center border overflow-y-auto h-full">
+    <div className="flex flex-col gap-4 p-4 w-full items-center border overflow-y-auto h-full">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -314,7 +314,7 @@ const Discount = () => {
       {modalOpen && <DiscountEditModal handleModalOpen={handleModalOpen} data={data} />}
 
     </div>
-    </>
+    </div>
   );
 };
 
