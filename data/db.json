@@ -647,5 +647,15 @@
       "minumumMeterSquare": "1000",
       "discountPercentage": "50"
     }
+  ],
+  "commissions": [
+    {
+      "id": "1710111531529",
+      "phone": "0905-08-8266",
+      "companyType": "individual",
+      "firstName": "Muhammed",
+      "lastName": "",
+      "email": "admin@domino.com"
+    }
   ]
 }

@@ -1,14 +1,13 @@
 "use client";
 
 import { Datepicker } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { createOrder } from "../../redux/features/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { FaCalendarAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { GoBack } from "../common/GoBack";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
 import { CiSettings } from "react-icons/ci";
@@ -16,6 +15,7 @@ import { getprice } from "../../redux/features/price/pricingSlice";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import Select from "react-select";
 import { IoMdClose } from "react-icons/io";
+import CommissionSearchInput from "../commission/CommissionSearchInput";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -37,8 +37,6 @@ export const OrderRegistration = () => {
     dispatch(getprice());
     dispatch(getServices());
   }, [dispatch]);
-
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
@@ -48,8 +46,11 @@ export const OrderRegistration = () => {
     customerPhone: "",
     customerFirstName: "",
     customerEmail: "",
+    commissionPhone: "",
+    commissionFirstName: "",
+    commissionEmail: "",
   });
-  
+
   const [formData, setFormData] = useState([
     {
       machine: "",
@@ -83,10 +84,30 @@ export const OrderRegistration = () => {
   const [totalBirr, setTotalBirr] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
   const [fileName, setFileName] = useState([]);
-
-  const handleIsCollapsed = () => {
-    setIsCollapsed((prev) => !prev);
+  const [toggleCommission, setToggleCommission] = useState(false);
+  const [selectedCommission, setSelectedCommission] = useState("standard");
+  const dropdownRef = useRef(null);
+  const handleToggleCommission = () => {
+    setToggleCommission(!toggleCommission);
   };
+
+  const handleChangeCommission = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedCommission(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setToggleCommission(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleAddRow = () => {
     setFormData((prevFormData) => [
@@ -136,7 +157,7 @@ export const OrderRegistration = () => {
   useEffect(() => {
     const totalBirr = calculatedUnitPrices.reduce((acc, c) => acc + c || 0, 0);
     setTotalBirr(totalBirr);
-    const granTotal = totalBirr + (totalBirr * 0.15)
+    const granTotal = totalBirr + totalBirr * 0.15;
     setGrandTotal(granTotal);
   }, [calculatedUnitPrices]);
 
@@ -169,6 +190,15 @@ export const OrderRegistration = () => {
       customerPhone: customer.phone,
       customerFirstName: customer.firstName,
       customerEmail: customer.email,
+    }));
+  };
+
+  const handleCommissionInfo = (commission: CustomerType) => {
+    setOrderInfo((prevOrderInfo) => ({
+      ...prevOrderInfo,
+      commissionPhone: commission.phone,
+      commissionFirstName: commission.firstName,
+      commissionEmail: commission.email,
     }));
   };
 
@@ -246,13 +276,13 @@ export const OrderRegistration = () => {
   };
 
   useEffect(() => {
-    const data = [...formData]
+    const data = [...formData];
     const units = [...measuresFormData];
     const combination = data.map((item, index) => {
       return `${item.machine}-${item.material}-${units[index].width}x${units[index].height}`;
     });
-    setFileName(combination) 
-  }, [formData,measuresFormData]);
+    setFileName(combination);
+  }, [formData, measuresFormData]);
 
   useEffect(() => {
     const matchingPriceData = formData.map((unitPrice) => {
@@ -280,7 +310,11 @@ export const OrderRegistration = () => {
       customerPhone: "",
       customerFirstName: "",
       customerEmail: "",
+      commissionPhone: "",
+      commissionFirstName: "",
+      commissionEmail: "",
     });
+
     setFormData([
       {
         machine: "",
@@ -328,10 +362,10 @@ export const OrderRegistration = () => {
       return item;
     });
 
-    const appendName = fileName.map((item)=>{
-      const nameAndFile =   `${orderInfo.customerFirstName}-${item}`;
-      return nameAndFile
-    })    
+    const appendName = fileName.map((item) => {
+      const nameAndFile = `${orderInfo.customerFirstName}-${item}`;
+      return nameAndFile;
+    });
 
     const orderData = {
       ...orderInfo,
@@ -456,28 +490,129 @@ export const OrderRegistration = () => {
               }}
             />
           </div>
+          {selectedCommission === "commission" ?(
+          <div className="w-full relative">
+            <CommissionSearchInput
+              handleCommissionInfo={handleCommissionInfo}
+              value={orderInfo.commissionFirstName}
+            />
+          </div>
+            ): null}
         </div>
         <form onSubmit={handleSubmit}>
           <div>
             <button
-              onClick={handleIsCollapsed}
+              // onClick={handleIsCollapsed}
               type="button"
               className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
             >
               Orders List{" "}
-              <span className="font-thin">
+              {/* <span className="font-thin">
                 {isCollapsed ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "}
+              </span>{" "} */}
             </button>
+            <div className="px-4 relative flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+              <div>
+                <button
+                  onClick={handleToggleCommission}
+                  id="dropdownActionButton"
+                  data-dropdown-toggle="dropdownAction"
+                  className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  type="button"
+                >
+                  <span className="sr-only">Action button</span>
+                  Action
+                  <svg
+                    className="w-2.5 h-2.5 ms-2.5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 4 4 4-4"
+                    />
+                  </svg>
+                </button>
+              </div>
 
+              {toggleCommission ? (
+                <div
+                  ref={dropdownRef}
+                  id="dropdownAction"
+                  className="absolute left-4 top-10 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                >
+                  <ul
+                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdownActionButton"
+                  >
+                    <li>
+                      <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                        <input
+                          onChange={handleChangeCommission}
+                          id="standard"
+                          type="radio"
+                          value="standard" // Different value for standard commission
+                          checked={selectedCommission === "standard"}
+                          name="filter-radio"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          htmlFor="standard"
+                          className="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                        >
+                          Standard
+                        </label>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                        <input
+                          onChange={handleChangeCommission}
+                          id="commission"
+                          type="radio"
+                          value="commission" // Different value for commission
+                          checked={selectedCommission === "commission"}
+                          name="filter-radio"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          htmlFor="commission"
+                          className="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                        >
+                          Commission
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              ) : null}
+            </div>
             <div className="px-4">
               <table
-                className={`${
-                  isCollapsed ? "hidden" : ""
-                } w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
+                className={`w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
               >
                 <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
+                    <td className="w-4 p-4 border border-gray-300">
+                      <div className="flex items-center">
+                        <input
+                          id="checkbox-table-search"
+                          type="checkbox"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          htmlFor="checkbox-table-search"
+                          className="sr-only"
+                        >
+                          checkbox
+                        </label>
+                      </div>
+                    </td>
                     <th scope="col" className="p-4 w-4 border border-gray-300">
                       No
                     </th>
@@ -542,6 +677,21 @@ export const OrderRegistration = () => {
                         key={index}
                         className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
+                        <td className="w-4 p-4  border border-gray-300">
+                          <div className="flex items-center">
+                            <input
+                              id={`checkbox-table-search-${index}`}
+                              type="checkbox"
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <label
+                              htmlFor={`checkbox-table-search-${index}`}
+                              className="sr-only"
+                            >
+                              checkbox
+                            </label>
+                          </div>
+                        </td>
                         <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                           {index + 1}
                         </td>
@@ -732,33 +882,29 @@ export const OrderRegistration = () => {
                 File Names
               </p>
               <ul className="space-y-4 text-left text-gray-500 dark:text-gray-400">
-                {
-                  fileName.map((item, index) => (
-                      <li
-                        key={index} 
-                        className="flex items-center space-x-3 rtl:space-x-reverse"
-                      >
-                        <svg
-                          className="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 16 12"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round" // Changed to camelCase
-                            strokeLinejoin="round" // Changed to camelCase
-                            strokeWidth="2" // Changed to camelCase
-                            d="M1 5.917 5.724 10.5 15 1.5"
-                          />
-                        </svg>
-                        <span>
-                          {item}
-                        </span>
-                      </li>
-                    )
-                  )}
+                {fileName.map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-3 rtl:space-x-reverse"
+                  >
+                    <svg
+                      className="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 16 12"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M1 5.917 5.724 10.5 15 1.5"
+                      />
+                    </svg>
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
