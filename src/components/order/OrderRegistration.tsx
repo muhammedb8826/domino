@@ -187,6 +187,7 @@ export const OrderRegistration = () => {
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
+      customerId: customer.id,
       customerPhone: customer.phone,
       customerFirstName: customer.firstName,
       customerEmail: customer.email,
@@ -196,6 +197,7 @@ export const OrderRegistration = () => {
   const handleCommissionInfo = (commission: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
+      commissionId: commission.id,
       commissionPhone: commission.phone,
       commissionFirstName: commission.firstName,
       commissionEmail: commission.email,
@@ -221,7 +223,6 @@ export const OrderRegistration = () => {
   };
 
   // setting options for material and machine
-
   const uniqueMachineMaterialCombinations = new Set();
   prices.forEach(({ machine, material }) => {
     const combination = `${material.name}-(${machine.name})`;
@@ -369,6 +370,7 @@ export const OrderRegistration = () => {
 
     const orderData = {
       ...orderInfo,
+      commissionType: selectedCommission,
       orderItems: unitPrice,
       orderMeasures: measuresFormData,
       totalBirr,

@@ -10,10 +10,12 @@ import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { getCommissions } from "@/redux/features/commission/commissionSlice";
+import { getOrders } from "@/redux/features/order/orderSlice";
 
 
 export const CommissionList = () => {
     const {commissions, isLoading, error} = useSelector((state)=>state.commission);
+    const {orders} = useSelector((state)=>state.order);
     const dispatch = useDispatch();
     const [openModal, setOpenModal] = useState(false);
     const [showPopover, setShowPopover] = useState(null);
@@ -23,6 +25,7 @@ export const CommissionList = () => {
     }
     useEffect(()=>{
      dispatch(getCommissions());
+     dispatch(getOrders())
     },[dispatch])
 
     const handleAction = (index: number) => {
@@ -51,6 +54,12 @@ export const CommissionList = () => {
     //       setShowPopover(null);
     //     });
     //   }
+
+    const filteredOrders = orders.filter((order) => 
+    commissions.map((commission)=>commission.id).includes(order.commissionId)
+);
+
+    
  
     
     if(isLoading) return <Loading/>
@@ -123,7 +132,9 @@ export const CommissionList = () => {
                     {commission.companyType}
                 </td>
                 <td className="px-6 py-4">
-                    commission orders
+                    {filteredOrders.map((order, index) => (
+                        <span key={index} className="text-blue-600 dark:text-blue-500 hover:underline">{order.id}</span>
+                    ))}
                 </td>
                 <td className="px-6 py-4 relative">
                 <button
@@ -140,10 +151,6 @@ export const CommissionList = () => {
               {showPopover === index && (
                 <div className="absolute z-40 right-40 -top-14 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                   {/* Dropdown content */}
-                  <div className="px-4 py-3 text-sm text-gray-900">
-                    <div className="font-medium">Pro User</div>
-                    <div className="truncate">email</div>
-                  </div>
                   <ul className="py-2 text-sm text-gray-700">
                     <li>
                       <button

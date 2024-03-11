@@ -167,34 +167,34 @@
   ],
   "orders": [
     {
+      "id": "366b",
       "series": "SAL-ORD-YYYY-",
-      "date": "Mar 3, 2024",
-      "deliveryDate": "Mar 3, 2024",
+      "date": "Mar 11, 2024",
+      "deliveryDate": "Mar 13, 2024",
       "orderType": "telegram",
-      "description": "",
-      "customerPhone": "0988-45-6666",
-      "customerFirstName": "Babi",
-      "customerEmail": "",
+      "description": "Uv and Baneer sticker",
+      "customerPhone": "0905-07-8826",
+      "customerFirstName": "CocaCola",
+      "customerEmail": "cocacola@gmail.com",
+      "commissionPhone": "0905-08-8266",
+      "commissionFirstName": "Muhammed",
+      "commissionEmail": "admin@domino.com",
+      "customerId": "1710128272183",
+      "commissionId": "1710111531529",
+      "commissionType": "commission",
       "orderItems": [
         {
           "machine": "UV",
           "material": "Film",
           "service": "Print and Material",
-          "unitPrice": 10000,
-          "status": "edited"
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print and Heat press",
-          "unitPrice": 20000,
-          "status": "rejected"
+          "unitPrice": 8000,
+          "status": "recieved"
         },
         {
           "machine": "BANNER",
           "material": "sticker",
           "service": "Print",
-          "unitPrice": 10000,
+          "unitPrice": 16000,
           "status": "recieved"
         }
       ],
@@ -202,61 +202,31 @@
         {
           "unitName": null,
           "width": "5",
-          "height": "5",
-          "quantity": "2",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "5",
           "height": "2",
-          "quantity": "5",
+          "quantity": "4",
           "unitPrice": null
         },
         {
           "unitName": null,
           "width": "5",
-          "height": "5",
-          "quantity": "2",
+          "height": "4",
+          "quantity": "4",
           "unitPrice": null
         }
       ],
-      "totalBirr": 40000,
+      "totalBirr": 24000,
+      "grandTotal": 27600,
       "fileNames": [
-        "Babi-Babi-UV-Film-5x5",
-        "Babi-Babi-BANNER-Screen-5x2",
-        "Babi-Babi-BANNER-sticker-5x5"
+        "CocaCola-UV-Film-5x2",
+        "CocaCola-BANNER-sticker-5x4"
       ],
-      "totalQuantity": 9,
-      "grandTotal": 46000,
-      "vat": 6000,
-      "discounts": [
-        0,
-        0,
-        0
-      ],
-      "levels": [
-        null,
-        null,
-        null
-      ],
-      "isDiscounted": [
-        true,
-        true,
-        true
-      ],
-      "totalBirrAfterDiscount": [
-        10000,
-        20000,
-        10000
-      ],
+      "totalQuantity": 8,
       "paymentInfo": {
-        "paymentMethod": "bank-transfer",
-        "paymentReference": "444444",
-        "paymentAmount": "46000",
-        "paymentStatus": "paid"
-      },
-      "id": "11aa"
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      }
     }
   ],
   "customers": [
@@ -363,6 +333,14 @@
       "firstName": "test",
       "lastName": "test",
       "email": "admin@domino.com"
+    },
+    {
+      "id": "1710128272183",
+      "phone": "0905-07-8826",
+      "companyType": "company",
+      "firstName": "CocaCola",
+      "lastName": "",
+      "email": "cocacola@gmail.com"
     }
   ],
   "services": [

@@ -105,7 +105,7 @@ const OrdersList = () => {
             <FaFirstOrderAlt className="w-8 h-8 rounded-full" />
             <div className="ps-3">
               <div className="text-base font-semibold">
-                {order.customerFirstName}
+                {order.customerFirstName}{order.customerLastName}
               </div>
               <div className="font-normal text-gray-500">
                 {order.customerPhone}
