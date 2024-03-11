@@ -656,6 +656,22 @@
       "firstName": "Muhammed",
       "lastName": "",
       "email": "admin@domino.com"
+    },
+    {
+      "id": "1710126934041",
+      "phone": "1234-56-7890",
+      "companyType": "company",
+      "firstName": "Teshager",
+      "lastName": "Assefa",
+      "email": "teshagerass@gmail.com"
+    },
+    {
+      "id": "1710127040750",
+      "phone": "1234-56-7890",
+      "companyType": "individual",
+      "firstName": "Muktar",
+      "lastName": "Berisso",
+      "email": "muktar@gmail.com"
     }
   ]
 }

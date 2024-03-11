@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CommissionRegistration } from "./CommissionRegistrationModal";
-import { getCustomers, searchUsers } from "../../redux/features/customer/customerSlice";
+import { searchUsers } from "../../redux/features/commission/commissionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getCommissions } from "@/redux/features/commission/commissionSlice";
 
@@ -63,7 +63,7 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
                 htmlFor="input-group-search"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Customer
+                Commission
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">

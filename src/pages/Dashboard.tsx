@@ -7,6 +7,7 @@ import Product from "../components/product/Product";
 import Pricing from "../components/pricing/Pricing";
 import Setting from "../components/setting/Setting";
 import  {CustomerList} from "../components/customer/CustomerList";
+import { CommissionList } from "@/components/commission/CommissionList";
 
 const Dashboard = () => {
 
@@ -39,6 +40,13 @@ const Dashboard = () => {
           <>
             <TopBar />
             <CustomerList/>
+          </>
+        )}
+
+{active === "commission" && (
+          <>
+            <TopBar />
+            <CommissionList/>
           </>
         )}
 

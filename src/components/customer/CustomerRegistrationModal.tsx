@@ -40,7 +40,7 @@ const dispatch = useDispatch();
     dispatch(createCustomer(formData)).then((res)=>{
         if(res.payload){
             const message = "Customer registered successfully"
-            toast(message)
+            toast.success(message)
             resetForm();
             handleModalOpen()
         }

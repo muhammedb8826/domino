@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createCustomer } from "../../redux/features/customer/customerSlice";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
 import { createCommission } from "@/redux/features/commission/commissionSlice";
@@ -40,8 +39,8 @@ const dispatch = useDispatch();
     e.preventDefault();
     dispatch(createCommission(formData)).then((res)=>{
         if(res.payload){
-            const message = "COmmission registered successfully"
-            toast(message)
+            const message = "Commission registered successfully"
+            toast.success(message)
             resetForm();
             handleModalOpen()
         }
