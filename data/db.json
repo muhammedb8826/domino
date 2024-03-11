@@ -167,60 +167,62 @@
   ],
   "orders": [
     {
-      "id": "366b",
+      "id": "8ff3",
       "series": "SAL-ORD-YYYY-",
-      "date": "Mar 11, 2024",
-      "deliveryDate": "Mar 13, 2024",
+      "date": "Mar 12, 2024",
+      "deliveryDate": "Mar 12, 2024",
       "orderType": "telegram",
-      "description": "Uv and Baneer sticker",
+      "description": "",
       "customerPhone": "0905-07-8826",
       "customerFirstName": "CocaCola",
       "customerEmail": "cocacola@gmail.com",
       "commissionPhone": "0905-08-8266",
       "commissionFirstName": "Muhammed",
       "commissionEmail": "admin@domino.com",
-      "customerId": "1710128272183",
       "commissionId": "1710111531529",
+      "customerId": "1710128272183",
       "commissionType": "commission",
       "orderItems": [
         {
-          "machine": "UV",
-          "material": "Film",
+          "machine": "DTF",
+          "material": "T-shirt",
           "service": "Print and Material",
-          "unitPrice": 8000,
-          "status": "recieved"
+          "unitPrice": 2000,
+          "status": "recieved",
+          "commissionPrice": 400
         },
         {
           "machine": "BANNER",
           "material": "sticker",
           "service": "Print",
-          "unitPrice": 16000,
+          "unitPrice": 25000,
+          "commissionPrice": 5000,
           "status": "recieved"
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
-          "width": "5",
-          "height": "2",
-          "quantity": "4",
+          "width": "2",
+          "height": "5",
+          "quantity": "2",
           "unitPrice": null
         },
         {
           "unitName": null,
           "width": "5",
-          "height": "4",
-          "quantity": "4",
+          "height": "5",
+          "quantity": "5",
           "unitPrice": null
         }
       ],
-      "totalBirr": 24000,
-      "grandTotal": 27600,
+      "totalBirr": 27000,
+      "grandTotal": 31050,
       "fileNames": [
-        "CocaCola-UV-Film-5x2",
-        "CocaCola-BANNER-sticker-5x4"
+        "CocaCola-DTF-T-shirt-2x5",
+        "CocaCola-BANNER-sticker-5x5"
       ],
-      "totalQuantity": 8,
+      "totalQuantity": 7,
       "paymentInfo": {
         "paymentMethod": "cash",
         "paymentReference": "",

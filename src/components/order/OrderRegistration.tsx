@@ -86,6 +86,7 @@ export const OrderRegistration = () => {
   const [fileName, setFileName] = useState([]);
   const [toggleCommission, setToggleCommission] = useState(false);
   const [selectedCommission, setSelectedCommission] = useState("standard");
+  const [commissionPrice, setCommissionPrice] = useState([]);
   const dropdownRef = useRef(null);
   const handleToggleCommission = () => {
     setToggleCommission(!toggleCommission);
@@ -117,6 +118,7 @@ export const OrderRegistration = () => {
         material: "",
         service: "",
         unitPrice: null,
+        commissionPrice,
         status: "recieved",
       },
     ]);
@@ -172,8 +174,12 @@ export const OrderRegistration = () => {
       const calculatedUnitPrice = unitPrice * (width * height) * quantity;
       return calculatedUnitPrice;
     });
+    setCommissionPrice(selectedCommission === "commission" ? calculatedUnitPrices.map((price) => price * 0.2): 0);
     setCalculatedUnitPrices(calculatedUnitPrices);
-  }, [measuresFormData, filteredData]);
+  }, [measuresFormData, filteredData, selectedCommission]);
+
+  console.log(commissionPrice);
+  console.log(calculatedUnitPrices);
 
   // customer and order info handling
   const handleOrderInfo = (e) => {
@@ -322,6 +328,7 @@ export const OrderRegistration = () => {
         material: "",
         service: "",
         unitPrice: null,
+        commissionPrice,
         status: "recieved",
       },
     ]);
@@ -358,8 +365,10 @@ export const OrderRegistration = () => {
       alert("Please add delivery date");
       return;
     }
+
     const unitPrice = formData.map((item, index) => {
       item.unitPrice = calculatedUnitPrices[index];
+      item.commissionPrice = commissionPrice[index];
       return item;
     });
 
@@ -492,14 +501,14 @@ export const OrderRegistration = () => {
               }}
             />
           </div>
-          {selectedCommission === "commission" ?(
-          <div className="w-full relative">
-            <CommissionSearchInput
-              handleCommissionInfo={handleCommissionInfo}
-              value={orderInfo.commissionFirstName}
-            />
-          </div>
-            ): null}
+          {selectedCommission === "commission" ? (
+            <div className="w-full relative">
+              <CommissionSearchInput
+                handleCommissionInfo={handleCommissionInfo}
+                value={orderInfo.commissionFirstName}
+              />
+            </div>
+          ) : null}
         </div>
         <form onSubmit={handleSubmit}>
           <div>
@@ -654,6 +663,14 @@ export const OrderRegistration = () => {
                     >
                       Amount
                     </th>
+                    {selectedCommission === "commission" ? (
+                    <th
+                      scope="col"
+                      className="px-4 py-3 border border-gray-300"
+                    >
+                      Commission
+                    </th>
+                    ) : null}
                     <th
                       scope="col"
                       className="px-4 py-3 border border-gray-300"
@@ -776,20 +793,14 @@ export const OrderRegistration = () => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
-                          <input
-                            readOnly
-                            title="price"
-                            type="number"
-                            name="price"
-                            id="price"
-                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
-                            placeholder="0"
-                            required
-                            min={0}
-                            value={calculatedUnitPrices[index] || 0}
-                          />
+                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
+                          {calculatedUnitPrices[index] || 0}
                         </td>
+                        {selectedCommission === "commission" ? (
+                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
+                        {commissionPrice[index] || 0}
+                        </td>
+                        ) : null}
                         <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10">
                           <button
                             onClick={() => handleCancel(index)}
