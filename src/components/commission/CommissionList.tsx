@@ -3,7 +3,7 @@ import { IoBagAdd } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CommissionRegistration } from "./CommissionRegistrationModal";
 import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
@@ -11,6 +11,7 @@ import { FaRegEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { getCommissions } from "@/redux/features/commission/commissionSlice";
 import { getOrders } from "@/redux/features/order/orderSlice";
+import { NavLink } from "react-router-dom";
 
 export const CommissionList = () => {
   const { commissions, isLoading, error } = useSelector(
@@ -19,7 +20,31 @@ export const CommissionList = () => {
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
-  const [showPopover, setShowPopover] = useState(null);
+  const [showPopover, setShowPopover] = useState<number | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(null);
+      }
+    };
+
+    if (showPopover !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPopover]);
+
+  const handleAction = (index: number) => {
+    setShowPopover((prevIndex) => (prevIndex === index ? null : index));
+  };
 
   const handleModalOpen = () => {
     setOpenModal((prev) => !prev);
@@ -29,9 +54,7 @@ export const CommissionList = () => {
     dispatch(getOrders());
   }, [dispatch]);
 
-  const handleAction = (index: number) => {
-    setShowPopover((prevIndex) => (prevIndex === index ? null : index));
-  };
+
 
   const filteredOrders = commissions.map(commission => {
     const commissionOrders = orders.filter(order => order.commissionId === commission.id);
@@ -163,43 +186,42 @@ export const CommissionList = () => {
                 2000
               </td>
               <td className="px-6 py-4 relative">
-                <button
-                  onClick={() => handleAction(index)}
-                  title="action"
-                  data-popover-target={`popover-bottom-${index}`}
-                  data-popover-trigger="click"
-                  id={`dropdownAvatarNameButton-${commission.id}-${index}`}
-                  type="button"
-                  className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                >
-                  <CiMenuKebab />
-                </button>
-                {showPopover === index && (
-                  <div className="absolute z-40 right-40 -top-14 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                    {/* Dropdown content */}
-                    <ul className="py-2 text-sm text-gray-700">
-                      <li>
-                        <button
-                          type="button"
-                          className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                        >
-                          <FaRegEdit />
-                          Edit
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          // onClick={() => handleDeleteOrder(customer.id)}
-                          type="button"
-                          className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                        >
-                          <MdDelete /> Delete
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </td>
+            <button
+              onClick={() => handleAction(index)}
+              title="action"
+              type="button"
+              className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              <CiMenuKebab />
+            </button>
+            {showPopover === index && (
+              <div
+                ref={popoverRef}
+                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+              >
+                <ul className="py-2 text-sm text-gray-700">
+                  <li key={`${commission.id}-${index}-1`}>
+                    <NavLink
+                      to={`/commission/${commission.id}`}
+                      className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                    >
+                      <FaRegEdit />
+                      Details
+                    </NavLink>{" "}
+                  </li>
+                  <li key={`${commission.id}-${index}-2`}>
+                    <button
+                      // onClick={() => handleDeleteOrder(commission.id)}
+                      type="button"
+                      className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <MdDelete /> Delete
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </td>
             </tr>
           ))}
         </tbody>

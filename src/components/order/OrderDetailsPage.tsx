@@ -19,6 +19,7 @@ import { getprice } from "../../redux/features/price/pricingSlice";
 import { MdDelete } from "react-icons/md";
 import { StatusEditModal } from "./StatusEditModal";
 import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
+import CommissionSearchInput from "../commission/CommissionSearchInput";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -59,7 +60,9 @@ const OrderDetailsPage = () => {
             customerPhone: order.customerPhone,
             customerFirstName: order.customerFirstName,
             customerEmail: order.customerEmail,
-            status: order.status,
+            commissionPhone: order.commissionPhone,
+            commissionFirstName: order.commissionFirstName,
+            commissionEmail: order.commissionEmail,
           });
           setFormData(order.orderItems);
           setMeasuresFormData(order.orderMeasures);
@@ -68,12 +71,14 @@ const OrderDetailsPage = () => {
           setFileName(order.fileNames);
           setDiscountPerItem(order.discounts);
           setLevels(order.levels);
-          setIsDiscounted(order.isDiscounted);
           setTotalBirrAfterDiscount(order.totalBirrAfterDiscount);
           setGrandTotal(order.grandTotal);
           setVat(order.vat);
           setUserInputDiscount(order.userInputDiscount);
           setPaymentInfo(order.paymentInfo);
+          setCommissionPercent(order.orderItems.map((item) => item.commissionPercent));
+          setCommissionPrice(order.orderItems.map((item) => item.commissionPrice));
+          setTotalCommission(order.totalCommission);
         }
       })
       .catch((error) => {
@@ -171,6 +176,9 @@ const OrderDetailsPage = () => {
     customerPhone: "",
     customerFirstName: "",
     customerEmail: "",
+    commissionPhone: "",
+    commissionFirstName: "",
+    commissionEmail: "",
   });
 
   const [formData, setFormData] = useState([
@@ -180,6 +188,7 @@ const OrderDetailsPage = () => {
       service: "",
       unitPrice: null,
       status: "recieved",
+      isDiscounted: false,
     },
   ]);
 
@@ -207,13 +216,12 @@ const OrderDetailsPage = () => {
   const [grandTotal, setGrandTotal] = useState(0);
   const [vat, setVat] = useState(0);
   const [userInputDiscount, setUserInputDiscount] = useState(0);
-  const [isDiscounted, setIsDiscounted] = useState([]);
   const [totalBirrAfterDiscount, setTotalBirrAfterDiscount] = useState([]);
   const [togglePayment, setTogglePayment] = useState(false);
-
-  useEffect(() => {
-    setIsDiscounted(Array(formData.length).fill(true));
-  }, [formData, measuresFormData]);
+  const [commissionPrice, setCommissionPrice] = useState([]);
+  const [commissionPercent, setCommissionPercent] = useState([]);
+  const [totalCommission, setTotalCommission] = useState(null);
+  const [commissionForAll, setCommissionForAll] = useState(null);
 
   const handleModalOpen = (index) => {
     setModalOpen((prev) => !prev);
@@ -247,6 +255,7 @@ const OrderDetailsPage = () => {
         service: "",
         unitPrice: null,
         status: "recieved",
+        isDiscounted: false,
       },
     ]);
     setMeasuresFormData((prevFormData) => [
@@ -374,42 +383,35 @@ const OrderDetailsPage = () => {
   }, [calculatedUnitPrices, totalUnits, calculateDiscount]);
 
   const handleDiscountChange = (index, e) => {
-    setIsDiscounted((prevToggles) => [
-      ...prevToggles.slice(0, index),
-      e.target.checked,
-      ...prevToggles.slice(index + 1),
-    ]);
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index] = {
+        ...updatedFormData[index],
+        isDiscounted: e.target.checked,
+      };
+      return updatedFormData;
+    });
+  };  
 
-    //     setIsDiscounted((prevIsDiscounted) => {
-    //         // Create a new array with updated values based on index and checked state
-    //         const updatedIsDiscounted = prevIsDiscounted?.map((discounted, i) =>
-    //             i === index ? !e.target.checked : discounted
-    //         );
-    //         return updatedIsDiscounted;
-    // });
-
-    if (!e.target.checked) {
-      setDiscountPerItem((prevDiscounts) => {
-        const updatedDiscounts = [...prevDiscounts];
-        updatedDiscounts[index] = 0;
-        return updatedDiscounts;
-      });
-    } else {
-      const price = calculatedUnitPrices[index];
-      const totalUnit = totalUnits[index];
-      const { discount, level } = calculateDiscount(price, totalUnit);
-      setLevels((prevLevels) => {
-        const updatedLevels = [...prevLevels];
-        updatedLevels[index] = level;
-        return updatedLevels;
-      });
-      setDiscountPerItem((prevDiscounts) => {
-        const updatedDiscounts = [...prevDiscounts];
-        updatedDiscounts[index] = discount;
-        return updatedDiscounts;
-      });
+  useEffect(() => {
+const updatedDiscounts = formData.map((item, index) => {
+    if(!item.isDiscounted){
+        return 0;
     }
-  };
+    const price = calculatedUnitPrices[index];
+    const totalUnit = totalUnits[index];
+    const { discount, level } = calculateDiscount(price, totalUnit);
+    setLevels((prevLevels) => {
+      const updatedLevels = [...prevLevels];
+      updatedLevels[index] = level;
+      return updatedLevels;
+    });
+    return discount;
+}
+);
+setDiscountPerItem(updatedDiscounts);
+  }, [ formData, calculatedUnitPrices, totalUnits, calculateDiscount]);
+  
 
   useEffect(() => {
     if (discountPerItem) {
@@ -477,8 +479,6 @@ const OrderDetailsPage = () => {
     }
   }, [paymentInfo?.paymentAmount, grandTotal]);
 
-  console.log("paymentInfo", paymentInfo);
-
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
@@ -487,6 +487,60 @@ const OrderDetailsPage = () => {
       customerEmail: customer.email,
     }));
   };
+
+  //  commission handling
+
+  const handleCommissionInfo = (commission: CustomerType) => {
+    setOrderInfo((prevOrderInfo) => ({
+      ...prevOrderInfo,
+      commissionId: commission.id,
+      commissionPhone: commission.phone,
+      commissionFirstName: commission.firstName,
+      commissionEmail: commission.email,
+    }));
+  };
+
+  const handleCommissionPercent = (index, e) => {
+    const { value } = e.target;
+    setCommissionPercent((prevCommissionPercent) => {
+      const updatedCommissionPercent = [...prevCommissionPercent];
+      updatedCommissionPercent[index] = value;
+      return updatedCommissionPercent;
+    });  
+    setCommissionForAll(null);
+  };
+
+// commission prices handling
+
+useEffect(() => {
+  const commission = calculatedUnitPrices.map(
+    (price, index) => price * (commissionPercent[index] / 100)
+  );
+  setCommissionPrice(commission);
+}, [commissionPercent, calculatedUnitPrices, measuresFormData])
+
+  // Total commission
+  useEffect(() => {
+    const totalCommission = commissionPrice.reduce((acc, c) => acc + c, 0);
+    setTotalCommission(totalCommission);
+  }, [commissionPrice]);
+    
+
+// resetting commission for all when the commission percent for each index changes
+
+  const handleCommissionForAll = (e) => {
+    const { value } = e.target;
+    setCommissionForAll(value);
+    setCommissionPercent(Array(formData.length).fill(value));
+    const commission = calculatedUnitPrices.map(
+      (price) => price * (value / 100)
+    );
+    setCommissionPrice(commission);
+  };
+
+
+
+  // reset commission for all when the commission percent changes
 
   const handleDatePickerChange = (date: Date) => {
     const options = { month: "short", day: "numeric", year: "numeric" };
@@ -542,11 +596,8 @@ const OrderDetailsPage = () => {
     const { value } = selectedOption;
     const str = value;
     const parts = str.split("-("); // Split the string at "-("
-
-    // parts[0] will contain "T-shirt" and parts[1] will contain "DTF)"
     const material = parts[0]; // Extract "T-shirt"
     const machine = parts[1].substring(0, parts[1].length - 1); // Extract "DTF" by removing the last character ")"
-    // console.log(material, machine); // Output: T-shirt DTF
     setFormData((prevFormData) => {
       const updatedFormData = prevFormData.map((item, i) => {
         if (i === index) {
@@ -623,6 +674,9 @@ const OrderDetailsPage = () => {
       customerPhone: "",
       customerFirstName: "",
       customerEmail: "",
+      commissionPhone: "",
+      commissionEmail: "",
+      commissionFirstName: "",
     });
     setFormData([
       {
@@ -631,6 +685,7 @@ const OrderDetailsPage = () => {
         service: "",
         unitPrice: null,
         status: "recieved",
+        isDiscounted: false,
       },
     ]);
     setMeasuresFormData([
@@ -648,7 +703,6 @@ const OrderDetailsPage = () => {
     setDiscountPerItem([]);
     setLevels([]);
     setVat(0);
-    // setIsDiscounted(Array(discountPerItem.length).fill(true));
     setTotalBirrAfterDiscount([]);
     setGrandTotal(0);
     setUserInputDiscount(0);
@@ -683,6 +737,8 @@ const OrderDetailsPage = () => {
       return {
         ...item,
         unitPrice: calculatedUnitPrices[index],
+        commissionPrice: commissionPrice[index],
+        commissionPercent: commissionPercent[index],
       };
     });
 
@@ -698,13 +754,13 @@ const OrderDetailsPage = () => {
       orderItems: updatedFormData,
       orderMeasures: measuresFormData,
       totalBirr,
+      totalCommission,
       fileNames: appendName,
       totalQuantity,
       grandTotal,
       vat,
       discounts: discountPerItem,
       levels,
-      isDiscounted,
       userInputDiscount,
       totalBirrAfterDiscount,
       paymentInfo,
@@ -731,7 +787,7 @@ const OrderDetailsPage = () => {
 
   return (
     <>
-      <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0 min-h-screen">
+      <section className="bg-white dark:bg-gray-900 wrapper py-4 mb-10 border p-0 min-h-screen">
         <GoBack goback="/dashboard" />
         <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
           Edit Order
@@ -775,7 +831,7 @@ const OrderDetailsPage = () => {
               title="Registration date"
               name="date"
               onSelectedDateChanged={handleDatePickerChange}
-              value={orderInfo.date}
+              // value={orderInfo.date}
               style={{
                 padding: "0.25rem",
                 paddingLeft: "2.5rem",
@@ -820,7 +876,7 @@ const OrderDetailsPage = () => {
             <Datepicker
               title="Delivery date"
               onSelectedDateChanged={handleDeliveryDatePickerChange}
-              value={orderInfo.deliveryDate}
+              // value={orderInfo.deliveryDate}
               style={{
                 padding: "0.25rem",
                 paddingLeft: "2.5rem",
@@ -1065,7 +1121,7 @@ const OrderDetailsPage = () => {
                                 : null}
                             </span>
                             <p className="text-gray-900 sm:text-sm flex items-center justify-center w-1/4">
-                              {levels ? (
+                            {levels && levels[index] ? (
                                 levels[index] > 0 ? (
                                   <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
                                     Level <sup>{levels[index]}</sup>
@@ -1081,15 +1137,14 @@ const OrderDetailsPage = () => {
                             <label
                               key={index}
                               className="inline-flex items-center cursor-pointer w-1/4"
+                              htmlFor={`isDiscounted-${index}`}
                             >
                               <input
                                 onChange={(e) => handleDiscountChange(index, e)}
                                 type="checkbox"
                                 name="isDiscounted"
                                 id={`isDiscounted-${index}`}
-                                checked={
-                                  isDiscounted ? isDiscounted[index] : false
-                                }
+                                checked={data.isDiscounted}
                                 className="sr-only peer"
                               />
                               <div className="relative w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -1259,7 +1314,7 @@ const OrderDetailsPage = () => {
               </div>
               <div className="flex justify-between gap-4 items-center">
                 <label
-                  htmlFor="totalQuantity"
+                  htmlFor="totalBirr"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-[15%]"
                 >
                   Total (Birr)
@@ -1273,137 +1328,6 @@ const OrderDetailsPage = () => {
                   className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="0"
                   required
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-4">
-            <button
-              // onClick={handleCollapseDicount}
-              type="button"
-              className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
-            >
-              Addition Discount{" "}
-              {/* <span className="font-thin">
-                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "} */}
-            </button>
-          </div>
-
-          <div
-            className="
-            flex justify-end items-center gap-4 pb-4"
-          >
-            <div className="px-4 flex md:w-1/2">
-              <label
-                htmlFor="userInputDiscount"
-                className="w-[15%] gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Dicount
-              </label>
-              <input
-                type="number"
-                name="userInputDiscount"
-                value={userInputDiscount}
-                id="userInputDiscount"
-                className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="0"
-                required
-                onChange={(e) => setUserInputDiscount(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="pt-4">
-            <button
-              // onClick={handleCollapseDicount}
-              type="button"
-              className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
-            >
-              Payment{" "}
-              {/* <span className="font-thin">
-                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "} */}
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 px-4">
-            <div className="flex items-center justify-start ps-4 border border-gray-200 rounded dark:border-gray-700">
-              <input
-                id="bordered-checkbox-1"
-                onChange={handlePaymentStatus}
-                checked={togglePayment}
-                type="checkbox"
-                name="bordered-checkbox"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-              <label
-                htmlFor="bordered-checkbox-1"
-                className="w-full py-1 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Recieve payment
-              </label>
-            </div>
-            <div className={`${togglePayment ? "" : "hidden"}`}>
-              <div className="px-4">
-                <label
-                  htmlFor="paymentMethod"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Select an option
-                </label>
-                <select
-                  onChange={handlePaymentInfo}
-                  name="paymentMethod"
-                  value={paymentInfo?.paymentMethod}
-                  id="paymentMethod"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option value="cash">Cash</option>
-                  <option value="bank-transfer">Bank Transfer</option>
-                </select>
-              </div>
-
-              <div className="px-4">
-                <label
-                  htmlFor="paymentAmount"
-                  className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Amount
-                </label>
-                <input
-                  type="number"
-                  name="paymentAmount"
-                  value={paymentInfo?.paymentAmount}
-                  id="paymentAmount"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="0"
-                  onChange={handlePaymentInfo}
-                  // min={1}
-                  max={grandTotal}
-                  required={togglePayment}
-                />
-              </div>
-
-              <div
-                className={`${
-                  paymentInfo?.paymentMethod === "bank-transfer" ? "" : "hidden"
-                } px-4`}
-              >
-                <label
-                  htmlFor="paymentReference"
-                  className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Reference Number
-                </label>
-                <input
-                  type="number"
-                  name="paymentReference"
-                  value={paymentInfo?.paymentReference}
-                  id="paymentReference"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="0"
-                  onChange={handlePaymentInfo}
                 />
               </div>
             </div>
@@ -1503,13 +1427,332 @@ const OrderDetailsPage = () => {
               </ul>
             </div>
           </div>
-          <button
-            type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            update
-          </button>
+          <div className="absolute top-56 end-44">
+            <button
+              type="submit"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              update
+            </button>
+          </div>
         </form>
+        <div className="pt-4">
+          <button
+            // onClick={handleCollapseDicount}
+            type="button"
+            className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+          >
+            Additional Discount{" "}
+            {/* <span className="font-thin">
+                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
+              </span>{" "} */}
+          </button>
+        </div>
+        <div
+          className="
+            flex justify-end items-center gap-4 pb-4"
+        >
+          <div className="px-4 flex md:w-1/2">
+            <label
+              htmlFor="userInputDiscount"
+              className="w-[15%] gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Discount
+            </label>
+            <input
+              type="number"
+              name="userInputDiscount"
+              value={userInputDiscount}
+              id="userInputDiscount"
+              className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="0"
+              required
+              onChange={(e) => setUserInputDiscount(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="pt-4">
+          <button
+            // onClick={handleCollapseDicount}
+            type="button"
+            className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+          >
+            Payment{" "}
+            {/* <span className="font-thin">
+                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
+              </span>{" "} */}
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 px-4">
+          <div className="flex items-center justify-start ps-4 border border-gray-200 rounded dark:border-gray-700">
+            <input
+              id="bordered-checkbox-1"
+              onChange={handlePaymentStatus}
+              checked={togglePayment}
+              type="checkbox"
+              name="bordered-checkbox"
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor="bordered-checkbox-1"
+              className="w-full py-1 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              Recieve payment
+            </label>
+          </div>
+          <div className={`${togglePayment ? "" : "hidden"}`}>
+            <div className="px-4">
+              <label
+                htmlFor="paymentMethod"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Select an option
+              </label>
+              <select
+                onChange={handlePaymentInfo}
+                name="paymentMethod"
+                value={paymentInfo?.paymentMethod}
+                id="paymentMethod"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option value="cash">Cash</option>
+                <option value="bank-transfer">Bank Transfer</option>
+              </select>
+            </div>
+
+            <div className="px-4">
+              <label
+                htmlFor="paymentAmount"
+                className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Amount
+              </label>
+              <input
+                type="number"
+                name="paymentAmount"
+                value={paymentInfo?.paymentAmount}
+                id="paymentAmount"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0"
+                onChange={handlePaymentInfo}
+                // min={1}
+                max={grandTotal}
+                required={togglePayment}
+              />
+            </div>
+
+            <div
+              className={`${
+                paymentInfo?.paymentMethod === "bank-transfer" ? "" : "hidden"
+              } px-4`}
+            >
+              <label
+                htmlFor="paymentReference"
+                className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Reference Number
+              </label>
+              <input
+                type="number"
+                name="paymentReference"
+                value={paymentInfo?.paymentReference}
+                id="paymentReference"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0"
+                onChange={handlePaymentInfo}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="pt-4 relative">
+          <button
+            // onClick={handleCollapseDicount}
+            type="button"
+            className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+          >
+            Commission{" "}
+            {/* <span className="font-thin">
+                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
+              </span>{" "} */}
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-4 px-4">
+          <div className="w-full relative">
+            <CommissionSearchInput
+              handleCommissionInfo={handleCommissionInfo}
+              value={orderInfo.commissionFirstName}
+            />
+          </div>
+          <div className={`${togglePayment ? "" : ""}`}>
+            <div className="px-4">
+              <label
+                htmlFor="paymentMethod"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Commission percent
+              </label>
+              <input
+                type="number"
+                name="commissionForAll"
+                value={commissionForAll || null}
+                id="commissionForAll"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0"
+                required
+                onChange={handleCommissionForAll}
+              />
+            </div>
+
+            <div className="px-4">
+            <label
+                  htmlFor="totalCommission"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-[15%]"
+                >
+                  Total (Birr)
+                </label>
+                <input
+                  value={totalCommission || null}
+                  readOnly
+                  type="number"
+                  name="totalCommission"
+                  id="totalCommission"
+                  className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  required
+                />
+            </div>
+          </div>
+
+          <table
+            className="
+               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          >
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="p-4 w-4 border border-gray-300">
+                  No
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Material
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Services
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Amount
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Commission %
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Earned
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  {/* Action */}
+                  <span className="font-semibold flex justify-center items-center">
+                    <CiSettings className="text-xl font-bold" />
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {formData && formData.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="text-center">
+                    No data found
+                  </td>
+                </tr>
+              )}
+              {formData &&
+                formData.map((data, index) => (
+                  <tr
+                    key={index}
+                    className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      {index + 1}
+                    </td>
+                    <td
+                      scope="row"
+                      className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
+                    >
+                      {data.material}
+                    </td>
+                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {data.service}
+                    </td>
+                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      {calculatedUnitPrices[index] || 0}
+                    </td>
+                    <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      <input
+                        type="number"
+                        name="commissionPercent"
+                        id="commissionPercent"
+                        className="text-gray-900 text-sm block w-full border-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="0"
+                        required
+                        value={commissionPercent[index] || null}
+                        onChange={(e) => handleCommissionPercent(index, e)}
+                      />
+                    </td>
+                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      {commissionPrice[index] || 0}
+                    </td>
+                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
+                      <button
+                        onClick={() => handleAction(index)}
+                        title="action"
+                        type="button"
+                        className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      >
+                        <CiMenuKebab />
+                      </button>
+                      {showPopover === index && (
+                        <div
+                          ref={popoverRef}
+                          className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                        >
+                          <ul className="py-2 text-sm text-gray-700">
+                            <li key={index}>
+                              <button
+                                type="button"
+                                onClick={() => handleModalOpen(index)}
+                                className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                              >
+                                <FaRegEdit />
+                                Edit
+                              </button>
+                            </li>
+                            <li key={index}>
+                              <button
+                                onClick={() => handleCancel(index)}
+                                type="button"
+                                className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                              >
+                                <MdDelete /> Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* <button
+                            onClick={() => handleCancel(index)}
+                            title="action"
+                            type="button"
+                            className="flex items-center justify-between gap-2 text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-2.5 py-2.5 text-center"
+                          >
+                            <IoMdClose />
+                          </button> */}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </section>
       {modalOpen && (
         <StatusEditModal

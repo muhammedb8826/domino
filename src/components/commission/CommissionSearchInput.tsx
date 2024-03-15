@@ -63,7 +63,7 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
                 htmlFor="input-group-search"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Commission
+                Sales partner
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -145,7 +145,7 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
                 >
                   <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-6a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2Z" />
                 </svg>
-                Add new customer
+                Add sales partner
               </button>
             </div>
             {modalOpen && <CommissionRegistration handleModalOpen={handleModalOpen} />}

@@ -13,6 +13,7 @@ import Login from "./auth/Login";
 import Dashboard from "./pages/Dashboard";
 import OrderDetailsPage from "./components/order/OrderDetailsPage";
 import { OrderRegistration } from "./components/order/OrderRegistration";
+import CommissionDetailsPage from "./components/commission/CommissionDetailsPage";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-order" element={<OrderRegistration/>} />
           <Route path="/order/:id" element={<OrderDetailsPage />} />
+          <Route path="/commission/:id" element={<CommissionDetailsPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

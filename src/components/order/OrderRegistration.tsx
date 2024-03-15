@@ -15,7 +15,6 @@ import { getprice } from "../../redux/features/price/pricingSlice";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import Select from "react-select";
 import { IoMdClose } from "react-icons/io";
-import CommissionSearchInput from "../commission/CommissionSearchInput";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -84,31 +83,6 @@ export const OrderRegistration = () => {
   const [totalBirr, setTotalBirr] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
   const [fileName, setFileName] = useState([]);
-  const [toggleCommission, setToggleCommission] = useState(false);
-  const [selectedCommission, setSelectedCommission] = useState("standard");
-  const [commissionPrice, setCommissionPrice] = useState([]);
-  const dropdownRef = useRef(null);
-  const handleToggleCommission = () => {
-    setToggleCommission(!toggleCommission);
-  };
-
-  const handleChangeCommission = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedCommission(e.target.value);
-    console.log(e.target.value);
-  };
-
-  const handleClickOutside = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setToggleCommission(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleAddRow = () => {
     setFormData((prevFormData) => [
@@ -118,7 +92,6 @@ export const OrderRegistration = () => {
         material: "",
         service: "",
         unitPrice: null,
-        commissionPrice,
         status: "recieved",
       },
     ]);
@@ -174,12 +147,8 @@ export const OrderRegistration = () => {
       const calculatedUnitPrice = unitPrice * (width * height) * quantity;
       return calculatedUnitPrice;
     });
-    setCommissionPrice(selectedCommission === "commission" ? calculatedUnitPrices.map((price) => price * 0.2): 0);
     setCalculatedUnitPrices(calculatedUnitPrices);
-  }, [measuresFormData, filteredData, selectedCommission]);
-
-  console.log(commissionPrice);
-  console.log(calculatedUnitPrices);
+  }, [measuresFormData, filteredData]);
 
   // customer and order info handling
   const handleOrderInfo = (e) => {
@@ -197,16 +166,6 @@ export const OrderRegistration = () => {
       customerPhone: customer.phone,
       customerFirstName: customer.firstName,
       customerEmail: customer.email,
-    }));
-  };
-
-  const handleCommissionInfo = (commission: CustomerType) => {
-    setOrderInfo((prevOrderInfo) => ({
-      ...prevOrderInfo,
-      commissionId: commission.id,
-      commissionPhone: commission.phone,
-      commissionFirstName: commission.firstName,
-      commissionEmail: commission.email,
     }));
   };
 
@@ -328,7 +287,6 @@ export const OrderRegistration = () => {
         material: "",
         service: "",
         unitPrice: null,
-        commissionPrice,
         status: "recieved",
       },
     ]);
@@ -368,7 +326,6 @@ export const OrderRegistration = () => {
 
     const unitPrice = formData.map((item, index) => {
       item.unitPrice = calculatedUnitPrices[index];
-      item.commissionPrice = commissionPrice[index];
       return item;
     });
 
@@ -379,7 +336,6 @@ export const OrderRegistration = () => {
 
     const orderData = {
       ...orderInfo,
-      commissionType: selectedCommission,
       orderItems: unitPrice,
       orderMeasures: measuresFormData,
       totalBirr,
@@ -501,14 +457,6 @@ export const OrderRegistration = () => {
               }}
             />
           </div>
-          {selectedCommission === "commission" ? (
-            <div className="w-full relative">
-              <CommissionSearchInput
-                handleCommissionInfo={handleCommissionInfo}
-                value={orderInfo.commissionFirstName}
-              />
-            </div>
-          ) : null}
         </div>
         <form onSubmit={handleSubmit}>
           <div>
@@ -522,87 +470,6 @@ export const OrderRegistration = () => {
                 {isCollapsed ? <FaChevronUp /> : <FaChevronDown />}{" "}
               </span>{" "} */}
             </button>
-            <div className="px-4 relative flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-              <div>
-                <button
-                  onClick={handleToggleCommission}
-                  id="dropdownActionButton"
-                  data-dropdown-toggle="dropdownAction"
-                  className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                  type="button"
-                >
-                  <span className="sr-only">Action button</span>
-                  Action
-                  <svg
-                    className="w-2.5 h-2.5 ms-2.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              {toggleCommission ? (
-                <div
-                  ref={dropdownRef}
-                  id="dropdownAction"
-                  className="absolute left-4 top-10 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-                >
-                  <ul
-                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownActionButton"
-                  >
-                    <li>
-                      <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                        <input
-                          onChange={handleChangeCommission}
-                          id="standard"
-                          type="radio"
-                          value="standard" // Different value for standard commission
-                          checked={selectedCommission === "standard"}
-                          name="filter-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                          htmlFor="standard"
-                          className="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                        >
-                          Standard
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                        <input
-                          onChange={handleChangeCommission}
-                          id="commission"
-                          type="radio"
-                          value="commission" // Different value for commission
-                          checked={selectedCommission === "commission"}
-                          name="filter-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                          htmlFor="commission"
-                          className="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                        >
-                          Commission
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </div>
             <div className="px-4">
               <table
                 className={`w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
@@ -663,14 +530,6 @@ export const OrderRegistration = () => {
                     >
                       Amount
                     </th>
-                    {selectedCommission === "commission" ? (
-                    <th
-                      scope="col"
-                      className="px-4 py-3 border border-gray-300"
-                    >
-                      Commission
-                    </th>
-                    ) : null}
                     <th
                       scope="col"
                       className="px-4 py-3 border border-gray-300"
@@ -796,11 +655,6 @@ export const OrderRegistration = () => {
                         <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
                           {calculatedUnitPrices[index] || 0}
                         </td>
-                        {selectedCommission === "commission" ? (
-                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
-                        {commissionPrice[index] || 0}
-                        </td>
-                        ) : null}
                         <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10">
                           <button
                             onClick={() => handleCancel(index)}

@@ -167,68 +167,82 @@
   ],
   "orders": [
     {
-      "id": "8ff3",
       "series": "SAL-ORD-YYYY-",
-      "date": "Mar 12, 2024",
-      "deliveryDate": "Mar 12, 2024",
+      "date": "Mar 15, 2024",
+      "deliveryDate": "Mar 15, 2024",
       "orderType": "telegram",
       "description": "",
-      "customerPhone": "0905-07-8826",
-      "customerFirstName": "CocaCola",
-      "customerEmail": "cocacola@gmail.com",
-      "commissionPhone": "0905-08-8266",
-      "commissionFirstName": "Muhammed",
-      "commissionEmail": "admin@domino.com",
-      "commissionId": "1710111531529",
-      "customerId": "1710128272183",
-      "commissionType": "commission",
+      "customerPhone": "0911-88-9696",
+      "customerFirstName": "Teshe",
+      "customerEmail": "",
+      "commissionPhone": "",
+      "commissionFirstName": "",
+      "commissionEmail": "",
       "orderItems": [
         {
           "machine": "DTF",
           "material": "T-shirt",
           "service": "Print and Material",
-          "unitPrice": 2000,
+          "unitPrice": 28000,
           "status": "recieved",
-          "commissionPrice": 400
+          "commissionPrice": null,
+          "isDiscounted": true
         },
         {
           "machine": "BANNER",
-          "material": "sticker",
+          "material": "Screen",
           "service": "Print",
-          "unitPrice": 25000,
-          "commissionPrice": 5000,
-          "status": "recieved"
+          "unitPrice": 36000,
+          "status": "recieved",
+          "isDiscounted": false,
+          "commissionPrice": null
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
-          "width": "2",
-          "height": "5",
-          "quantity": "2",
+          "width": "8",
+          "height": "7",
+          "quantity": "5",
           "unitPrice": null
         },
         {
           "unitName": null,
           "width": "5",
-          "height": "5",
-          "quantity": "5",
+          "height": "6",
+          "quantity": "4",
           "unitPrice": null
         }
       ],
-      "totalBirr": 27000,
-      "grandTotal": 31050,
+      "totalBirr": 58400,
+      "totalCommission": null,
       "fileNames": [
-        "CocaCola-DTF-T-shirt-2x5",
-        "CocaCola-BANNER-sticker-5x5"
+        "Teshe-Teshe-DTF-T-shirt-8x7",
+        "Teshe-Teshe-BANNER-Screen-5x6"
       ],
-      "totalQuantity": 7,
+      "totalQuantity": 9,
+      "grandTotal": 67160,
+      "vat": 8760,
+      "discounts": [
+        5600,
+        0
+      ],
+      "levels": [
+        "2",
+        "1"
+      ],
+      "userInputDiscount": 0,
+      "totalBirrAfterDiscount": [
+        22400,
+        36000
+      ],
       "paymentInfo": {
         "paymentMethod": "cash",
         "paymentReference": "",
         "paymentAmount": 0,
         "paymentStatus": "not paid"
-      }
+      },
+      "id": "355c"
     }
   ],
   "customers": [
@@ -343,6 +357,14 @@
       "firstName": "CocaCola",
       "lastName": "",
       "email": "cocacola@gmail.com"
+    },
+    {
+      "id": "1710271642550",
+      "phone": "0911-04-0506",
+      "companyType": "company",
+      "firstName": "Pepsi",
+      "lastName": "",
+      "email": "pepsi@gmail.com"
     }
   ],
   "services": [
@@ -652,6 +674,30 @@
       "firstName": "Muktar",
       "lastName": "Berisso",
       "email": "muktar@gmail.com"
+    },
+    {
+      "id": "1710435424659",
+      "phone": "0905-07-8826",
+      "companyType": "individual",
+      "firstName": "Osman",
+      "lastName": "",
+      "email": "osman@gmail.com"
+    },
+    {
+      "id": "1710443612685",
+      "phone": "0905-07-8826",
+      "companyType": "individual",
+      "firstName": "Teshsss",
+      "lastName": "",
+      "email": "admin@domino.com"
+    },
+    {
+      "id": "1710447345166",
+      "phone": "0911-04-0506",
+      "companyType": "company",
+      "firstName": "Ted",
+      "lastName": "Tirkasso",
+      "email": "tedtirkasso@gmail.com"
     }
   ]
 }
