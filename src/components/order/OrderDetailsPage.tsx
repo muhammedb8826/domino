@@ -20,6 +20,7 @@ import { MdDelete } from "react-icons/md";
 import { StatusEditModal } from "./StatusEditModal";
 import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
 import CommissionSearchInput from "../commission/CommissionSearchInput";
+import { createCommissionTransaction, getCommissionTransactions, updateCommissionTranscation } from "@/redux/features/commission/commissionSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -37,6 +38,7 @@ const OrderDetailsPage = () => {
   const { prices } = useSelector((state) => state.price);
   const { services } = useSelector((state) => state.service);
   const { discounts } = useSelector((state) => state.discount);
+  const { commissionTransactions } = useSelector((state) => state.commission);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,6 +46,7 @@ const OrderDetailsPage = () => {
     dispatch(getprice());
     dispatch(getServices());
     dispatch(getDiscounts());
+    dispatch(getCommissionTransactions());
   }, [dispatch]);
 
   useEffect(() => {
@@ -59,6 +62,7 @@ const OrderDetailsPage = () => {
             description: order.description,
             customerPhone: order.customerPhone,
             customerFirstName: order.customerFirstName,
+            commissionId: order.commissionId,
             customerEmail: order.customerEmail,
             commissionPhone: order.commissionPhone,
             commissionFirstName: order.commissionFirstName,
@@ -86,11 +90,15 @@ const OrderDetailsPage = () => {
       });
   }, [dispatch, id]);
 
+  console.log(commissionTransactions, "commissionTransactions");
+  
+
   const [fileName, setFileName] = useState([]);
   const [tooltipMessages, setTooltipMessages] = useState([]);
 
   const [icons, setIcons] = useState([]);
   const inputRefs = useRef(Array(fileName.length).fill(null));
+  
 
   useEffect(() => {
     setIcons(Array(fileName.length).fill("default"));
@@ -176,6 +184,7 @@ const OrderDetailsPage = () => {
     customerPhone: "",
     customerFirstName: "",
     customerEmail: "",
+    commissionId: "",
     commissionPhone: "",
     commissionFirstName: "",
     commissionEmail: "",
@@ -490,7 +499,7 @@ setDiscountPerItem(updatedDiscounts);
 
   //  commission handling
 
-  const handleCommissionInfo = (commission: CustomerType) => {
+  const handleCommissionInfo = (commission: CustomerType) => {    
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
       commissionId: commission.id,
@@ -673,6 +682,7 @@ useEffect(() => {
       description: "",
       customerPhone: "",
       customerFirstName: "",
+      commissionId: "",
       customerEmail: "",
       commissionPhone: "",
       commissionEmail: "",
@@ -747,8 +757,6 @@ useEffect(() => {
       return nameAndFile;
     });
 
-    console.log(paymentInfo);
-
     const orderData = {
       ...orderInfo,
       orderItems: updatedFormData,
@@ -764,6 +772,7 @@ useEffect(() => {
       userInputDiscount,
       totalBirrAfterDiscount,
       paymentInfo,
+      commissionId: orderInfo.commissionId,
       id: singleOrder.id,
     };
 
@@ -775,6 +784,26 @@ useEffect(() => {
         navigate("/dashboard");
       }
     });
+
+
+    // const commissionData = {
+    //   commissionId: orderInfo.commissionId,
+    //   commissionFirstName: orderInfo.commissionFirstName,
+    //   totalCommission,
+    //   totalUnitPrices: calculatedUnitPrices.reduce((acc, c) => acc + c, 0),
+    //   date: formattedDate,
+    // };
+    
+    // // Assuming commissionTransactions is an array
+    // const existingTransactionIndex = commissionTransactions.findIndex(item => item.id === singleOrder.id);
+    
+
+    // if (existingTransactionIndex !== -1) {
+    //   dispatch(updateCommissionTranscation(commissionData));
+    // } else {
+    //   dispatch(createCommissionTransaction(commissionData));
+    // }
+
     setGrandTotal(grandTotal);
   };
 
@@ -1081,37 +1110,11 @@ useEffect(() => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
-                          {/* <input
-                            readOnly
-                            title="price"
-                            type="number"
-                            name="price"
-                            id="price"
-                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
-                            placeholder="0"
-                            required
-                            min={0}
-                            value={calculatedUnitPrices[index] || 0}
-                          /> */}
-                          <span className="px-2">
+                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                             {calculatedUnitPrices[index] || 0}
-                          </span>
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
-                          {/* <input
-                            readOnly
-                            title="totalUnits"
-                            type="number"
-                            name="totalUnits"
-                            id="totalUnits"
-                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
-                            placeholder="0"
-                            required
-                            min={0}
-                            value={totalUnits[index] || 0}
-                          /> */}
-                          <span className="px-2">{totalUnits[index] || 0}</span>
+                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        {totalUnits[index] || 0}
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-40">
                           <div className="flex items-center gap-2">
@@ -1120,6 +1123,7 @@ useEffect(() => {
                                 ? discountPerItem[index]
                                 : null}
                             </span>
+                            {discountPerItem && discountPerItem[index] > 0 && (
                             <p className="text-gray-900 sm:text-sm flex items-center justify-center w-1/4">
                             {levels && levels[index] ? (
                                 levels[index] > 0 ? (
@@ -1133,6 +1137,7 @@ useEffect(() => {
                                 0
                               )}
                             </p>
+                            )}
 
                             <label
                               key={index}
@@ -1610,7 +1615,7 @@ useEffect(() => {
                   htmlFor="totalCommission"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-[15%]"
                 >
-                  Total (Birr)
+                  Total Commission
                 </label>
                 <input
                   value={totalCommission || null}

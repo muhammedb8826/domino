@@ -174,10 +174,11 @@
       "description": "",
       "customerPhone": "0911-88-9696",
       "customerFirstName": "Teshe",
+      "commissionId": "1710111531529",
       "customerEmail": "",
-      "commissionPhone": "",
-      "commissionFirstName": "",
-      "commissionEmail": "",
+      "commissionPhone": "0905-08-8266",
+      "commissionFirstName": "Muhammed",
+      "commissionEmail": "admin@domino.com",
       "orderItems": [
         {
           "machine": "DTF",
@@ -185,8 +186,9 @@
           "service": "Print and Material",
           "unitPrice": 28000,
           "status": "recieved",
-          "commissionPrice": null,
-          "isDiscounted": true
+          "commissionPrice": 560,
+          "isDiscounted": true,
+          "commissionPercent": "2"
         },
         {
           "machine": "BANNER",
@@ -195,7 +197,8 @@
           "unitPrice": 36000,
           "status": "recieved",
           "isDiscounted": false,
-          "commissionPrice": null
+          "commissionPrice": 1440,
+          "commissionPercent": "4"
         }
       ],
       "orderMeasures": [
@@ -215,7 +218,7 @@
         }
       ],
       "totalBirr": 58400,
-      "totalCommission": null,
+      "totalCommission": 2000,
       "fileNames": [
         "Teshe-Teshe-DTF-T-shirt-8x7",
         "Teshe-Teshe-BANNER-Screen-5x6"
@@ -243,6 +246,142 @@
         "paymentStatus": "not paid"
       },
       "id": "355c"
+    },
+    {
+      "series": "SAL-ORD-YYYY-",
+      "date": "Mar 15, 2024",
+      "deliveryDate": "Mar 15, 2024",
+      "orderType": "telegram",
+      "description": "",
+      "customerPhone": "1234-56-7890",
+      "customerFirstName": "Teshager",
+      "commissionId": "1710126934041",
+      "customerEmail": "teshagerass@gmail.com",
+      "commissionPhone": "1234-56-7890",
+      "commissionFirstName": "Teshager",
+      "commissionEmail": "teshagerass@gmail.com",
+      "orderItems": [
+        {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Heat press",
+          "unitPrice": 25000,
+          "status": "recieved",
+          "commissionPrice": 500,
+          "commissionPercent": "2"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 25000,
+      "totalCommission": 500,
+      "fileNames": [
+        "Teshager-Teshager-DTF-T-shirt-5x5"
+      ],
+      "totalQuantity": 5,
+      "grandTotal": 28750,
+      "vat": 3750,
+      "discounts": [
+        0
+      ],
+      "levels": [
+        "1"
+      ],
+      "totalBirrAfterDiscount": [
+        25000
+      ],
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      },
+      "id": "82a8"
+    },
+    {
+      "series": "SAL-ORD-YYYY-",
+      "date": "Mar 16, 2024",
+      "deliveryDate": "Mar 16, 2024",
+      "orderType": "telegram",
+      "description": "",
+      "customerPhone": "0911-88-9696",
+      "customerFirstName": "Teshe",
+      "commissionId": "1710126934041",
+      "customerEmail": "",
+      "commissionPhone": "1234-56-7890",
+      "commissionFirstName": "Teshager",
+      "commissionEmail": "teshagerass@gmail.com",
+      "orderItems": [
+        {
+          "machine": "BANNER",
+          "material": "sticker",
+          "service": "Print",
+          "unitPrice": 25000,
+          "status": "recieved",
+          "commissionPrice": 250,
+          "commissionPercent": "1"
+        },
+        {
+          "machine": "UV",
+          "material": "Film",
+          "service": "Print and Material",
+          "unitPrice": 25000,
+          "status": "recieved",
+          "commissionPrice": 500,
+          "commissionPercent": "2"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 50000,
+      "totalCommission": 750,
+      "fileNames": [
+        "Teshe-Teshe-BANNER-sticker-5x5",
+        "Teshe-Teshe-UV-Film-5x5"
+      ],
+      "totalQuantity": 10,
+      "grandTotal": 57500,
+      "vat": 7500,
+      "discounts": [
+        0,
+        0
+      ],
+      "levels": [
+        "1",
+        "1"
+      ],
+      "totalBirrAfterDiscount": [
+        25000,
+        25000
+      ],
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      },
+      "id": "45cf"
     }
   ],
   "customers": [
@@ -657,7 +796,21 @@
       "companyType": "individual",
       "firstName": "Muhammed",
       "lastName": "",
-      "email": "admin@domino.com"
+      "email": "admin@domino.com",
+      "data": [
+        {
+          "date": "Mar 16, 2024",
+          "description": "This corolla car ",
+          "paymentAmount": "55",
+          "status": "Paid"
+        },
+        {
+          "date": "Mar 16, 2024",
+          "description": "hjkfg",
+          "paymentAmount": "200",
+          "status": "Paid"
+        }
+      ]
     },
     {
       "id": "1710126934041",
@@ -698,6 +851,48 @@
       "firstName": "Ted",
       "lastName": "Tirkasso",
       "email": "tedtirkasso@gmail.com"
+    }
+  ],
+  "commissionTransactions": [
+    {
+      "id": "afa2",
+      "commissionId": "1710111531529",
+      "commissionFirstName": "Muhammed",
+      "totalCommission": 2000,
+      "totalUnitPrices": 64000,
+      "date": "Mar 16, 2024"
+    },
+    {
+      "id": "364b",
+      "commissionId": "1710111531529",
+      "commissionFirstName": "Muhammed",
+      "totalCommission": 500,
+      "totalUnitPrices": 25000,
+      "date": "Mar 16, 2024"
+    },
+    {
+      "id": "4de7",
+      "commissionId": "1710126934041",
+      "commissionFirstName": "Teshager",
+      "totalCommission": 1000,
+      "totalUnitPrices": 50000,
+      "date": "Mar 16, 2024"
+    },
+    {
+      "id": "8214",
+      "commissionId": "1710126934041",
+      "commissionFirstName": "Teshager",
+      "totalCommission": 750,
+      "totalUnitPrices": 50000,
+      "date": "Mar 16, 2024"
+    },
+    {
+      "id": "4e62",
+      "commissionId": "1710126934041",
+      "commissionFirstName": "Teshager",
+      "totalCommission": 500,
+      "totalUnitPrices": 25000,
+      "date": "Mar 16, 2024"
     }
   ]
 }

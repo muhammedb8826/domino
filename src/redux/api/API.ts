@@ -13,3 +13,4 @@ export const unitURL = "http://127.0.0.1:3000/units";
 export const roleURL = "http://127.0.0.1:3000/roles";
 export const permissionURL = "http://127.0.0.1:3000/permissions";
 export const discountURL = "http://127.0.0.1:3000/dicounts";
+export const commissionTransactionURL = "http://127.0.0.1:3000/commissionTransactions"

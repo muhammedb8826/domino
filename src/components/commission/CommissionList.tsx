@@ -58,17 +58,13 @@ export const CommissionList = () => {
 
   const filteredOrders = commissions.map(commission => {
     const commissionOrders = orders.filter(order => order.commissionId === commission.id);
-    console.log(commissionOrders);
-    
     return {
       ...commission,
       hasOrder: commissionOrders
     };
   });
 
-  console.log(commissions);
   console.log(filteredOrders);
-  
   
 
   if (isLoading) return <Loading />;
@@ -142,7 +138,7 @@ export const CommissionList = () => {
               Total Earned
             </th>
             <th scope="col" className="px-6 py-3">
-              Total paid
+              Balance
             </th>
             <th scope="col" className="px-6 py-3">
               Action
@@ -176,11 +172,7 @@ export const CommissionList = () => {
               <td className="px-6 py-4">{commission.phone}</td>
               <td className="px-6 py-4">{commission.companyType}</td>
               <td className="px-6 py-4">
-                {filteredOrders[index].hasOrder.map((order) => (
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {order.orderItems.reduce((acc, item) => acc + item.commissionPrice, 0)}
-                    </span>
-                ))}
+                {filteredOrders[index].hasOrder.reduce((acc, order) => (acc += order.totalCommission), 0)}
               </td>
               <td className="px-6 py-4">
                 2000

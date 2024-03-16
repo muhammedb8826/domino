@@ -35,6 +35,8 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
         dispatch(searchUsers(e.target.value));
       };
       const handleSelectCustomer = (commission) => {
+        console.log(commission);
+        
         setSearchInput(commission.firstName);
         setIsDropdownOpen(false);
         handleCommissionInfo(commission);
