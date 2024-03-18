@@ -13,10 +13,12 @@ interface UserState {
   errors: string[] | null;
   registrationErrors: {} | null;
   roles: string;
+  user: null;
 }
 
 const initialState: UserState = {
   users: [],
+  user: null,
   isLoading: false,
   token: localStorage.getItem("token") || null,
   error: null,
@@ -35,6 +37,21 @@ export const getUsers = createAsyncThunk("user/getUsers", async (_, { getState }
     console.error("Error fetching users:", error);
     throw error;
   }
+});
+
+export const setTokenUser = createAsyncThunk('auth/setToken', async (_, { getState }) => {
+  try {
+    const { token } = getState().auth; 
+  const response = await api.get('/user', { token });
+  const user = response.data;
+console.log(user+"user");
+
+  // Return token and user details
+  return { token, user };
+} catch (error) {
+  console.error("Error fetching user:", error);
+  throw error;
+}
 });
 
 export const getRoles = createAsyncThunk("user/getRoles", async (_, { getState }) => {
@@ -172,6 +189,11 @@ const user = createSlice({
       state.isLoading = false;
       state.error = action.error.message || null;
     })
+    builder.addCase(setTokenUser.fulfilled, (state, action) => {
+      const { token, user } = action.payload;
+      state.token = token;
+      state.user = user; // Add user details to the state
+    });
   },
 });
 

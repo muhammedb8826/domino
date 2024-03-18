@@ -22,10 +22,10 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
     
       const filteredCustomers = customers.filter(
         (customer) =>
-          customer.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customer.id.toString().includes(searchTerm) ||
-          customer.phone.toLowerCase().includes(searchTerm) ||
-          customer.companyType.toLowerCase().includes(searchTerm)
+          customer.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          customer.id?.toString().includes(searchTerm) ||
+          customer.phone?.toLowerCase().includes(searchTerm) ||
+          customer.companyType?.toLowerCase().includes(searchTerm)
       );
     
       const handleSearchUser = (e) => {

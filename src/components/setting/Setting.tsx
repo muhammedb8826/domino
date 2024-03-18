@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Machine } from "./Machine";
 import Material from "./Material";
 import Unit from "./Unit";
@@ -6,12 +6,34 @@ import { Services } from "./Services";
 import '../../assets/styles/scroll.css';
 import Role from "./Role";
 import Discount from "./Discount";
+import { useSelector } from "react-redux";
+import Loading from "../common/Loading";
+import ErroPage from "../common/ErroPage";
+import { RootState } from "@/redux/store";
 
-const Setting = () => {
+const Setting = () => { 
+  const { user, token, isLoading, error } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   const [active, setActive] = useState("machines");
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
+
+  if(user?.email !== "admin@domino.com"){
+    return <ErroPage error="You are not authorized to view this page" />
+  }
+  
+  if(isLoading){
+    return <Loading/>
+  }
+
+  if(error){
+    return <ErroPage error={error} />
+  }
+  
+
   return (
     <div className="relative h-screen calc(100% - 2rem) flex flex-col">
       <nav className="flex items-center justify-center h-[15%]">

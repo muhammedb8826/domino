@@ -15,6 +15,7 @@ const User = () => {
   const { users, isLoading, errors, error } = useSelector(
     (state: any) => state.user
   );
+  const { user } = useSelector((state: RootState) => state.auth);
   const [showPopover, setShowPopover] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -164,6 +165,7 @@ const User = () => {
     <>
     <div className="p-4 h-[550px] overflow-y-scroll">
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
+        {user?.email === "admin@domino.com" && (
         <div>
           <button
             onClick={handleModalOpen}
@@ -174,6 +176,7 @@ const User = () => {
             <span className="ml-2">Add New User</span>
           </button>
         </div>
+        )}
 
         <label htmlFor="table-search" className="sr-only">
           Search
@@ -204,34 +207,6 @@ const User = () => {
           />
         </div>
       </div>
-{/* 
-      {isModalOpen && (
-        <div
-          className="fixed z-10 inset-0 overflow-y-auto"
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-              aria-hidden="true"
-            ></div>
-            <span
-              className="hidden sm:inline-block sm:align-middle sm:h-screen"
-              aria-hidden="true"
-            >
-              &#8203;
-            </span>
-
-            <UserRegistration
-              handleModalOpen={handleModalOpen}
-              errors={registrationError}
-            />
-          </div>
-        </div>
-      )} */}
-
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>

@@ -44,7 +44,7 @@ const UserRegistration = ({
     joinedDate: "",
     address: "",
     profileImage: "",
-    roles: "",
+    roles: 'reception',
     machinePermissions: [],
     isActice: true,
   });
@@ -70,7 +70,8 @@ const UserRegistration = ({
 
     dispatch(createUser(newUserData)).then((res) => {
       if (res.payload.data) {
-        toast(message);
+        const message = res.payload.data.message;
+        toast.success(message);
         dispatch(clearSuccessMessage());
         handleModalOpen();
       }
@@ -88,7 +89,7 @@ const UserRegistration = ({
       joinedDate: "",
       address: "",
       profileImage: "",
-      roles: "user",
+      roles: 'reception',
       machinePermissions: [],
       isActice: true,
     });
@@ -207,8 +208,8 @@ const UserRegistration = ({
                         })
                       }
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                      placeholder="123-45-678"
-                      pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                      placeholder="09-4544-6788"
+                      pattern="[0-9]{2}-[0-9]{4}-[0-9]{4}"
                       required
                     />
                     {errPhone && (
@@ -309,7 +310,7 @@ const UserRegistration = ({
                   </div>
 
                   <div className="relative max-w-sm">
-                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pt-3 pointer-events-none">
                       <svg
                         className="w-4 h-4 text-gray-500 dark:text-gray-400"
                         aria-hidden="true"
@@ -340,14 +341,13 @@ const UserRegistration = ({
                     />
                   </div>
 
-                  <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                  <div className="flex items-center gap-4 ps-4 border border-gray-200 rounded dark:border-gray-700">
                     <div className="flex items-center me-4">
                       <input
                         id="inline-radio-male"
                         type="radio"
-                        value="male"
+                        value="male" // Set the value attribute to "male"
                         name="gender"
-                        checked
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600"
                         onChange={(e) =>
                           setUserData({ ...userData, gender: e.target.value })
@@ -365,7 +365,7 @@ const UserRegistration = ({
                       <input
                         id="inline-2-radio-female"
                         type="radio"
-                        value="female"
+                        value="female" // Set the value attribute to "female"
                         name="gender"
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600"
                         onChange={(e) =>
@@ -381,7 +381,6 @@ const UserRegistration = ({
                       </label>
                     </div>
                   </div>
-
                   <div>
                     <label
                       className="block mb-2 text-sm font-medium text-gray-900"
@@ -419,6 +418,7 @@ const UserRegistration = ({
                       Assign role
                     </label>
                     <select
+                    defaultValue="reception"
                       id="roles"
                       name="roles"
                       value={userData.roles}
@@ -427,9 +427,7 @@ const UserRegistration = ({
                       }
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      <option selected value="reception">
-                        Reception
-                      </option>
+                      <option value="reception">Reception</option>
                       <option value="graphic-designer">Graphic designer</option>
                       <option value="operator">Operator</option>
                       <option value="finance">Finance</option>
@@ -461,7 +459,9 @@ const UserRegistration = ({
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       >
                         {machines.map((machine) => (
-                          <option value={machine.id}>{machine.name}</option>
+                          <option key={machine.id} value={machine.id}>
+                            {machine.name}
+                          </option>
                         ))}
                       </select>
                     </div>
@@ -481,7 +481,7 @@ const UserRegistration = ({
                   className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
                 >
-                 {isLoading ? "Saving..." : "Save"}
+                  {isLoading ? "Saving..." : "Save"}
                 </button>
               </div>
             </div>

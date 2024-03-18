@@ -147,8 +147,12 @@ export const commissionSlice = createSlice({
     })
     builder.addCase(updateCommission.fulfilled, (state, action)=>{
       state.isLoading = false;
-      const index = state.commissions.findIndex((commission)=> commission.id === action.payload.id);
-      state.commissions[index] = action.payload
+      state.commissions = state.commissions.map((commission) => {
+        if (commission.id === action.payload.id) {
+          return action.payload;
+        }
+        return commission;
+      });
     })
     builder.addCase(updateCommission.rejected, (state, action)=>{
       state.isLoading = false;

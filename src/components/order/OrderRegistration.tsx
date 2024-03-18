@@ -24,6 +24,7 @@ interface CustomerType {
   phone: string;
   firstName: string;
   email: string;
+  id: string;
 }
 
 export const OrderRegistration = () => {
@@ -42,6 +43,7 @@ export const OrderRegistration = () => {
     deliveryDate: formattedDate,
     orderType: "",
     description: "",
+    customerId: "",
     customerPhone: "",
     customerFirstName: "",
     customerEmail: "",
@@ -266,6 +268,9 @@ export const OrderRegistration = () => {
 
   // form submission
 
+  console.log(orderInfo.customerId);
+  
+
   const resetForm = () => {
     setOrderInfo({
       series: "SAL-ORD-YYYY-",
@@ -279,6 +284,7 @@ export const OrderRegistration = () => {
       commissionPhone: "",
       commissionFirstName: "",
       commissionEmail: "",
+      customerId: "",
     });
 
     setFormData([
@@ -334,6 +340,9 @@ export const OrderRegistration = () => {
       return nameAndFile;
     });
 
+    const cutomerId = orderInfo.customerId;
+    localStorage.setItem("customerId", cutomerId )
+
     const orderData = {
       ...orderInfo,
       orderItems: unitPrice,
@@ -364,16 +373,6 @@ export const OrderRegistration = () => {
         <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
           Add a new order
         </h2>
-        {/* {mediaError && (
-        <div
-          className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-          role="alert"
-        >
-          <span className="font-medium">Danger alert!</span> {mediaError} Change
-          a few things up and try submitting again.
-        </div>
-      )} */}
-
         <div className="grid sm:grid-cols-3 sm:gap-6 mb-4 p-4">
           <div className="w-full">
             <label
@@ -423,19 +422,21 @@ export const OrderRegistration = () => {
               htmlFor="orderType"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Order Type
+              Order way
             </label>
             <select
+            defaultValue="telegram"
               name="orderType"
               onChange={handleOrderInfo}
               value={orderInfo.orderType}
               id="orderType"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             >
-              <option>Choose type</option>
-              <option value="phone">Phone</option>
+              <option value="">Select order way</option>
               <option value="telegram">Telegram</option>
+              <option value="phone">Phone</option>
               <option value="In person">In person</option>
+              <option value="whatsapp">Whatsapp</option>
             </select>
           </div>
           <div className="w-full">

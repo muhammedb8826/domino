@@ -23,10 +23,10 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
     
       const filteredCommission = commissions.filter(
         (commission) =>
-          commission.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          commission.id.toString().includes(searchTerm) ||
-          commission.phone.toLowerCase().includes(searchTerm) ||
-          commission.companyType.toLowerCase().includes(searchTerm)
+          commission.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          commission.id?.toString().includes(searchTerm) ||
+          commission.phone?.toLowerCase().includes(searchTerm) ||
+          commission.companyType?.toLowerCase().includes(searchTerm)
       );
     
       const handleSearchUser = (e) => {

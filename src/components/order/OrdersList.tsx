@@ -12,15 +12,26 @@ import Loading from "../common/Loading";
 import { FaFirstOrderAlt, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
+// import { getCommissions, updateCommission } from "@/redux/features/commission/commissionSlice";
+
+interface User {
+  email: string;
+  roles: string;
+}
+
 
 const OrdersList = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
   const { orders, isLoading, error } = useSelector(
     (state: RootState) => state.order
   );
+  // const {commissions} = useSelector((state: RootState) => state.commission);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrders());
+    // dispatch(getCommissions());
   }, [dispatch]);
+  
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +86,7 @@ const OrdersList = () => {
       setShowPopover(null);
     });
   };
+
 
   if (isLoading) {
     return <Loading />;
@@ -154,7 +166,7 @@ const OrdersList = () => {
                 className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
               >
                 <ul className="py-2 text-sm text-gray-700">
-                  <li key={`${order.id}-${index}-1`}>
+                  <li>
                     <NavLink
                       to={`/order/${order.id}`}
                       className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
@@ -163,7 +175,8 @@ const OrdersList = () => {
                       Edit
                     </NavLink>{" "}
                   </li>
-                  <li key={`${order.id}-${index}-2`}>
+                  {user?.email === "admin@domino.com" && (
+                  <li>
                     <button
                       onClick={() => handleDeleteOrder(order.id)}
                       type="button"
@@ -172,6 +185,7 @@ const OrdersList = () => {
                       <MdDelete /> Delete
                     </button>
                   </li>
+                   )}
                 </ul>
               </div>
             )}
@@ -297,7 +311,7 @@ const OrdersList = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
+      <div className={`${user?.email !== 'admin@domino.com' && user?.roles !== 'reception' ? 'hidden' : ''} flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4`}>
         <div>
           <NavLink
             to="/add-order"
@@ -307,7 +321,6 @@ const OrdersList = () => {
             <span className="ml-2">Add New Order</span>
           </NavLink>
         </div>
-
         <label htmlFor="table-search" className="sr-only">
           Search
         </label>

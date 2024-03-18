@@ -9,12 +9,20 @@ import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
+import { RootState } from "@/redux/store";
 
 const Pricing = () => {
+  const { user, token } = useSelector(
+    (state: RootState) => state.auth
+  );
   const { prices, isLoading, error } = useSelector((state) => state.price);
 
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  if(user?.email !== "admin@domino.com"){
+    return <ErroPage error="You are not authorized to view this page" />
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

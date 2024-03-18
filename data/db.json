@@ -1,301 +1,95 @@
 {
-  "products": [
-    {
-      "id": 1,
-      "name": "T-Shirt",
-      "price": 10,
-      "description": "A simple T-Shirt",
-      "image": "https://unblast.com/wp-content/uploads/2018/09/T-shirt-Mockup.jpg",
-      "attributes": [
-        {
-          "name": "fabric",
-          "options": [
-            "cotton",
-            "polyester",
-            "wool",
-            "rayon",
-            "linen"
-          ]
-        },
-        {
-          "name": "size",
-          "options": [
-            "small",
-            "medium",
-            "large"
-          ]
-        },
-        {
-          "name": "color",
-          "options": [
-            "red",
-            "blue",
-            "green",
-            "yellow",
-            "white",
-            "black"
-          ]
-        },
-        {
-          "name": "style",
-          "options": [
-            "v-neck",
-            "crew-neck"
-          ]
-        },
-        {
-          "name": "placement",
-          "options": []
-        },
-        {
-          "name": "purpose",
-          "options": [
-            "business",
-            "personal",
-            "gift"
-          ]
-        },
-        {
-          "name": "description",
-          "options": [
-            "I want a picture of a cat on the front",
-            "I want a picture of a dog on the back"
-          ]
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Banner",
-      "price": 10,
-      "description": "A simple Banner",
-      "image": "https://unblast.com/wp-content/uploads/2018/10/Rollup-Mockup.jpg",
-      "attributes": [
-        {
-          "name": "material",
-          "options": [
-            "vinyl",
-            "fabric",
-            "mesh"
-          ]
-        },
-        {
-          "name": "dimensions",
-          "options": []
-        },
-        {
-          "name": "unit",
-          "options": [
-            "ft",
-            "in",
-            "cm",
-            "m"
-          ]
-        },
-        {
-          "name": "purpose",
-          "options": [
-            "business",
-            "personal",
-            "gift"
-          ]
-        },
-        {
-          "name": "description",
-          "options": [
-            "I want a picture of a cat on the front",
-            "I want a picture of a dog on the back"
-          ]
-        },
-        {
-          "name": "side",
-          "options": [
-            "single",
-            "double"
-          ]
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Sticker",
-      "price": 10,
-      "description": "A simple Sticker",
-      "image": "https://unblast.com/wp-content/uploads/2020/10/Red-Grey-Watercolor-Floral-Clipart-1.jpg",
-      "attributes": [
-        {
-          "name": "material",
-          "options": [
-            "vinyl",
-            "fabric",
-            "mesh"
-          ]
-        },
-        {
-          "name": "unit",
-          "options": [
-            "ft",
-            "in",
-            "cm",
-            "m"
-          ]
-        },
-        {
-          "name": "purpose",
-          "options": [
-            "business",
-            "personal",
-            "gift"
-          ]
-        },
-        {
-          "name": "description",
-          "options": [
-            "I want a picture of a cat on the front",
-            "I want a picture of a dog on the back"
-          ]
-        },
-        {
-          "name": "side",
-          "options": [
-            "single",
-            "double"
-          ]
-        }
-      ]
-    }
-  ],
+  "products": [],
   "orders": [
     {
       "series": "SAL-ORD-YYYY-",
-      "date": "Mar 15, 2024",
-      "deliveryDate": "Mar 15, 2024",
+      "date": "Mar 18, 2024",
+      "deliveryDate": "Mar 18, 2024",
       "orderType": "telegram",
       "description": "",
-      "customerPhone": "0911-88-9696",
-      "customerFirstName": "Teshe",
-      "commissionId": "1710111531529",
-      "customerEmail": "",
-      "commissionPhone": "0905-08-8266",
+      "customerPhone": "09-1104-4506",
+      "customerFirstName": "Coca Cola",
+      "commissionId": "1710715076756",
+      "customerEmail": "cocacola@gmail.com",
+      "commissionPhone": "09-0507-8826",
       "commissionFirstName": "Muhammed",
-      "commissionEmail": "admin@domino.com",
-      "orderItems": [
-        {
-          "machine": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 28000,
-          "status": "recieved",
-          "commissionPrice": 560,
-          "isDiscounted": true,
-          "commissionPercent": "2"
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print",
-          "unitPrice": 36000,
-          "status": "recieved",
-          "isDiscounted": false,
-          "commissionPrice": 1440,
-          "commissionPercent": "4"
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "8",
-          "height": "7",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "6",
-          "quantity": "4",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 58400,
-      "totalCommission": 2000,
-      "fileNames": [
-        "Teshe-Teshe-DTF-T-shirt-8x7",
-        "Teshe-Teshe-BANNER-Screen-5x6"
-      ],
-      "totalQuantity": 9,
-      "grandTotal": 67160,
-      "vat": 8760,
-      "discounts": [
-        5600,
-        0
-      ],
-      "levels": [
-        "2",
-        "1"
-      ],
-      "userInputDiscount": 0,
-      "totalBirrAfterDiscount": [
-        22400,
-        36000
-      ],
-      "paymentInfo": {
-        "paymentMethod": "cash",
-        "paymentReference": "",
-        "paymentAmount": 0,
-        "paymentStatus": "not paid"
-      },
-      "id": "355c"
-    },
-    {
-      "series": "SAL-ORD-YYYY-",
-      "date": "Mar 15, 2024",
-      "deliveryDate": "Mar 15, 2024",
-      "orderType": "telegram",
-      "description": "",
-      "customerPhone": "1234-56-7890",
-      "customerFirstName": "Teshager",
-      "commissionId": "1710126934041",
-      "customerEmail": "teshagerass@gmail.com",
-      "commissionPhone": "1234-56-7890",
-      "commissionFirstName": "Teshager",
-      "commissionEmail": "teshagerass@gmail.com",
+      "commissionEmail": "muhammedb8826@gmail.com",
       "orderItems": [
         {
           "machine": "DTF",
           "material": "T-shirt",
           "service": "Print and Heat press",
-          "unitPrice": 25000,
+          "unitPrice": 30000,
           "status": "recieved",
-          "commissionPrice": 500,
+          "commissionPrice": 600,
+          "commissionPercent": "2"
+        },
+        {
+          "machine": "UV",
+          "material": "Film",
+          "service": "Print and Material",
+          "unitPrice": 28800,
+          "status": "recieved",
+          "commissionPrice": 864,
+          "commissionPercent": "3"
+        },
+        {
+          "machine": "UV",
+          "material": "Film",
+          "service": "Print and Material",
+          "unitPrice": 12000,
+          "status": "recieved",
+          "commissionPrice": 240,
           "commissionPercent": "2"
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
-          "width": "5",
+          "width": "6",
           "height": "5",
+          "quantity": "5",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "8",
+          "height": "9",
+          "quantity": "2",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "2",
+          "height": "6",
           "quantity": "5",
           "unitPrice": null
         }
       ],
-      "totalBirr": 25000,
-      "totalCommission": 500,
+      "totalBirr": 70800,
+      "totalCommission": 1704,
       "fileNames": [
-        "Teshager-Teshager-DTF-T-shirt-5x5"
+        "Coca Cola-Coca Cola-DTF-T-shirt-6x5",
+        "Coca Cola-Coca Cola-UV-Film-8x9",
+        "Coca Cola-Coca Cola-UV-Film-2x6"
       ],
-      "totalQuantity": 5,
-      "grandTotal": 28750,
-      "vat": 3750,
+      "totalQuantity": 12,
+      "grandTotal": 81420,
+      "vat": 10620,
       "discounts": [
+        0,
+        0,
         0
       ],
       "levels": [
-        "1"
+        "2",
+        "1",
+        null
       ],
       "totalBirrAfterDiscount": [
-        25000
+        30000,
+        28800,
+        12000
       ],
       "paymentInfo": {
         "paymentMethod": "cash",
@@ -303,30 +97,30 @@
         "paymentAmount": 0,
         "paymentStatus": "not paid"
       },
-      "id": "82a8"
+      "id": "f9f9"
     },
     {
       "series": "SAL-ORD-YYYY-",
-      "date": "Mar 16, 2024",
-      "deliveryDate": "Mar 16, 2024",
-      "orderType": "telegram",
+      "date": "Mar 18, 2024",
+      "deliveryDate": "Mar 18, 2024",
+      "orderType": "phone",
       "description": "",
-      "customerPhone": "0911-88-9696",
-      "customerFirstName": "Teshe",
-      "commissionId": "1710126934041",
-      "customerEmail": "",
-      "commissionPhone": "1234-56-7890",
+      "customerPhone": "09-1144-0266",
+      "customerFirstName": "Biniyam",
+      "commissionId": "1710715690780",
+      "customerEmail": "bmtirkassomart@gmail.com",
+      "commissionPhone": "09-1102-2222",
       "commissionFirstName": "Teshager",
       "commissionEmail": "teshagerass@gmail.com",
       "orderItems": [
         {
           "machine": "BANNER",
-          "material": "sticker",
+          "material": "Screen",
           "service": "Print",
-          "unitPrice": 25000,
+          "unitPrice": 45000,
           "status": "recieved",
-          "commissionPrice": 250,
-          "commissionPercent": "1"
+          "commissionPrice": 900,
+          "commissionPercent": "2"
         },
         {
           "machine": "UV",
@@ -342,7 +136,7 @@
         {
           "unitName": null,
           "width": "5",
-          "height": "5",
+          "height": "6",
           "quantity": "5",
           "unitPrice": null
         },
@@ -354,25 +148,25 @@
           "unitPrice": null
         }
       ],
-      "totalBirr": 50000,
-      "totalCommission": 750,
+      "totalBirr": 70000,
+      "totalCommission": 1400,
       "fileNames": [
-        "Teshe-Teshe-BANNER-sticker-5x5",
-        "Teshe-Teshe-UV-Film-5x5"
+        "Biniyam-Biniyam-BANNER-Screen-5x6",
+        "Biniyam-Biniyam-UV-Film-5x5"
       ],
       "totalQuantity": 10,
-      "grandTotal": 57500,
-      "vat": 7500,
+      "grandTotal": 80500,
+      "vat": 10500,
       "discounts": [
         0,
         0
       ],
       "levels": [
-        "1",
+        "2",
         "1"
       ],
       "totalBirrAfterDiscount": [
-        25000,
+        45000,
         25000
       ],
       "paymentInfo": {
@@ -381,129 +175,95 @@
         "paymentAmount": 0,
         "paymentStatus": "not paid"
       },
-      "id": "45cf"
+      "id": "5c4d"
     }
   ],
   "customers": [
     {
-      "id": 1707080341356,
-      "phone": "0905-07-8826",
+      "id": "1710714859103",
+      "phone": "09-1104-4506",
+      "companyType": "company",
+      "firstName": "Coca Cola",
+      "lastName": "",
+      "email": "cocacola@gmail.com",
+      "transactions": [
+        {
+          "date": "Mar 18, 2024",
+          "paymentMethod": "cash",
+          "description": "payment",
+          "paymentAmount": "8000",
+          "status": "paid",
+          "reference": "958djdd98-CBE"
+        },
+        {
+          "date": "Mar 18, 2024",
+          "paymentMethod": "bank-transfer",
+          "description": "payment",
+          "paymentAmount": "10000",
+          "status": "paid",
+          "reference": "958djdd98-Awash"
+        }
+      ]
+    },
+    {
+      "id": "1710715591514",
+      "phone": "09-1144-0266",
+      "companyType": "group",
+      "firstName": "Biniyam",
+      "lastName": "",
+      "email": "bmtirkassomart@gmail.com",
+      "transactions": [
+        {
+          "date": "Mar 18, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "status": "paid",
+          "reference": ""
+        }
+      ]
+    }
+  ],
+  "commissions": [
+    {
+      "id": "1710715076756",
+      "phone": "09-0507-8826",
       "companyType": "individual",
       "firstName": "Muhammed",
-      "lastName": "Berisso",
-      "email": "muhammedb8826@gmail.com"
-    },
-    {
-      "id": "1707080747266",
-      "phone": "0911-04-0506",
-      "companyType": "group",
-      "firstName": "Berisso",
-      "lastName": "Family",
-      "email": "berisso@gmail.com"
-    },
-    {
-      "id": "1707080869403",
-      "phone": "0916-01-6212",
-      "companyType": "company",
-      "firstName": "Kuma",
-      "lastName": "Shark",
-      "email": "kuma@gmail.com"
-    },
-    {
-      "id": "1707089336029",
-      "phone": "0911-88-9696",
-      "companyType": "",
-      "firstName": "Teshe",
       "lastName": "",
-      "email": ""
+      "email": "muhammedb8826@gmail.com",
+      "data": [
+        {
+          "date": "Mar 18, 2024",
+          "description": "payment",
+          "paymentAmount": "500",
+          "status": "Paid"
+        }
+      ],
+      "balance": 1204
     },
     {
-      "id": "1707089362257",
-      "phone": "0988-45-6666",
-      "companyType": "",
-      "firstName": "Babi",
-      "lastName": "",
-      "email": ""
-    },
-    {
-      "id": "1707089382443",
-      "phone": "0926-98-0318",
-      "companyType": "",
-      "firstName": "Osman",
-      "lastName": "",
-      "email": ""
-    },
-    {
-      "id": "1707089490260",
-      "phone": "0911-07-0000",
-      "companyType": "",
-      "firstName": "Basha",
-      "lastName": "",
-      "email": ""
-    },
-    {
-      "id": "1707594176543",
-      "phone": "1234-56-7890",
+      "id": "1710715690780",
+      "phone": "09-1102-2222",
       "companyType": "individual",
       "firstName": "Teshager",
-      "lastName": "Assefa",
-      "email": "teshagerass@gmail.com"
-    },
-    {
-      "id": "1707595667165",
-      "phone": "1234-56-7896",
-      "companyType": "company",
-      "firstName": "Mamila",
       "lastName": "",
-      "email": "mamila@gmail.com"
-    },
-    {
-      "id": "1707603896773",
-      "phone": "0916-11-5252",
-      "companyType": "individual",
-      "firstName": "Muktar",
-      "lastName": "",
-      "email": "muktar@gmail.com"
-    },
-    {
-      "id": "1707706533313",
-      "phone": "0910-11-1111",
-      "companyType": "company",
-      "firstName": "Duche",
-      "lastName": "",
-      "email": "duche@gmail.com"
-    },
-    {
-      "id": "1707746857768",
-      "phone": "1234-56-7890",
-      "companyType": "individual",
-      "firstName": "ahadu",
-      "lastName": "teshager",
-      "email": "admin@domino.com"
-    },
-    {
-      "id": "1707883674950",
-      "phone": "9856-59-8000",
-      "companyType": "individual",
-      "firstName": "test",
-      "lastName": "test",
-      "email": "admin@domino.com"
-    },
-    {
-      "id": "1710128272183",
-      "phone": "0905-07-8826",
-      "companyType": "company",
-      "firstName": "CocaCola",
-      "lastName": "",
-      "email": "cocacola@gmail.com"
-    },
-    {
-      "id": "1710271642550",
-      "phone": "0911-04-0506",
-      "companyType": "company",
-      "firstName": "Pepsi",
-      "lastName": "",
-      "email": "pepsi@gmail.com"
+      "email": "teshagerass@gmail.com",
+      "data": [
+        {
+          "date": "Mar 18, 2024",
+          "description": "payment",
+          "paymentAmount": "700",
+          "status": "Paid"
+        },
+        {
+          "date": "Mar 18, 2024",
+          "description": "Take the remaining amount",
+          "paymentAmount": "700",
+          "status": "Paid"
+        }
+      ],
+      "balance": 0
     }
   ],
   "services": [
@@ -528,10 +288,6 @@
     {
       "id": "f084",
       "name": "BANNER"
-    },
-    {
-      "id": "5b90",
-      "name": "vvvv"
     }
   ],
   "materials": [
@@ -789,110 +545,5 @@
       "discountPercentage": "50"
     }
   ],
-  "commissions": [
-    {
-      "id": "1710111531529",
-      "phone": "0905-08-8266",
-      "companyType": "individual",
-      "firstName": "Muhammed",
-      "lastName": "",
-      "email": "admin@domino.com",
-      "data": [
-        {
-          "date": "Mar 16, 2024",
-          "description": "This corolla car ",
-          "paymentAmount": "55",
-          "status": "Paid"
-        },
-        {
-          "date": "Mar 16, 2024",
-          "description": "hjkfg",
-          "paymentAmount": "200",
-          "status": "Paid"
-        }
-      ]
-    },
-    {
-      "id": "1710126934041",
-      "phone": "1234-56-7890",
-      "companyType": "company",
-      "firstName": "Teshager",
-      "lastName": "Assefa",
-      "email": "teshagerass@gmail.com"
-    },
-    {
-      "id": "1710127040750",
-      "phone": "1234-56-7890",
-      "companyType": "individual",
-      "firstName": "Muktar",
-      "lastName": "Berisso",
-      "email": "muktar@gmail.com"
-    },
-    {
-      "id": "1710435424659",
-      "phone": "0905-07-8826",
-      "companyType": "individual",
-      "firstName": "Osman",
-      "lastName": "",
-      "email": "osman@gmail.com"
-    },
-    {
-      "id": "1710443612685",
-      "phone": "0905-07-8826",
-      "companyType": "individual",
-      "firstName": "Teshsss",
-      "lastName": "",
-      "email": "admin@domino.com"
-    },
-    {
-      "id": "1710447345166",
-      "phone": "0911-04-0506",
-      "companyType": "company",
-      "firstName": "Ted",
-      "lastName": "Tirkasso",
-      "email": "tedtirkasso@gmail.com"
-    }
-  ],
-  "commissionTransactions": [
-    {
-      "id": "afa2",
-      "commissionId": "1710111531529",
-      "commissionFirstName": "Muhammed",
-      "totalCommission": 2000,
-      "totalUnitPrices": 64000,
-      "date": "Mar 16, 2024"
-    },
-    {
-      "id": "364b",
-      "commissionId": "1710111531529",
-      "commissionFirstName": "Muhammed",
-      "totalCommission": 500,
-      "totalUnitPrices": 25000,
-      "date": "Mar 16, 2024"
-    },
-    {
-      "id": "4de7",
-      "commissionId": "1710126934041",
-      "commissionFirstName": "Teshager",
-      "totalCommission": 1000,
-      "totalUnitPrices": 50000,
-      "date": "Mar 16, 2024"
-    },
-    {
-      "id": "8214",
-      "commissionId": "1710126934041",
-      "commissionFirstName": "Teshager",
-      "totalCommission": 750,
-      "totalUnitPrices": 50000,
-      "date": "Mar 16, 2024"
-    },
-    {
-      "id": "4e62",
-      "commissionId": "1710126934041",
-      "commissionFirstName": "Teshager",
-      "totalCommission": 500,
-      "totalUnitPrices": 25000,
-      "date": "Mar 16, 2024"
-    }
-  ]
+  "commissionTransactions": []
 }

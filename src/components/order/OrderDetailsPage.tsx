@@ -20,7 +20,18 @@ import { MdDelete } from "react-icons/md";
 import { StatusEditModal } from "./StatusEditModal";
 import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
 import CommissionSearchInput from "../commission/CommissionSearchInput";
-import { createCommissionTransaction, getCommissionTransactions, updateCommissionTranscation } from "@/redux/features/commission/commissionSlice";
+import {
+  createCommissionTransaction,
+  getCommissionTransactions,
+  getCommissions,
+  updateCommissionTranscation,
+} from "@/redux/features/commission/commissionSlice";
+import Swal from "sweetalert2";
+import {
+  getCustomers,
+  updateCustomer,
+} from "@/redux/features/customer/customerSlice";
+import { RootState } from "@/redux/store";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -35,18 +46,42 @@ interface CustomerType {
 const OrderDetailsPage = () => {
   const { id } = useParams();
   const { singleOrder, isLoading, error } = useSelector((state) => state.order);
+  const { customers } = useSelector((state) => state.customer);
   const { prices } = useSelector((state) => state.price);
   const { services } = useSelector((state) => state.service);
   const { discounts } = useSelector((state) => state.discount);
-  const { commissionTransactions } = useSelector((state) => state.commission);
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getprice());
     dispatch(getServices());
     dispatch(getDiscounts());
-    dispatch(getCommissionTransactions());
+    dispatch(getCommissions());
+    const customerId = localStorage.getItem("customerId");    
+    dispatch(getCustomers()).then((res) => {         
+      if (res.payload) {
+        const customer = res.payload.find(
+          (customer) => customer.id === customerId
+        );  
+        setCustomer(customer);
+        if(customer.transactions){
+        setPaymentTransaction(customer.transactions);
+        }
+      }
+      else {
+        setPaymentTransaction([
+          {
+            date: formattedDate,
+            paymentMethod: "cash",
+            description: "",
+            paymentAmount: "",
+            status: "pending",
+            reference: "",
+          },
+        ]);
+      }
+    });
   }, [dispatch]);
 
   useEffect(() => {
@@ -80,8 +115,12 @@ const OrderDetailsPage = () => {
           setVat(order.vat);
           setUserInputDiscount(order.userInputDiscount);
           setPaymentInfo(order.paymentInfo);
-          setCommissionPercent(order.orderItems.map((item) => item.commissionPercent));
-          setCommissionPrice(order.orderItems.map((item) => item.commissionPrice));
+          setCommissionPercent(
+            order.orderItems.map((item) => item.commissionPercent)
+          );
+          setCommissionPrice(
+            order.orderItems.map((item) => item.commissionPrice)
+          );
           setTotalCommission(order.totalCommission);
         }
       })
@@ -90,15 +129,11 @@ const OrderDetailsPage = () => {
       });
   }, [dispatch, id]);
 
-  console.log(commissionTransactions, "commissionTransactions");
-  
-
   const [fileName, setFileName] = useState([]);
   const [tooltipMessages, setTooltipMessages] = useState([]);
 
   const [icons, setIcons] = useState([]);
   const inputRefs = useRef(Array(fileName.length).fill(null));
-  
 
   useEffect(() => {
     setIcons(Array(fileName.length).fill("default"));
@@ -143,7 +178,9 @@ const OrderDetailsPage = () => {
   };
 
   const [showPopover, setShowPopover] = useState<number | null>(null);
+  const [showPopover2, setShowPopover2] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const popoverRef2 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -153,19 +190,32 @@ const OrderDetailsPage = () => {
       ) {
         setShowPopover(null);
       }
+      if (
+        popoverRef2.current &&
+        !popoverRef2.current.contains(event.target as Node)
+      ) {
+        setShowPopover2(null);
+      }
     };
 
     if (showPopover !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    if (showPopover2 !== null) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showPopover]);
+  }, [showPopover, showPopover2]);
 
   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const handleAction2 = (index: number) => {
+    setShowPopover2((prevIndex) => (prevIndex === index ? null : index));
   };
 
   const [paymentInfo, setPaymentInfo] = useState({
@@ -231,6 +281,106 @@ const OrderDetailsPage = () => {
   const [commissionPercent, setCommissionPercent] = useState([]);
   const [totalCommission, setTotalCommission] = useState(null);
   const [commissionForAll, setCommissionForAll] = useState(null);
+  const [collapseCommission, setCollapseCommission] = useState(false);
+  const [collapseDisount, setCollapseDiscount] = useState(false);
+  const [totaTransaction, setTotalTransaction] = useState(0);
+  const [remainingAmount, setRemainingAmount] = useState(0);
+  const[customer, setCustomer] = useState([]);
+  const [paymentTransaction, setPaymentTransaction] = useState([
+    {
+      date: formattedDate,
+      paymentMethod: "cash",
+      description: "",
+      paymentAmount: "",
+      status: "pending",
+      reference: "",
+    },
+  ]);
+
+  useEffect(() => {
+    const totalTransaction = paymentTransaction?.reduce(
+      (acc, { paymentAmount }) => acc + Number(paymentAmount || 0),
+      0
+    );
+    setTotalTransaction(totalTransaction);
+    setRemainingAmount(grandTotal - totalTransaction);
+  }, [paymentTransaction, grandTotal]);
+
+  const handleFormChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setPaymentTransaction((prev) => {
+      const updatedData = [...prev];
+      updatedData[index] = {
+        ...updatedData[index],
+        [name]: value,
+      };
+      return updatedData;
+    });
+  };
+
+  const handlePaymentMethod = (index, e) => {
+    setPaymentTransaction((prev) => {
+      const updatedData = [...prev];
+      updatedData[index] = {
+        ...updatedData[index],
+        paymentMethod: e.target.value,
+      };
+      return updatedData;
+    });
+  };
+
+
+  const handleAddPaymentTransaction = () => {
+    setPaymentTransaction((prev) => [
+      ...prev,
+      {
+        date: formattedDate,
+        paymentMethod: "cash", // "cash" or "bank transfer
+        description: "",
+        paymentAmount: "",
+        status: "pending",
+        reference: "",
+      },
+    ]);
+  };
+
+  const handleDeleteTransaction = (index) => {
+    const updatedTransactions = [...paymentTransaction];
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this transaction!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The transaction has been deleted.",
+          icon: "success",
+        }).then(() => {
+          const filteredData = updatedTransactions.filter(
+            (_, i) => i !== index
+          );
+          // dispatch(updateCustomer({id, data: filteredData}));
+          setPaymentTransaction(filteredData);
+        });
+      }
+    });
+  };
+
+  const handleCollapseCommission = () => {
+    setCollapseCommission((prev) => !prev);
+  };
+
+  const handleCollapseDiscount = () => {
+    setCollapseDiscount((prev) => !prev);
+  };
 
   const handleModalOpen = (index) => {
     setModalOpen((prev) => !prev);
@@ -400,27 +550,25 @@ const OrderDetailsPage = () => {
       };
       return updatedFormData;
     });
-  };  
+  };
 
   useEffect(() => {
-const updatedDiscounts = formData.map((item, index) => {
-    if(!item.isDiscounted){
+    const updatedDiscounts = formData.map((item, index) => {
+      if (!item.isDiscounted) {
         return 0;
-    }
-    const price = calculatedUnitPrices[index];
-    const totalUnit = totalUnits[index];
-    const { discount, level } = calculateDiscount(price, totalUnit);
-    setLevels((prevLevels) => {
-      const updatedLevels = [...prevLevels];
-      updatedLevels[index] = level;
-      return updatedLevels;
+      }
+      const price = calculatedUnitPrices[index];
+      const totalUnit = totalUnits[index];
+      const { discount, level } = calculateDiscount(price, totalUnit);
+      setLevels((prevLevels) => {
+        const updatedLevels = [...prevLevels];
+        updatedLevels[index] = level;
+        return updatedLevels;
+      });
+      return discount;
     });
-    return discount;
-}
-);
-setDiscountPerItem(updatedDiscounts);
-  }, [ formData, calculatedUnitPrices, totalUnits, calculateDiscount]);
-  
+    setDiscountPerItem(updatedDiscounts);
+  }, [formData, calculatedUnitPrices, totalUnits, calculateDiscount]);
 
   useEffect(() => {
     if (discountPerItem) {
@@ -466,27 +614,26 @@ setDiscountPerItem(updatedDiscounts);
 
   useEffect(() => {
     if (
-      Number(paymentInfo?.paymentAmount) >= 1 &&
-      Number(paymentInfo?.paymentAmount) < grandTotal
+     totaTransaction > 0 && grandTotal > 0 && totaTransaction < grandTotal
     ) {
       setPaymentInfo((prev) => ({
         ...prev,
         paymentStatus: "partial",
       }));
     }
-    if (Number(paymentInfo?.paymentAmount) === grandTotal) {
+    if (totaTransaction === grandTotal) {
       setPaymentInfo((prev) => ({
         ...prev,
         paymentStatus: "paid",
       }));
     }
-    if (Number(paymentInfo?.paymentAmount) === 0) {
+    if (totaTransaction === 0) {
       setPaymentInfo((prev) => ({
         ...prev,
         paymentStatus: "not paid",
       }));
     }
-  }, [paymentInfo?.paymentAmount, grandTotal]);
+  }, [grandTotal, totaTransaction]);
 
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
@@ -499,7 +646,7 @@ setDiscountPerItem(updatedDiscounts);
 
   //  commission handling
 
-  const handleCommissionInfo = (commission: CustomerType) => {    
+  const handleCommissionInfo = (commission: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
       commissionId: commission.id,
@@ -515,27 +662,26 @@ setDiscountPerItem(updatedDiscounts);
       const updatedCommissionPercent = [...prevCommissionPercent];
       updatedCommissionPercent[index] = value;
       return updatedCommissionPercent;
-    });  
+    });
     setCommissionForAll(null);
   };
 
-// commission prices handling
+  // commission prices handling
 
-useEffect(() => {
-  const commission = calculatedUnitPrices.map(
-    (price, index) => price * (commissionPercent[index] / 100)
-  );
-  setCommissionPrice(commission);
-}, [commissionPercent, calculatedUnitPrices, measuresFormData])
+  useEffect(() => {
+    const commission = calculatedUnitPrices.map(
+      (price, index) => price * (commissionPercent[index] / 100)
+    );
+    setCommissionPrice(commission);
+  }, [commissionPercent, calculatedUnitPrices, measuresFormData]);
 
   // Total commission
   useEffect(() => {
     const totalCommission = commissionPrice.reduce((acc, c) => acc + c, 0);
     setTotalCommission(totalCommission);
   }, [commissionPrice]);
-    
 
-// resetting commission for all when the commission percent for each index changes
+  // resetting commission for all when the commission percent for each index changes
 
   const handleCommissionForAll = (e) => {
     const { value } = e.target;
@@ -546,8 +692,6 @@ useEffect(() => {
     );
     setCommissionPrice(commission);
   };
-
-
 
   // reset commission for all when the commission percent changes
 
@@ -669,60 +813,7 @@ useEffect(() => {
       return matchingPrice;
     });
     setFilteredData(matchingPriceData);
-  }, [formData, prices]);
-
-  // form submission
-
-  const resetForm = () => {
-    setOrderInfo({
-      series: "SAL-ORD-YYYY-",
-      date: formattedDate,
-      deliveryDate: formattedDate,
-      orderType: "",
-      description: "",
-      customerPhone: "",
-      customerFirstName: "",
-      commissionId: "",
-      customerEmail: "",
-      commissionPhone: "",
-      commissionEmail: "",
-      commissionFirstName: "",
-    });
-    setFormData([
-      {
-        machine: "",
-        material: "",
-        service: "",
-        unitPrice: null,
-        status: "recieved",
-        isDiscounted: false,
-      },
-    ]);
-    setMeasuresFormData([
-      {
-        unitName: null,
-        width: null,
-        height: null,
-        quantity: null,
-        unitPrice: null,
-      },
-    ]);
-    setCalculatedUnitPrices([]);
-    setTotalQuantity(0);
-    setTotalBirr(0);
-    setDiscountPerItem([]);
-    setLevels([]);
-    setVat(0);
-    setTotalBirrAfterDiscount([]);
-    setGrandTotal(0);
-    setUserInputDiscount(0);
-    setPaymentInfo({
-      paymentMethod: "cash",
-      paymentReference: "",
-      paymentAmount: 0,
-      paymentStatus: "not paid",
-    });
-  };
+  }, [formData, prices]);  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -755,7 +846,7 @@ useEffect(() => {
     const appendName = fileName.map((item) => {
       const nameAndFile = `${orderInfo.customerFirstName}-${item}`;
       return nameAndFile;
-    });
+    });   
 
     const orderData = {
       ...orderInfo,
@@ -780,29 +871,31 @@ useEffect(() => {
       if (res.payload) {
         const message = "Order updated successfully";
         toast.success(message);
-        resetForm();
-        navigate("/dashboard");
       }
     });
 
+    const updatedTransactionsStatus = paymentTransaction.map((item) => {
+      return {
+        ...item,
+        status: "paid",
+      };
+    });
 
-    // const commissionData = {
-    //   commissionId: orderInfo.commissionId,
-    //   commissionFirstName: orderInfo.commissionFirstName,
-    //   totalCommission,
-    //   totalUnitPrices: calculatedUnitPrices.reduce((acc, c) => acc + c, 0),
-    //   date: formattedDate,
-    // };
+    const customerId = localStorage.getItem("customerId");
     
-    // // Assuming commissionTransactions is an array
-    // const existingTransactionIndex = commissionTransactions.findIndex(item => item.id === singleOrder.id);
-    
+    const transactionData = {
+      ...customer,
+      transactions: updatedTransactionsStatus,
+      id: customerId,
+    };    
 
-    // if (existingTransactionIndex !== -1) {
-    //   dispatch(updateCommissionTranscation(commissionData));
-    // } else {
-    //   dispatch(createCommissionTransaction(commissionData));
-    // }
+    dispatch(updateCustomer(transactionData)).then((res) => {
+      if (res.payload) {
+        console.log(res.payload);
+        
+        setPaymentTransaction(res.payload.transactions);
+      }
+    });
 
     setGrandTotal(grandTotal);
   };
@@ -821,17 +914,7 @@ useEffect(() => {
         <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
           Edit Order
         </h2>
-        {/* {mediaError && (
-      <div
-        className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-        role="alert"
-      >
-        <span className="font-medium">Danger alert!</span> {mediaError} Change
-        a few things up and try submitting again.
-      </div>
-    )} */}
-
-        <div className="grid gap-4 sm:grid-cols-3 sm:gap-6 mb-4 p-4">
+        <div className={`grid gap-4 sm:grid-cols-3 sm:gap-6 mb-4 p-4`}>
           <div className="w-full">
             <label
               htmlFor="name"
@@ -918,14 +1001,10 @@ useEffect(() => {
         <form onSubmit={handleSubmit}>
           <div className="pb-4">
             <button
-              // onClick={handleIsCollapsed}
               type="button"
               className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
             >
               Orders List{" "}
-              {/* <span className="font-thin">
-                {isCollapsed ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "} */}
             </button>
 
             <div className="px-4">
@@ -1111,10 +1190,10 @@ useEffect(() => {
                           />
                         </td>
                         <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
-                            {calculatedUnitPrices[index] || 0}
+                          {calculatedUnitPrices[index] || 0}
                         </td>
                         <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
-                        {totalUnits[index] || 0}
+                          {totalUnits[index] || 0}
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-40">
                           <div className="flex items-center gap-2">
@@ -1124,19 +1203,19 @@ useEffect(() => {
                                 : null}
                             </span>
                             {discountPerItem && discountPerItem[index] > 0 && (
-                            <p className="text-gray-900 sm:text-sm flex items-center justify-center w-1/4">
-                            {levels && levels[index] ? (
-                                levels[index] > 0 ? (
-                                  <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
-                                    Level <sup>{levels[index]}</sup>
-                                  </span>
+                              <p className="text-gray-900 sm:text-sm flex items-center justify-center w-1/4">
+                                {levels && levels[index] ? (
+                                  levels[index] > 0 ? (
+                                    <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
+                                      Level <sup>{levels[index]}</sup>
+                                    </span>
+                                  ) : (
+                                    0
+                                  )
                                 ) : (
                                   0
-                                )
-                              ) : (
-                                0
-                              )}
-                            </p>
+                                )}
+                              </p>
                             )}
 
                             <label
@@ -1180,9 +1259,6 @@ useEffect(() => {
                                 {data.status}
                               </span>
                             )}
-                            {/* <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                              {data.status}
-                            </span> */}
                           </div>
                         </td>
                         <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
@@ -1200,7 +1276,7 @@ useEffect(() => {
                               className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                             >
                               <ul className="py-2 text-sm text-gray-700">
-                                <li key={index}>
+                                <li className={`${user?.email !== 'admin@domino.com' && user?.roles !== 'graphic-designer' ? 'hidden' : ''}`}>
                                   <button
                                     type="button"
                                     onClick={() => handleModalOpen(index)}
@@ -1210,7 +1286,7 @@ useEffect(() => {
                                     Edit
                                   </button>
                                 </li>
-                                <li key={index}>
+                                <li className={`${user?.email !== 'admin@domino.com' && user?.roles !== 'reception' ? 'hidden' : ''}`}>
                                   <button
                                     onClick={() => handleCancel(index)}
                                     type="button"
@@ -1222,15 +1298,6 @@ useEffect(() => {
                               </ul>
                             </div>
                           )}
-
-                          {/* <button
-                            onClick={() => handleCancel(index)}
-                            title="action"
-                            type="button"
-                            className="flex items-center justify-between gap-2 text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-2.5 py-2.5 text-center"
-                          >
-                            <IoMdClose />
-                          </button> */}
                         </td>
                       </tr>
                     ))}
@@ -1441,23 +1508,25 @@ useEffect(() => {
             </button>
           </div>
         </form>
+        {user?.email === "admin@domino.com" && (
+          <>
         <div className="pt-4">
           <button
-            // onClick={handleCollapseDicount}
+            onClick={handleCollapseDiscount}
             type="button"
             className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
           >
             Additional Discount{" "}
-            {/* <span className="font-thin">
+            <span className="font-thin">
                 {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "} */}
+              </span>{" "}
           </button>
         </div>
         <div
           className="
             flex justify-end items-center gap-4 pb-4"
         >
-          <div className="px-4 flex md:w-1/2">
+          <div className={`${collapseDisount? 'hidden': ''} px-4 flex md:w-1/2`}>
             <label
               htmlFor="userInputDiscount"
               className="w-[15%] gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -1476,122 +1545,269 @@ useEffect(() => {
             />
           </div>
         </div>
+        </>
+        )}
 
-        <div className="pt-4">
-          <button
-            // onClick={handleCollapseDicount}
-            type="button"
-            className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
-          >
-            Payment{" "}
-            {/* <span className="font-thin">
+  
+        <button
+          // onClick={handleCollapseDicount}
+          type="button"
+          className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+        >
+          Payment{" "}
+          {/* <span className="font-thin">
                 {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
               </span>{" "} */}
-          </button>
-        </div>
+        </button>
 
-        <div className="grid grid-cols-2 gap-4 px-4">
-          <div className="flex items-center justify-start ps-4 border border-gray-200 rounded dark:border-gray-700">
-            <input
-              id="bordered-checkbox-1"
-              onChange={handlePaymentStatus}
-              checked={togglePayment}
-              type="checkbox"
-              name="bordered-checkbox"
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              htmlFor="bordered-checkbox-1"
-              className="w-full py-1 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              Recieve payment
-            </label>
-          </div>
-          <div className={`${togglePayment ? "" : "hidden"}`}>
-            <div className="px-4">
-              <label
-                htmlFor="paymentMethod"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Select an option
-              </label>
-              <select
-                onChange={handlePaymentInfo}
-                name="paymentMethod"
-                value={paymentInfo?.paymentMethod}
-                id="paymentMethod"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="cash">Cash</option>
-                <option value="bank-transfer">Bank Transfer</option>
-              </select>
-            </div>
-
-            <div className="px-4">
-              <label
-                htmlFor="paymentAmount"
-                className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Amount
-              </label>
-              <input
-                type="number"
-                name="paymentAmount"
-                value={paymentInfo?.paymentAmount}
-                id="paymentAmount"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="0"
-                onChange={handlePaymentInfo}
-                // min={1}
-                max={grandTotal}
-                required={togglePayment}
-              />
-            </div>
-
-            <div
-              className={`${
-                paymentInfo?.paymentMethod === "bank-transfer" ? "" : "hidden"
-              } px-4`}
-            >
-              <label
-                htmlFor="paymentReference"
-                className="gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Reference Number
-              </label>
-              <input
-                type="number"
-                name="paymentReference"
-                value={paymentInfo?.paymentReference}
-                id="paymentReference"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="0"
-                onChange={handlePaymentInfo}
-              />
+        <div className={`${user?.email !== 'admin@domino.com' && user?.roles !== 'finance' ? 'hidden' : ''}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
+              <strong>Summary</strong>
+            <div className="w-full py-4">
+              <div className="flex items-center">
+                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Grand total :
+                </p>
+                <p className="flex-1">{grandTotal}</p>
+              </div>
+              <div className="flex items-center">
+                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Total payment :
+                </p>
+                <p className="flex-1">{totaTransaction}</p>
+              </div>
+              <div className="flex items-center">
+                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Remaining amount :
+                </p>
+                <p className="flex-1">{remainingAmount}</p>
+              </div>
             </div>
           </div>
+
+          {/* transactions */}
+          <div className="px-4">
+            <table
+              className="
+               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+            >
+              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="p-4 w-4 border border-gray-300">
+                    No
+                  </th>
+                  <th scope="col" className="px-4 py-2 border border-gray-300">
+                    Date
+                  </th>
+                  <th scope="col" className="px-4 py-2 border border-gray-300">
+                    Payment method
+                  </th>
+                  <th scope="col" className="px-4 py-2 border border-gray-300">
+                    Description
+                  </th>
+                  <th scope="col" className="px-4 py-2 border border-gray-300">
+                    Payment amount
+                  </th>
+                  <th scope="col" className="px-4 py-2 border border-gray-300">
+                    Reference
+                  </th>
+                  <th scope="col" className="px-4 py-2 border border-gray-300">
+                    Status
+                  </th>
+                  <th scope="col" className="px-4 py-2 border border-gray-300">
+                    {/* Action */}
+                    <span className="font-semibold flex justify-center items-center">
+                      <CiSettings className="text-xl font-bold" />
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {paymentTransaction && paymentTransaction.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="text-center">
+                      No data found
+                    </td>
+                  </tr>
+                )}
+                {paymentTransaction &&
+                  paymentTransaction.map((data, index) => (
+                    <tr
+                      key={index}
+                      className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    >
+                      <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                        {index + 1}
+                      </td>
+                      <td
+                        className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
+                      >
+                        {data.date}
+                      </td>
+
+                      <td
+                        className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
+                      >
+                        <label
+                          htmlFor={`${data.paymentMethod}-${index}`}
+                          className="sr-only peer"
+                        >
+                          Select an option
+                        </label>
+                        <select
+                          onChange={(e) => handlePaymentMethod(index, e)}
+                          name="paymentMethod"
+                          value={data.paymentMethod}
+                          id={`${data.paymentMethod}-${index}`}
+                          className="text-gray-900 text-sm border-0 focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                          <option value="cash">Cash</option>
+                          <option value="bank-transfer">Bank Transfer</option>
+                          <option value="mobile-banking">Mobile Banking</option>
+                          <option value="check">Check</option>
+                        </select>
+                      </td>
+
+                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                        <label
+                          htmlFor={`${data.description}-${index}`}
+                          className="sr-only peer"
+                        >
+                          Description
+                        </label>
+                        <input
+                          type="text"
+                          name="description"
+                          value={data.description}
+                          id={`${data.description}-${index}`}
+                          className="text-gray-900 sm:text-sm block w-full border-0"
+                          onChange={(e) => handleFormChange(index, e)}
+                        />
+                      </td>
+                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                        <label
+                          htmlFor={`${data.paymentAmount}-${index}`}
+                          className="sr-only peer"
+                        >
+                          Payment amount
+                        </label>
+                        <input
+                          type="number"
+                          name="paymentAmount"
+                          value={data.paymentAmount}
+                          id={`${data.paymentAmount}-${index}`}
+                          className="text-gray-900 sm:text-sm block w-full border-0"
+                          placeholder="0"
+                          onChange={(e) => handleFormChange(index, e)}
+                          min={0}
+                        />
+                      </td>
+                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                        <label
+                          htmlFor={`${data.reference}-${index}`}
+                          className="sr-only peer"
+                        >
+                          Reference
+                        </label>
+                        <input
+                          type="text"
+                          name="reference"
+                          value={data.reference}
+                          id={`${data.reference}-${index}`}
+                          className="text-gray-900 sm:text-sm block w-full border-0"
+                          placeholder="0"
+                          onChange={(e) => handleFormChange(index, e)}
+                        />
+                      </td>
+                      <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                        <span
+                          className={`${
+                            data.status === "paid"
+                              ? "bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300"
+                              : "bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+                          }`}
+                        >
+                          {data.status}
+                        </span>
+                      </td>
+                      <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
+                        <button
+                          onClick={() => handleAction2(index)}
+                          title="action"
+                          type="button"
+                          className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                        >
+                          <CiMenuKebab />
+                        </button>
+                        {showPopover2 === index && (
+                          <div
+                            ref={popoverRef2}
+                            className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                          >
+                            <ul className="py-2 text-sm text-gray-700">
+                              {user?.email === "admin@domino.com" && (
+                              <li>
+                                <button
+                                  onClick={() => handleDeleteTransaction(index)}
+                                  type="button"
+                                  className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                                >
+                                  <MdDelete /> Delete
+                                </button>
+                              </li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="p-4 flex items-center justify-between">
+            <button
+              onClick={handleAddPaymentTransaction}
+              type="button"
+              className="bg-gray-200 rounded px-2 font-semibold flex items-center gap-4"
+            >
+              Add transaction
+            </button>
+            <button
+              type="button"
+              className="bg-gray-200 rounded px-2 font-semibold flex items-center gap-4"
+            >
+              Download
+            </button>
+          </div>
         </div>
+        {user?.email === "admin@domino.com" && (
+          <>
         <div className="pt-4 relative">
           <button
-            // onClick={handleCollapseDicount}
+            onClick={handleCollapseCommission}
             type="button"
             className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
           >
             Commission{" "}
-            {/* <span className="font-thin">
-                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "} */}
+            <span className="font-thin">
+              {collapseCommission ? <FaChevronUp /> : <FaChevronDown />}{" "}
+            </span>{" "}
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-4 px-4">
+        <div
+          className={`${
+            collapseCommission ? "hidden" : ""
+          } grid grid-cols-2 gap-4 px-4`}
+        >
           <div className="w-full relative">
             <CommissionSearchInput
               handleCommissionInfo={handleCommissionInfo}
               value={orderInfo.commissionFirstName}
             />
           </div>
-          <div className={`${togglePayment ? "" : ""}`}>
-            <div className="px-4">
+          <div className="">
+            <div className="px-4 mb-2">
               <label
                 htmlFor="paymentMethod"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -1601,7 +1817,7 @@ useEffect(() => {
               <input
                 type="number"
                 name="commissionForAll"
-                value={commissionForAll || null}
+                value={commissionForAll || ""}
                 id="commissionForAll"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="0"
@@ -1611,22 +1827,22 @@ useEffect(() => {
             </div>
 
             <div className="px-4">
-            <label
-                  htmlFor="totalCommission"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-[15%]"
-                >
-                  Total Commission
-                </label>
-                <input
-                  value={totalCommission || null}
-                  readOnly
-                  type="number"
-                  name="totalCommission"
-                  id="totalCommission"
-                  className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="0"
-                  required
-                />
+              <label
+                htmlFor="totalCommission"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Total Commission
+              </label>
+              <input
+                value={totalCommission || ""}
+                readOnly
+                type="number"
+                name="totalCommission"
+                id="totalCommission"
+                className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0"
+                required
+              />
             </div>
           </div>
 
@@ -1653,12 +1869,6 @@ useEffect(() => {
                 </th>
                 <th scope="col" className="px-4 py-2 border border-gray-300">
                   Earned
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  {/* Action */}
-                  <span className="font-semibold flex justify-center items-center">
-                    <CiSettings className="text-xl font-bold" />
-                  </span>
                 </th>
               </tr>
             </thead>
@@ -1699,65 +1909,20 @@ useEffect(() => {
                         className="text-gray-900 text-sm block w-full border-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="0"
                         required
-                        value={commissionPercent[index] || null}
+                        value={commissionPercent[index] || ""}
                         onChange={(e) => handleCommissionPercent(index, e)}
                       />
                     </td>
                     <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                       {commissionPrice[index] || 0}
                     </td>
-                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
-                      <button
-                        onClick={() => handleAction(index)}
-                        title="action"
-                        type="button"
-                        className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                      >
-                        <CiMenuKebab />
-                      </button>
-                      {showPopover === index && (
-                        <div
-                          ref={popoverRef}
-                          className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-                        >
-                          <ul className="py-2 text-sm text-gray-700">
-                            <li key={index}>
-                              <button
-                                type="button"
-                                onClick={() => handleModalOpen(index)}
-                                className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                              >
-                                <FaRegEdit />
-                                Edit
-                              </button>
-                            </li>
-                            <li key={index}>
-                              <button
-                                onClick={() => handleCancel(index)}
-                                type="button"
-                                className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                              >
-                                <MdDelete /> Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-
-                      {/* <button
-                            onClick={() => handleCancel(index)}
-                            title="action"
-                            type="button"
-                            className="flex items-center justify-between gap-2 text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-2.5 py-2.5 text-center"
-                          >
-                            <IoMdClose />
-                          </button> */}
-                    </td>
                   </tr>
                 ))}
             </tbody>
           </table>
         </div>
+        </>
+        )}
       </section>
       {modalOpen && (
         <StatusEditModal

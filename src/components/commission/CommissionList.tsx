@@ -175,7 +175,7 @@ export const CommissionList = () => {
                 {filteredOrders[index].hasOrder.reduce((acc, order) => (acc += order.totalCommission), 0)}
               </td>
               <td className="px-6 py-4">
-                2000
+               {commission.balance}
               </td>
               <td className="px-6 py-4 relative">
             <button
