@@ -3,269 +3,134 @@
   "orders": [
     {
       "series": "SAL-ORD-YYYY-",
-      "date": "Mar 18, 2024",
-      "deliveryDate": "Mar 18, 2024",
+      "date": "Mar 19, 2024",
+      "deliveryDate": "Mar 19, 2024",
       "orderType": "telegram",
       "description": "",
-      "customerPhone": "09-1104-4506",
+      "customerPhone": "12-4566-6788",
       "customerFirstName": "Coca Cola",
-      "commissionId": "1710715076756",
       "customerEmail": "cocacola@gmail.com",
-      "commissionPhone": "09-0507-8826",
-      "commissionFirstName": "Muhammed",
-      "commissionEmail": "muhammedb8826@gmail.com",
+      "commissionPhone": "",
+      "commissionFirstName": "",
+      "commissionEmail": "",
       "orderItems": [
         {
           "machine": "DTF",
           "material": "T-shirt",
-          "service": "Print and Heat press",
-          "unitPrice": 30000,
+          "service": "Print and Material",
+          "unitPrice": 5000,
           "status": "recieved",
-          "commissionPrice": 600,
-          "commissionPercent": "2"
+          "commissionPrice": null
         },
         {
           "machine": "UV",
           "material": "Film",
           "service": "Print and Material",
-          "unitPrice": 28800,
+          "unitPrice": 24000,
           "status": "recieved",
-          "commissionPrice": 864,
-          "commissionPercent": "3"
+          "commissionPrice": null
         },
         {
-          "machine": "UV",
-          "material": "Film",
-          "service": "Print and Material",
-          "unitPrice": 12000,
+          "machine": "BANNER",
+          "material": "Screen",
+          "service": "Print",
+          "unitPrice": 7200,
           "status": "recieved",
-          "commissionPrice": 240,
-          "commissionPercent": "2"
+          "commissionPrice": null
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
-          "width": "6",
-          "height": "5",
+          "width": "5",
+          "height": "2",
           "quantity": "5",
           "unitPrice": null
         },
         {
           "unitName": null,
-          "width": "8",
-          "height": "9",
-          "quantity": "2",
+          "width": "6",
+          "height": "4",
+          "quantity": "5",
           "unitPrice": null
         },
         {
           "unitName": null,
           "width": "2",
-          "height": "6",
-          "quantity": "5",
+          "height": "3",
+          "quantity": "4",
           "unitPrice": null
         }
       ],
-      "totalBirr": 70800,
-      "totalCommission": 1704,
+      "totalBirr": 36200,
+      "totalCommission": null,
       "fileNames": [
-        "Coca Cola-Coca Cola-DTF-T-shirt-6x5",
-        "Coca Cola-Coca Cola-UV-Film-8x9",
-        "Coca Cola-Coca Cola-UV-Film-2x6"
+        "Coca Cola-Coca Cola-DTF-T-shirt-5x2",
+        "Coca Cola-Coca Cola-UV-Film-6x4",
+        "Coca Cola-Coca Cola-BANNER-Screen-2x3"
       ],
-      "totalQuantity": 12,
-      "grandTotal": 81420,
-      "vat": 10620,
+      "totalQuantity": 14,
+      "grandTotal": 41630,
+      "vat": 5430,
       "discounts": [
         0,
         0,
         0
       ],
       "levels": [
-        "2",
+        null,
         "1",
         null
       ],
       "totalBirrAfterDiscount": [
-        30000,
-        28800,
-        12000
+        5000,
+        24000,
+        7200
       ],
       "paymentInfo": {
         "paymentMethod": "cash",
         "paymentReference": "",
         "paymentAmount": 0,
-        "paymentStatus": "not paid"
+        "paymentStatus": "partial"
       },
-      "id": "f9f9"
-    },
-    {
-      "series": "SAL-ORD-YYYY-",
-      "date": "Mar 18, 2024",
-      "deliveryDate": "Mar 18, 2024",
-      "orderType": "phone",
-      "description": "",
-      "customerPhone": "09-1144-0266",
-      "customerFirstName": "Biniyam",
-      "commissionId": "1710715690780",
-      "customerEmail": "bmtirkassomart@gmail.com",
-      "commissionPhone": "09-1102-2222",
-      "commissionFirstName": "Teshager",
-      "commissionEmail": "teshagerass@gmail.com",
-      "orderItems": [
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print",
-          "unitPrice": 45000,
-          "status": "recieved",
-          "commissionPrice": 900,
-          "commissionPercent": "2"
-        },
-        {
-          "machine": "UV",
-          "material": "Film",
-          "service": "Print and Material",
-          "unitPrice": 25000,
-          "status": "recieved",
-          "commissionPrice": 500,
-          "commissionPercent": "2"
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "6",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "5",
-          "quantity": "5",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 70000,
-      "totalCommission": 1400,
-      "fileNames": [
-        "Biniyam-Biniyam-BANNER-Screen-5x6",
-        "Biniyam-Biniyam-UV-Film-5x5"
-      ],
-      "totalQuantity": 10,
-      "grandTotal": 80500,
-      "vat": 10500,
-      "discounts": [
-        0,
-        0
-      ],
-      "levels": [
-        "2",
-        "1"
-      ],
-      "totalBirrAfterDiscount": [
-        45000,
-        25000
-      ],
-      "paymentInfo": {
-        "paymentMethod": "cash",
-        "paymentReference": "",
-        "paymentAmount": 0,
-        "paymentStatus": "not paid"
-      },
-      "id": "5c4d"
+      "id": "ecdd"
     }
   ],
   "customers": [
     {
-      "id": "1710714859103",
-      "phone": "09-1104-4506",
+      "id": "1710809287639",
+      "phone": "12-4566-6788",
       "companyType": "company",
       "firstName": "Coca Cola",
       "lastName": "",
-      "email": "cocacola@gmail.com",
-      "transactions": [
-        {
-          "date": "Mar 18, 2024",
-          "paymentMethod": "cash",
-          "description": "payment",
-          "paymentAmount": "8000",
-          "status": "paid",
-          "reference": "958djdd98-CBE"
-        },
-        {
-          "date": "Mar 18, 2024",
-          "paymentMethod": "bank-transfer",
-          "description": "payment",
-          "paymentAmount": "10000",
-          "status": "paid",
-          "reference": "958djdd98-Awash"
-        }
-      ]
+      "email": "cocacola@gmail.com"
     },
     {
-      "id": "1710715591514",
+      "id": "1710814124476",
       "phone": "09-1144-0266",
-      "companyType": "group",
+      "companyType": "individual",
       "firstName": "Biniyam",
       "lastName": "",
-      "email": "bmtirkassomart@gmail.com",
-      "transactions": [
-        {
-          "date": "Mar 18, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "status": "paid",
-          "reference": ""
-        }
-      ]
-    }
-  ],
-  "commissions": [
-    {
-      "id": "1710715076756",
-      "phone": "09-0507-8826",
-      "companyType": "individual",
-      "firstName": "Muhammed",
-      "lastName": "",
-      "email": "muhammedb8826@gmail.com",
-      "data": [
-        {
-          "date": "Mar 18, 2024",
-          "description": "payment",
-          "paymentAmount": "500",
-          "status": "Paid"
-        }
-      ],
-      "balance": 1204
+      "email": "bini@gmail.com"
     },
     {
-      "id": "1710715690780",
-      "phone": "09-1102-2222",
+      "id": "1710821022900",
+      "phone": "09-1196-8989",
+      "companyType": "company",
+      "firstName": "Pepsi",
+      "lastName": "",
+      "email": "pepsi@gmail.com"
+    },
+    {
+      "id": "1710822546278",
+      "phone": "09-1156-8989",
       "companyType": "individual",
       "firstName": "Teshager",
       "lastName": "",
-      "email": "teshagerass@gmail.com",
-      "data": [
-        {
-          "date": "Mar 18, 2024",
-          "description": "payment",
-          "paymentAmount": "700",
-          "status": "Paid"
-        },
-        {
-          "date": "Mar 18, 2024",
-          "description": "Take the remaining amount",
-          "paymentAmount": "700",
-          "status": "Paid"
-        }
-      ],
-      "balance": 0
+      "email": ""
     }
   ],
+  "commissions": [],
   "services": [
     {
       "id": "e4b1",
@@ -545,5 +410,57 @@
       "discountPercentage": "50"
     }
   ],
-  "commissionTransactions": []
+  "commissionTransactions": [],
+  "paymentTransactions": [
+    {
+      "id": "157e",
+      "transactions": [
+        {
+          "date": "Mar 19, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "15000",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "ecdd",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    }
+  ],
+  "orderStatus": [
+    {
+      "id": "8a3b",
+      "orderId": "ecdd",
+      "status": "recieved",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "recieved",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "recieved",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "recieved",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        }
+      ]
+    }
+  ]
 }

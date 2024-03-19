@@ -2,6 +2,7 @@ import { GoBack } from "../common/GoBack";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import {
+  getOrderStatus,
   getOrdersById,
   updateOrder,
 } from "../../redux/features/order/orderSlice";
@@ -29,7 +30,9 @@ import {
 import Swal from "sweetalert2";
 import {
   getCustomers,
+  getPaymentTransactions,
   updateCustomer,
+  updatePaymentTransaction,
 } from "@/redux/features/customer/customerSlice";
 import { RootState } from "@/redux/store";
 
@@ -45,12 +48,13 @@ interface CustomerType {
 
 const OrderDetailsPage = () => {
   const { id } = useParams();
-  const { singleOrder, isLoading, error } = useSelector((state) => state.order);
-  const { customers } = useSelector((state) => state.customer);
+  const { singleOrder, orderStatus, isLoading, error } = useSelector((state) => state.order);
   const { prices } = useSelector((state) => state.price);
   const { services } = useSelector((state) => state.service);
   const { discounts } = useSelector((state) => state.discount);
   const { user } = useSelector((state: RootState) => state.auth);
+  
+const findOrderStatus = orderStatus.find((status) => status.orderId === id);  
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -58,31 +62,22 @@ const OrderDetailsPage = () => {
     dispatch(getServices());
     dispatch(getDiscounts());
     dispatch(getCommissions());
-    const customerId = localStorage.getItem("customerId");    
-    dispatch(getCustomers()).then((res) => {         
+    dispatch(getOrderStatus()).then((res) => {
       if (res.payload) {
-        const customer = res.payload.find(
-          (customer) => customer.id === customerId
-        );  
-        setCustomer(customer);
-        if(customer.transactions){
-        setPaymentTransaction(customer.transactions);
-        }
-      }
-      else {
-        setPaymentTransaction([
-          {
-            date: formattedDate,
-            paymentMethod: "cash",
-            description: "",
-            paymentAmount: "",
-            status: "pending",
-            reference: "",
-          },
-        ]);
+        const status = res.payload.find((status) => status.orderId === id);
+        setOrderStatus(status);
       }
     });
-  }, [dispatch]);
+    dispatch(getPaymentTransactions()).then((res) => {         
+      if (res.payload) {
+        const customer = res.payload.find(
+          (customer) => customer.order?.id === id
+        );  
+        setTransactionData(customer);
+        setPaymentTransaction(customer.transactions);
+      }
+    });
+  }, [dispatch, id]);
 
   useEffect(() => {
     dispatch(getOrdersById(id))
@@ -285,7 +280,8 @@ const OrderDetailsPage = () => {
   const [collapseDisount, setCollapseDiscount] = useState(false);
   const [totaTransaction, setTotalTransaction] = useState(0);
   const [remainingAmount, setRemainingAmount] = useState(0);
-  const[customer, setCustomer] = useState([]);
+  const [orderStat, setOrderStatus] = useState(findOrderStatus);
+  const [transactionData, setTransactionData] = useState({});
   const [paymentTransaction, setPaymentTransaction] = useState([
     {
       date: formattedDate,
@@ -508,7 +504,6 @@ const OrderDetailsPage = () => {
       if (!price) {
         return { discount: 0, level: null };
       }
-
       // Iterate through discounts array to find the appropriate discount level
       let discountPercentage = 0;
       let level = null;
@@ -583,9 +578,7 @@ const OrderDetailsPage = () => {
         discount = userInputDiscount;
       }
       const grandTotal = totalBirr - discount + vat;
-      // const lastGrandTotal = grandTotal - userInputDiscount;
       setGrandTotal(grandTotal);
-      // setLastGrandTotal(lastGrandTotal);
     }
   }, [
     discountPerItem,
@@ -600,14 +593,6 @@ const OrderDetailsPage = () => {
     const { name, value } = e.target;
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
-      [name]: value,
-    }));
-  };
-
-  const handlePaymentInfo = (e) => {
-    const { name, value } = e.target;
-    setPaymentInfo((prevPaymentInfo) => ({
-      ...prevPaymentInfo,
       [name]: value,
     }));
   };
@@ -740,10 +725,19 @@ const OrderDetailsPage = () => {
   }
 
   const handleCancel = (index) => {
-    const updatedFormData = [...formData];
-    const filteredData = updatedFormData.filter((_, i) => i !== index);
-    setFormData(filteredData);
-  };
+    // const updatedFormData = [...formData];
+    // const filteredData = updatedFormData.filter((_, i) => i !== index);
+    // setFormData(filteredData);
+  
+    // // After filtering data, recalculate totalBirr and vat
+    // const totalBirr = filteredData.reduce((acc, item) => acc + item.totalBirr || 0, 0);
+    // const vat = totalBirr * 0.15;
+    // setTotalBirr(totalBirr);
+    // setVat(vat);
+  }
+
+console.log(orderStat, "orderStat");
+
 
   const handleMaterialSelect = (selectedOption, index) => {
     const { value } = selectedOption;
@@ -764,16 +758,6 @@ const OrderDetailsPage = () => {
       });
       return updatedFormData;
     });
-    setMeasuresFormData((prevFormData) => [
-      ...prevFormData,
-      {
-        unitName: null,
-        width: null,
-        height: null,
-        quantity: null,
-        unitPrice: null,
-      },
-    ]);
   };
 
   const handleServiceSelect = (selectedOption, index) => {
@@ -880,19 +864,13 @@ const OrderDetailsPage = () => {
         status: "paid",
       };
     });
-
-    const customerId = localStorage.getItem("customerId");
-    
-    const transactionData = {
-      ...customer,
+  
+    const transactions = {
+      ...transactionData,
       transactions: updatedTransactionsStatus,
-      id: customerId,
     };    
-
-    dispatch(updateCustomer(transactionData)).then((res) => {
-      if (res.payload) {
-        console.log(res.payload);
-        
+    dispatch(updatePaymentTransaction(transactions)).then((res) => {
+      if (res.payload) {  
         setPaymentTransaction(res.payload.transactions);
       }
     });
@@ -1243,23 +1221,25 @@ const OrderDetailsPage = () => {
                           </p>
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                          {orderStat && (
                           <div className="flex items-center justify-center w-full">
-                            {data.status === "recieved" && (
+                            {orderStat?.orderItems[index]?.status === "recieved" && (
                               <span className="bg-blue-100 text-blue-800 text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                                {data.status}
+                                {orderStat?.orderItems[index]?.status}
                               </span>
                             )}
-                            {data.status === "edited" && (
+                            {orderStat?.orderItems[index]?.status === "edited" && (
                               <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
-                                {data.status}
+                                {orderStat?.orderItems[index].status}
                               </span>
                             )}
-                            {data.status === "rejected" && (
+                            {orderStat?.orderItems[index]?.status === "rejected" && (
                               <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                {data.status}
+                                {orderStat?.orderItems[index]?.status}
                               </span>
                             )}
                           </div>
+)}
                         </td>
                         <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
                           <button
@@ -1341,7 +1321,7 @@ const OrderDetailsPage = () => {
               </div>
               <div>
                 <label
-                  htmlFor="totalQuantity"
+                  htmlFor="totalBirr"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Sub Total
@@ -1386,7 +1366,7 @@ const OrderDetailsPage = () => {
               </div>
               <div className="flex justify-between gap-4 items-center">
                 <label
-                  htmlFor="totalBirr"
+                  htmlFor="grandTotal"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-[15%]"
                 >
                   Total (Birr)
@@ -1395,8 +1375,8 @@ const OrderDetailsPage = () => {
                   value={grandTotal}
                   readOnly
                   type="number"
-                  name="totalBirr"
-                  id="totalBirr"
+                  name="grandTotal"
+                  id="grandTotal"
                   className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="0"
                   required

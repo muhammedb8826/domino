@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import { createOrder } from "../../redux/features/order/orderSlice";
+import { createOrder, createOrderStatus } from "../../redux/features/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { GoBack } from "../common/GoBack";
@@ -15,6 +15,7 @@ import { getprice } from "../../redux/features/price/pricingSlice";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import Select from "react-select";
 import { IoMdClose } from "react-icons/io";
+import { createPaymentTransaction } from "@/redux/features/customer/customerSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -61,6 +62,17 @@ export const OrderRegistration = () => {
       status: "recieved",
     },
   ]);
+
+const [paymentTransaction, setPaymentTransaction] = useState([{
+      amount: "",
+      date: formattedDate,
+      order: {
+        id: "",
+        customer: {
+          id: "",
+        }
+      }
+}]);
 
   const [paymentInfo, setPaymentInfo] = useState({
     paymentMethod: "cash",
@@ -267,10 +279,6 @@ export const OrderRegistration = () => {
   }, [formData, prices]);
 
   // form submission
-
-  console.log(orderInfo.customerId);
-  
-
   const resetForm = () => {
     setOrderInfo({
       series: "SAL-ORD-YYYY-",
@@ -340,9 +348,6 @@ export const OrderRegistration = () => {
       return nameAndFile;
     });
 
-    const cutomerId = orderInfo.customerId;
-    localStorage.setItem("customerId", cutomerId )
-
     const orderData = {
       ...orderInfo,
       orderItems: unitPrice,
@@ -355,6 +360,40 @@ export const OrderRegistration = () => {
     };
     dispatch(createOrder(orderData)).then((res) => {
       if (res.payload) {
+        setPaymentTransaction((prevPaymentTransaction) => ({
+          ...prevPaymentTransaction,
+          order: {
+            id: res.payload.id,
+            customer: {
+              id: res.payload.customerId,
+            },
+          },
+        }));
+
+        const paymentData = {
+          transactions: [{
+            date: formattedDate,
+          paymentMethod: "cash",
+          description: "",
+          paymentAmount: "",
+          reference: "",
+          status: "pending",
+          }],
+          order: {
+            id: res.payload.id,
+            customer: {
+              id: res.payload.customerId,
+            },
+          },
+        };
+        dispatch(createPaymentTransaction(paymentData));
+        const statusData = {
+          orderId: res.payload.id,
+          status: "recieved",
+          adminApproval: false,
+          orderItems: Array(res.payload.orderItems.length).fill({status: "recieved", note: "", printed: false, adminApproval: false,completed: false}),
+        };
+        dispatch(createOrderStatus(statusData));
         const message = "Order created successfully";
         toast.success(message);
         resetForm();

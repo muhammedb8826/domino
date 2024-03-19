@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers, deleteUser } from "../../redux/features/user/userSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import userImage from "../../assets/images/avatar.jpg";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaRegEdit, FaUserPlus } from "react-icons/fa";
@@ -15,14 +15,33 @@ const User = () => {
   const { users, isLoading, errors, error } = useSelector(
     (state: any) => state.user
   );
+  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
   const [showPopover, setShowPopover] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
-  const [userId, setUserId] = useState(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
 
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(null);
+      }
+    };
+
+    if (showPopover !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPopover]);
+
 
   useEffect(() => {
     if (errors) {
@@ -113,7 +132,7 @@ const User = () => {
             <td className="px-6 py-4">{user.phone}</td>
             <td className="px-6 py-4">{user.address}</td>
             <td className="px-6 py-4">{user.joined_date}</td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4 relative">
               <button
                 onClick={() => handleAction(index)}
                 title="action"
@@ -126,10 +145,12 @@ const User = () => {
                 <CiMenuKebab />
               </button>
               {showPopover === index && (
-                <div className="absolute z-10 right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                <div 
+                ref={popoverRef}
+                className="absolute z-10 end-32 -top-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                   {/* Dropdown content */}
                   <div className="px-4 py-3 text-sm text-gray-900">
-                    <div className="font-medium">Pro User</div>
+                    <div className="font-medium">{user?.roles}</div>
                     <div className="truncate">{user.email}</div>
                   </div>
                   <ul className="py-2 text-sm text-gray-700">
