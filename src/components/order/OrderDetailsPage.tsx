@@ -5,6 +5,7 @@ import {
   getOrderStatus,
   getOrdersById,
   updateOrder,
+  updateOrderStatus,
 } from "../../redux/features/order/orderSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,13 +49,15 @@ interface CustomerType {
 
 const OrderDetailsPage = () => {
   const { id } = useParams();
-  const { singleOrder, orderStatus, isLoading, error } = useSelector((state) => state.order);
+  const { singleOrder, orderStatus, isLoading, error } = useSelector(
+    (state) => state.order
+  );
   const { prices } = useSelector((state) => state.price);
   const { services } = useSelector((state) => state.service);
   const { discounts } = useSelector((state) => state.discount);
   const { user } = useSelector((state: RootState) => state.auth);
-  
-const findOrderStatus = orderStatus.find((status) => status.orderId === id);  
+
+  const findOrderStatus = orderStatus.find((status) => status.orderId === id);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -68,11 +71,11 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
         setOrderStatus(status);
       }
     });
-    dispatch(getPaymentTransactions()).then((res) => {         
+    dispatch(getPaymentTransactions()).then((res) => {
       if (res.payload) {
         const customer = res.payload.find(
           (customer) => customer.order?.id === id
-        );  
+        );
         setTransactionData(customer);
         setPaymentTransaction(customer.transactions);
       }
@@ -129,7 +132,15 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
 
   const [icons, setIcons] = useState([]);
   const inputRefs = useRef(Array(fileName.length).fill(null));
+  const [invisibleTooltip, setInvisibleTooltip] = useState(false);
 
+  const handleMouseEnter = () => {
+    setInvisibleTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    setInvisibleTooltip(false);
+  };
   useEffect(() => {
     setIcons(Array(fileName.length).fill("default"));
     setTooltipMessages(Array(fileName.length).fill("Copy to clipboard"));
@@ -271,7 +282,6 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
   const [vat, setVat] = useState(0);
   const [userInputDiscount, setUserInputDiscount] = useState(0);
   const [totalBirrAfterDiscount, setTotalBirrAfterDiscount] = useState([]);
-  const [togglePayment, setTogglePayment] = useState(false);
   const [commissionPrice, setCommissionPrice] = useState([]);
   const [commissionPercent, setCommissionPercent] = useState([]);
   const [totalCommission, setTotalCommission] = useState(null);
@@ -328,7 +338,6 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
     });
   };
 
-
   const handleAddPaymentTransaction = () => {
     setPaymentTransaction((prev) => [
       ...prev,
@@ -383,24 +392,6 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
     setDataIndex(index);
   };
 
-  const handleStatusUpdate = (dataIndex, status) => {
-    // Update the status in the form data
-    const updatedFormData = formData.map((item, i) => {
-      if (i === dataIndex) {
-        return {
-          ...item,
-          status,
-        };
-      }
-      return item;
-    });
-    setFormData(updatedFormData);
-  };
-
-  const handlePaymentStatus = () => {
-    setTogglePayment((prev) => !prev);
-  };
-
   const handleAddRow = () => {
     setFormData((prevFormData) => [
       ...prevFormData,
@@ -423,7 +414,22 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
         unitPrice: null,
       },
     ]);
+    setOrderStatus((prev) => ({
+      ...prev,
+      orderItems: [
+        ...prev.orderItems,
+        {
+          status: "received",
+          note: "",
+          printed: false,
+          adminApproval: false,
+          completed: false,
+        },
+      ],
+    }));
   };
+
+  console.log(orderStat);
 
   const handleInputChanges = (
     index: number,
@@ -598,9 +604,7 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
   };
 
   useEffect(() => {
-    if (
-     totaTransaction > 0 && grandTotal > 0 && totaTransaction < grandTotal
-    ) {
+    if (totaTransaction > 0 && grandTotal > 0 && totaTransaction < grandTotal) {
       setPaymentInfo((prev) => ({
         ...prev,
         paymentStatus: "partial",
@@ -728,16 +732,12 @@ const findOrderStatus = orderStatus.find((status) => status.orderId === id);
     // const updatedFormData = [...formData];
     // const filteredData = updatedFormData.filter((_, i) => i !== index);
     // setFormData(filteredData);
-  
     // // After filtering data, recalculate totalBirr and vat
     // const totalBirr = filteredData.reduce((acc, item) => acc + item.totalBirr || 0, 0);
     // const vat = totalBirr * 0.15;
     // setTotalBirr(totalBirr);
     // setVat(vat);
-  }
-
-console.log(orderStat, "orderStat");
-
+  };
 
   const handleMaterialSelect = (selectedOption, index) => {
     const { value } = selectedOption;
@@ -797,7 +797,7 @@ console.log(orderStat, "orderStat");
       return matchingPrice;
     });
     setFilteredData(matchingPriceData);
-  }, [formData, prices]);  
+  }, [formData, prices]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -830,7 +830,7 @@ console.log(orderStat, "orderStat");
     const appendName = fileName.map((item) => {
       const nameAndFile = `${orderInfo.customerFirstName}-${item}`;
       return nameAndFile;
-    });   
+    });
 
     const orderData = {
       ...orderInfo,
@@ -864,17 +864,17 @@ console.log(orderStat, "orderStat");
         status: "paid",
       };
     });
-  
+
     const transactions = {
       ...transactionData,
       transactions: updatedTransactionsStatus,
-    };    
+    };
     dispatch(updatePaymentTransaction(transactions)).then((res) => {
-      if (res.payload) {  
+      if (res.payload) {
         setPaymentTransaction(res.payload.transactions);
       }
     });
-
+    dispatch(updateOrderStatus(orderStat));
     setGrandTotal(grandTotal);
   };
 
@@ -1222,24 +1222,60 @@ console.log(orderStat, "orderStat");
                         </td>
                         <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
                           {orderStat && (
-                          <div className="flex items-center justify-center w-full">
-                            {orderStat?.orderItems[index]?.status === "recieved" && (
-                              <span className="bg-blue-100 text-blue-800 text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                                {orderStat?.orderItems[index]?.status}
-                              </span>
-                            )}
-                            {orderStat?.orderItems[index]?.status === "edited" && (
-                              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
-                                {orderStat?.orderItems[index].status}
-                              </span>
-                            )}
-                            {orderStat?.orderItems[index]?.status === "rejected" && (
-                              <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                {orderStat?.orderItems[index]?.status}
-                              </span>
-                            )}
-                          </div>
-)}
+                            <div
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            className="border flex items-center justify-center w-full relative"
+                          >
+                              {orderStat.orderItems[index].status ===
+                                "received" && (
+                                <span className="bg-blue-100 text-blue-800 text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                                  {orderStat.orderItems[index].status}
+                                </span>
+                              )}
+                              {orderStat.orderItems[index].status ===
+                                "edited" && (
+                                <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                  {orderStat.orderItems[index].status}
+                                </span>
+                              )}
+                              {orderStat.orderItems[index].status ===
+                                "rejected" && (
+                                <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                  {orderStat.orderItems[index].status}
+                                </span>
+                              )}
+                              {orderStat.orderItems[index].status ===
+                                "approved" && (
+                                <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                  {orderStat.orderItems[index].status}
+                                </span>
+                              )}
+                              {orderStat.orderItems[index].status ===
+                                "printed" && (
+                                <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                  {orderStat.orderItems[index].status}
+                                </span>
+                              )}
+                              {invisibleTooltip && ( // Show tooltip only if visibleTooltip state is true
+                                <>
+                                {orderStat.orderItems[index].note !=="" ?
+                                (
+                                <div
+                                  role="tooltip"
+                                  className="absolute z-10 inline-block p-1 text-xs font-medium text-gray-100 bg-gray-800 border border-gray-300 rounded-lg shadow-sm tooltip"
+                                >
+                                  {orderStat.orderItems[index].note}
+                                  <div
+                                    className="tooltip-arrow"
+                                    data-popper-arrow
+                                  ></div>
+                                </div>
+                                ) : null}
+                                </>
+                              )}
+                            </div>
+                          )}
                         </td>
                         <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
                           <button
@@ -1256,7 +1292,15 @@ console.log(orderStat, "orderStat");
                               className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                             >
                               <ul className="py-2 text-sm text-gray-700">
-                                <li className={`${user?.email !== 'admin@domino.com' && user?.roles !== 'graphic-designer' ? 'hidden' : ''}`}>
+                                {orderStat?.orderItems[index].adminApproval === false && (
+                                <li
+                                  className={`${
+                                    user?.email !== "admin@domino.com" &&
+                                    user?.roles !== "graphic-designer"
+                                      ? "hidden"
+                                      : ""
+                                  }`}
+                                >
                                   <button
                                     type="button"
                                     onClick={() => handleModalOpen(index)}
@@ -1266,7 +1310,15 @@ console.log(orderStat, "orderStat");
                                     Edit
                                   </button>
                                 </li>
-                                <li className={`${user?.email !== 'admin@domino.com' && user?.roles !== 'reception' ? 'hidden' : ''}`}>
+                                )}
+                                <li
+                                  className={`${
+                                    user?.email !== "admin@domino.com" &&
+                                    user?.roles !== "reception"
+                                      ? "hidden"
+                                      : ""
+                                  }`}
+                                >
                                   <button
                                     onClick={() => handleCancel(index)}
                                     type="button"
@@ -1490,45 +1542,48 @@ console.log(orderStat, "orderStat");
         </form>
         {user?.email === "admin@domino.com" && (
           <>
-        <div className="pt-4">
-          <button
-            onClick={handleCollapseDiscount}
-            type="button"
-            className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
-          >
-            Additional Discount{" "}
-            <span className="font-thin">
-                {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "}
-          </button>
-        </div>
-        <div
-          className="
+            <div className="pt-4">
+              <button
+                onClick={handleCollapseDiscount}
+                type="button"
+                className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+              >
+                Additional Discount{" "}
+                <span className="font-thin">
+                  {collapseDisount ? <FaChevronUp /> : <FaChevronDown />}{" "}
+                </span>{" "}
+              </button>
+            </div>
+            <div
+              className="
             flex justify-end items-center gap-4 pb-4"
-        >
-          <div className={`${collapseDisount? 'hidden': ''} px-4 flex md:w-1/2`}>
-            <label
-              htmlFor="userInputDiscount"
-              className="w-[15%] gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Discount
-            </label>
-            <input
-              type="number"
-              name="userInputDiscount"
-              value={userInputDiscount}
-              id="userInputDiscount"
-              className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="0"
-              required
-              onChange={(e) => setUserInputDiscount(e.target.value)}
-            />
-          </div>
-        </div>
-        </>
+              <div
+                className={`${
+                  collapseDisount ? "hidden" : ""
+                } px-4 flex md:w-1/2`}
+              >
+                <label
+                  htmlFor="userInputDiscount"
+                  className="w-[15%] gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Discount
+                </label>
+                <input
+                  type="number"
+                  name="userInputDiscount"
+                  value={userInputDiscount}
+                  id="userInputDiscount"
+                  className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="0"
+                  required
+                  onChange={(e) => setUserInputDiscount(e.target.value)}
+                />
+              </div>
+            </div>
+          </>
         )}
 
-  
         <button
           // onClick={handleCollapseDicount}
           type="button"
@@ -1540,9 +1595,15 @@ console.log(orderStat, "orderStat");
               </span>{" "} */}
         </button>
 
-        <div className={`${user?.email !== 'admin@domino.com' && user?.roles !== 'finance' ? 'hidden' : ''}`}>
+        <div
+          className={`${
+            user?.email !== "admin@domino.com" && user?.roles !== "finance"
+              ? "hidden"
+              : ""
+          }`}
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-              <strong>Summary</strong>
+            <strong>Summary</strong>
             <div className="w-full py-4">
               <div className="flex items-center">
                 <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -1619,15 +1680,11 @@ console.log(orderStat, "orderStat");
                       <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                         {index + 1}
                       </td>
-                      <td
-                        className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
-                      >
+                      <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                         {data.date}
                       </td>
 
-                      <td
-                        className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
-                      >
+                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                         <label
                           htmlFor={`${data.paymentMethod}-${index}`}
                           className="sr-only peer"
@@ -1726,15 +1783,17 @@ console.log(orderStat, "orderStat");
                           >
                             <ul className="py-2 text-sm text-gray-700">
                               {user?.email === "admin@domino.com" && (
-                              <li>
-                                <button
-                                  onClick={() => handleDeleteTransaction(index)}
-                                  type="button"
-                                  className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                                >
-                                  <MdDelete /> Delete
-                                </button>
-                              </li>
+                                <li>
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteTransaction(index)
+                                    }
+                                    type="button"
+                                    className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                                  >
+                                    <MdDelete /> Delete
+                                  </button>
+                                </li>
                               )}
                             </ul>
                           </div>
@@ -1763,152 +1822,168 @@ console.log(orderStat, "orderStat");
         </div>
         {user?.email === "admin@domino.com" && (
           <>
-        <div className="pt-4 relative">
-          <button
-            onClick={handleCollapseCommission}
-            type="button"
-            className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
-          >
-            Commission{" "}
-            <span className="font-thin">
-              {collapseCommission ? <FaChevronUp /> : <FaChevronDown />}{" "}
-            </span>{" "}
-          </button>
-        </div>
-        <div
-          className={`${
-            collapseCommission ? "hidden" : ""
-          } grid grid-cols-2 gap-4 px-4`}
-        >
-          <div className="w-full relative">
-            <CommissionSearchInput
-              handleCommissionInfo={handleCommissionInfo}
-              value={orderInfo.commissionFirstName}
-            />
-          </div>
-          <div className="">
-            <div className="px-4 mb-2">
-              <label
-                htmlFor="paymentMethod"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            <div className="pt-4 relative">
+              <button
+                onClick={handleCollapseCommission}
+                type="button"
+                className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
               >
-                Commission percent
-              </label>
-              <input
-                type="number"
-                name="commissionForAll"
-                value={commissionForAll || ""}
-                id="commissionForAll"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="0"
-                required
-                onChange={handleCommissionForAll}
-              />
+                Commission{" "}
+                <span className="font-thin">
+                  {collapseCommission ? <FaChevronUp /> : <FaChevronDown />}{" "}
+                </span>{" "}
+              </button>
             </div>
-
-            <div className="px-4">
-              <label
-                htmlFor="totalCommission"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Total Commission
-              </label>
-              <input
-                value={totalCommission || ""}
-                readOnly
-                type="number"
-                name="totalCommission"
-                id="totalCommission"
-                className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="0"
-                required
-              />
-            </div>
-          </div>
-
-          <table
-            className="
-               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          >
-            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="p-4 w-4 border border-gray-300">
-                  No
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Material
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Services
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Amount
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Commission %
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Earned
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {formData && formData.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="text-center">
-                    No data found
-                  </td>
-                </tr>
-              )}
-              {formData &&
-                formData.map((data, index) => (
-                  <tr
-                    key={index}
-                    className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            <div
+              className={`${
+                collapseCommission ? "hidden" : ""
+              } grid grid-cols-2 gap-4 px-4`}
+            >
+              <div className="w-full relative">
+                <CommissionSearchInput
+                  handleCommissionInfo={handleCommissionInfo}
+                  value={orderInfo.commissionFirstName}
+                />
+              </div>
+              <div className="">
+                <div className="px-4 mb-2">
+                  <label
+                    htmlFor="paymentMethod"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      {index + 1}
-                    </td>
-                    <td
-                      scope="row"
-                      className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
+                    Commission percent
+                  </label>
+                  <input
+                    type="number"
+                    name="commissionForAll"
+                    value={commissionForAll || ""}
+                    id="commissionForAll"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="0"
+                    required
+                    onChange={handleCommissionForAll}
+                  />
+                </div>
+
+                <div className="px-4">
+                  <label
+                    htmlFor="totalCommission"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Total Commission
+                  </label>
+                  <input
+                    value={totalCommission || ""}
+                    readOnly
+                    type="number"
+                    name="totalCommission"
+                    id="totalCommission"
+                    className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="0"
+                    required
+                  />
+                </div>
+              </div>
+
+              <table
+                className="
+               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+              >
+                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="p-4 w-4 border border-gray-300">
+                      No
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-2 border border-gray-300"
                     >
-                      {data.material}
-                    </td>
-                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {data.service}
-                    </td>
-                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      {calculatedUnitPrices[index] || 0}
-                    </td>
-                    <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      <input
-                        type="number"
-                        name="commissionPercent"
-                        id="commissionPercent"
-                        className="text-gray-900 text-sm block w-full border-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="0"
-                        required
-                        value={commissionPercent[index] || ""}
-                        onChange={(e) => handleCommissionPercent(index, e)}
-                      />
-                    </td>
-                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      {commissionPrice[index] || 0}
-                    </td>
+                      Material
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-2 border border-gray-300"
+                    >
+                      Services
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-2 border border-gray-300"
+                    >
+                      Amount
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-2 border border-gray-300"
+                    >
+                      Commission %
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-2 border border-gray-300"
+                    >
+                      Earned
+                    </th>
                   </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-        </>
+                </thead>
+                <tbody>
+                  {formData && formData.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center">
+                        No data found
+                      </td>
+                    </tr>
+                  )}
+                  {formData &&
+                    formData.map((data, index) => (
+                      <tr
+                        key={index}
+                        className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      >
+                        <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                          {index + 1}
+                        </td>
+                        <td
+                          scope="row"
+                          className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
+                        >
+                          {data.material}
+                        </td>
+                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          {data.service}
+                        </td>
+                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                          {calculatedUnitPrices[index] || 0}
+                        </td>
+                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                          <input
+                            type="number"
+                            name="commissionPercent"
+                            id="commissionPercent"
+                            className="text-gray-900 text-sm block w-full border-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="0"
+                            required
+                            value={commissionPercent[index] || ""}
+                            onChange={(e) => handleCommissionPercent(index, e)}
+                          />
+                        </td>
+                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                          {commissionPrice[index] || 0}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </section>
       {modalOpen && (
         <StatusEditModal
           handleModalOpen={handleModalOpen}
           dataIndex={dataIndex}
-          handleStatusUpdate={handleStatusUpdate}
+          orderStat={orderStat}
+          setOrderStatus={setOrderStatus}
         />
       )}
     </>

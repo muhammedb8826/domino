@@ -1,16 +1,20 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import Logout from "../../auth/Logout";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { logout } from "../../redux/features/user/authentication";
 import getStartedImage from "../../assets/images/avatar.jpg";
 import { RootState } from '../../redux/store';
+import { getOrderStatus } from "@/redux/features/order/orderSlice";
+import Loading from "../common/Loading";
 
 const TopBar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const { user, isLoading } = useSelector((state: RootState) => state.auth);
+  const {orderStatus} = useSelector((state: RootState) => state.order);
+
   
 
   const dispatch = useDispatch();
@@ -25,38 +29,51 @@ const TopBar = () => {
       navigate('/sign-in');
     }
   }, [user, navigate]);
-
+useEffect(() => {
+  dispatch(getOrderStatus());
+}
+, [dispatch]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
+  const [received, setReceived] = useState([]);
+  const [approved, setApproved] = useState([]);
+
+  useEffect(()=>{
+    const receivedItems = orderStatus.filter(order => order.status === 'received')
+    .map(order => order.orderItems); // Map over the received orders to get their orderItems
+    setReceived(receivedItems);
+  },[orderStatus])
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading/>
   }
 
   const date = new Date();
   const hour = date.getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
-
   return (
     <div className="flex h-16 p-4 justify-between gap-4 items-center w-full shadow-md bg-white">
       <div className="flex-1">
         <h1 className="text-xl">{greeting} {user?.first_name}</h1>
       </div>
-
+      {user?.email === "admin@domino.com" && (
       <div>
-        <button
+        <Link
+          to="/dashboard/notifications"
           type="button"
           className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Notifications
           <span className="inline-flex items-center justify-center w-4 h-4 ms-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
-            2
+            {`${user?.email === "admin@domino.com" ? received.length : 0}`}
           </span>
-        </button>
+        </Link>
       </div>
+      )}
 
       <div className="relative">
       <button

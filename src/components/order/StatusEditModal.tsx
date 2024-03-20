@@ -1,25 +1,55 @@
+import { updateOrderStatus } from "@/redux/features/order/orderSlice";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-export const StatusEditModal = ({ handleModalOpen, dataIndex, handleStatusUpdate }) => {
-const [status, setStatus] = useState("");
+export const StatusEditModal = ({
+  handleModalOpen,
+  dataIndex,
+  orderStat,
+  setOrderStatus,
+}) => {
+  console.log("orderStat", orderStat);
+  const dispatch = useDispatch();
+
+  const [status, setStatus] = useState("");
+  const [note, setNote] = useState("");
 
   const handleChange = (e) => {
     setStatus(e.target.value);
   };
+  const handleChangeNote = (e) => {
+    setNote(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleStatusUpdate(dataIndex, status);
-    // Clear the status after updating the form state
+    const updatedOrderItems = orderStat.orderItems.map((item, index) => {
+      if (index === dataIndex) {
+        // Create a new object to maintain immutability
+        return {
+          ...item,
+          status: status,
+          note: note,
+        };
+      }
+      return item;
+    });
+    const data = {
+      ...orderStat,
+      orderItems: updatedOrderItems,
+    };
+
+    // console.log("data", data);
+
+    setOrderStatus(data);
+    dispatch(updateOrderStatus(data));
     const message = "Order status updated successfully";
     toast.success(message);
     setStatus("");
     handleModalOpen(false);
-    // Close the modal
   };
-
 
   return (
     <>
@@ -64,7 +94,9 @@ const [status, setStatus] = useState("");
                 </div>
                 <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
                   <input
-                    onChange={(e) => {handleChange(e)}}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
                     id="bordered-radio-2"
                     type="radio"
                     value="rejected"
@@ -77,6 +109,23 @@ const [status, setStatus] = useState("");
                   >
                     Rejected
                   </label>
+                </div>
+                <div>
+                  <label
+                    htmlFor="note"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Note
+                  </label>
+                  <textarea
+                   onChange={handleChangeNote}
+                    value={note}
+                    id="note"
+                    rows={4}
+                    name="note"
+                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Write your thoughts here..."
+                  ></textarea>
                 </div>
               </div>
               {/*footer*/}

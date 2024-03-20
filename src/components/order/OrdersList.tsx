@@ -5,7 +5,7 @@ import { IoBagAdd } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import { deleteOrder, getOrders } from "@/redux/features/order/orderSlice";
+import { deleteOrder, deleteOrderStatus, getOrders } from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
 import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
@@ -22,7 +22,7 @@ interface User {
 
 const OrdersList = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { orders, isLoading, error } = useSelector(
+  const { orders, orderStatus, isLoading, error } = useSelector(
     (state: RootState) => state.order
   );
   // const {commissions} = useSelector((state: RootState) => state.commission);
@@ -61,10 +61,22 @@ const OrdersList = () => {
   const receivedStatus =
     orders &&
     orders.map((item, index) => {
-      return item.orderItems.filter((order) => order.status === "recieved");
+      return item.orderItems.filter((order) => order.status === "received");
     });
 
   const handleDeleteOrder = (id) => {
+    orderStatus.map((order) => {
+      if (order.id === id) {
+        if (order.status === "approved") {
+          return Swal.fire({
+            title: "Error!",
+            text: "You can't delete a received order",
+            icon: "error",
+          });
+        }
+      }
+    });
+
     Swal.fire({
       title: "Are you sure?",
       text: "You want to delete this order!",
@@ -81,6 +93,8 @@ const OrdersList = () => {
           icon: "success",
         }).then(() => {
           dispatch(deleteOrder(id));
+          const orderStatusId = orderStatus.find((order) => order.orderId === id);
+          dispatch(deleteOrderStatus(orderStatusId?.id));
         });
       }
       setShowPopover(null);
@@ -197,10 +211,7 @@ const OrdersList = () => {
   return (
     <div className="p-4 overflow-y-scroll h-screen">
       <h1 className="flex items-center gap-4">
-        <span className="text-2xl font-bold">Order Details</span>
-        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
-          You have 3 pending notification
-        </span>
+        <span className="text-2xl font-bold">Orders List</span>
       </h1>
 
       <div className="cards flex items-center justify-between py-4">
@@ -220,7 +231,7 @@ const OrdersList = () => {
           </p>
           <div className="">
             <p className="font-bold text-2xl">{receivedStatus.length}</p>
-            <p className="text-gray-400">Total recieved orders</p>
+            <p className="text-gray-400">Total received orders</p>
           </div>
           <div className="progress ml-auto">
             <div className="relative w-14 h-14">

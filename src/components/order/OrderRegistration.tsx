@@ -389,9 +389,9 @@ const [paymentTransaction, setPaymentTransaction] = useState([{
         dispatch(createPaymentTransaction(paymentData));
         const statusData = {
           orderId: res.payload.id,
-          status: "recieved",
+          status: "received",
           adminApproval: false,
-          orderItems: Array(res.payload.orderItems.length).fill({status: "recieved", note: "", printed: false, adminApproval: false,completed: false}),
+          orderItems: Array(res.payload.orderItems.length).fill({status: "received", note: "", printed: false, adminApproval: false,completed: false}),
         };
         dispatch(createOrderStatus(statusData));
         const message = "Order created successfully";

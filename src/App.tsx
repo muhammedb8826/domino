@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import OrderDetailsPage from "./components/order/OrderDetailsPage";
 import { OrderRegistration } from "./components/order/OrderRegistration";
 import CommissionDetailsPage from "./components/commission/CommissionDetailsPage";
+import { Notifications } from "./components/header/Notifications";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/add-order" element={<OrderRegistration/>} />
           <Route path="/order/:id" element={<OrderDetailsPage />} />
           <Route path="/commission/:id" element={<CommissionDetailsPage />} />
+          <Route path="/dashboard/notifications" element={<Notifications />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

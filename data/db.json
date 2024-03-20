@@ -2,11 +2,13 @@
   "products": [],
   "orders": [
     {
+      "id": "dafc",
       "series": "SAL-ORD-YYYY-",
-      "date": "Mar 19, 2024",
-      "deliveryDate": "Mar 19, 2024",
-      "orderType": "telegram",
+      "date": "Mar 20, 2024",
+      "deliveryDate": "Mar 20, 2024",
+      "orderType": "phone",
       "description": "",
+      "customerId": "1710809287639",
       "customerPhone": "12-4566-6788",
       "customerFirstName": "Coca Cola",
       "customerEmail": "cocacola@gmail.com",
@@ -18,82 +20,91 @@
           "machine": "DTF",
           "material": "T-shirt",
           "service": "Print and Material",
-          "unitPrice": 5000,
-          "status": "recieved",
-          "commissionPrice": null
+          "unitPrice": 10000,
+          "status": "recieved"
         },
         {
           "machine": "UV",
           "material": "Film",
           "service": "Print and Material",
           "unitPrice": 24000,
-          "status": "recieved",
-          "commissionPrice": null
-        },
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print",
-          "unitPrice": 7200,
-          "status": "recieved",
-          "commissionPrice": null
+          "status": "recieved"
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
           "width": "5",
-          "height": "2",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "6",
           "height": "4",
           "quantity": "5",
           "unitPrice": null
         },
         {
           "unitName": null,
-          "width": "2",
-          "height": "3",
+          "width": "6",
+          "height": "5",
           "quantity": "4",
           "unitPrice": null
         }
       ],
-      "totalBirr": 36200,
-      "totalCommission": null,
+      "totalBirr": 34000,
+      "grandTotal": 39100,
       "fileNames": [
-        "Coca Cola-Coca Cola-DTF-T-shirt-5x2",
-        "Coca Cola-Coca Cola-UV-Film-6x4",
-        "Coca Cola-Coca Cola-BANNER-Screen-2x3"
+        "Coca Cola-DTF-T-shirt-5x4",
+        "Coca Cola-UV-Film-6x5"
       ],
-      "totalQuantity": 14,
-      "grandTotal": 41630,
-      "vat": 5430,
-      "discounts": [
-        0,
-        0,
-        0
-      ],
-      "levels": [
-        null,
-        "1",
-        null
-      ],
-      "totalBirrAfterDiscount": [
-        5000,
-        24000,
-        7200
-      ],
+      "totalQuantity": 9,
       "paymentInfo": {
         "paymentMethod": "cash",
         "paymentReference": "",
         "paymentAmount": 0,
-        "paymentStatus": "partial"
-      },
-      "id": "ecdd"
+        "paymentStatus": "not paid"
+      }
+    },
+    {
+      "id": "925e",
+      "series": "SAL-ORD-YYYY-",
+      "date": "Mar 20, 2024",
+      "deliveryDate": "Mar 20, 2024",
+      "orderType": "In person",
+      "description": "",
+      "customerId": "1710821022900",
+      "customerPhone": "09-1196-8989",
+      "customerFirstName": "Pepsi",
+      "customerEmail": "pepsi@gmail.com",
+      "commissionPhone": "",
+      "commissionFirstName": "",
+      "commissionEmail": "",
+      "orderItems": [
+        {
+          "machine": "BANNER",
+          "material": "Screen",
+          "service": "Print and Heat press",
+          "unitPrice": 18000,
+          "status": "recieved"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "3",
+          "height": "5",
+          "quantity": "3",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 18000,
+      "grandTotal": 20700,
+      "fileNames": [
+        "Pepsi-BANNER-Screen-3x5"
+      ],
+      "totalQuantity": 3,
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      }
     }
   ],
   "customers": [
@@ -422,6 +433,14 @@
           "paymentAmount": "15000",
           "reference": "",
           "status": "paid"
+        },
+        {
+          "date": "Mar 19, 2024",
+          "paymentMethod": "mobile-banking",
+          "description": "payment",
+          "paymentAmount": "26000",
+          "status": "paid",
+          "reference": ""
         }
       ],
       "order": {
@@ -430,31 +449,191 @@
           "id": "1710809287639"
         }
       }
+    },
+    {
+      "id": "2915",
+      "transactions": [
+        {
+          "date": "Mar 19, 2024",
+          "paymentMethod": "check",
+          "description": "",
+          "paymentAmount": "299000",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "ef7a",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "cd0b",
+      "transactions": [
+        {
+          "date": "Mar 19, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "c592",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "4208",
+      "transactions": [
+        {
+          "date": "Mar 19, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "38d1",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "3592",
+      "transactions": [
+        {
+          "date": "Mar 19, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "a2f2",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "bc86",
+      "transactions": [
+        {
+          "date": "Mar 20, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "ad66",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "5bd7",
+      "transactions": [
+        {
+          "date": "Mar 20, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "5002",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "ced3",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "a16f",
+      "transactions": [
+        {
+          "date": "Mar 20, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "dafc",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "6118",
+      "transactions": [
+        {
+          "date": "Mar 20, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "925e",
+        "customer": {
+          "id": "1710821022900"
+        }
+      }
     }
   ],
   "orderStatus": [
     {
-      "id": "8a3b",
-      "orderId": "ecdd",
-      "status": "recieved",
+      "id": "5456",
+      "orderId": "dafc",
+      "status": "received",
       "adminApproval": false,
       "orderItems": [
         {
-          "status": "recieved",
-          "note": "",
+          "status": "approved",
+          "note": "admin approved",
           "printed": false,
-          "adminApproval": false,
+          "adminApproval": true,
           "completed": false
         },
         {
-          "status": "recieved",
-          "note": "",
+          "status": "approved",
+          "note": "admin approved",
           "printed": false,
-          "adminApproval": false,
+          "adminApproval": true,
           "completed": false
-        },
+        }
+      ]
+    },
+    {
+      "id": "2e55",
+      "orderId": "925e",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
         {
-          "status": "recieved",
+          "status": "received",
           "note": "",
           "printed": false,
           "adminApproval": false,
