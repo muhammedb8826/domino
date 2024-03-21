@@ -1257,6 +1257,18 @@ const OrderDetailsPage = () => {
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
+                              {orderStat.orderItems[index].status ===
+                                "paid" && (
+                                <span className="text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-100 dark:bg-sky-400 dark:hover:bg-sky-500 dark:focus:ring-sky-600 text-xs font-medium px-2.5 py-0.5 rounded">
+                                  {orderStat.orderItems[index].status}
+                                </span>
+                              )}
+                              {orderStat.orderItems[index].status ===
+                                "delivered" && (
+                                <span className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                  {orderStat.orderItems[index].status}
+                                </span>
+                              )}
                               {invisibleTooltip && ( // Show tooltip only if visibleTooltip state is true
                                 <>
                                 {orderStat.orderItems[index].note !=="" ?

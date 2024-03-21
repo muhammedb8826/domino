@@ -15,6 +15,9 @@ import OrderDetailsPage from "./components/order/OrderDetailsPage";
 import { OrderRegistration } from "./components/order/OrderRegistration";
 import CommissionDetailsPage from "./components/commission/CommissionDetailsPage";
 import { Notifications } from "./components/header/Notifications";
+import { OperatorNotification } from "./components/header/OperatorNotification";
+import { ReceptionistNotification } from "./components/header/ReceptionistNotification";
+import { FinanceNotification } from "./components/header/FinanceNotification";
 
 const App = () => {
   return (
@@ -34,6 +37,10 @@ const App = () => {
           <Route path="/order/:id" element={<OrderDetailsPage />} />
           <Route path="/commission/:id" element={<CommissionDetailsPage />} />
           <Route path="/dashboard/notifications" element={<Notifications />} />
+          <Route path="/dashboard/operator/notifications" element={<OperatorNotification />} />
+          <Route path="/dashboard/reception/notifications" element={<ReceptionistNotification />} />
+          <Route path="/dashboard/finance/notifications" element={<FinanceNotification />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
