@@ -114,6 +114,15 @@ export const OperatorNotification = () => {
                   Order
                 </th>
                 <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Customer Name
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Date
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
+                  Delivery date
+                </th>
+                <th scope="col" className="px-4 py-2 border border-gray-300">
                   payment status
                 </th>
                 <th scope="col" className="px-4 py-2 border border-gray-300">
@@ -144,6 +153,18 @@ export const OperatorNotification = () => {
                       className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
                     >
                       {filteredOrder && filteredOrder.id}
+                    </td>
+                    <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      {filteredOrder &&
+                        filteredOrder.customerFirstName}
+                    </td>
+                    <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      {filteredOrder &&
+                        filteredOrder.date}
+                    </td>
+                    <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      {filteredOrder &&
+                        filteredOrder.deliveryDate}
                     </td>
                     <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                       {filteredOrder &&

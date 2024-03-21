@@ -96,13 +96,11 @@
       "id": "9f9c"
     },
     {
-      "id": "5fb6",
       "series": "SAL-ORD-YYYY-",
       "date": "Mar 21, 2024",
       "deliveryDate": "Mar 21, 2024",
       "orderType": "In person",
       "description": "",
-      "customerId": "1710822546278",
       "customerPhone": "09-1156-8989",
       "customerFirstName": "Teshager",
       "customerEmail": "",
@@ -115,14 +113,16 @@
           "material": "T-shirt",
           "service": "Print and Heat press",
           "unitPrice": 14400,
-          "status": "recieved"
+          "status": "recieved",
+          "commissionPrice": null
         },
         {
           "machine": "BANNER",
           "material": "Screen",
           "service": "Print and Heat press",
           "unitPrice": 9600,
-          "status": "recieved"
+          "status": "recieved",
+          "commissionPrice": null
         }
       ],
       "orderMeasures": [
@@ -142,18 +142,33 @@
         }
       ],
       "totalBirr": 24000,
-      "grandTotal": 27600,
+      "totalCommission": null,
       "fileNames": [
-        "Teshager-DTF-T-shirt-3x6",
-        "Teshager-BANNER-Screen-6x2"
+        "Teshager-Teshager-DTF-T-shirt-3x6",
+        "Teshager-Teshager-BANNER-Screen-6x2"
       ],
       "totalQuantity": 6,
+      "grandTotal": 27600,
+      "vat": 3600,
+      "discounts": [
+        0,
+        0
+      ],
+      "levels": [
+        null,
+        null
+      ],
+      "totalBirrAfterDiscount": [
+        14400,
+        9600
+      ],
       "paymentInfo": {
         "paymentMethod": "cash",
         "paymentReference": "",
         "paymentAmount": 0,
-        "paymentStatus": "not paid"
-      }
+        "paymentStatus": "paid"
+      },
+      "id": "5fb6"
     }
   ],
   "customers": [
@@ -514,9 +529,9 @@
           "date": "Mar 21, 2024",
           "paymentMethod": "cash",
           "description": "",
-          "paymentAmount": "",
+          "paymentAmount": "27600",
           "reference": "",
-          "status": "pending"
+          "status": "paid"
         }
       ],
       "order": {
@@ -542,7 +557,7 @@
           "completed": false
         },
         {
-          "status": "paid",
+          "status": "delivered",
           "note": "",
           "printed": false,
           "adminApproval": true,
@@ -564,14 +579,14 @@
       "adminApproval": false,
       "orderItems": [
         {
-          "status": "approved",
+          "status": "paid",
           "note": "",
           "printed": false,
           "adminApproval": true,
           "completed": false
         },
         {
-          "status": "printed",
+          "status": "paid",
           "note": "",
           "printed": false,
           "adminApproval": true,
