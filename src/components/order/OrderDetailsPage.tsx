@@ -429,8 +429,6 @@ const OrderDetailsPage = () => {
     }));
   };
 
-  console.log(orderStat);
-
   const handleInputChanges = (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
@@ -659,17 +657,16 @@ const OrderDetailsPage = () => {
 
   useEffect(() => {
     const commission = calculatedUnitPrices.map(
-      (price, index) => price * (commissionPercent[index] / 100)
+      (price, index) => price * (commissionPercent[index] / 100 || 0) // Ensure a default value of 0 if commission percent is not set
     );
     setCommissionPrice(commission);
-  }, [commissionPercent, calculatedUnitPrices, measuresFormData]);
-
+  }, [calculatedUnitPrices, commissionPercent]);
+  
   // Total commission
   useEffect(() => {
     const totalCommission = commissionPrice.reduce((acc, c) => acc + c, 0);
     setTotalCommission(totalCommission);
   }, [commissionPrice]);
-
   // resetting commission for all when the commission percent for each index changes
 
   const handleCommissionForAll = (e) => {
@@ -903,7 +900,7 @@ const OrderDetailsPage = () => {
             <input
               type="text"
               name="name"
-              value="SAL-ORD-YYYY-"
+              value={orderInfo.series}
               readOnly
               id="name"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"

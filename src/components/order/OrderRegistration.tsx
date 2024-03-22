@@ -348,6 +348,9 @@ const [paymentTransaction, setPaymentTransaction] = useState([{
       return nameAndFile;
     });
 
+ 
+    orderInfo.series = `${orderInfo.customerFirstName}-${date.getFullYear()}`;
+    
     const orderData = {
       ...orderInfo,
       orderItems: unitPrice,

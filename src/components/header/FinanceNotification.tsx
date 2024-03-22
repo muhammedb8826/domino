@@ -120,7 +120,7 @@ export const FinanceNotification = () => {
                              
                 );
                 return (
-                    filteredOrder && filteredOrder.paymentInfo?.paymentStatus === "paid" && financeNotification > 0 && (
+                    filteredOrder && filteredOrder.paymentInfo?.paymentStatus === "paid" && filteredOrder.paymentInfo?.paymentStatus === "partial" &&  financeNotification > 0 && (
                   <tr
                     key={itemIndex}
                     className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
