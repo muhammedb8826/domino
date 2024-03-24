@@ -1,14 +1,13 @@
 "use client";
 
 import { Datepicker } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import { createOrder } from "../../redux/features/order/orderSlice";
+import { createOrder, createOrderStatus } from "../../redux/features/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { FaCalendarAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { GoBack } from "../common/GoBack";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
 import { CiSettings } from "react-icons/ci";
@@ -16,6 +15,7 @@ import { getprice } from "../../redux/features/price/pricingSlice";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import Select from "react-select";
 import { IoMdClose } from "react-icons/io";
+import { createPaymentTransaction } from "@/redux/features/customer/customerSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -25,6 +25,7 @@ interface CustomerType {
   phone: string;
   firstName: string;
   email: string;
+  id: string;
 }
 
 export const OrderRegistration = () => {
@@ -37,19 +38,21 @@ export const OrderRegistration = () => {
     dispatch(getprice());
     dispatch(getServices());
   }, [dispatch]);
-
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
     deliveryDate: formattedDate,
     orderType: "",
     description: "",
+    customerId: "",
     customerPhone: "",
     customerFirstName: "",
     customerEmail: "",
+    commissionPhone: "",
+    commissionFirstName: "",
+    commissionEmail: "",
   });
-  
+
   const [formData, setFormData] = useState([
     {
       machine: "",
@@ -59,6 +62,25 @@ export const OrderRegistration = () => {
       status: "recieved",
     },
   ]);
+
+const [paymentTransaction, setPaymentTransaction] = useState([{
+      amount: "",
+      date: formattedDate,
+      order: {
+        id: "",
+        customer: {
+          id: "",
+        }
+      }
+}]);
+
+  const [paymentInfo, setPaymentInfo] = useState({
+    paymentMethod: "cash",
+    paymentReference: "",
+    paymentAmount: 0,
+    paymentStatus: "not paid",
+  });
+  const [grandTotal, setGrandTotal] = useState(0);
 
   const [measuresFormData, setMeasuresFormData] = useState([
     {
@@ -75,10 +97,6 @@ export const OrderRegistration = () => {
   const [totalBirr, setTotalBirr] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
   const [fileName, setFileName] = useState([]);
-
-  const handleIsCollapsed = () => {
-    setIsCollapsed((prev) => !prev);
-  };
 
   const handleAddRow = () => {
     setFormData((prevFormData) => [
@@ -128,6 +146,8 @@ export const OrderRegistration = () => {
   useEffect(() => {
     const totalBirr = calculatedUnitPrices.reduce((acc, c) => acc + c || 0, 0);
     setTotalBirr(totalBirr);
+    const granTotal = totalBirr + totalBirr * 0.15;
+    setGrandTotal(granTotal);
   }, [calculatedUnitPrices]);
 
   useEffect(() => {
@@ -156,6 +176,7 @@ export const OrderRegistration = () => {
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
       ...prevOrderInfo,
+      customerId: customer.id,
       customerPhone: customer.phone,
       customerFirstName: customer.firstName,
       customerEmail: customer.email,
@@ -181,7 +202,6 @@ export const OrderRegistration = () => {
   };
 
   // setting options for material and machine
-
   const uniqueMachineMaterialCombinations = new Set();
   prices.forEach(({ machine, material }) => {
     const combination = `${material.name}-(${machine.name})`;
@@ -236,13 +256,13 @@ export const OrderRegistration = () => {
   };
 
   useEffect(() => {
-    const data = [...formData]
+    const data = [...formData];
     const units = [...measuresFormData];
     const combination = data.map((item, index) => {
       return `${item.machine}-${item.material}-${units[index].width}x${units[index].height}`;
     });
-    setFileName(combination) 
-  }, [formData,measuresFormData]);
+    setFileName(combination);
+  }, [formData, measuresFormData]);
 
   useEffect(() => {
     const matchingPriceData = formData.map((unitPrice) => {
@@ -259,7 +279,6 @@ export const OrderRegistration = () => {
   }, [formData, prices]);
 
   // form submission
-
   const resetForm = () => {
     setOrderInfo({
       series: "SAL-ORD-YYYY-",
@@ -270,8 +289,12 @@ export const OrderRegistration = () => {
       customerPhone: "",
       customerFirstName: "",
       customerEmail: "",
-      status: "pending",
+      commissionPhone: "",
+      commissionFirstName: "",
+      commissionEmail: "",
+      customerId: "",
     });
+
     setFormData([
       {
         machine: "",
@@ -293,6 +316,7 @@ export const OrderRegistration = () => {
     setCalculatedUnitPrices([]);
     setTotalQuantity(0);
     setTotalBirr(0);
+    setGrandTotal(0);
   };
 
   const handleSubmit = (e) => {
@@ -313,26 +337,66 @@ export const OrderRegistration = () => {
       alert("Please add delivery date");
       return;
     }
+
     const unitPrice = formData.map((item, index) => {
       item.unitPrice = calculatedUnitPrices[index];
       return item;
     });
 
-    const appendName = fileName.map((item)=>{
-      const nameAndFile =   `${orderInfo.customerFirstName}-${item}`;
-      return nameAndFile
-    })    
+    const appendName = fileName.map((item) => {
+      const nameAndFile = `${orderInfo.customerFirstName}-${item}`;
+      return nameAndFile;
+    });
 
+ 
+    orderInfo.series = `${orderInfo.customerFirstName}-${date.getFullYear()}`;
+    
     const orderData = {
       ...orderInfo,
       orderItems: unitPrice,
       orderMeasures: measuresFormData,
       totalBirr,
+      grandTotal,
       fileNames: appendName,
       totalQuantity,
+      paymentInfo,
     };
     dispatch(createOrder(orderData)).then((res) => {
       if (res.payload) {
+        setPaymentTransaction((prevPaymentTransaction) => ({
+          ...prevPaymentTransaction,
+          order: {
+            id: res.payload.id,
+            customer: {
+              id: res.payload.customerId,
+            },
+          },
+        }));
+
+        const paymentData = {
+          transactions: [{
+            date: formattedDate,
+          paymentMethod: "cash",
+          description: "",
+          paymentAmount: "",
+          reference: "",
+          status: "pending",
+          }],
+          order: {
+            id: res.payload.id,
+            customer: {
+              id: res.payload.customerId,
+            },
+          },
+        };
+        dispatch(createPaymentTransaction(paymentData));
+        const statusData = {
+          orderId: res.payload.id,
+          status: "received",
+          adminApproval: false,
+          orderItems: Array(res.payload.orderItems.length).fill({status: "received", note: "", printed: false, adminApproval: false,completed: false}),
+        };
+        dispatch(createOrderStatus(statusData));
         const message = "Order created successfully";
         toast.success(message);
         resetForm();
@@ -351,16 +415,6 @@ export const OrderRegistration = () => {
         <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
           Add a new order
         </h2>
-        {/* {mediaError && (
-        <div
-          className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-          role="alert"
-        >
-          <span className="font-medium">Danger alert!</span> {mediaError} Change
-          a few things up and try submitting again.
-        </div>
-      )} */}
-
         <div className="grid sm:grid-cols-3 sm:gap-6 mb-4 p-4">
           <div className="w-full">
             <label
@@ -410,19 +464,21 @@ export const OrderRegistration = () => {
               htmlFor="orderType"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Order Type
+              Order way
             </label>
             <select
+            defaultValue="telegram"
               name="orderType"
               onChange={handleOrderInfo}
               value={orderInfo.orderType}
               id="orderType"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             >
-              <option>Choose type</option>
-              <option value="phone">Phone</option>
+              <option value="">Select order way</option>
               <option value="telegram">Telegram</option>
+              <option value="phone">Phone</option>
               <option value="In person">In person</option>
+              <option value="whatsapp">Whatsapp</option>
             </select>
           </div>
           <div className="w-full">
@@ -448,24 +504,36 @@ export const OrderRegistration = () => {
         <form onSubmit={handleSubmit}>
           <div>
             <button
-              onClick={handleIsCollapsed}
+              // onClick={handleIsCollapsed}
               type="button"
               className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
             >
               Orders List{" "}
-              <span className="font-thin">
+              {/* <span className="font-thin">
                 {isCollapsed ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "}
+              </span>{" "} */}
             </button>
-
             <div className="px-4">
               <table
-                className={`${
-                  isCollapsed ? "hidden" : ""
-                } w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
+                className={`w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}
               >
                 <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
+                    <td className="w-4 p-4 border border-gray-300">
+                      <div className="flex items-center">
+                        <input
+                          id="checkbox-table-search"
+                          type="checkbox"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          htmlFor="checkbox-table-search"
+                          className="sr-only"
+                        >
+                          checkbox
+                        </label>
+                      </div>
+                    </td>
                     <th scope="col" className="p-4 w-4 border border-gray-300">
                       No
                     </th>
@@ -530,6 +598,21 @@ export const OrderRegistration = () => {
                         key={index}
                         className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
+                        <td className="w-4 p-4  border border-gray-300">
+                          <div className="flex items-center">
+                            <input
+                              id={`checkbox-table-search-${index}`}
+                              type="checkbox"
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <label
+                              htmlFor={`checkbox-table-search-${index}`}
+                              className="sr-only"
+                            >
+                              checkbox
+                            </label>
+                          </div>
+                        </td>
                         <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                           {index + 1}
                         </td>
@@ -612,19 +695,8 @@ export const OrderRegistration = () => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
-                          <input
-                            readOnly
-                            title="price"
-                            type="number"
-                            name="price"
-                            id="price"
-                            className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
-                            placeholder="0"
-                            required
-                            min={0}
-                            value={calculatedUnitPrices[index] || 0}
-                          />
+                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-24">
+                          {calculatedUnitPrices[index] || 0}
                         </td>
                         <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10">
                           <button
@@ -720,33 +792,29 @@ export const OrderRegistration = () => {
                 File Names
               </p>
               <ul className="space-y-4 text-left text-gray-500 dark:text-gray-400">
-                {
-                  fileName.map((item, index) => (
-                      <li
-                        key={index} 
-                        className="flex items-center space-x-3 rtl:space-x-reverse"
-                      >
-                        <svg
-                          className="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 16 12"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round" // Changed to camelCase
-                            strokeLinejoin="round" // Changed to camelCase
-                            strokeWidth="2" // Changed to camelCase
-                            d="M1 5.917 5.724 10.5 15 1.5"
-                          />
-                        </svg>
-                        <span>
-                          {item}
-                        </span>
-                      </li>
-                    )
-                  )}
+                {fileName.map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-3 rtl:space-x-reverse"
+                  >
+                    <svg
+                      className="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 16 12"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M1 5.917 5.724 10.5 15 1.5"
+                      />
+                    </svg>
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

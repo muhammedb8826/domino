@@ -1,5 +1,17 @@
 {
   "compilerOptions": {
+    // "baseUrl": "src",
+    "types": ["node"],
+    "paths": {
+      // "assets*": ["./src/assets/*"],
+      // "auth*": ["./src/auth/*"],
+      // "components*": ["./src/components/*"],
+      // "pages*": ["./src/pages/*"],
+      // "redux": ["./src/redux/*"],
+      // "hooks*": ["./src/hooks/*"],
+      // "utils*": ["./src/utils/*"],
+      "@/*": ["./src/*"],
+    },
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],

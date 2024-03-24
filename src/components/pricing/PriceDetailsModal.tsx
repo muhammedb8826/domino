@@ -9,9 +9,17 @@ import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
 import { createprice } from "../../redux/features/price/pricingSlice";
 import { RiPriceTag2Line } from "react-icons/ri";
+import { RootState } from "@/redux/store";
+import ErroPage from "../common/ErroPage";
+import Loading from "../common/Loading";
 // import options from "tailwind-datepicker-react/types/Options";
 
 const PriceDetailsModal = ({ handleModalOpen }) => {
+
+  const { user, token, isLoading, error } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   const { machines, isLoading: machineLoading, error: machineError } = useSelector((state) => state.machine);
   const { materials, isLoading: materialLoading, error: materialError } = useSelector((state) => state.material);
   const { units, isLoading: unitLoading, error: unitError } = useSelector((state) => state.unit);
@@ -36,6 +44,10 @@ const PriceDetailsModal = ({ handleModalOpen }) => {
     unit: "",
     unitPrice: "",
   });
+
+  if(user?.email !== "admin@domino.com"){
+    return <ErroPage error="You are not authorized to view this page" />
+  }
 
   const mapOptions = (data) => {
     return data.map((item) => ({
@@ -155,6 +167,14 @@ const data = {
 
   if (machineLoading) return <div>Loading...</div>;
   if (machineError) return <div>Error: {machineError}</div>;
+
+  if(isLoading){
+    return <Loading/>
+  }
+
+  if(error){
+    return <ErroPage error={error} />
+  }
 
   return (
     <>

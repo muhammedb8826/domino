@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createCustomer } from "../../redux/features/customer/customerSlice";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
+import { createCommission } from "@/redux/features/commission/commissionSlice";
 
-export const CustomerRegistration = ({ handleModalOpen }) => {
+export const CommissionRegistration = ({ handleModalOpen }) => {
 const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         id: Date.now().toString(),
@@ -37,9 +37,9 @@ const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createCustomer(formData)).then((res)=>{
+    dispatch(createCommission(formData)).then((res)=>{
         if(res.payload){
-            const message = "Customer registered successfully"
+            const message = "Commission registered successfully"
             toast.success(message)
             resetForm();
             handleModalOpen()
@@ -56,7 +56,7 @@ const dispatch = useDispatch();
             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
               {/*header*/}
               <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                <h3 className="text-3xl font-semibold">Add Customer</h3>
+                <h3 className="text-3xl font-semibold">Add sales partner</h3>
                 <button
                   title="close"
                   type="button"
@@ -86,7 +86,7 @@ const dispatch = useDispatch();
                     htmlFor="floating_phone"
                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-7 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-7"
                   >
-                    Phone number (12-3445-7890)
+                   Phone number (12-3445-7890)
                   </label>
                 </div>
                 <div className="grid md:grid-cols-2 md:gap-6">

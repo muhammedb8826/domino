@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
 import { updateUnits } from "../../redux/features/unit/unitSlice";
+import { updateDiscounts } from "@/redux/features/dicount/dicountSlice";
 
-const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
+const DiscountEditModal = ({ handleModalOpen, data = {level: 0, minumumMeterSquare: 0, discountPercentage: 0,} }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(data);
   const handleChange = (e) => {
@@ -17,11 +18,11 @@ const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateUnits(formData)).then((res) => {
+    dispatch(updateDiscounts(formData)).then((res) => {
       if (res.payload) {
-        const message = "Unit updated successfully";
+        const message = "Discount updated successfully";
         toast.success(message);
-        setFormData({ name: "" });
+        setFormData({ level: 0, minumumMeterSquare: 0, discountPercentage: 0});
         handleModalOpen(false);
       }
     });
@@ -52,51 +53,51 @@ const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
               <div className="relative p-6 flex-auto">
                 <div>
                   <label
-                    htmlFor="unit-name"
+                    htmlFor="level"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Unit name
+                    Level
                   </label>
                   <input
                     onChange={handleChange}
-                    type="text"
-                    value={formData.name}
-                    name="name"
-                    id="unit-name"
+                    type="number"
+                    value={formData.level}
+                    name="level"
+                    id="level"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="eg, Print"
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor="width"
+                    htmlFor="minumumMeterSquare"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Width
+                    Meter Square
                   </label>
                   <input
                     onChange={handleChange}
                     type="number"
-                    value={formData.width}
-                    name="width"
-                    id="width"
+                    value={formData.minumumMeterSquare}
+                    name="minumumMeterSquare"
+                    id="minumumMeterSquare"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="eg, 10"
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor="height"
+                    htmlFor="discountPercentage"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Height
+                    Percentage %
                   </label>
                   <input
                     onChange={handleChange}
-                    type="text"
-                    value={formData.height}
-                    name="height"
-                    id="height"
+                    type="number"
+                    value={formData.discountPercentage}
+                    name="discountPercentage"
+                    id="discountPercentage"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="eg, 10"
                   />
@@ -127,4 +128,4 @@ const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
   );
 };
 
-export default UnitEditModal;
+export default DiscountEditModal;

@@ -2,30 +2,40 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
-import { updateUnits } from "../../redux/features/unit/unitSlice";
+import { updateRoles } from "../../redux/features/role/roleSlice";
 
-const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
-  const dispatch = useDispatch();
-  const [formData, setFormData] = useState(data);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+export const RoleEditModal = ({ handleModalOpen, data = {} }) => {
+    const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(updateUnits(formData)).then((res) => {
-      if (res.payload) {
-        const message = "Unit updated successfully";
-        toast.success(message);
-        setFormData({ name: "" });
-        handleModalOpen(false);
-      }
+    const [formData, setFormData] = useState({
+      name: data.name || "",
+      description: data.description || "",
     });
-  };
+    
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    };
+  
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const role = {
+          id: data.id,
+          name: formData.name,
+          description: formData.description
+        };
+        dispatch(updateRoles(role)).then((res) => {
+          if (res.payload) {
+            const message = "Role updated successfully";
+            toast.success(message);
+            setFormData({ name: "", description: "" });
+            handleModalOpen(false);
+          }
+      });
+    }
 
   return (
     <>
@@ -52,53 +62,38 @@ const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
               <div className="relative p-6 flex-auto">
                 <div>
                   <label
-                    htmlFor="unit-name"
+                    htmlFor="role-name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Unit name
+                    Role name
                   </label>
                   <input
                     onChange={handleChange}
                     type="text"
-                    value={formData.name}
                     name="name"
-                    id="unit-name"
+                    value={formData.name}
+                    id="role-name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    placeholder="eg, Print"
+                    placeholder="eg, admin"
+                    required
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor="width"
+                    htmlFor="description"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Width
-                  </label>
-                  <input
-                    onChange={handleChange}
-                    type="number"
-                    value={formData.width}
-                    name="width"
-                    id="width"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    placeholder="eg, 10"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="height"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Height
+                    Description
                   </label>
                   <input
                     onChange={handleChange}
                     type="text"
-                    value={formData.height}
-                    name="height"
-                    id="height"
+                    name="description"
+                    value={formData.description}
+                    id="description"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    placeholder="eg, 10"
+                    placeholder="description"
+                    required
                   />
                 </div>
               </div>
@@ -126,5 +121,3 @@ const UnitEditModal = ({ handleModalOpen, data = { name: '' } }) => {
     </>
   );
 };
-
-export default UnitEditModal;

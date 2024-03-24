@@ -1,7 +1,8 @@
+import { getRoles } from './../role/roleSlice';
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { usersURL } from "../../api/API";
-import { selectToken } from "./authentication";
+import api from "../../api/apiUtils";
 
 interface UserState {
   users: [];
@@ -10,84 +11,98 @@ interface UserState {
   error: string | null;
   message: string | null;
   errors: string[] | null;
+  registrationErrors: {} | null;
+  roles: string;
+  user: null;
 }
 
 const initialState: UserState = {
   users: [],
+  user: null,
   isLoading: false,
   token: localStorage.getItem("token") || null,
   error: null,
   errors:[],
   message: null,
   registrationErrors: {},
-
+ roles: "",
 };
 
-
-
-export const getUsers = createAsyncThunk("user/getUser", async (_, { getState }) => {
-  const token = selectToken(getState()); // Pass the state as the first argument
+export const getUsers = createAsyncThunk("user/getUsers", async (_, { getState }) => {
   try {
-    const response = await axios.get(usersURL, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { token } = getState().auth; // Access token from Redux state
+    const response = await api.get("/users", { token });
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error; // Re-throw the error so that it can be caught in the rejected case
+    console.error("Error fetching users:", error);
+    throw error;
   }
 });
 
+export const setTokenUser = createAsyncThunk('auth/setToken', async (_, { getState }) => {
+  try {
+    const { token } = getState().auth; 
+  const response = await api.get('/user', { token });
+  const user = response.data;
+console.log(user+"user");
+
+  // Return token and user details
+  return { token, user };
+} catch (error) {
+  console.error("Error fetching user:", error);
+  throw error;
+}
+});
+
+export const getRoles = createAsyncThunk("user/getRoles", async (_, { getState }) => {
+  try {
+    const { token } = getState().auth; // Access token from Redux state
+    const response = await api.get("/roles", { token });
+    console.log(response.data+"response");
+    return response.data;
+    
+  } catch (error) {
+    console.error("Error fetching roles:", error);
+    throw error;
+  }
+});
 
 export const createUser = createAsyncThunk('user/createUser', async (newUserData, { getState, rejectWithValue }) => {
-  const token = selectToken(getState());
-  
+  const { token } = getState().auth;
   try {
-    const response = await axios.post(usersURL, newUserData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data; // Return the created user data
+    const response = await api.post(usersURL, newUserData, { token });
+    return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data);
   }
 });
 
-export const updateUser = createAsyncThunk("user/updateUser", async (user) => {
-  
-  const response = await axios.put(usersURL, user);
+export const updateUser = createAsyncThunk("user/updateUser", async (user, {getState, rejectWithValue}) => {
+ const {token} = getState().auth;
+ try {
+  const response = await api.put(usersURL, user, { token});
   return response.data;
+ } catch (error) {
+    return rejectWithValue(error.response?.data);
+  }
 });
 
 export const deleteUser = createAsyncThunk('user/deleteUser', async (id, { getState, rejectWithValue }) => { 
   try {
-    const token = selectToken(getState());
-    const response = await axios.delete(`${usersURL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const {token} = getState().auth
+    const response = await api.delete(`${usersURL}/${id}`, { token });
     console.log(response.data+"response");
-    
     return id;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
-      // Handle 404 Not Found error
       console.error('User not found:', error.response.data);
       return rejectWithValue('User not found');
     } else {
-      // Handle other errors
       console.error('Error deleting user:', error.message);
       throw error;
     }
   }
 });
-
-
-
 
 const user = createSlice({
   name: "users",
@@ -108,6 +123,8 @@ const user = createSlice({
     })
     builder.addCase(getUsers.fulfilled, (state, action) => {
        state.users =action.payload.data;
+       console.log(JSON.stringify(action.payload.data));
+       
       state.isLoading = false;
       state.error = null;
     })
@@ -115,6 +132,20 @@ const user = createSlice({
       state.isLoading = false;
       state.error = action.error.message || null;
     })
+    
+    builder.addCase(getRoles.pending, (state) => {
+      state.isLoading = true;
+    })
+    builder.addCase(getRoles.fulfilled, (state, action) => {
+      state.roles = action.payload;
+      state.isLoading = false;
+      state.error = null;
+    })
+    builder.addCase(getRoles.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message || null;
+    })
+
     builder.addCase(createUser.pending, (state) => {
       state.isLoading = true;
     })
@@ -158,10 +189,14 @@ const user = createSlice({
       state.isLoading = false;
       state.error = action.error.message || null;
     })
+    builder.addCase(setTokenUser.fulfilled, (state, action) => {
+      const { token, user } = action.payload;
+      state.token = token;
+      state.user = user; // Add user details to the state
+    });
   },
 });
 
-export const { setToken } = user.actions;
-export const { clearSuccessMessage } = user.actions;
+export const { setToken, clearSuccessMessage } = user.actions;
 export default user.reducer;
 

@@ -16,6 +16,7 @@
     "flowbite-react": "^0.7.2",
     "json-server": "^1.0.0-alpha.16",
     "jsvectormap": "^1.5.3",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-copy-to-clipboard": "^5.1.0",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@types/react-helmet": "^6.1.11",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",

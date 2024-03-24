@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updatePrintingData } from "../../redux/features/print/printingSlice";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
 import { updateMachines } from "../../redux/features/machine/machineSlice";

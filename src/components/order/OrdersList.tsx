@@ -5,22 +5,136 @@ import { IoBagAdd } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import { deleteOrder, getOrders } from "../../redux/features/order/orderSlice";
-import { RootState } from "../../redux/store";
+import {
+  deleteOrder,
+  deleteOrderStatus,
+  getOrders,
+} from "@/redux/features/order/orderSlice";
+import { RootState } from "@/redux/store";
 import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
 import { FaFirstOrderAlt, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
+// import { getCommissions, updateCommission } from "@/redux/features/commission/commissionSlice";
+
+interface User {
+  email: string;
+  roles: string;
+}
+
+
+// const getCurrentDateFormatted = () => {
+//   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+//   const currentDate = new Date();
+//   const monthIndex = currentDate.getMonth();
+//   const day = currentDate.getDate();
+//   const year = currentDate.getFullYear();
+
+//   const formattedDate = `${months[monthIndex]} ${day}, ${year}`;
+//   return formattedDate;
+// };
+
+// const date = new Date();
+// const options = { month: "short", day: "numeric", year: "numeric" };
+// const formattedDate = date.toLocaleDateString("en-US", options);
+
 
 const OrdersList = () => {
-  const { orders, isLoading, error } = useSelector(
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { orders, orderStatus, isLoading, error } = useSelector(
     (state: RootState) => state.order
   );
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrders());
   }, [dispatch]);
+
+  const [selectedOption, setSelectedOption] = useState("all");
+  const [search, setSearch] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+
+  const handleDateSearch = (e) => {
+    if (e.target.name === "start") {
+      setStart(e.target.value);
+    } else {
+      setEnd(e.target.value);
+    }
+  };
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  const filteredOrders = () => {
+    switch (selectedOption) {
+      case "paid":
+        return orders.filter(
+          (order) => order.paymentInfo.paymentStatus === "paid"
+        );
+      case "partial":
+        return orders.filter(
+          (order) => order.paymentInfo.paymentStatus === "partial"
+        );
+      case "not-paid":
+        return orders.filter(
+          (order) => order.paymentInfo.paymentStatus === "not paid"
+        );
+      case "date":
+        return orders
+          .slice()
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+      case "delivery-date":
+        return orders
+          .slice()
+          .sort((a, b) => new Date(a.deliveryDate) - new Date(b.deliveryDate));
+      default:
+        return orders;
+    }
+  };
+
+  const displayedOrders = filteredOrders();
+
+  const filteredOrder = displayedOrders.filter(
+    (order) =>
+      order.customerFirstName?.toLowerCase().includes(search.toLowerCase()) ||
+      order.customerLastName?.toLowerCase().includes(search.toLowerCase()) ||
+      order.series?.toLowerCase().includes(search.toLowerCase()) ||
+      order.customerPhone?.toLowerCase().includes(search.toLowerCase()) ||
+      order.grandTotal?.toString().includes(search) ||
+      order.deliveryDate?.toLowerCase().includes(search.toLowerCase()) ||
+      order.paymentInfo.paymentStatus
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+        order.orderItems.some((item) =>
+          item.material.toLowerCase().includes(search.toLowerCase())
+        ) ||
+      order.orderItems.some((item) =>
+        item.status.toLowerCase().includes(search.toLowerCase())
+      )
+  );
+
+  const filterDate = filteredOrder.filter((order) => {
+    if (start === "" || end === "") {
+      return order;
+    } else {
+      return (
+        new Date(order.date) >= new Date(start) &&
+        new Date(order.date) <= new Date(end)
+      );
+    }
+  });
+  
+
+
+  // const {commissions} = useSelector((state: RootState) => state.commission);
+
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -47,11 +161,25 @@ const OrdersList = () => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const receivedStatus = orders && orders.map((item, index)=>{
-    return item.orderItems.filter((order)=> order.status === "recieved")
-  });
+  const receivedStatus =
+    orders &&
+    orders.map((item, index) => {
+      return item.orderItems.filter((order) => order.status === "received");
+    });
 
   const handleDeleteOrder = (id) => {
+    orderStatus.map((order) => {
+      if (order.id === id) {
+        if (order.status === "approved") {
+          return Swal.fire({
+            title: "Error!",
+            text: "You can't delete a received order",
+            icon: "error",
+          });
+        }
+      }
+    });
+
     Swal.fire({
       title: "Are you sure?",
       text: "You want to delete this order!",
@@ -68,6 +196,10 @@ const OrdersList = () => {
           icon: "success",
         }).then(() => {
           dispatch(deleteOrder(id));
+          const orderStatusId = orderStatus.find(
+            (order) => order.orderId === id
+          );
+          dispatch(deleteOrderStatus(orderStatusId?.id));
         });
       }
       setShowPopover(null);
@@ -82,17 +214,20 @@ const OrdersList = () => {
     return <ErroPage error={error} />;
   }
 
-
-    const orderListContent = orders
-          ? orders.map((order, index: number) => (
+  const orderListContent =
+    filterDate.length > 0
+      ? filterDate.map((order, index: number) => (
           <tr
             key={order.id}
             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
           >
             <td className="px-6 py-4">
-            <NavLink to={`/order/${order.id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    {order.series}
-                  </NavLink>{" "}
+              <NavLink
+                to={`/order/${order.id}`}
+                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                {order.series}
+              </NavLink>{" "}
             </td>
             <th
               scope="row"
@@ -102,6 +237,7 @@ const OrdersList = () => {
               <div className="ps-3">
                 <div className="text-base font-semibold">
                   {order.customerFirstName}
+                  {order.customerLastName}
                 </div>
                 <div className="font-normal text-gray-500">
                   {order.customerPhone}
@@ -116,12 +252,25 @@ const OrdersList = () => {
                 </span>
               ))}
             </td>
+            <td className="px-6 py-4">{order.grandTotal?.toLocaleString()}</td>
             <td className="px-6 py-4">
-            {order.totalBirr.toLocaleString()}
-              </td>
-            <td className="px-6 py-4">
-            <span className="bg-red-100 text-red-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Not paid</span>
+              {order.paymentInfo?.paymentStatus === "not paid" && (
+                <span className="bg-red-100 text-red-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                  {order.paymentInfo?.paymentStatus}
+                </span>
+              )}
+              {order.paymentInfo?.paymentStatus === "partial" && (
+                <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                  {order.paymentInfo?.paymentStatus}
+                </span>
+              )}
+              {order.paymentInfo?.paymentStatus === "paid" && (
+                <span className="bg-green-100 text-green-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                  {order.paymentInfo?.paymentStatus}
+                </span>
+              )}
             </td>
+            <td className="px-6 py-4">{order.date}</td>
             <td className="px-6 py-4">{order.deliveryDate}</td>
             <td className="px-6 py-4 relative">
               <button
@@ -138,7 +287,7 @@ const OrdersList = () => {
                   className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                 >
                   <ul className="py-2 text-sm text-gray-700">
-                    <li key={`${order.id}-${index}-1`}>
+                    <li>
                       <NavLink
                         to={`/order/${order.id}`}
                         className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
@@ -147,30 +296,29 @@ const OrdersList = () => {
                         Edit
                       </NavLink>{" "}
                     </li>
-                    <li key={`${order.id}-${index}-2`}>
-                      <button
-                        onClick={() => handleDeleteOrder(order.id)}
-                        type="button"
-                        className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        <MdDelete /> Delete
-                      </button>
-                    </li>
+                    {user?.email === "admin@domino.com" && (
+                      <li>
+                        <button
+                          onClick={() => handleDeleteOrder(order.id)}
+                          type="button"
+                          className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                        >
+                          <MdDelete /> Delete
+                        </button>
+                      </li>
+                    )}
                   </ul>
                 </div>
               )}
             </td>
           </tr>
-      ))
-    : null;
+        ))
+      : null;
 
   return (
     <div className="p-4 overflow-y-scroll h-screen">
       <h1 className="flex items-center gap-4">
-        <span className="text-2xl font-bold">Order Details</span>
-        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
-          You have 3 pending notification
-        </span>
+        <span className="text-2xl font-bold">Orders List</span>
       </h1>
 
       <div className="cards flex items-center justify-between py-4">
@@ -190,7 +338,7 @@ const OrdersList = () => {
           </p>
           <div className="">
             <p className="font-bold text-2xl">{receivedStatus.length}</p>
-            <p className="text-gray-400">Total recieved orders</p>
+            <p className="text-gray-400">Total received orders</p>
           </div>
           <div className="progress ml-auto">
             <div className="relative w-14 h-14">
@@ -281,8 +429,16 @@ const OrdersList = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
-        <div>
+      <div
+        className={`flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4`}
+      >
+        <div
+          className={`${
+            user?.email !== "admin@domino.com" && user?.roles !== "reception"
+              ? "hidden"
+              : ""
+          }`}
+        >
           <NavLink
             to="/add-order"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -290,6 +446,71 @@ const OrdersList = () => {
             <IoBagAdd />
             <span className="ml-2">Add New Order</span>
           </NavLink>
+        </div>
+        <div>
+          <div>
+            <select
+              id="filter-order"
+              title="filter-order"
+              defaultValue="all"
+              value={selectedOption}
+              onChange={(e) => handleSelectChange(e)}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="all">All</option>
+              <option value="paid">Paid</option>
+              <option value="partial">Partial</option>
+              <option value="not-paid">Not Paid</option>
+              <option value="date">Date</option>
+              <option value="delivery-date">Delivery date</option>
+            </select>
+          </div>
+        </div>
+
+        <div date-rangepicker className="flex items-center">
+          <div className="relative">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+              </svg>
+            </div>
+            <input
+              name="start"
+              type="date"
+              onChange={(e) => handleDateSearch(e)}
+              value={start}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Select date start"
+            />
+          </div>
+          <span className="mx-4 text-gray-500">to</span>
+          <div className="relative">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+              </svg>
+            </div>
+            <input
+              name="end"
+              onChange={(e) => handleDateSearch(e)}
+              value={end}
+              type="date"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Select date end"
+            />
+          </div>
         </div>
 
         <label htmlFor="table-search" className="sr-only">
@@ -314,10 +535,12 @@ const OrdersList = () => {
             </svg>
           </div>
           <input
+            onChange={(e) => handleSearch(e)}
+            value={search}
             type="text"
             id="table-search-users"
             className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search for users"
+            placeholder="Search for orders"
           />
         </div>
       </div>
@@ -336,22 +559,23 @@ const OrdersList = () => {
                   Orders
                 </th>
                 <th scope="col" className="px-6 py-3">
-                Price
+                  Price
                 </th>
                 <th scope="col" className="px-6 py-3">
-                payment
+                  Status
                 </th>
                 <th scope="col" className="px-6 py-3">
-                Delivery Date
+                  Date
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Delivery Date
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
             </thead>
-            <tbody>
-            {orderListContent}
-            </tbody>
+            <tbody>{orderListContent}</tbody>
           </table>
           <nav
             className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
@@ -456,7 +680,6 @@ const OrdersList = () => {
           </div>
         </div>
       )}
-      
     </div>
   );
 };

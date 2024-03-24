@@ -10,10 +10,12 @@ import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { getOrders } from "@/redux/features/order/orderSlice";
 
 
 export const CustomerList = () => {
     const {customers, isLoading, error} = useSelector((state)=>state.customer);
+    const {orders} = useSelector((state)=>state.order);
     const dispatch = useDispatch();
     const [openModal, setOpenModal] = useState(false);
     const [showPopover, setShowPopover] = useState(null);
@@ -23,6 +25,7 @@ export const CustomerList = () => {
     }
     useEffect(()=>{
      dispatch(getCustomers());
+     dispatch(getOrders());
     },[dispatch])
     console.log(customers);
 
@@ -52,8 +55,9 @@ export const CustomerList = () => {
     //       setShowPopover(null);
     //     });
     //   }
- 
-    
+
+const filteredOrders = orders.filter((order) => order.customerId === customers.id);
+
     if(isLoading) return <Loading/>
     if(error) return <ErroPage error={error}/>
   return (

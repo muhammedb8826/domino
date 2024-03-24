@@ -1,201 +1,34 @@
 {
-  "products": [
-    {
-      "id": 1,
-      "name": "T-Shirt",
-      "price": 10,
-      "description": "A simple T-Shirt",
-      "image": "https://unblast.com/wp-content/uploads/2018/09/T-shirt-Mockup.jpg",
-      "attributes": [
-        {
-          "name": "fabric",
-          "options": [
-            "cotton",
-            "polyester",
-            "wool",
-            "rayon",
-            "linen"
-          ]
-        },
-        {
-          "name": "size",
-          "options": [
-            "small",
-            "medium",
-            "large"
-          ]
-        },
-        {
-          "name": "color",
-          "options": [
-            "red",
-            "blue",
-            "green",
-            "yellow",
-            "white",
-            "black"
-          ]
-        },
-        {
-          "name": "style",
-          "options": [
-            "v-neck",
-            "crew-neck"
-          ]
-        },
-        {
-          "name": "placement",
-          "options": []
-        },
-        {
-          "name": "purpose",
-          "options": [
-            "business",
-            "personal",
-            "gift"
-          ]
-        },
-        {
-          "name": "description",
-          "options": [
-            "I want a picture of a cat on the front",
-            "I want a picture of a dog on the back"
-          ]
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Banner",
-      "price": 10,
-      "description": "A simple Banner",
-      "image": "https://unblast.com/wp-content/uploads/2018/10/Rollup-Mockup.jpg",
-      "attributes": [
-        {
-          "name": "material",
-          "options": [
-            "vinyl",
-            "fabric",
-            "mesh"
-          ]
-        },
-        {
-          "name": "dimensions",
-          "options": []
-        },
-        {
-          "name": "unit",
-          "options": [
-            "ft",
-            "in",
-            "cm",
-            "m"
-          ]
-        },
-        {
-          "name": "purpose",
-          "options": [
-            "business",
-            "personal",
-            "gift"
-          ]
-        },
-        {
-          "name": "description",
-          "options": [
-            "I want a picture of a cat on the front",
-            "I want a picture of a dog on the back"
-          ]
-        },
-        {
-          "name": "side",
-          "options": [
-            "single",
-            "double"
-          ]
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Sticker",
-      "price": 10,
-      "description": "A simple Sticker",
-      "image": "https://unblast.com/wp-content/uploads/2020/10/Red-Grey-Watercolor-Floral-Clipart-1.jpg",
-      "attributes": [
-        {
-          "name": "material",
-          "options": [
-            "vinyl",
-            "fabric",
-            "mesh"
-          ]
-        },
-        {
-          "name": "unit",
-          "options": [
-            "ft",
-            "in",
-            "cm",
-            "m"
-          ]
-        },
-        {
-          "name": "purpose",
-          "options": [
-            "business",
-            "personal",
-            "gift"
-          ]
-        },
-        {
-          "name": "description",
-          "options": [
-            "I want a picture of a cat on the front",
-            "I want a picture of a dog on the back"
-          ]
-        },
-        {
-          "name": "side",
-          "options": [
-            "single",
-            "double"
-          ]
-        }
-      ]
-    }
-  ],
+  "products": [],
   "orders": [
     {
-      "series": "SAL-ORD-YYYY-",
-      "date": "Feb 17, 2024",
-      "deliveryDate": "Feb 21, 2024",
-      "orderType": "phone",
-      "description": "ይህ ትዕዛዝ በሚቀጥለው ሳምንት እንዲታተም እና እንዲደርስ እፈልጋለሁ",
-      "customerPhone": "0905-07-8826",
-      "customerFirstName": "Muhammed",
-      "customerEmail": "muhammedb8826@gmail.com",
+      "series": "Coca Cola-2024",
+      "date": "Mar 17, 2024",
+      "deliveryDate": "Mar 27, 2024",
+      "orderType": "telegram",
+      "description": "",
+      "customerPhone": "12-4566-6788",
+      "customerFirstName": "Coca Cola",
+      "customerEmail": "cocacola@gmail.com",
+      "commissionPhone": "",
+      "commissionFirstName": "",
+      "commissionEmail": "",
       "orderItems": [
-        {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print and Heat press",
-          "unitPrice": 50000,
-          "status": "rejected"
-        },
         {
           "machine": "DTF",
           "material": "T-shirt",
-          "service": "Print and Heat press",
-          "unitPrice": 1600,
-          "status": "edited"
+          "service": "Print and Material",
+          "unitPrice": 12500,
+          "status": "recieved",
+          "commissionPrice": 0
         },
         {
           "machine": "UV",
           "material": "Film",
           "service": "Print and Material",
-          "unitPrice": 1600,
-          "status": "recieved"
+          "unitPrice": 10000,
+          "status": "recieved",
+          "commissionPrice": 0
         }
       ],
       "orderMeasures": [
@@ -209,175 +42,181 @@
         {
           "unitName": null,
           "width": "2",
-          "height": "2",
-          "quantity": "2",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "2",
-          "height": "2",
-          "quantity": "2",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": null,
-          "height": null,
-          "quantity": null,
+          "height": "5",
+          "quantity": "5",
           "unitPrice": null
         }
       ],
-      "totalBirr": 53200,
+      "totalBirr": 22500,
+      "totalCommission": 0,
       "fileNames": [
-        "Muhammed-Muhammed-BANNER-Screen-5x5",
-        "Muhammed-Muhammed-DTF-T-shirt-2x2",
-        "Muhammed-Muhammed-UV-Film-2x2"
+        "Coca Cola-Coca Cola-DTF-T-shirt-5x5",
+        "Coca Cola-Coca Cola-UV-Film-2x5"
       ],
-      "totalQuantity": 9,
-      "id": "2ed2"
+      "totalQuantity": 10,
+      "grandTotal": 25875,
+      "vat": 3375,
+      "discounts": [
+        0,
+        0
+      ],
+      "levels": [
+        "1",
+        null
+      ],
+      "totalBirrAfterDiscount": [
+        12500,
+        10000
+      ],
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "partial"
+      },
+      "id": "605e"
     },
     {
-      "id": "bea3",
-      "series": "SAL-ORD-YYYY-",
-      "date": "Feb 17, 2024",
-      "deliveryDate": "Feb 22, 2024",
-      "orderType": "telegram",
+      "id": "b96d",
+      "series": "Teshager-2024",
+      "date": "Mar 19, 2024",
+      "deliveryDate": "Mar 22, 2024",
+      "orderType": "phone",
       "description": "",
-      "customerPhone": "0988-45-6666",
-      "customerFirstName": "Babi",
+      "customerId": "1710822546278",
+      "customerPhone": "09-1156-8989",
+      "customerFirstName": "Teshager",
       "customerEmail": "",
+      "commissionPhone": "",
+      "commissionFirstName": "",
+      "commissionEmail": "",
       "orderItems": [
         {
-          "machine": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 800,
+          "machine": "BANNER",
+          "material": "sticker",
+          "service": "Print",
+          "unitPrice": 43200,
           "status": "recieved"
         }
       ],
       "orderMeasures": [
         {
           "unitName": null,
-          "width": "2",
-          "height": "2",
-          "quantity": "2",
+          "width": "6",
+          "height": "6",
+          "quantity": "6",
           "unitPrice": null
         }
       ],
-      "totalBirr": 800,
+      "totalBirr": 43200,
+      "grandTotal": 49680,
       "fileNames": [
-        "Babi-DTF-T-shirt-2x2"
+        "Teshager-BANNER-sticker-6x6"
       ],
-      "totalQuantity": 2
+      "totalQuantity": 6,
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      }
+    },
+    {
+      "id": "48ad",
+      "series": "Biniyam-2024",
+      "date": "Mar 20, 2024",
+      "deliveryDate": "Mar 22, 2024",
+      "orderType": "phone",
+      "description": "",
+      "customerId": "1710814124476",
+      "customerPhone": "09-1144-0266",
+      "customerFirstName": "Biniyam",
+      "customerEmail": "bini@gmail.com",
+      "commissionPhone": "",
+      "commissionFirstName": "",
+      "commissionEmail": "",
+      "orderItems": [
+        {
+          "machine": "UV",
+          "material": "Film",
+          "service": "Print and Material",
+          "unitPrice": 30000,
+          "status": "recieved"
+        },
+        {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitPrice": 9000,
+          "status": "recieved"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "6",
+          "height": "5",
+          "quantity": "5",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "3",
+          "height": "5",
+          "quantity": "6",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 39000,
+      "grandTotal": 44850,
+      "fileNames": [
+        "Biniyam-UV-Film-6x5",
+        "Biniyam-DTF-T-shirt-3x5"
+      ],
+      "totalQuantity": 11,
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      }
     }
   ],
   "customers": [
     {
-      "id": 1707080341356,
-      "phone": "0905-07-8826",
-      "companyType": "individual",
-      "firstName": "Muhammed",
-      "lastName": "Berisso",
-      "email": "muhammedb8826@gmail.com"
-    },
-    {
-      "id": "1707080747266",
-      "phone": "0911-04-0506",
-      "companyType": "group",
-      "firstName": "Berisso",
-      "lastName": "Family",
-      "email": "berisso@gmail.com"
-    },
-    {
-      "id": "1707080869403",
-      "phone": "0916-01-6212",
+      "id": "1710809287639",
+      "phone": "12-4566-6788",
       "companyType": "company",
-      "firstName": "Kuma",
-      "lastName": "Shark",
-      "email": "kuma@gmail.com"
-    },
-    {
-      "id": "1707089336029",
-      "phone": "0911-88-9696",
-      "companyType": "",
-      "firstName": "Teshe",
+      "firstName": "Coca Cola",
       "lastName": "",
-      "email": ""
+      "email": "cocacola@gmail.com"
     },
     {
-      "id": "1707089362257",
-      "phone": "0988-45-6666",
-      "companyType": "",
-      "firstName": "Babi",
+      "id": "1710814124476",
+      "phone": "09-1144-0266",
+      "companyType": "individual",
+      "firstName": "Biniyam",
       "lastName": "",
-      "email": ""
+      "email": "bini@gmail.com"
     },
     {
-      "id": "1707089382443",
-      "phone": "0926-98-0318",
-      "companyType": "",
-      "firstName": "Osman",
+      "id": "1710821022900",
+      "phone": "09-1196-8989",
+      "companyType": "company",
+      "firstName": "Pepsi",
       "lastName": "",
-      "email": ""
+      "email": "pepsi@gmail.com"
     },
     {
-      "id": "1707089490260",
-      "phone": "0911-07-0000",
-      "companyType": "",
-      "firstName": "Basha",
-      "lastName": "",
-      "email": ""
-    },
-    {
-      "id": "1707594176543",
-      "phone": "1234-56-7890",
+      "id": "1710822546278",
+      "phone": "09-1156-8989",
       "companyType": "individual",
       "firstName": "Teshager",
-      "lastName": "Assefa",
-      "email": "teshagerass@gmail.com"
-    },
-    {
-      "id": "1707595667165",
-      "phone": "1234-56-7896",
-      "companyType": "company",
-      "firstName": "Mamila",
       "lastName": "",
-      "email": "mamila@gmail.com"
-    },
-    {
-      "id": "1707603896773",
-      "phone": "0916-11-5252",
-      "companyType": "individual",
-      "firstName": "Muktar",
-      "lastName": "",
-      "email": "muktar@gmail.com"
-    },
-    {
-      "id": "1707706533313",
-      "phone": "0910-11-1111",
-      "companyType": "company",
-      "firstName": "Duche",
-      "lastName": "",
-      "email": "duche@gmail.com"
-    },
-    {
-      "id": "1707746857768",
-      "phone": "1234-56-7890",
-      "companyType": "individual",
-      "firstName": "ahadu",
-      "lastName": "teshager",
-      "email": "admin@domino.com"
-    },
-    {
-      "id": "1707883674950",
-      "phone": "9856-59-8000",
-      "companyType": "individual",
-      "firstName": "test",
-      "lastName": "test",
-      "email": "admin@domino.com"
+      "email": ""
     }
   ],
+  "commissions": [],
   "services": [
     {
       "id": "e4b1",
@@ -600,6 +439,464 @@
         "height": "1"
       },
       "unitPrice": "200"
+    }
+  ],
+  "roles": [
+    {
+      "id": "5932",
+      "name": " Reception",
+      "description": "She can create an order"
+    }
+  ],
+  "permissions": [
+    {
+      "id": 1,
+      "name": "create",
+      "description": "Can create items"
+    },
+    {
+      "id": 2,
+      "name": "read",
+      "description": "Can read items"
+    },
+    {
+      "id": 3,
+      "name": "update",
+      "description": "Can update items"
+    },
+    {
+      "id": 4,
+      "name": "delete",
+      "description": "Can delete items"
+    }
+  ],
+  "dicounts": [
+    {
+      "id": "2b12",
+      "level": "1",
+      "minumumMeterSquare": "100",
+      "discountPercentage": "15"
+    },
+    {
+      "id": "a09d",
+      "level": "2",
+      "minumumMeterSquare": "150",
+      "discountPercentage": "20"
+    },
+    {
+      "id": "a88c",
+      "level": "3",
+      "minumumMeterSquare": "500",
+      "discountPercentage": "30"
+    },
+    {
+      "id": "b8b8",
+      "level": "4",
+      "minumumMeterSquare": "1000",
+      "discountPercentage": "50"
+    }
+  ],
+  "commissionTransactions": [],
+  "paymentTransactions": [
+    {
+      "id": "6b3f",
+      "transactions": [
+        {
+          "date": "Mar 21, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "50000",
+          "reference": "958djdd98-CBE",
+          "status": "paid"
+        },
+        {
+          "date": "Mar 21, 2024",
+          "paymentMethod": "bank-transfer",
+          "description": "",
+          "paymentAmount": "69000",
+          "status": "paid",
+          "reference": "958djdd98-Abyssinia"
+        },
+        {
+          "date": "Mar 21, 2024",
+          "paymentMethod": "check",
+          "description": "",
+          "paymentAmount": "600",
+          "status": "paid",
+          "reference": ""
+        }
+      ],
+      "order": {
+        "id": "9f9c",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "a8cf",
+      "transactions": [
+        {
+          "date": "Mar 21, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "27600",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "5fb6",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "99dc",
+      "transactions": [
+        {
+          "date": "Mar 21, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "11500",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "1efb",
+        "customer": {
+          "id": "1710821022900"
+        }
+      }
+    },
+    {
+      "id": "ec0f",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "553c",
+        "customer": {
+          "id": "1710814124476"
+        }
+      }
+    },
+    {
+      "id": "c3a5",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "1311",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "4991",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "974f",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "d7a6",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "a2fe",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "6f2a",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "1459",
+        "customer": {
+          "id": "1710814124476"
+        }
+      }
+    },
+    {
+      "id": "3afb",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "c37f",
+        "customer": {
+          "id": "1710821022900"
+        }
+      }
+    },
+    {
+      "id": "b1d7",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "d240",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "7bf0",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "50000",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "c159",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "d1ce",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "81da",
+        "customer": {
+          "id": "1710814124476"
+        }
+      }
+    },
+    {
+      "id": "242b",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "bdba",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "9618",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "8a83",
+        "customer": {
+          "id": "1710821022900"
+        }
+      }
+    },
+    {
+      "id": "96a0",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "5002",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "605e",
+        "customer": {
+          "id": "1710809287639"
+        }
+      }
+    },
+    {
+      "id": "250b",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "b96d",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "cf19",
+      "transactions": [
+        {
+          "date": "Mar 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "48ad",
+        "customer": {
+          "id": "1710814124476"
+        }
+      }
+    }
+  ],
+  "orderStatus": [
+    {
+      "id": "ed70",
+      "orderId": "605e",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "3e46",
+      "orderId": "b96d",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "74be",
+      "orderId": "48ad",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        }
+      ]
     }
   ]
 }

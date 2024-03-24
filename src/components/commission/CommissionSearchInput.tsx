@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { CustomerRegistration } from "./CustomerRegistrationModal";
-import { getCustomers, searchUsers } from "../../redux/features/customer/customerSlice";
+import { CommissionRegistration } from "./CommissionRegistrationModal";
+import { searchUsers } from "../../redux/features/commission/commissionSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { getCommissions } from "@/redux/features/commission/commissionSlice";
 
 
-const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
+const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
     const dispatch = useDispatch();
-    const { customers, searchTerm } = useSelector((state) => state.customer);
+    const { commissions, searchTerm } = useSelector((state) => state.commission);
 
     const [searchInput, setSearchInput] = useState(value || "");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -17,15 +18,15 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
   }, [value]);
 
   useEffect(() => {
-      dispatch(getCustomers());
+      dispatch(getCommissions());
   }, [dispatch]);
     
-      const filteredCustomers = customers.filter(
-        (customer) =>
-          customer.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customer.id?.toString().includes(searchTerm) ||
-          customer.phone?.toLowerCase().includes(searchTerm) ||
-          customer.companyType?.toLowerCase().includes(searchTerm)
+      const filteredCommission = commissions.filter(
+        (commission) =>
+          commission.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          commission.id?.toString().includes(searchTerm) ||
+          commission.phone?.toLowerCase().includes(searchTerm) ||
+          commission.companyType?.toLowerCase().includes(searchTerm)
       );
     
       const handleSearchUser = (e) => {
@@ -33,10 +34,12 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
         setIsDropdownOpen(true);
         dispatch(searchUsers(e.target.value));
       };
-      const handleSelectCustomer = (customer) => {
-        setSearchInput(customer.firstName);
+      const handleSelectCustomer = (commission) => {
+        console.log(commission);
+        
+        setSearchInput(commission.firstName);
         setIsDropdownOpen(false);
-        handleCustomerInfo(customer);
+        handleCommissionInfo(commission);
       };
 
     const handleModalOpen = () => {
@@ -62,7 +65,7 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
                 htmlFor="input-group-search"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Customer
+                Sales partner
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -105,23 +108,23 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
                 className="max-h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
                 aria-labelledby="dropdownSearchButton"
               >
-                {filteredCustomers.length > 0 ? (
-                  filteredCustomers.map((customer) => (
-                    <li key={customer.id}>
+                {filteredCommission.length > 0 ? (
+                  filteredCommission.map((commission) => (
+                    <li key={commission.id}>
                       <div className="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                         <input
-                          onChange={() => handleSelectCustomer(customer)}
+                          onChange={() => handleSelectCustomer(commission)}
                           value={searchInput}
-                          id={`checkbox-item-${customer.id}`}
+                          id={`checkbox-item-${commission.id}`}
                           type="radio"
                           name="customerPhone"
                           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                         />
                         <label
-                          htmlFor={`checkbox-item-${customer.id}`}
+                          htmlFor={`checkbox-item-${commission.id}`}
                           className="w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
                         >
-                          {customer.firstName}, {customer.phone}
+                          {commission.firstName}, {commission.phone}
                         </label>
                       </div>
                     </li>
@@ -144,12 +147,12 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
                 >
                   <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-6a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2Z" />
                 </svg>
-                Add new customer
+                Add sales partner
               </button>
             </div>
-            {modalOpen && <CustomerRegistration handleModalOpen={handleModalOpen} />}
+            {modalOpen && <CommissionRegistration handleModalOpen={handleModalOpen} />}
     </>
   )
 }
 
-export default CustomerSearchInput
+export default CommissionSearchInput

@@ -1,29 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createUser } from "../../redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { FaRegWindowClose } from "react-icons/fa";
 import { RootState } from "@reduxjs/toolkit/query";
 import { clearSuccessMessage } from "../../redux/features/user/userSlice";
-import {  toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CgClose } from "react-icons/cg";
+import { getMachines } from "@/redux/features/machine/machineSlice";
+import Loading from "../common/Loading";
 
 interface UserRegistrationProps {
   handleModalOpen: () => void;
   errors: null | string;
 }
 
-
-const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) => {
+const UserRegistration = ({
+  handleModalOpen,
+  errors,
+}: UserRegistrationProps) => {
   const { isLoading, registrationErrors, message } = useSelector(
     (state: RootState) => state.user
   );
+  const { machines } = useSelector((state: RootState) => state.machine);
 
-
-  // const [errPhone, setErrPhone] = useState(null);
-  // const [errEmail, setErrEmail] = useState(null);
-  // const [errPassword, setErrPassword] = useState(null);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getMachines());
+  }, [dispatch]);
 
   const errPhone = errors && errors.phone ? errors.phone[0] : null;
   const errEmail = errors && errors.email ? errors.email[0] : null;
@@ -41,9 +44,10 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
     joinedDate: "",
     address: "",
     profileImage: "",
+    roles: 'reception',
+    machinePermissions: [],
+    isActice: true,
   });
-
-  const dispatch = useDispatch();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,17 +63,20 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
       joined_date: userData.joinedDate,
       address: userData.address,
       profile_image: userData.profileImage,
+      roles: userData.roles,
+      machine_permissions: userData.machinePermissions,
+      is_active: userData.isActice,
     };
 
     dispatch(createUser(newUserData)).then((res) => {
-      
-        if(res.payload.data){
-          toast(message)
-          dispatch(clearSuccessMessage());
-          handleModalOpen();
-        }  
+      if (res.payload.data) {
+        const message = res.payload.data.message;
+        toast.success(message);
+        dispatch(clearSuccessMessage());
+        handleModalOpen();
+      }
     });
-    
+
     setUserData({
       firstName: "",
       middleName: "",
@@ -82,48 +89,43 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
       joinedDate: "",
       address: "",
       profileImage: "",
+      roles: 'reception',
+      machinePermissions: [],
+      isActice: true,
     });
   };
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="inline-block overflow-hidden text-center align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full mx-auto"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-headline"
-    >
-      <div className="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4 mx-auto">
-        <div className="sm:flex sm:items-start">
-          <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <div className="flex justify-between items-center">
-              <h3
-                className="text-lg font-medium leading-6 text-gray-900"
-                id="modal-headline"
-              >
-                Add New User
-              </h3>
-              
-              <button
-                onClick={handleModalOpen}
-                type="button"
-                title="close"
-                className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:ml-3 sm:w-auto"
-              >
-                <FaRegWindowClose />
-              </button>
-            </div>
-            {registrationErrors && (
-                <p className="text-red-500 text-xs italic">
-                  {registrationErrors.message}{" "}
-                </p>
-              )}
-            <div className="mt-2">
-              <div>
-               
-                <hr />
+  if (isLoading) return <Loading />;
 
-                <div className="grid gap-2 md:grid-cols-3 p-2">
+  return (
+    <>
+      <form onSubmit={handleSubmit} className="">
+        <div className="justify-center items-center flex overflow-hidden fixed inset-0 z-50 outline-none focus:outline-none">
+          <div className="relative w-auto my-6 mx-auto max-w-3xl md:w-1/2 h-[95%]">
+            {/*content*/}
+            <div className=" rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none h-full border-0 overflow-hidden overflow-y-auto">
+              {/*header*/}
+              <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                <h3 className="text-2xl font-semibold">Add New User</h3>
+                {registrationErrors && (
+                  <p className="text-red-500 text-xs italic">
+                    {registrationErrors.message}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  title="Close Modal"
+                  className="p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                  onClick={handleModalOpen}
+                >
+                  <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                    <CgClose />
+                  </span>
+                </button>
+              </div>
+              {/*body*/}
+              <div className="relative p-6 flex-auto">
+                <div className="grid gap-4 md:grid-cols-3 p-2">
                   <div>
                     <label
                       htmlFor="first_name"
@@ -186,7 +188,7 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                   </div>
                 </div>
 
-                <div className="grid gap-2 md:grid-cols-2 p-2">
+                <div className="grid gap-4 md:grid-cols-2 p-2">
                   <div>
                     <label
                       htmlFor="phone"
@@ -206,8 +208,8 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                         })
                       }
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                      placeholder="123-45-678"
-                      pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                      placeholder="09-4544-6788"
+                      pattern="[0-9]{2}-[0-9]{4}-[0-9]{4}"
                       required
                     />
                     {errPhone && (
@@ -286,7 +288,7 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                     />
                   </div>
 
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <label
                       htmlFor="address"
                       className="block mb-2 text-sm font-medium text-gray-900 "
@@ -308,11 +310,11 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                   </div>
 
                   <div className="relative max-w-sm">
-                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pt-3 pointer-events-none">
                       <svg
                         className="w-4 h-4 text-gray-500 dark:text-gray-400"
                         aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns="http:www.w3.org/2000/svg"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -339,14 +341,13 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                     />
                   </div>
 
-                  <div className="flex">
+                  <div className="flex items-center gap-4 ps-4 border border-gray-200 rounded dark:border-gray-700">
                     <div className="flex items-center me-4">
                       <input
                         id="inline-radio-male"
                         type="radio"
-                        value="male"
+                        value="male" // Set the value attribute to "male"
                         name="gender"
-                        checked
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600"
                         onChange={(e) =>
                           setUserData({ ...userData, gender: e.target.value })
@@ -364,7 +365,7 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                       <input
                         id="inline-2-radio-female"
                         type="radio"
-                        value="female"
+                        value="female" // Set the value attribute to "female"
                         name="gender"
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600"
                         onChange={(e) =>
@@ -380,7 +381,6 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                       </label>
                     </div>
                   </div>
-
                   <div>
                     <label
                       className="block mb-2 text-sm font-medium text-gray-900"
@@ -410,21 +410,86 @@ const UserRegistration = ({ handleModalOpen, errors }: UserRegistrationProps) =>
                       SVG, PNG, JPG or GIF (MAX. 800x400px).
                     </p>
                   </div>
+                  <div>
+                    <label
+                      htmlFor="roles"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Assign role
+                    </label>
+                    <select
+                    defaultValue="reception"
+                      id="roles"
+                      name="roles"
+                      value={userData.roles}
+                      onChange={(e) =>
+                        setUserData({ ...userData, roles: e.target.value })
+                      }
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                      <option value="reception">Reception</option>
+                      <option value="graphic-designer">Graphic designer</option>
+                      <option value="operator">Operator</option>
+                      <option value="finance">Finance</option>
+                      <option value="owner">Owner</option>
+                    </select>
+                  </div>
+                  {userData.roles === "operator" && (
+                    <div>
+                      <label
+                        htmlFor="machinePermissions"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Assign machines
+                      </label>
+                      <select
+                        id="machinePermissions"
+                        name="machinePermissions"
+                        multiple={true}
+                        onChange={(e) => {
+                          const selectedValues = Array.from(
+                            e.target.selectedOptions,
+                            (option) => option.value
+                          );
+                          setUserData({
+                            ...userData,
+                            machinePermissions: selectedValues,
+                          });
+                        }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                        {machines.map((machine) => (
+                          <option key={machine.id} value={machine.id}>
+                            {machine.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
+              </div>
+              {/*footer*/}
+              <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                <button
+                  className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={handleModalOpen}
+                >
+                  Close
+                </button>
+                <button
+                  className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  type="submit"
+                >
+                  {isLoading ? "Saving..." : "Save"}
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse mx-auto">
-        <button
-          type="submit"
-          className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-700 border border-transparent rounded-md shadow-sm hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:ml-3 sm:w-auto sm:text-sm"
-        >
-          {isLoading ? "Saving..." : "Save"}
-        </button>
-      </div>
-    </form>
+      </form>
+      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+    </>
   );
 };
 

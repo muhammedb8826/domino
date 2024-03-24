@@ -1,36 +1,34 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { loginURL } from "../../api/API";
-
-
+import api from "../../api/apiUtils";
 interface User {
   token: string;
 }
-
 interface AuthState {
   isLoading: boolean;
   error: string;
-  isAuthenticated: boolean;
   user: User | null;
   token: string | null;
 }
 
+const storedUser = localStorage.getItem("user");
+const storedToken = localStorage.getItem("token");
 
-
-const userItem = localStorage.getItem("user");
-const user = userItem ? JSON.parse(userItem) : null;
 
 const initialState: AuthState = {
-  user,
+  user: storedUser ? JSON.parse(storedUser) : null,
+  token: storedToken,
   isLoading: false,
-  isAuthenticated: !!localStorage.getItem("token"),
-  token: localStorage.getItem("token") || null,
   error: "",
 };
 
-export const loginUser = createAsyncThunk("user/loginUser", async (user) => {
-  const response = await axios.post(loginURL, user);
-  return response.data;
+export const loginUser = createAsyncThunk("auth/loginUser", async (userData) => {
+  try {
+    const response = await api.post("/login", userData);
+    return response.data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
 });
 
 const authSlice = createSlice({
@@ -39,15 +37,15 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      state.isAuthenticated = true;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     setToken: (state, action) => {
       state.token = action.payload;
+      localStorage.setItem("token", action.payload);
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
-      state.isAuthenticated = false;
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
@@ -59,9 +57,8 @@ const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.user = action.payload.user;
       state.isLoading = false;
-      state.isAuthenticated = true;
       state.token = action.payload.token;
-      state.error = "something went wrong";
+      state.error = "";
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.isLoading = false;
@@ -71,6 +68,6 @@ const authSlice = createSlice({
 });
 
 export const { setUser, setToken, logout } = authSlice.actions;
-export const selectToken = (state: AuthState) => state.user?.token;
-// export const selectAuth = (state) => state.auth;
+export const selectToken = (state: { auth: { token: string } }) => state.auth.token;
+export const selectUser = (state: { auth: { user: User } }) => state.auth.user;
 export default authSlice.reducer;

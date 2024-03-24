@@ -3,6 +3,7 @@ import { FaCartArrowDown, FaProductHunt, FaUsers } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
 import { MdSettings } from "react-icons/md";
 import { IoIosPricetags } from "react-icons/io";
+import { RiHandCoinFill } from "react-icons/ri";
 // import dominoLogo from "../../assets/images/domino-logo.jpg";
 
 export const SideBar = ({
@@ -63,6 +64,16 @@ export const SideBar = ({
         >
           <FaUsers />
           <span> Customer</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => handleButtonClick("commission")}
+          className={`${
+            active === "commission" ? "bg-white text-black" : ""
+          } ps-4 p-2 rounded-l-3xl flex items-center gap-2 text-base`}
+        >
+          <RiHandCoinFill />
+          <span> Commission</span>
         </button>
         <button
           type="button"

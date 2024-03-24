@@ -1,28 +1,27 @@
-import { useEffect, useRef, useState } from "react";
-import { RiPriceTag2Line } from "react-icons/ri";
+"use client";
+import { IoBagAdd } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
-import { deleteprice, getprice } from "../../redux/features/price/pricingSlice";
-import PriceDetailsModal from "./PriceDetailsModal";
+import ErroPage from "../common/ErroPage";
+import { useEffect, useRef, useState } from "react";
+import { CommissionRegistration } from "./CommissionRegistrationModal";
+import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
-import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
-import { RootState } from "@/redux/store";
+import { getCommissions } from "@/redux/features/commission/commissionSlice";
+import { getOrders } from "@/redux/features/order/orderSlice";
+import { NavLink } from "react-router-dom";
 
-const Pricing = () => {
-  const { user, token } = useSelector(
-    (state: RootState) => state.auth
+export const CommissionList = () => {
+  const { commissions, isLoading, error } = useSelector(
+    (state) => state.commission
   );
-  const { prices, isLoading, error } = useSelector((state) => state.price);
-
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+  const [openModal, setOpenModal] = useState(false);
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-
-  if(user?.email !== "admin@domino.com"){
-    return <ErroPage error="You are not authorized to view this page" />
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -34,19 +33,15 @@ const Pricing = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    if (showPopover !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [showPopover]);
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getprice());
-  }, [dispatch]);
-
-  const [openModal, setOpenModal] = useState(false);
   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
@@ -54,33 +49,26 @@ const Pricing = () => {
   const handleModalOpen = () => {
     setOpenModal((prev) => !prev);
   };
+  useEffect(() => {
+    dispatch(getCommissions());
+    dispatch(getOrders());
+  }, [dispatch]);
 
-  const handleDeletePrice = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You want to delete this price!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "The price has been deleted.",
-          icon: "success",
-        }).then(() => {
-          dispatch(deleteprice(id));
-        });
-      }
-      setShowPopover(null);
-    });
-  };
+
+
+  const filteredOrders = commissions.map(commission => {
+    const commissionOrders = orders.filter(order => order.commissionId === commission.id);
+    return {
+      ...commission,
+      hasOrder: commissionOrders
+    };
+  });
+
+  console.log(filteredOrders);
+  
 
   if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
-
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
@@ -90,8 +78,8 @@ const Pricing = () => {
             onClick={handleModalOpen}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            <RiPriceTag2Line />
-            <span className="ml-2">Add Unit Price</span>
+            <IoBagAdd />
+            <span className="ml-2">Add New Commission</span>
           </button>
         </div>
         <label htmlFor="table-search" className="sr-only">
@@ -138,22 +126,19 @@ const Pricing = () => {
               </div>
             </th>
             <th scope="col" className="px-6 py-3">
-              Machine
+              Customer name
             </th>
             <th scope="col" className="px-6 py-3">
-              Material
+              Phone number
             </th>
             <th scope="col" className="px-6 py-3">
-              Service
+              Company type
             </th>
             <th scope="col" className="px-6 py-3">
-              Unit
+              Total Earned
             </th>
             <th scope="col" className="px-6 py-3">
-              Measures(wxh)
-            </th>
-            <th scope="col" className="px-6 py-3">
-              price
+              Balance
             </th>
             <th scope="col" className="px-6 py-3">
               Action
@@ -161,96 +146,76 @@ const Pricing = () => {
           </tr>
         </thead>
         <tbody>
-          {prices && prices.length === 0 && (
-            <tr>
-              <td colSpan={7} className="text-center">
-                No data found
+          {commissions.map((commission, index) => (
+            <tr
+              key={commission.id}
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <td className="w-4 p-4">
+                <div className="flex items-center">
+                  <input
+                    id="checkbox-table-search-1"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label htmlFor="checkbox-table-search-1" className="sr-only">
+                    checkbox
+                  </label>
+                </div>
               </td>
-            </tr>
-          )}
-          {prices &&
-            prices.map((price, index) => (
-              <tr
-                key={price.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
+                {commission.firstName}
+              </th>
+              <td className="px-6 py-4">{commission.phone}</td>
+              <td className="px-6 py-4">{commission.companyType}</td>
+              <td className="px-6 py-4">
+                {filteredOrders[index].hasOrder.reduce((acc, order) => (acc += order.totalCommission), 0)}
+              </td>
+              <td className="px-6 py-4">
+               {commission.balance}
+              </td>
+              <td className="px-6 py-4 relative">
+            <button
+              onClick={() => handleAction(index)}
+              title="action"
+              type="button"
+              className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              <CiMenuKebab />
+            </button>
+            {showPopover === index && (
+              <div
+                ref={popoverRef}
+                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+              >
+                <ul className="py-2 text-sm text-gray-700">
+                  <li key={`${commission.id}-${index}-1`}>
+                    <NavLink
+                      to={`/commission/${commission.id}`}
+                      className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
                     >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  {price.machine && price.machine.name}
-                </th>
-                <td className="px-6 py-4">
-                  {price.material && price.material.name}
-                </td>
-                <td className="px-6 py-4">{price && price.service.name}</td>
-                <td className="px-6 py-4">{price.unit && price.unit.name}</td>
-                <td className="px-6 py-4">
-                  {price.unit && price.unit.width}x{price.unit.height}
-                </td>
-                <td className="px-6 py-4">{price.unitPrice}</td>
-                <td className="px-6 py-4 relative">
-                  <button
-                    onClick={() => handleAction(index)}
-                    title="action"
-                    data-popover-target={`popover-bottom-${index}`}
-                    data-popover-trigger="click"
-                    id={`dropdownAvatarNameButton-${price.id}-${index}`}
-                    type="button"
-                    className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                  >
-                    <CiMenuKebab />
-                  </button>
-                  {showPopover === index && (
-                    <div
-                      ref={popoverRef}
-                      className="absolute z-40 right-32 -top-14 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                      <FaRegEdit />
+                      Details
+                    </NavLink>{" "}
+                  </li>
+                  <li key={`${commission.id}-${index}-2`}>
+                    <button
+                      // onClick={() => handleDeleteOrder(commission.id)}
+                      type="button"
+                      className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
                     >
-                      {/* Dropdown content */}
-                      <div className="px-4 py-3 text-sm text-gray-900">
-                        <div className="font-medium">Pro User</div>
-                        <div className="truncate">email</div>
-                      </div>
-                      <ul className="py-2 text-sm text-gray-700">
-                        <li>
-                          <button
-                            type="button"
-                            className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                          >
-                            <FaRegEdit />
-                            Edit
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => handleDeletePrice(price.id)}
-                            type="button"
-                            className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                          >
-                            <MdDelete /> Delete
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
+                      <MdDelete /> Delete
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <nav
@@ -327,9 +292,9 @@ const Pricing = () => {
           </li>
         </ul>
       </nav>
-      {openModal && <PriceDetailsModal handleModalOpen={handleModalOpen} />}
+      {openModal && (
+        <CommissionRegistration handleModalOpen={handleModalOpen} />
+      )}
     </div>
   );
 };
-
-export default Pricing;
