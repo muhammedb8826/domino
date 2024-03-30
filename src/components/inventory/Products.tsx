@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import {  FaUserPlus } from "react-icons/fa"
+import { ProductRegistration } from "./ProductRegistration";
 
 export const Products = () => {
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModalOpen = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
     const productListContent =  (
         <tbody>
@@ -37,6 +42,9 @@ export const Products = () => {
             </th>
             <td className="px-6 py-4"></td>
             <td className="px-6 py-4 truncate"></td>
+            <td className="px-6 py-4">product reg date</td>
+            <td className="px-6 py-4">product reg date</td>
+            <td className="px-6 py-4">product reg date</td>
             <td className="px-6 py-4">product reg date</td>
             <td className="px-6 py-4">
               <button
@@ -92,7 +100,7 @@ export const Products = () => {
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
         <div>
           <button
-            // onClick={handleModalOpen}
+            onClick={handleModalOpen}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             type="button"
           >
@@ -149,13 +157,22 @@ export const Products = () => {
               Product name
             </th>
             <th scope="col" className="px-6 py-3">
-              Price
+              Description
             </th>
             <th scope="col" className="px-6 py-3">
-                Attributes
+                Unit price
             </th>
             <th scope="col" className="px-6 py-3">
-                Created At
+                Quantity
+            </th>
+            <th scope="col" className="px-6 py-3">
+                Category
+            </th>
+            <th scope="col" className="px-6 py-3">
+                Stock Level
+            </th>
+            <th scope="col" className="px-6 py-3">
+                Supplier
             </th>
             <th scope="col" className="px-6 py-3">
               Action
@@ -253,6 +270,7 @@ export const Products = () => {
           </svg>
         </button>
       </div>
+      {isModalOpen && <ProductRegistration handleModalOpen={handleModalOpen} />}
     </>
   )
 }

@@ -28,7 +28,12 @@
     "react-select": "^5.8.0",
     "sweetalert2": "^11.10.3",
     "tailwind-datepicker-react": "^1.4.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "react-hot-toast": "^2.4.1",
+    "apexcharts": "^3.41.0",
+    "headlessui": "^0.0.0",
+    "match-sorter": "^6.3.1",
+    "sort-by": "^0.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

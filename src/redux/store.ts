@@ -13,6 +13,7 @@ import unitReducer from "./features/unit/unitSlice";
 import priceReducer from "./features/price/pricingSlice";
 import roleReducer from "./features/role/roleSlice";
 import discountReducer from "./features/dicount/dicountSlice";
+import supplierReducer from "./features/supplier/suppliersSlice";
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -29,6 +30,7 @@ const store = configureStore({
         price: priceReducer,
         role: roleReducer,
         discount: discountReducer,
+        supplier: supplierReducer,
     },
 });
 

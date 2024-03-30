@@ -1,5 +1,11 @@
-import { NavLink } from "react-router-dom";
-import { FaAngleDown, FaAngleRight, FaCartArrowDown, FaProductHunt, FaUsers } from "react-icons/fa";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import {
+  FaAngleDown,
+  FaAngleRight,
+  FaCartArrowDown,
+  FaProductHunt,
+  FaUsers,
+} from "react-icons/fa";
 import { FaPeopleCarryBox, FaUsersGear } from "react-icons/fa6";
 import { MdCategory, MdInventory, MdSettings } from "react-icons/md";
 import { IoIosPricetags } from "react-icons/io";
@@ -9,15 +15,20 @@ import { BiSolidPurchaseTag, BiSolidReport } from "react-icons/bi";
 import { useEffect, useRef, useState } from "react";
 // import dominoLogo from "../../assets/images/domino-logo.jpg";
 
-export const SideBar = ({
-  handleButtonClick,
-  active,
-}: {
-  handleButtonClick: (arg: string) => void;
-  active: string;
-}) => {
+export const SideBar = () => {
+  const [active, setActive] = useState("order");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  const handleButtonClick = (activeState) => {
+    // Set the active state
+    setActive(activeState);
+    
+    // Navigate to the corresponding route
+    navigate(`/dashboard/${activeState}`);
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -26,9 +37,9 @@ export const SideBar = ({
       }
     }
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -70,101 +81,101 @@ export const SideBar = ({
           <FaUsersGear />
           <span>User</span>
         </button>
-        <div  className="relative w-full">
-      <button
-        onClick={handleDropdownClick}
-        id="dropdownDefaultButton"
-        data-dropdown-toggle="dropdown"
-        className={`${
-          isDropdownOpen ? "text-white bg-blue-700 hover:bg-blue-800 mb-2" : ""
-        } w-full ps-4 p-2 rounded-l-3xl flex items-center justify-between gap-2 text-base`}
-        type="button"
-      >
-        <span className="inline-flex items-center gap-2">
-          <MdInventory />
-          Inventory
-        </span>
-        {isDropdownOpen ? <FaAngleDown /> : <FaAngleRight />}
-      </button>
-      {isDropdownOpen && (
-        <ul
-          className="w-full rounded-br-lg shadow-lg dark:bg-boxdark"
-        >
-          <li>
-            <button
-              type="button"
-              onClick={() => handleButtonClick("products")}
-              className={`${
-                active === "products" ? "text-white" : ""
-              } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
-            >
-              <FaProductHunt />
-              Products
-            </button>
-          </li>
-          <li>
+        <div className="relative w-full">
           <button
-              type="button"
-              onClick={() => handleButtonClick("categories")}
-              className={`${
-                active === "categories" ? "text-white" : ""
-              } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
-            >
-              <MdCategory />
-              Categories
-            </button>
-          </li>
-          <li>
-          <button
-              type="button"
-              onClick={() => handleButtonClick("sale")}
-              className={`${
-                active === "sale" ? "text-white" : ""
-              } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
-            >
-              <FcSalesPerformance />
-              Sale
-            </button>
-          </li>
-          <li>
-          <button
-              type="button"
-              onClick={() => handleButtonClick("purchase")}
-              className={`${
-                active === "purchase" ? "text-white" : ""
-              } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
-            >
-              <BiSolidPurchaseTag />
-              Purchase
-            </button>
-          </li>
-          <li>
-          <button
-              type="button"
-              onClick={() => handleButtonClick("suppliers")}
-              className={`${
-                active === "suppliers" ? "text-white" : ""
-              } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
-            >
-              <FaPeopleCarryBox />
-              Suppliers
-            </button>
-          </li>
-          <li>
-          <button
-              type="button"
-              onClick={() => handleButtonClick("reports")}
-              className={`${
-                active === "reports" ? "text-white" : ""
-              } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
-            >
-              <BiSolidReport />
-              Reports
-            </button>
-          </li>
-        </ul>
-      )}
-    </div>
+            onClick={handleDropdownClick}
+            id="dropdownDefaultButton"
+            data-dropdown-toggle="dropdown"
+            className={`${
+              isDropdownOpen
+                ? "text-white bg-blue-700 hover:bg-blue-800 mb-2"
+                : ""
+            } w-full ps-4 p-2 rounded-l-3xl flex items-center justify-between gap-2 text-base`}
+            type="button"
+          >
+            <span className="inline-flex items-center gap-2">
+              <MdInventory />
+              Inventory
+            </span>
+            {isDropdownOpen ? <FaAngleDown /> : <FaAngleRight />}
+          </button>
+          {isDropdownOpen && (
+            <ul className="w-full rounded-br-lg shadow-lg dark:bg-boxdark">
+              <li>
+                <button
+                  type="button"
+                  onClick={() => handleButtonClick("products")}
+                  className={`${
+                    active === "products" ? "text-white" : ""
+                  } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
+                >
+                  <FaProductHunt />
+                  Products
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => handleButtonClick("sale")}
+                  className={`${
+                    active === "sale" ? "text-white" : ""
+                  } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
+                >
+                  <FcSalesPerformance />
+                  Sale
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => handleButtonClick("categories")}
+                  className={`${
+                    active === "categories" ? "text-white" : ""
+                  } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
+                >
+                  <MdCategory />
+                  Categories
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => handleButtonClick("purchase")}
+                  className={`${
+                    active === "purchase" ? "text-white" : ""
+                  } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
+                >
+                  <BiSolidPurchaseTag />
+                  Purchase
+                </button>
+              </li>
+              <li>
+                <Link
+                  to="/dashboard/inventory/suppliers"
+                  onClick={() => handleButtonClick("suppliers")}
+                  className={`${
+                    active === "suppliers" ? "text-white" : ""
+                  } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
+                >
+                  <FaPeopleCarryBox />
+                  Suppliers
+                </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => handleButtonClick("reports")}
+                  className={`${
+                    active === "reports" ? "text-white" : ""
+                  } w-full hover:border-l-2 p-2 flex items-center gap-2 text-base text-gray-400`}
+                >
+                  <BiSolidReport />
+                  Reports
+                </button>
+              </li>
+            </ul>
+          )}
+        </div>
         <button
           type="button"
           onClick={() => handleButtonClick("customer")}

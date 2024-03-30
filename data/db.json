@@ -898,5 +898,27 @@
         }
       ]
     }
+  ],
+  "suppliers": [
+    {
+      "id": "a85f",
+      "firstName": "Muhammed",
+      "lastName": "Berisso",
+      "phone": "09-0507-8826",
+      "email": "mrol3943@gmail.com",
+      "company": "Domino",
+      "address": "Addis Ababa",
+      "tinNumber": "12345678"
+    },
+    {
+      "id": "349b",
+      "firstName": "Teshager",
+      "lastName": "Assefa",
+      "phone": "09-0507-8826",
+      "email": "teshagerass@gmail.com",
+      "company": "Domino",
+      "address": "Addis Ababa",
+      "tinNumber": "12345678"
+    }
   ]
 }

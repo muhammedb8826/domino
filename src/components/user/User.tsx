@@ -9,6 +9,7 @@ import UserRegistration from "./UserRegistration";
 import Swal from "sweetalert2";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
+import { RootState } from "@/redux/store";
 
 
 const User = () => {
