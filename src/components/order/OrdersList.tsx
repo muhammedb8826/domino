@@ -16,13 +16,18 @@ import Loading from "../common/Loading";
 import { FaFirstOrderAlt, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
+import CardOne from "../CardOne";
+import CardTwo from "../CardTwo";
+import CardThree from "../CardThree";
+import CardFour from "../CardFour";
+import Loader from "@/common/Loader";
+import Breadcrumb from "../Breadcrumb";
 // import { getCommissions, updateCommission } from "@/redux/features/commission/commissionSlice";
 
 interface User {
   email: string;
   roles: string;
 }
-
 
 // const getCurrentDateFormatted = () => {
 //   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -38,7 +43,6 @@ interface User {
 // const date = new Date();
 // const options = { month: "short", day: "numeric", year: "numeric" };
 // const formattedDate = date.toLocaleDateString("en-US", options);
-
 
 const OrdersList = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -112,9 +116,9 @@ const OrdersList = () => {
       order.paymentInfo.paymentStatus
         ?.toLowerCase()
         .includes(search.toLowerCase()) ||
-        order.orderItems.some((item) =>
-          item.material.toLowerCase().includes(search.toLowerCase())
-        ) ||
+      order.orderItems.some((item) =>
+        item.material.toLowerCase().includes(search.toLowerCase())
+      ) ||
       order.orderItems.some((item) =>
         item.status.toLowerCase().includes(search.toLowerCase())
       )
@@ -130,8 +134,6 @@ const OrdersList = () => {
       );
     }
   });
-  
-
 
   // const {commissions} = useSelector((state: RootState) => state.commission);
 
@@ -206,10 +208,6 @@ const OrdersList = () => {
     });
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   if (error) {
     return <ErroPage error={error} />;
   }
@@ -217,23 +215,19 @@ const OrdersList = () => {
   const orderListContent =
     filterDate.length > 0
       ? filterDate.map((order, index: number) => (
-          <tr
-            key={order.id}
-            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-          >
-            <td className="px-6 py-4">
-              <NavLink
-                to={`/order/${order.id}`}
-                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                {order.series}
-              </NavLink>{" "}
+          <tr key={order.id}>
+            <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+              <h5 className="font-medium text-black dark:text-white">
+                <NavLink
+                  to={`/order/${order.id}`}
+                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  {order.series}
+                </NavLink>{" "}
+              </h5>
             </td>
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center"
-            >
-              <FaFirstOrderAlt className="w-8 h-8 rounded-full" />
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {/* <FaFirstOrderAlt className="w-8 h-8 rounded-full" /> */}
               <div className="ps-3">
                 <div className="text-base font-semibold">
                   {order.customerFirstName}
@@ -243,35 +237,33 @@ const OrdersList = () => {
                   {order.customerPhone}
                 </div>
               </div>
-            </th>
-            <td className="px-6 py-4">
-              {order.orderItems.map((item, index) => (
-                <span key={index}>
-                  {item.material}
-                  {","}
-                </span>
-              ))}
             </td>
-            <td className="px-6 py-4">{order.grandTotal?.toLocaleString()}</td>
-            <td className="px-6 py-4">
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {order.grandTotal?.toLocaleString()}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
               {order.paymentInfo?.paymentStatus === "not paid" && (
-                <span className="bg-red-100 text-red-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger">
                   {order.paymentInfo?.paymentStatus}
                 </span>
               )}
               {order.paymentInfo?.paymentStatus === "partial" && (
-                <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-sm font-medium text-warning">
                   {order.paymentInfo?.paymentStatus}
                 </span>
               )}
               {order.paymentInfo?.paymentStatus === "paid" && (
-                <span className="bg-green-100 text-green-800 text-xs font-medium px-0.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
                   {order.paymentInfo?.paymentStatus}
                 </span>
               )}
             </td>
-            <td className="px-6 py-4">{order.date}</td>
-            <td className="px-6 py-4">{order.deliveryDate}</td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {order.date}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {order.deliveryDate}
+            </td>
             <td className="px-6 py-4 relative">
               <button
                 onClick={() => handleAction(index)}
@@ -315,122 +307,20 @@ const OrdersList = () => {
         ))
       : null;
 
-  return (
-    <div className="p-4 overflow-y-scroll h-screen">
-      <h1 className="flex items-center gap-4">
-        <span className="text-2xl font-bold">Orders List</span>
-      </h1>
-
-      <div className="cards flex items-center justify-between py-4">
-        <div className="total-order flex items-center gap-4 shadow-sm bg-white rounded-md p-4 w-[30%]">
-          <p className="text-xl">
-            <SiVirustotal />
-          </p>
-          <div className="">
-            <p className="font-bold text-2xl">{orders.length}</p>
-            <p className="text-gray-400">Total Order</p>
-          </div>
-        </div>
-
-        <div className="total-order flex items-center gap-4 shadow-sm bg-white rounded-md p-4 w-[30%]">
-          <p className="text-xl">
-            <MdOutlinePendingActions />
-          </p>
-          <div className="">
-            <p className="font-bold text-2xl">{receivedStatus.length}</p>
-            <p className="text-gray-400">Total received orders</p>
-          </div>
-          <div className="progress ml-auto">
-            <div className="relative w-14 h-14">
-              <svg className="w-full h-full" viewBox="0 0 100 100">
-                {/* <!-- Background circle --> */}
-                <circle
-                  className="text-gray-200 stroke-current"
-                  strokeWidth="10"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                ></circle>
-                {/* <!-- Progress circle --> */}
-                <circle
-                  className="text-blue-500  progress-ring__circle stroke-current"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  strokeDashoffset="calc(400 - (400 * 45) / 100)"
-                ></circle>
-
-                {/* <!-- Center text --> */}
-                <text
-                  x="50"
-                  y="50"
-                  fontFamily="Verdana"
-                  fontSize="20"
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                >
-                  70%
-                </text>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div className="total-order flex items-center gap-4 shadow-sm bg-white rounded-md p-4 w-[30%]">
-          <p className="text-xl">
-            <MdApproval />
-          </p>
-          <div className="">
-            <p className="font-bold text-2xl">34</p>
-            <p className="text-gray-400">Total Order Approved</p>
-          </div>
-          <div className="progress ml-auto">
-            <div className="relative w-14 h-14">
-              <svg className="w-full h-full" viewBox="0 0 100 100">
-                {/* <!-- Background circle --> */}
-                <circle
-                  className="text-gray-200 stroke-current"
-                  strokeWidth="10"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                ></circle>
-                {/* <!-- Progress circle --> */}
-                <circle
-                  className="text-blue-500  progress-ring__circle stroke-current"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  strokeDashoffset="calc(400 - (400 * 45) / 100)"
-                ></circle>
-
-                {/* <!-- Center text --> */}
-                <text
-                  x="50"
-                  y="50"
-                  fontFamily="Verdana"
-                  fontSize="20"
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                >
-                  70%
-                </text>
-              </svg>
-            </div>
-          </div>
-        </div>
+  return isLoading ? (
+    <Loader />
+  ) : (
+    <>
+      {/* <Breadcrumb pageName="Order List" /> */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+        <CardOne />
+        <CardTwo />
+        <CardThree />
+        <CardFour />
       </div>
 
       <div
-        className={`flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4`}
+        className={`flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 py-4`}
       >
         <div
           className={`${
@@ -441,21 +331,25 @@ const OrdersList = () => {
         >
           <NavLink
             to="/add-order"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
           >
             <IoBagAdd />
             <span className="ml-2">Add New Order</span>
           </NavLink>
         </div>
-        <div>
-          <div>
+
+        <div className="mb-4.5">
+          <label className="sr-only mb-2.5 block text-black dark:text-white">
+            Subject
+          </label>
+          <div className="relative z-20 bg-transparent dark:bg-form-input">
             <select
               id="filter-order"
               title="filter-order"
               defaultValue="all"
               value={selectedOption}
               onChange={(e) => handleSelectChange(e)}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-2 px-4 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             >
               <option value="all">All</option>
               <option value="paid">Paid</option>
@@ -464,50 +358,48 @@ const OrdersList = () => {
               <option value="date">Date</option>
               <option value="delivery-date">Delivery date</option>
             </select>
+            <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+              <svg
+                className="fill-current"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g opacity="0.8">
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                    fill=""
+                  ></path>
+                </g>
+              </svg>
+            </span>
           </div>
         </div>
 
         <div date-rangepicker className="flex items-center">
           <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-              </svg>
-            </div>
             <input
               name="start"
               type="date"
               onChange={(e) => handleDateSearch(e)}
               value={start}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               placeholder="Select date start"
             />
           </div>
           <span className="mx-4 text-gray-500">to</span>
+
           <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-              </svg>
-            </div>
             <input
               name="end"
               onChange={(e) => handleDateSearch(e)}
               value={end}
               type="date"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               placeholder="Select date end"
             />
           </div>
@@ -539,148 +431,150 @@ const OrdersList = () => {
             value={search}
             type="text"
             id="table-search-users"
-            className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 ps-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             placeholder="Search for orders"
           />
         </div>
       </div>
-      {orders && (
-        <>
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  id
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Orders
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Price
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Date
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Delivery Date
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>{orderListContent}</tbody>
-          </table>
-          <nav
-            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-            aria-label="Table navigation"
-          >
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-              Showing{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1-10
-              </span>{" "}
-              of{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1000
-              </span>
-            </span>
-            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          {orders && (
+            <>
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                      id
+                    </th>
+                    <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                      Customer
+                    </th>
+                    <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                      Price
+                    </th>
+                    <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                      Status
+                    </th>
+                    <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                      Date
+                    </th>
+                    <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                      Delivery Date
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{orderListContent}</tbody>
+              </table>
+              <nav
+                className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+                aria-label="Table navigation"
+              >
+                <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                  Showing{" "}
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    1-10
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    1000
+                  </span>
+                </span>
+                <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                  <li>
+                    <a
+                      href="#"
+                      className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      Previous
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      1
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      2
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      aria-current="page"
+                      className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                    >
+                      3
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      4
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      5
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      Next
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </>
+          )}
+          {orders.length === 0 && (
+            <div className="flex items-center justify-center w-full">
+              <div className="flex flex-col items-center justify-center">
+                <svg
+                  className="w-16 h-16 text-gray-400"
+                  stroke="currentColor"
+                  viewBox="0 0 52 52"
                 >
-                  Previous
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  4
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  5
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </>
-      )}
-      {orders.length === 0 && (
-        <div className="flex items-center justify-center w-full">
-          <div className="flex flex-col items-center justify-center">
-            <svg
-              className="w-16 h-16 text-gray-400"
-              stroke="currentColor"
-              viewBox="0 0 52 52"
-            >
-              <circle
-                className="fill-transparent stroke-current stroke-2"
-                cx="26"
-                cy="26"
-                r="25"
-              ></circle>
-              <path
-                className="stroke-current stroke-2"
-                fill="transparent"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M16 16l20 20m0 0l-20-20"
-              ></path>
-            </svg>
-            <p className="text-gray-600">No orders found</p>
-          </div>
+                  <circle
+                    className="fill-transparent stroke-current stroke-2"
+                    cx="26"
+                    cy="26"
+                    r="25"
+                  ></circle>
+                  <path
+                    className="stroke-current stroke-2"
+                    fill="transparent"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 16l20 20m0 0l-20-20"
+                  ></path>
+                </svg>
+                <p className="text-gray-600">No orders found</p>
+              </div>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
 

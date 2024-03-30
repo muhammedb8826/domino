@@ -5,9 +5,9 @@ const GetStarted = () => {
   return (
     <>
     <Navbar />
-      <div className="wrapper flex justify-between gap-4 pt-5">
+      <div className="flex justify-between gap-4 pt-20">
         <div className="w-1/2 hidden lg:block">
-          <img src={sideImage} alt="side image" className="w-full" />
+          <img src={sideImage} alt="side image" className="h-full" />
         </div>
         <form className="max-w-md mx-auto">
           <h1 className="max-md:text-3xl flex text-4xl font-semibold mb-4">

@@ -23,7 +23,7 @@ const Logout = ({ handleLogout }: { handleLogout: () => void }) => {
           fill=""
         />
       </svg>
-      Signout
+      Log Out
     </button>
   );
 };

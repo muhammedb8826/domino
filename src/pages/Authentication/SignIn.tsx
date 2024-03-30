@@ -47,8 +47,7 @@ const SignIn = () => {
     <div className="w-full max-w-xs">
       <div className="flex justify-center py-2">
         <NavLink to="/" className="flex text-3xl items-center">
-          <span className="font-bold">D</span>
-          <span className="text-[#f01d52]">omino</span>{" "}
+          <span className="">IAN PLC</span>
         </NavLink>
       </div>
       <form

@@ -76,6 +76,7 @@ const Profile = () => {
                     fill=""
                   />
                 </svg>
+                <label htmlFor="profile" className="sr-only">Profile Picture</label>
                 <input
                   type="file"
                   name="profile"

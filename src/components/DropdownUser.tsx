@@ -1,11 +1,45 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import UserOne from '../images/user/user-01.png';
+import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { loginUser, logout, setToken, setUser } from '@/redux/features/user/authentication';
+import Loading from './common/Loading';
+import ErroPage from './common/ErroPage';
+import { getOrderStatus, getOrders } from '@/redux/features/order/orderSlice';
+import Logout from '@/auth/Logout';
+interface ILogin {
+  email: string | undefined;
+  password: string | undefined;
+  first_name: string
+}
 
 const DropdownUser = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { user, isLoading, error } = useSelector(
+    (state: RootState) => state.auth
+  );
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/signin");
+  };
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/sign-in");
+    }
+  }, [user, navigate]);
+  useEffect(() => {
+    dispatch(getOrderStatus());
+    dispatch(getOrders());
+  }, [dispatch]);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
 
@@ -35,7 +69,13 @@ const DropdownUser = () => {
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
-  return (
+if(error) {
+  <ErroPage error={error} />
+}
+
+  return isLoading ? (
+  <Loading />
+  ) : (
     <div className="relative">
       <Link
         ref={trigger}
@@ -45,9 +85,9 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+          {user?.first_name}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{user?.roles}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
@@ -108,7 +148,7 @@ const DropdownUser = () => {
               My Profile
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               to="#"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
@@ -128,7 +168,7 @@ const DropdownUser = () => {
               </svg>
               My Contacts
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
               to="/settings"
@@ -155,7 +195,9 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        {/* <button
+        type='button'
+         className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
           <svg
             className="fill-current"
             width="22"
@@ -174,7 +216,8 @@ const DropdownUser = () => {
             />
           </svg>
           Log Out
-        </button>
+        </button> */}
+        <Logout handleLogout={handleLogout} />
       </div>
       {/* <!-- Dropdown End --> */}
     </div>
