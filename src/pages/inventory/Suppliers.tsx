@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
-import { FaUserPlus } from "react-icons/fa";
+import { FaRegEdit, FaUserPlus } from "react-icons/fa";
 import { SupplierRegistration } from "./SupplierRegistration";
 import { useDispatch, useSelector } from "react-redux";
 import { getSuppliers } from "@/redux/features/supplier/suppliersSlice";
@@ -8,12 +8,50 @@ import ErroPage from "../../components/common/ErroPage";
 import userImage from "../../assets/images/avatar.jpg";
 import Loader from "@/common/Loader";
 import Breadcrumb from "../../components/Breadcrumb";
-
+import { Link, NavLink } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
 
 export const Suppliers = () => {
   const { suppliers, isLoading, error } = useSelector(
     (state) => state.supplier
   );
+
+  const [showPopover, setShowPopover] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const triggerRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (
+      !dropdownRef.current ||
+      dropdownOpen === false ||
+      dropdownRef.current.contains(event.target) ||
+      triggerRef.current.contains(event.target)
+    )
+      return;
+    setDropdownOpen(false);
+  };
+
+  const handleKeyDown = (event) => {
+    if (dropdownOpen === false || event.keyCode !== 27) return;
+    setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleAction = (index) => {
+    setDropdownOpen(!dropdownOpen);
+    setShowPopover(index);
+  };
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getSuppliers());
@@ -57,50 +95,53 @@ export const Suppliers = () => {
         {supplier.address}
       </td>
       <td className="px-6 py-4 relative">
-        <button
-          // onClick={() => handleAction(index)}
-          title="action"
-          // data-popover-target={`popover-bottom-${index}`}
-          data-popover-trigger="click"
-          // id={`dropdownAvatarNameButton-${user.id}-${index}`}
-          type="button"
-          className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        <Link
+          to="#"
+          onClick={(event) => {
+            handleAction(index);
+            event.stopPropagation();
+          }}
+          ref={triggerRef}
+          className="flex items-center gap-4"
         >
           <CiMenuKebab />
-        </button>
-        {/* {showPopover === index && (
-            <div className="absolute z-10 right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-              
-              <div className="px-4 py-3 text-sm text-gray-900">
-                <div className="font-medium">Name: </div>
-                <div className="truncate font-medium">Product Id: </div>
-              </div>
-              <ul className="py-2 text-sm text-gray-700">
-                <li>
-                  <button
-                 
-                    type="button"
-                    className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                  >
-                    <FaRegEdit />
-                    Edit
-                  </button>
-                </li>
-                <li>
-                  <button
-                 
-                    type="button"
-                    className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    <MdDelete /> Delete
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )} */}
+        </Link>
+
+        {/* <!-- Dropdown Start --> */}
+        {showPopover === index && (
+          <div
+            ref={dropdownRef}
+            onFocus={() => setDropdownOpen(true)}
+            onBlur={() => setDropdownOpen(false)}
+            className={`absolute right-16 -mt-4 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+              dropdownOpen ? "block" : "hidden"
+            }`}
+          >
+            <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
+              <li>
+                <NavLink
+                  to="#"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <FaRegEdit />
+                  Edit
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="#"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <MdDelete />
+                  Delete
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+        )}
+        {/* <!-- Dropdown End --> */}
       </td>
     </tr>
-    //   ))
   ));
   return isLoading ? (
     <Loader />
