@@ -69,6 +69,8 @@ export const suppliersSlice = createSlice({
             state.error = null;
         });
         builder.addCase(createSupplier.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.error = null
             state.suppliers.push(action.payload);
         });
         builder.addCase(createSupplier.rejected, (state, action) => {

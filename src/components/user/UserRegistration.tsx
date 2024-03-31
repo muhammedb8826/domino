@@ -44,7 +44,7 @@ const UserRegistration = ({
     joinedDate: "",
     address: "",
     profileImage: "",
-    roles: 'reception',
+    roles: "reception",
     machinePermissions: [],
     isActice: true,
   });
@@ -89,7 +89,7 @@ const UserRegistration = ({
       joinedDate: "",
       address: "",
       profileImage: "",
-      roles: 'reception',
+      roles: "reception",
       machinePermissions: [],
       isActice: true,
     });
@@ -99,30 +99,30 @@ const UserRegistration = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="">
-        <div className="justify-center items-center flex overflow-hidden fixed inset-0 z-50 outline-none focus:outline-none">
-          <div className="relative w-auto my-6 mx-auto max-w-3xl md:w-1/2 h-[95%]">
-            {/*content*/}
-            <div className=" rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none h-full border-0 overflow-hidden overflow-y-auto">
-              {/*header*/}
-              <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                <h3 className="text-2xl font-semibold">Add New User</h3>
-                {registrationErrors && (
-                  <p className="text-red-500 text-xs italic">
-                    {registrationErrors.message}
-                  </p>
-                )}
-                <button
-                  type="button"
-                  title="Close Modal"
-                  className="p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                  onClick={handleModalOpen}
-                >
-                  <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                    <CgClose />
-                  </span>
-                </button>
-              </div>
+      <div className="justify-center items-center flex overflow-hidden fixed inset-0 z-9999 outline-none focus:outline-none">
+        <div className="relative w-auto my-6 mx-auto max-w-3xl md:w-1/2 h-[95%]">
+          {/*content*/}
+          <div className=" rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none h-full border-0 overflow-hidden overflow-y-auto">
+            {/*header*/}
+            <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+              <h3 className="text-2xl font-semibold">Add New User</h3>
+              {registrationErrors && (
+                <p className="text-red-500 text-xs italic">
+                  {registrationErrors.message}
+                </p>
+              )}
+              <button
+                type="button"
+                title="Close Modal"
+                className="p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                onClick={handleModalOpen}
+              >
+                <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                  <CgClose />
+                </span>
+              </button>
+            </div>
+            <form onSubmit={handleSubmit} className="">
               {/*body*/}
               <div className="relative p-6 flex-auto">
                 <div className="grid gap-4 md:grid-cols-3 p-2">
@@ -418,7 +418,7 @@ const UserRegistration = ({
                       Assign role
                     </label>
                     <select
-                    defaultValue="reception"
+                      defaultValue="reception"
                       id="roles"
                       name="roles"
                       value={userData.roles}
@@ -484,10 +484,10 @@ const UserRegistration = ({
                   {isLoading ? "Saving..." : "Save"}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
-      </form>
+      </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
   );

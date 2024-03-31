@@ -2,10 +2,12 @@ import { createSupplier } from "@/redux/features/supplier/suppliersSlice";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const SupplierRegistration = ({ handleModalOpen }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -13,19 +15,18 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
     email: "",
     company: "",
     address: "",
-    tinNumber:""
+    tinNumber: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  console.log(formData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createSupplier(formData)).then((res)=>{
-      if(res.payload){
+    dispatch(createSupplier(formData)).then((res) => {
+      if (res.payload) {
         const message = "Supplier registered successfully";
         toast.success(message);
         setFormData({
@@ -35,29 +36,30 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
           email: "",
           company: "",
           address: "",
-          tinNumber:""
+          tinNumber: "",
         });
+        navigate("/dashboard/inventory/suppliers");
         handleModalOpen(false);
       }
-    })
+    });
   };
   return (
     <>
-      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
         <form onSubmit={handleSubmit} className="w-full">
-          <div className="relative w-auto my-6 mx-auto max-w-3xl">
+          <div className="relative w-auto my-6 mx-auto max-w-3xl ">
             {/*content*/}
-            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+            <div className="border-0 rounded-lg relative flex flex-col w-full bg-white shadow-default dark:border-strokedark dark:bg-boxdark outline-none focus:outline-none">
               {/*header*/}
-              <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                <h3 className="text-3xl font-semibold">Add supplier</h3>
+              <div className="flex items-start justify-between border-b border-stroke py-4 px-6.5 dark:border-strokedark rounded-t">
+                <h3 className="text-3xl text-black dark:text-white font-semibold text">Add supplier</h3>
                 <button
                   title="close"
                   type="button"
                   className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                   onClick={() => handleModalOpen(false)}
                 >
-                  <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                  <span className="bg-transparent text-black dark:text-white h-6 w-6 text-2xl block outline-none focus:outline-none">
                     <IoMdClose />
                   </span>
                 </button>
@@ -68,7 +70,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                   <div>
                     <label
                       htmlFor="firstName"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
                       First name
                     </label>
@@ -78,7 +80,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                       type="text"
                       id="firstName"
                       name="firstName"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       placeholder="John"
                       required
                     />
@@ -86,7 +88,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                   <div>
                     <label
                       htmlFor="lastName"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
                       Last name
                     </label>
@@ -96,15 +98,14 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                       type="text"
                       name="lastName"
                       id="lastName"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Doe"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       required
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="email"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
                       Email address
                     </label>
@@ -114,7 +115,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                       name="email"
                       type="email"
                       id="email"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       placeholder="john.doe@company.com"
                       required
                     />
@@ -122,7 +123,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                   <div>
                     <label
                       htmlFor="tinNumber"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
                       Tin number
                     </label>
@@ -132,14 +133,14 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                       name="tinNumber"
                       type="text"
                       id="tinNumber"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       placeholder="12345678"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="phone"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
                       Phone number
                     </label>
@@ -149,7 +150,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                       name="phone"
                       type="tel"
                       id="phone"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       placeholder="123-45-678"
                       pattern="[0-9]{2}-[0-9]{4}-[0-9]{4}"
                       required
@@ -158,7 +159,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                   <div>
                     <label
                       htmlFor="company"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
                       Company
                     </label>
@@ -168,14 +169,14 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                       type="text"
                       id="company"
                       name="company"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       placeholder="Domino"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="address"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
                       Address
                     </label>
@@ -185,26 +186,26 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                       type="text"
                       id="address"
                       name="address"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       placeholder="Adress"
                     />
                   </div>
                 </div>
               </div>
               {/*footer*/}
-              <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+              <div className="flex items-center justify-end gap-4.5 border-t border-stroke py-4 px-6.5 dark:border-strokedark rounded-b">
                 <button
-                  className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                   type="button"
                   onClick={() => handleModalOpen(false)}
                 >
                   Close
                 </button>
                 <button
-                  className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                   type="submit"
                 >
-                  Save Changes
+                  Save
                 </button>
               </div>
             </div>

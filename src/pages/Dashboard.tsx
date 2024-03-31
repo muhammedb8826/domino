@@ -8,12 +8,12 @@ import Pricing from "../components/pricing/Pricing";
 import Setting from "../components/setting/Setting";
 import { CustomerList } from "../components/customer/CustomerList";
 import { CommissionList } from "@/components/commission/CommissionList";
-import { Products } from "@/components/inventory/Products";
-import { Purschase } from "@/components/inventory/Purschase";
-import Sale from "@/components/inventory/Sale";
-import { Reports } from "@/components/inventory/Reports";
-import { Categories } from "@/components/inventory/Categories";
-import { People, Suppliers } from "@/components/inventory/Suppliers";
+import { Products } from "@/pages/inventory/Products";
+import { Purschase } from "@/pages/inventory/Purschase";
+import Sale from "@/pages/inventory/Sale";
+import { Reports } from "@/pages/inventory/Reports";
+import { Categories } from "@/pages/inventory/Categories";
+import { People, Suppliers } from "@/pages/inventory/Suppliers";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DynamicComponent from "./DynamicComponent";
 

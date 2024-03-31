@@ -311,7 +311,6 @@ const OrdersList = () => {
     <Loader />
   ) : (
     <>
-      {/* <Breadcrumb pageName="Order List" /> */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardOne />
         <CardTwo />
@@ -483,7 +482,7 @@ const OrdersList = () => {
                     1000
                   </span>
                 </span>
-                <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 bg-gray-2 text-left dark:bg-meta-4">
                   <li>
                     <a
                       href="#"

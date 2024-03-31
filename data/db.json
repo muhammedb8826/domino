@@ -919,6 +919,66 @@
       "company": "Domino",
       "address": "Addis Ababa",
       "tinNumber": "12345678"
+    },
+    {
+      "id": "284b",
+      "firstName": "Aster",
+      "lastName": "Tigistu",
+      "phone": "09-0507-3366",
+      "email": "aster@gmail.com",
+      "company": "Aster",
+      "address": "Addis Ababa",
+      "tinNumber": "12345678"
+    },
+    {
+      "id": "dfcf",
+      "firstName": "Firehiwot",
+      "lastName": "Tigistu",
+      "phone": "09-1155-9969",
+      "email": "fire@gmail.com",
+      "company": "fire",
+      "address": "Addis Ababa",
+      "tinNumber": "33333"
+    },
+    {
+      "id": "072b",
+      "firstName": "Muktar",
+      "lastName": "Berisso",
+      "phone": "09-0507-8826",
+      "email": "muktar@gmail.com",
+      "company": "",
+      "address": "Addis Ababa",
+      "tinNumber": "454545"
+    },
+    {
+      "id": "4967",
+      "firstName": "Fayo",
+      "lastName": "Bude",
+      "phone": "09-1012-6745",
+      "email": "fayo@gmail.com",
+      "company": "",
+      "address": "",
+      "tinNumber": "54545"
+    }
+  ],
+  "categories": [
+    {
+      "name": "Banner",
+      "description": "primary banner",
+      "id": "2fa8",
+      "status": "active"
+    },
+    {
+      "id": "b016",
+      "name": "Sticker",
+      "description": "Mesh sticker",
+      "status": "active"
+    },
+    {
+      "id": "b177",
+      "name": "Mika",
+      "description": "This is for plastic",
+      "status": "active"
     }
   ]
 }

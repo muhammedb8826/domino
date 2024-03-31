@@ -22,6 +22,16 @@ import Tables from "./pages/Tables";
 import OrdersList from "./components/order/OrdersList";
 import FormLayout from "./pages/Form/FormLayout";
 import Buttons from "./pages/UiElements/Buttons";
+import User from "./components/user/User";
+import Alerts from "./pages/UiElements/Alerts";
+import Chart from "./pages/Chart";
+import { Products } from "./pages/inventory/Products";
+import { Suppliers } from "./pages/inventory/Suppliers";
+import Setting from "./components/setting/Setting";
+import Settings from "./pages/Settings";
+import Material from "./components/setting/Material";
+import { Categories } from "./pages/inventory/Categories";
+import { Purschase } from "./pages/inventory/Purschase";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,15 +61,21 @@ const App = () => {
         <Route path="/get-started" element={<GetStarted />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<DefaultLayout />}>
-            <Route index element={<ECommerce />} />
+            <Route index element={<OrdersList />} />
             <Route path="/dashboard/profile" element={<Profile/>}/>
             <Route path="/dashboard/forms/form-elements" element={<FormElements/>}/>
             <Route path="/dashboard/forms/form-layout" element={<FormLayout />} />
-            <Route path="/dashboard/calendar" element={<Calendar/>}/>
+            <Route path="/dashboard/ui/alerts" element={<Alerts />} />
+            <Route path="/dashboard/user" element={<User/>}/>
             <Route path="/dashboard/tables" element={<Tables />} />
             <Route path="/dashboard/ui/buttons" element={<Buttons />} />
-            <Route path="/dashboard/settings" element={<Tables />} />
-            <Route path="/dashboard/orders" element={<OrdersList/>}/>
+            <Route path="/dashboard/settings" element={<Settings />} />
+            <Route path="/dashboard/ecommerce" element={<ECommerce/>}/>
+            <Route path="/dashboard/chart" element={<Chart/>}/>
+            <Route path="/dashboard/inventory/products" element={<Products/>}/>
+            <Route path="/dashboard/inventory/category" element={<Categories/>}/>
+            <Route path="/dashboard/inventory/suppliers" element={<Suppliers/>}/>
+            <Route path="/dashboard/inventory/purchases" element={<Purschase/>}/>
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

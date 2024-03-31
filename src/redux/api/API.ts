@@ -17,3 +17,4 @@ export const commissionTransactionURL = "http://127.0.0.1:3000/commissionTransac
 export const paymentTransactionURL = "http://127.0.0.1:3000/paymentTransactions"
 export const orderStatusURL = "http://127.0.0.1:3000/orderStatus"
 export const suppliersURL = "http://127.0.0.1:3000/suppliers"
+export const categoriesURL = "http://127.0.0.1:3000/categories"

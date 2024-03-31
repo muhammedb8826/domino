@@ -10,7 +10,8 @@ import Swal from "sweetalert2";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { RootState } from "@/redux/store";
-
+import Loader from "@/common/Loader";
+import Breadcrumb from "../Breadcrumb";
 
 const User = () => {
   const { users, isLoading, errors, error } = useSelector(
@@ -23,7 +24,6 @@ const User = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -42,7 +42,6 @@ const User = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showPopover]);
-
 
   useEffect(() => {
     if (errors) {
@@ -100,259 +99,234 @@ const User = () => {
 
   const userListContent = users
     ? users.map((user, index: number) => (
-        <tbody key={user.id}>
-          <tr className="bg-white border-b hover:bg-gray-50">
-            <td className="w-4 p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-table-1"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                />
-                <label htmlFor="checkbox-table-1" className="sr-only">
-                  checkbox
-                </label>
+        <tr key={user.id}>
+          <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+            <img
+              className="w-10 h-10 rounded-full"
+              src={userImage}
+              alt="Jese image"
+            />
+            <div className="ps-3">
+              <div className="text-base font-semibold text-black dark:text-white">
+                {user.first_name} {user.middle_name} {user.last_name}
               </div>
-            </td>
-            <th
-              scope="row"
-              className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
+              <div className="font-normal text-gray-500">{user.email}</div>
+            </div>
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {user.phone}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {user.address}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {user.joined_date}
+          </td>
+          <td className="px-6 py-4 relative">
+            <button
+              onClick={() => handleAction(index)}
+              title="action"
+              data-popover-target={`popover-bottom-${index}`}
+              data-popover-trigger="click"
+              id={`dropdownAvatarNameButton-${user.id}-${index}`}
+              type="button"
+              className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
-              <img
-                className="w-10 h-10 rounded-full"
-                src={userImage}
-                alt="Jese image"
-              />
-              <div className="ps-3">
-                <div className="text-base font-semibold">
-                  {user.first_name} {user.middle_name} {user.last_name}
-                </div>
-                <div className="font-normal text-gray-500">{user.email}</div>
-              </div>
-            </th>
-            <td className="px-6 py-4">{user.phone}</td>
-            <td className="px-6 py-4">{user.address}</td>
-            <td className="px-6 py-4">{user.joined_date}</td>
-            <td className="px-6 py-4 relative">
-              <button
-                onClick={() => handleAction(index)}
-                title="action"
-                data-popover-target={`popover-bottom-${index}`}
-                data-popover-trigger="click"
-                id={`dropdownAvatarNameButton-${user.id}-${index}`}
-                type="button"
-                className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-              >
-                <CiMenuKebab />
-              </button>
-              {showPopover === index && (
-                <div 
+              <CiMenuKebab />
+            </button>
+            {showPopover === index && (
+              <div
                 ref={popoverRef}
-                className="absolute z-10 end-32 -top-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                  {/* Dropdown content */}
-                  <div className="px-4 py-3 text-sm text-gray-900">
-                    <div className="font-medium">{user?.roles}</div>
-                    <div className="truncate">{user.email}</div>
-                  </div>
-                  <ul className="py-2 text-sm text-gray-700">
-                    <li>
-                      <button
-                        onClick={() => handleUpdateModal(user.id)}
-                        type="button"
-                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                      >
-                        <FaRegEdit />
-                        Edit
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => handleDeleteUser(user.id)}
-                        type="button"
-                        className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        <MdDelete /> Delete
-                      </button>
-                    </li>
-                  </ul>
+                className="absolute z-10 end-32 -top-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+              >
+                {/* Dropdown content */}
+                <div className="px-4 py-3 text-sm text-gray-900">
+                  <div className="font-medium">{user?.roles}</div>
+                  <div className="truncate">{user.email}</div>
                 </div>
-              )}
-            </td>
-          </tr>
-        </tbody>
+                <ul className="py-2 text-sm text-gray-700">
+                  <li>
+                    <button
+                      onClick={() => handleUpdateModal(user.id)}
+                      type="button"
+                      className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                    >
+                      <FaRegEdit />
+                      Edit
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleDeleteUser(user.id)}
+                      type="button"
+                      className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <MdDelete /> Delete
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </td>
+        </tr>
       ))
     : null;
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <>
-    <div className="p-4 h-[550px] overflow-y-scroll">
-      <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
-        {user?.email === "admin@domino.com" && (
-        <div>
-          <button
-            onClick={handleModalOpen}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            type="button"
-          >
-            <FaUserPlus />
-            <span className="ml-2">Add New User</span>
-          </button>
-        </div>
-        )}
+    <Breadcrumb pageName="Users" />
+      {/* <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1"> */}
+        <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
+          {user?.email === "admin@domino.com" && (
+            <div>
+              <button
+                onClick={handleModalOpen}
+                className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
+                type="button"
+              >
+                <FaUserPlus />
+                <span className="ml-2">Add New User</span>
+              </button>
+            </div>
+          )}
 
-        <label htmlFor="table-search" className="sr-only">
-          Search
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-500"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            type="text"
-            id="table-search-users"
-            className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search for users"
-          />
-        </div>
-      </div>
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-all"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  "
+          <label htmlFor="table-search" className="sr-only">
+            Search
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-500"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                 />
-                <label htmlFor="checkbox-all" className="sr-only">
-                  checkbox
-                </label>
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Full name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Phone
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Address
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Joined date
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        {userListContent}
-      </table>
-      
-    </div>
-    <div className="flex items-center gap-4 mt-4">
-        <button
-          disabled
-          className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          type="button"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            aria-hidden="true"
-            className="w-4 h-4"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-            ></path>
-          </svg>
-          Previous
-        </button>
-        <div className="flex items-center gap-2">
-          <button
-            className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg bg-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button"
-          >
-            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-              1
-            </span>
-          </button>
-          <button
-            className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button"
-          >
-            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-              2
-            </span>
-          </button>
-          <button
-            className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button"
-          >
-            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-              3
-            </span>
-          </button>
-          <button
-            className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button"
-          >
-            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-              4
-            </span>
-          </button>
-          <button
-            className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button"
-          >
-            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-              5
-            </span>
-          </button>
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="table-search-users"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 ps-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              placeholder="Search for users"
+            />
+          </div>
         </div>
-        <button
-          className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          type="button"
-        >
-          Next
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            aria-hidden="true"
-            className="w-4 h-4"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-            ></path>
-          </svg>
-        </button>
+        <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+          <div className="max-w-full overflow-x-auto">
+            <table className="w-full table-auto">
+              <thead>
+                <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                  <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                    Full name
+                  </th>
+                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                    Phone
+                  </th>
+                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                    Address
+                  </th>
+                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                    Joined date
+                  </th>
+                  <th className="py-4 px-4 font-medium text-black dark:text-white">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{userListContent}</tbody>
+            </table>
+            <nav
+              className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+              aria-label="Table navigation"
+            >
+              <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                Showing{" "}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  1-10
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  1000
+                </span>
+              </span>
+              <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 bg-gray-2 text-left dark:bg-meta-4">
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    Previous
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    1
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    2
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    aria-current="page"
+                    className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                  >
+                    3
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    4
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    5
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
       </div>
-      {isModalOpen && <UserRegistration handleModalOpen={handleModalOpen} errors={registrationError} />}
+      {isModalOpen && (
+        <UserRegistration
+          handleModalOpen={handleModalOpen}
+          errors={registrationError}
+        />
+      )}
     </>
   );
 };
