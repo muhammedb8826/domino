@@ -1,45 +1,59 @@
 import Loader from "@/common/Loader";
 import ErroPage from "@/components/common/ErroPage";
-import { updateCategory } from "@/redux/features/category/categorySlice";
+import { updateProduct } from "@/redux/features/product/productSlice";
 import { RootState } from "@/redux/store";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
-interface DataType {
-  name: string;
-  description: string;
-  id: number;
-  status: string;
-}
-
-export default function CategoryEditModal({ handleEditModalOpen, data }: { handleEditModalOpen: (isOpen: boolean) => void, data: DataType }) {
-  const { isLoading, error } = useSelector((state: RootState) => state.category);
+export const ProductEditModal = ({ handleEditModalOpen, data }) => {
+  const { categories, isLoading, error } = useSelector(
+    (state: RootState) => state.category
+  );
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     name: data.name,
     description: data.description,
+    unitPrice: data.unitPrice,
+    quantity: data.quantity,
+    categoryId: data.categoryId,
+    category: {
+      name: data.category.name,
+    },
     id: data.id,
-    status: data.status,
   });
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    dispatch(updateCategory(formData)).then(() => {
-        handleEditModalOpen(false);
-        const message = "Category updated successfully";
-        toast.success(message);
-        });
+  const handleCategoryChange = (e) => {
+    setFormData({
+      ...formData,
+      categoryId: e.target.value,
+      category: {
+        name: categories.find((category) => category.id === e.target.value)
+          .name,
+      },
+    });
   };
 
-  if(error) return <ErroPage error={error} />
-  return isLoading?(<Loader/>):(
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateProduct(formData)).then(() => {
+      handleEditModalOpen(false);
+      const message = "Product updated successfully";
+      toast.success(message);
+    });
+  };
+
+  if (error) return <ErroPage error={error} />;
+
+  return isLoading ? (
+    <Loader />
+  ) : (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
         <form onSubmit={handleSubmit} className="w-full">
@@ -49,7 +63,7 @@ export default function CategoryEditModal({ handleEditModalOpen, data }: { handl
               {/*header*/}
               <div className="flex items-start justify-between border-b border-stroke py-4 px-6.5 dark:border-strokedark rounded-t">
                 <h3 className="text-3xl text-black dark:text-white font-semibold text">
-                 Edit Category
+                  Add Products
                 </h3>
                 <button
                   title="close"
@@ -62,6 +76,7 @@ export default function CategoryEditModal({ handleEditModalOpen, data }: { handl
                   </span>
                 </button>
               </div>
+              {/*body*/}
               <div className="relative p-6 flex-auto">
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
                   <div>
@@ -69,7 +84,7 @@ export default function CategoryEditModal({ handleEditModalOpen, data }: { handl
                       htmlFor="name"
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
-                      Machine name
+                      Product name
                     </label>
                     <input
                       onChange={handleChange}
@@ -96,8 +111,64 @@ export default function CategoryEditModal({ handleEditModalOpen, data }: { handl
                       id="description"
                       name="description"
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      placeholder="Banner"
+                      placeholder="Description"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="category"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Category
+                    </label>
+                    <select
+                      onChange={handleCategoryChange}
+                      value={formData.categoryId}
+                      id="category"
+                      name="categoryId"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       required
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="unitPrice"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Unit price
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.unitPrice}
+                      type="number"
+                      id="unitPrice"
+                      name="unitPrice"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      placeholder="1000"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="quantity"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Quantity
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.quantity}
+                      type="number"
+                      id="quantity"
+                      name="quantity"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      placeholder="1000"
                     />
                   </div>
                 </div>
@@ -125,4 +196,4 @@ export default function CategoryEditModal({ handleEditModalOpen, data }: { handl
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
   );
-}
+};

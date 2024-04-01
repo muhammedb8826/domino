@@ -48,6 +48,7 @@ export const CategoryRegistration = ({ handleModalOpen }) => {
                   </span>
                 </button>
               </div>
+              {/*body*/}
               <div className="relative p-6 flex-auto">
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
                   <div>

@@ -901,14 +901,14 @@
   ],
   "suppliers": [
     {
-      "id": "a85f",
       "firstName": "Muhammed",
       "lastName": "Berisso",
-      "phone": "09-0507-8826",
       "email": "mrol3943@gmail.com",
+      "phone": "09-0507-8826",
       "company": "Domino",
-      "address": "Addis Ababa",
-      "tinNumber": "12345678"
+      "address": "Shashemene",
+      "tinNumber": "12345678",
+      "id": "a85f"
     },
     {
       "id": "349b",
@@ -921,24 +921,14 @@
       "tinNumber": "12345678"
     },
     {
-      "id": "284b",
       "firstName": "Aster",
       "lastName": "Tigistu",
-      "phone": "09-0507-3366",
       "email": "aster@gmail.com",
+      "phone": "09-0507-3366",
       "company": "Aster",
-      "address": "Addis Ababa",
-      "tinNumber": "12345678"
-    },
-    {
-      "id": "dfcf",
-      "firstName": "Firehiwot",
-      "lastName": "Tigistu",
-      "phone": "09-1155-9969",
-      "email": "fire@gmail.com",
-      "company": "fire",
-      "address": "Addis Ababa",
-      "tinNumber": "33333"
+      "address": "Addis Ababa, Jemo",
+      "tinNumber": "12345678",
+      "id": "284b"
     },
     {
       "id": "072b",
@@ -949,16 +939,6 @@
       "company": "",
       "address": "Addis Ababa",
       "tinNumber": "454545"
-    },
-    {
-      "id": "4967",
-      "firstName": "Fayo",
-      "lastName": "Bude",
-      "phone": "09-1012-6745",
-      "email": "fayo@gmail.com",
-      "company": "",
-      "address": "",
-      "tinNumber": "54545"
     }
   ],
   "categories": [
@@ -975,10 +955,11 @@
       "status": "active"
     },
     {
-      "id": "b177",
-      "name": "Mika",
-      "description": "This is for plastic",
+      "id": "833f",
+      "name": "UV",
+      "description": "Ultra Violer for Film print",
       "status": "active"
     }
-  ]
+  ],
+  "purchases":[]
 }

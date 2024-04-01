@@ -1,75 +1,52 @@
-import Loader from "@/common/Loader";
-import ErroPage from "@/components/common/ErroPage";
-import { getCategories } from "@/redux/features/category/categorySlice";
-import { createProduct } from "@/redux/features/product/productSlice";
-import { RootState } from "@/redux/store";
-import { useEffect, useState } from "react";
+import { updateSupplier } from "@/redux/features/supplier/suppliersSlice";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-export const ProductRegistration = ({ handleModalOpen }) => {
-const {categories, isLoading, error} = useSelector((state: RootState) => state.category);
-const dispatch = useDispatch();
-useEffect(() => {
-  dispatch(getCategories());
-}, [dispatch]);
-
+export const SupplierEditModal = ({ handleEditModalOpen, data }) => {
+  const dispatch = useDispatch();
+ 
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    unitPrice: "",
-    quantity: "",
-    stockLevel: "",
-    categoryId: "",
-    category: {
-      name: "",
-    }
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    phone: data.phone,
+    company: data.company,
+    address: data.address,
+    tinNumber: data.tinNumber,
+    id: data.id,
   });
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = {
-      name: formData.name,
-      description: formData.description,
-      unitPrice: formData.unitPrice,
-      quantity: formData.quantity,
-      stockLevel: formData.quantity,
-      categoryId: formData.categoryId,
-      category: {
-        name: categories.find((category) => category.id === formData.categoryId).name,
-      }
-    };
-
-
-    dispatch(createProduct(data)).then(() => {
-        handleModalOpen(false);
-        const message = "Product created successfully";
+    dispatch(updateSupplier(formData)).then(() => {
+        handleEditModalOpen(false);
+        const message = "Supplier updated successfully";
         toast.success(message);
-        });
+        }
+    );
   };
-
-  if(error) return <ErroPage error={error} />
-  return isLoading?(<Loader/>):(
+  return (
     <>
-   <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
+      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
         <form onSubmit={handleSubmit} className="w-full">
           <div className="relative w-auto my-6 mx-auto max-w-3xl ">
             {/*content*/}
             <div className="border-0 rounded-lg relative flex flex-col w-full bg-white shadow-default dark:border-strokedark dark:bg-boxdark outline-none focus:outline-none">
               {/*header*/}
               <div className="flex items-start justify-between border-b border-stroke py-4 px-6.5 dark:border-strokedark rounded-t">
-                <h3 className="text-3xl text-black dark:text-white font-semibold text">Add Products</h3>
+                <h3 className="text-3xl text-black dark:text-white font-semibold text">
+                  Add supplier
+                </h3>
                 <button
                   title="close"
                   type="button"
                   className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                  onClick={() => handleModalOpen(false)}
+                  onClick={() => handleEditModalOpen(false)}
                 >
                   <span className="bg-transparent text-black dark:text-white h-6 w-6 text-2xl block outline-none focus:outline-none">
                     <IoMdClose />
@@ -81,94 +58,125 @@ useEffect(() => {
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
                   <div>
                     <label
-                      htmlFor="name"
+                      htmlFor="firstName"
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
-                      Product name
+                      First name
                     </label>
                     <input
                       onChange={handleChange}
-                      value={formData.name}
+                      value={formData.firstName}
                       type="text"
-                      id="name"
-                      name="name"
+                      id="firstName"
+                      name="firstName"
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      placeholder="Banner"
+                      placeholder="John"
                       required
                     />
                   </div>
                   <div>
                     <label
-                      htmlFor="description"
+                      htmlFor="lastName"
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
-                      Description
+                      Last name
                     </label>
                     <input
                       onChange={handleChange}
-                      value={formData.description}
+                      value={formData.lastName}
                       type="text"
-                      id="description"
-                      name="description"
-                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      placeholder="Description"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="category"
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                    >
-                      Category
-                    </label>
-                    <select
-                      onChange={handleChange}
-                      value={formData.categoryId}
-                      id="category"
-                      name="categoryId"
+                      name="lastName"
+                      id="lastName"
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       required
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="unitPrice"
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                    >
-                      Unit price
-                    </label>
-                    <input
-                      onChange={handleChange}
-                      value={formData.unitPrice}
-                      type="number"
-                      id="unitPrice"
-                      name="unitPrice"
-                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      placeholder="1000"
                     />
                   </div>
                   <div>
                     <label
-                      htmlFor="quantity"
+                      htmlFor="email"
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                     >
-                      Quantity
+                      Email address
                     </label>
                     <input
                       onChange={handleChange}
-                      value={formData.quantity}
-                      type="number"
-                      id="quantity"
-                      name="quantity"
+                      value={formData.email}
+                      name="email"
+                      type="email"
+                      id="email"
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      placeholder="1000"
+                      placeholder="john.doe@company.com"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="tinNumber"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Tin number
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.tinNumber}
+                      name="tinNumber"
+                      type="text"
+                      id="tinNumber"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      placeholder="12345678"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Phone number
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.phone}
+                      name="phone"
+                      type="tel"
+                      id="phone"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      placeholder="123-45-678"
+                      pattern="[0-9]{2}-[0-9]{4}-[0-9]{4}"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="company"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Company
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.company}
+                      type="text"
+                      id="company"
+                      name="company"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      placeholder="Domino"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="address"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Address
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.address}
+                      type="text"
+                      id="address"
+                      name="address"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      placeholder="Adress"
                     />
                   </div>
                 </div>
@@ -178,7 +186,7 @@ useEffect(() => {
                 <button
                   className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                   type="button"
-                  onClick={() => handleModalOpen(false)}
+                  onClick={() => handleEditModalOpen(false)}
                 >
                   Close
                 </button>

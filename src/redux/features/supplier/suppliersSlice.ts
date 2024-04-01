@@ -82,6 +82,7 @@ export const suppliersSlice = createSlice({
         });
         builder.addCase(updateSupplier.fulfilled, (state, action) => {
             state.suppliers = state.suppliers.map((supplier) => supplier.id === action.payload.id ? action.payload : supplier);
+            state.isLoading = false;
         });
         builder.addCase(updateSupplier.rejected, (state, action) => {
             state.error = action.error.message;
@@ -92,6 +93,7 @@ export const suppliersSlice = createSlice({
         });
         builder.addCase(deleteSupplier.fulfilled, (state, action) => {
             state.suppliers = state.suppliers.filter((supplier) => supplier.id !== action.payload.id);
+            state.isLoading = false;
         });
         builder.addCase(deleteSupplier.rejected, (state, action) => {
             state.error = action.error.message;

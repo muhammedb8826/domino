@@ -3,13 +3,15 @@ import { CiMenuKebab } from "react-icons/ci";
 import { FaRegEdit, FaUserPlus } from "react-icons/fa";
 import { SupplierRegistration } from "./SupplierRegistration";
 import { useDispatch, useSelector } from "react-redux";
-import { getSuppliers } from "@/redux/features/supplier/suppliersSlice";
+import { deleteSupplier, getSuppliers } from "@/redux/features/supplier/suppliersSlice";
 import ErroPage from "../../components/common/ErroPage";
 import userImage from "../../assets/images/avatar.jpg";
 import Loader from "@/common/Loader";
 import Breadcrumb from "../../components/Breadcrumb";
 import { Link, NavLink } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
+import { SupplierEditModal } from "./SupplierEditModal";
+import Swal from "sweetalert2";
 
 export const Suppliers = () => {
   const { suppliers, isLoading, error } = useSelector(
@@ -18,38 +20,47 @@ export const Suppliers = () => {
 
   const [showPopover, setShowPopover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const triggerRef = useRef(null);
-  const dropdownRef = useRef(null);
+  const triggerRef = useRef<any>(null);
+  const dropdownRef = useRef<any>(null);
 
-  const handleClickOutside = (event) => {
-    if (
-      !dropdownRef.current ||
-      dropdownOpen === false ||
-      dropdownRef.current.contains(event.target) ||
-      triggerRef.current.contains(event.target)
-    )
-      return;
-    setDropdownOpen(false);
-  };
-
-  const handleKeyDown = (event) => {
-    if (dropdownOpen === false || event.keyCode !== 27) return;
-    setDropdownOpen(false);
-  };
-
+  // close on click outside
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (!dropdownRef.current) return;
+      if (
+        !dropdownOpen ||
+        dropdownRef.current.contains(target) ||
+        triggerRef.current.contains(target)
+      )
+        return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener('click', clickHandler);
+    return () => document.removeEventListener('click', clickHandler);
+  });
 
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+    // close if the esc key is pressed
+    useEffect(() => {
+      const keyHandler = ({ keyCode }: KeyboardEvent) => {
+        if (!dropdownOpen || keyCode !== 27) return;
+        setDropdownOpen(false);
+      };
+      document.addEventListener('keydown', keyHandler);
+      return () => document.removeEventListener('keydown', keyHandler);
+    });
 
   const handleAction = (index) => {
     setDropdownOpen(!dropdownOpen);
     setShowPopover(index);
+  };
+
+  const [data, setData] = useState({});
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const handleEditModalOpen = (id) => {
+    setIsEditModalOpen(!isEditModalOpen);
+    const findData = suppliers.find((item) => item.id === id);
+    setData(findData);
   };
 
   const dispatch = useDispatch();
@@ -62,11 +73,34 @@ export const Suppliers = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const handleDeleteSupplier = (id)=> {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this supplier!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The service has been deleted.",
+          icon: "success",
+        }).then(() => {
+          dispatch(deleteSupplier(id));
+        });
+      }
+    });
+  }
+
+
   if (error) return <ErroPage error={error} />;
 
   const supplierListContent = suppliers.map((supplier, index) => (
     <tr key={supplier.id}>
-      <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
+      <td className="border-b flex items-center border-[#eee] py-5 px-4 dark:border-strokedark">
         <img
           className="w-10 h-10 rounded-full"
           src={userImage}
@@ -81,9 +115,6 @@ export const Suppliers = () => {
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {supplier.phone}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {supplier.email}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {supplier.company}
@@ -113,13 +144,14 @@ export const Suppliers = () => {
             ref={dropdownRef}
             onFocus={() => setDropdownOpen(true)}
             onBlur={() => setDropdownOpen(false)}
-            className={`absolute right-16 -mt-4 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+            className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
               dropdownOpen ? "block" : "hidden"
             }`}
           >
             <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
               <li>
                 <NavLink
+                onClick={()=>handleEditModalOpen(supplier.id)}
                   to="#"
                   className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                 >
@@ -129,6 +161,7 @@ export const Suppliers = () => {
               </li>
               <li>
                 <NavLink
+                onClick={()=>handleDeleteSupplier(supplier.id)}
                   to="#"
                   className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                 >
@@ -195,14 +228,11 @@ export const Suppliers = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="min-w-[240px] py-4 px-4 font-medium text-black dark:text-white">
                   Supplier name
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Phone
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Email
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Company
@@ -298,6 +328,9 @@ export const Suppliers = () => {
       </div>
       {isModalOpen && (
         <SupplierRegistration handleModalOpen={handleModalOpen} />
+      )}
+      {isEditModalOpen && (
+        <SupplierEditModal handleEditModalOpen={handleEditModalOpen} data={data} />
       )}
     </>
   );

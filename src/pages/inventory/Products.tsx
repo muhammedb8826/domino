@@ -1,12 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
-import { FaUserPlus } from "react-icons/fa";
+import { FaRegEdit, FaUserPlus } from "react-icons/fa";
 import { ProductRegistration } from "./ProductRegistration";
 import Breadcrumb from "../../components/Breadcrumb";
 import userImage from "../../assets/images/avatar.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "@/redux/features/product/productSlice";
+import {
+  deleteProduct,
+  getProducts,
+} from "@/redux/features/product/productSlice";
 import Loader from "@/common/Loader";
+import { Link, NavLink } from "react-router-dom";
+import ErroPage from "@/components/common/ErroPage";
+import { MdDelete, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import Swal from "sweetalert2";
+import { ProductEditModal } from "./ProductEditModal";
 
 export const Products = () => {
   const { products, isLoading, error } = useSelector((state) => state.product);
@@ -15,93 +23,162 @@ export const Products = () => {
     dispatch(getProducts());
   }, [dispatch]);
 
+  const [showPopover, setShowPopover] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const triggerRef = useRef<any>(null);
+  const dropdownRef = useRef<any>(null);
+
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (!dropdownRef.current) return;
+      if (
+        !dropdownOpen ||
+        dropdownRef.current.contains(target) ||
+        triggerRef.current.contains(target)
+      )
+        return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
+  });
+
+  // close if the esc key is pressed
+  useEffect(() => {
+    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+      if (!dropdownOpen || keyCode !== 27) return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener("keydown", keyHandler);
+    return () => document.removeEventListener("keydown", keyHandler);
+  });
+
+  const handleAction = (index) => {
+    setDropdownOpen(!dropdownOpen);
+    setShowPopover(index);
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [data, setData] = useState({});
   const handleModalOpen = () => {
     setIsModalOpen(!isModalOpen);
   };
-  console.log(products);
 
-  const productListContent = products.map(
-    (material) => (
-      <tr key={material.id}>
-        <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
-          <img
-            className="w-10 h-10 rounded-full"
-            src={userImage}
-            alt="Jese image"
-          />
-          <div className="ps-3">
-            <div className="text-base font-semibold text-black dark:text-white">
-              {material.name}
-            </div>
-            {/* <div className="font-normal text-gray-500">{supplier.email}</div> */}
+  const handleEditModalOpen = (id: string) => {
+    const findData = products.find((data) => data.id === id);
+    setData(findData);
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const handleDeleteProduct = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this category!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The media has been deleted.",
+          icon: "success",
+        }).then(() => {
+          dispatch(deleteProduct(id));
+        });
+      }
+    });
+  };
+
+  if (error) {
+    return <ErroPage error={error} />;
+  }
+
+  const productListContent = products.map((product, index) => (
+    <tr key={product.id}>
+      <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
+        <img
+          className="w-10 h-10 rounded-full"
+          src={userImage}
+          alt="Jese image"
+        />
+        <div className="ps-3">
+          <div className="text-base font-semibold text-black dark:text-white">
+            {product.name}
           </div>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          des
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          product reg date
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          product reg date
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          product reg date
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          product reg date
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          supp
-        </td>
-        <td className="px-6 py-4 relative">
-          <button
-            // onClick={() => handleAction(index)}
-            title="action"
-            // data-popover-target={`popover-bottom-${index}`}
-            data-popover-trigger="click"
-            // id={`dropdownAvatarNameButton-${user.id}-${index}`}
-            type="button"
-            className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          {/* <div className="font-normal text-gray-500">{supplier.email}</div> */}
+        </div>
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {product.description}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {product.unitPrice}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {product.quantity}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {product.category.name}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {product.stockLevel}
+      </td>
+      <td className="px-6 py-4 relative">
+        <Link
+          to="#"
+          onClick={(event) => {
+            handleAction(index);
+            event.stopPropagation();
+          }}
+          ref={triggerRef}
+          className="flex items-center gap-4"
+        >
+          <CiMenuKebab />
+        </Link>
+
+        {/* <!-- Dropdown Start --> */}
+        {showPopover === index && (
+          <div
+            ref={dropdownRef}
+            onFocus={() => setDropdownOpen(true)}
+            onBlur={() => setDropdownOpen(false)}
+            className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+              dropdownOpen ? "block" : "hidden"
+            }`}
           >
-            <CiMenuKebab />
-          </button>
-          {/* {showPopover === index && (
-                <div className="absolute z-10 right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                  
-                  <div className="px-4 py-3 text-sm text-gray-900">
-                    <div className="font-medium">Name: </div>
-                    <div className="truncate font-medium">Product Id: </div>
-                  </div>
-                  <ul className="py-2 text-sm text-gray-700">
-                    <li>
-                      <button
-                     
-                        type="button"
-                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                      >
-                        <FaRegEdit />
-                        Edit
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                     
-                        type="button"
-                        className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        <MdDelete /> Delete
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              )} */}
-        </td>
-      </tr>
-    )
-    //   ))
-  );
+            <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
+              <li>
+                <NavLink
+                  onClick={() => handleEditModalOpen(product.id)}
+                  to="#"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <FaRegEdit />
+                  Edit
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  onClick={() => handleDeleteProduct(product.id)}
+                  to="#"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <MdDelete />
+                  Delete
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+        )}
+        {/* <!-- Dropdown End --> */}
+      </td>
+    </tr>
+  ));
 
   return isLoading ? (
     <Loader />
@@ -116,7 +193,7 @@ export const Products = () => {
             className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
             type="button"
           >
-            <FaUserPlus />
+            <MdOutlineProductionQuantityLimits />
             <span className="ml-2">Add Products</span>
           </button>
         </div>
@@ -173,9 +250,6 @@ export const Products = () => {
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Stock Level
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Supplier
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action
@@ -261,6 +335,12 @@ export const Products = () => {
         </div>
       </div>
       {isModalOpen && <ProductRegistration handleModalOpen={handleModalOpen} />}
+      {isEditModalOpen && (
+        <ProductEditModal
+          handleEditModalOpen={handleEditModalOpen}
+          data={data}
+        />
+      )}
     </>
   );
 };

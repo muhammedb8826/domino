@@ -15,6 +15,7 @@ import roleReducer from "./features/role/roleSlice";
 import discountReducer from "./features/dicount/dicountSlice";
 import supplierReducer from "./features/supplier/suppliersSlice";
 import categoryReducer from "./features/category/categorySlice";
+import purchaseReducer from "./features/purchaseSlice";
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -33,6 +34,7 @@ const store = configureStore({
         discount: discountReducer,
         supplier: supplierReducer,
         category: categoryReducer,
+        purchase: purchaseReducer,
     },
 });
 

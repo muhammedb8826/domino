@@ -2,12 +2,11 @@ import { createSupplier } from "@/redux/features/supplier/suppliersSlice";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const SupplierRegistration = ({ handleModalOpen }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,7 +37,6 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
           address: "",
           tinNumber: "",
         });
-        navigate("/dashboard/inventory/suppliers");
         handleModalOpen(false);
       }
     });

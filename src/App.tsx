@@ -32,6 +32,8 @@ import Settings from "./pages/Settings";
 import Material from "./components/setting/Material";
 import { Categories } from "./pages/inventory/Categories";
 import { Purschase } from "./pages/inventory/Purschase";
+import { OrderRegistration } from "./components/order/OrderRegistration";
+import OrderDetailsPage from "./components/order/OrderDetailsPage";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -60,6 +62,8 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/get-started" element={<GetStarted />} />
         <Route element={<PrivateRoute />}>
+            <Route path="/add-order" element={<OrderRegistration />} />
+            <Route path="/order/:id" element={<OrderDetailsPage />} />
           <Route path="/dashboard" element={<DefaultLayout />}>
             <Route index element={<OrdersList />} />
             <Route path="/dashboard/profile" element={<Profile/>}/>
