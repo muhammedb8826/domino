@@ -2,8 +2,17 @@ import axios from "axios";
 import { suppliersURL } from "@/redux/api/API";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+
+interface SupplierState {
+    suppliers: [];
+    searchTerm: string;
+    isLoading: boolean,
+    error: null
+}
+
+const initialState: SupplierState = {
     suppliers: [],
+    searchTerm: "",
     isLoading: false,
     error: null,
 }
@@ -51,7 +60,12 @@ export const deleteSupplier = createAsyncThunk("supplier/deleteSupplier", async 
 export const suppliersSlice = createSlice({
     name: "supplier",
     initialState,
-    reducers: {},
+    reducers: {
+      searchSuppliers: (state, action) => {
+        const searchTerm = action.payload.toLowerCase();
+        state.searchTerm = searchTerm;
+    },
+},
     extraReducers: (builder) => {
         builder.addCase(getSuppliers.pending, (state) => {
             state.isLoading = true;
@@ -102,3 +116,4 @@ export const suppliersSlice = createSlice({
 });
 
 export default suppliersSlice.reducer;
+export const {searchSuppliers} = suppliersSlice.actions

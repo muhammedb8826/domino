@@ -17,7 +17,6 @@ import ECommerce from "./pages/Dashboard/ECommerce";
 import SignIn from "./pages/Authentication/SignIn";
 import Profile from "./pages/Profile";
 import FormElements from "./pages/Form/FormElements";
-import Calendar from "./pages/Calendar";
 import Tables from "./pages/Tables";
 import OrdersList from "./components/order/OrdersList";
 import FormLayout from "./pages/Form/FormLayout";
@@ -27,13 +26,12 @@ import Alerts from "./pages/UiElements/Alerts";
 import Chart from "./pages/Chart";
 import { Products } from "./pages/inventory/Products";
 import { Suppliers } from "./pages/inventory/Suppliers";
-import Setting from "./components/setting/Setting";
 import Settings from "./pages/Settings";
-import Material from "./components/setting/Material";
 import { Categories } from "./pages/inventory/Categories";
 import { Purschase } from "./pages/inventory/Purschase";
 import { OrderRegistration } from "./components/order/OrderRegistration";
 import OrderDetailsPage from "./components/order/OrderDetailsPage";
+import { PurchaseRegistration } from "./pages/inventory/PurchaseRegistration";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -80,6 +78,7 @@ const App = () => {
             <Route path="/dashboard/inventory/category" element={<Categories/>}/>
             <Route path="/dashboard/inventory/suppliers" element={<Suppliers/>}/>
             <Route path="/dashboard/inventory/purchases" element={<Purschase/>}/>
+            <Route path="/dashboard/inventory/purchases/add" element={<PurchaseRegistration/>}/>
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

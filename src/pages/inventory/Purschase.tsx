@@ -57,12 +57,8 @@ export const Purschase = () => {
     setShowPopover(index);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [data, setData] = useState({});
-  const handleModalOpen = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
   const handleEditModalOpen = (id: string) => {
     const findData = products.find((data) => data.id === id);
@@ -120,6 +116,12 @@ export const Purschase = () => {
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {purchase.quantity}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {purchase.unit.name}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {purchase.unit.dimension}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {purchase.category.name}
@@ -188,14 +190,14 @@ export const Purschase = () => {
 
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
         <div>
-          <button
-            onClick={handleModalOpen}
+          <Link
+          to={"/dashboard/inventory/purchases/add"}
             className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
             type="button"
           >
             <BiPurchaseTag />
             <span className="ml-2">Purchase</span>
-          </button>
+          </Link>
         </div>
 
         <label htmlFor="table-search" className="sr-only">
@@ -247,6 +249,12 @@ export const Purschase = () => {
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Total price
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Unit name
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Unit dimension
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Category
@@ -340,7 +348,6 @@ export const Purschase = () => {
           </nav>
         </div>
       </div>
-      {isModalOpen && <PurchaseRegistration handleModalOpen={handleModalOpen} />}
       {isEditModalOpen && (
         <PurchaseEditModal
           handleEditModalOpen={handleEditModalOpen}

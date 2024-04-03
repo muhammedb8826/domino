@@ -1,5 +1,55 @@
 {
-  "products": [],
+  "products": [
+    {
+      "name": "T-shirt",
+      "description": "",
+      "unitPrice": "",
+      "quantity": "",
+      "categoryId": "2fa8",
+      "unitId": "1bd6",
+      "id": "1975"
+    },
+    {
+      "id": "ff36",
+      "name": "Film",
+      "description": "",
+      "unitPrice": "",
+      "quantity": "",
+      "stockLevel": "",
+      "categoryId": "833f",
+      "unitId": "1bd6"
+    },
+    {
+      "id": "ac29",
+      "name": "ddd",
+      "description": "",
+      "unitPrice": "",
+      "quantity": "",
+      "stockLevel": "",
+      "categoryId": "b016",
+      "unitId": "1bd6"
+    },
+    {
+      "id": "fb5f",
+      "name": "fdfhdjkfd",
+      "description": "",
+      "unitPrice": "",
+      "quantity": "",
+      "stockLevel": "",
+      "categoryId": "2fa8",
+      "unitId": "1bd6"
+    },
+    {
+      "id": "08b4",
+      "name": "Sticker",
+      "description": "",
+      "unitPrice": "",
+      "quantity": "",
+      "stockLevel": "",
+      "categoryId": "2fa8",
+      "unitId": "1bd6"
+    }
+  ],
   "orders": [
     {
       "series": "Coca Cola-2024",
@@ -925,20 +975,30 @@
       "lastName": "Tigistu",
       "email": "aster@gmail.com",
       "phone": "09-0507-3366",
-      "company": "Aster",
+      "company": "Aster@comapy",
       "address": "Addis Ababa, Jemo",
       "tinNumber": "12345678",
       "id": "284b"
     },
     {
-      "id": "072b",
+      "id": "362f",
       "firstName": "Muktar",
       "lastName": "Berisso",
-      "phone": "09-0507-8826",
+      "phone": "09-1612-0162",
       "email": "muktar@gmail.com",
       "company": "",
       "address": "Addis Ababa",
-      "tinNumber": "454545"
+      "tinNumber": "33333"
+    },
+    {
+      "id": "2e13",
+      "firstName": "Dawit",
+      "lastName": "amaha",
+      "phone": "09-1104-4506",
+      "email": "dawit@gmail.com",
+      "company": "",
+      "address": "",
+      "tinNumber": ""
     }
   ],
   "categories": [
@@ -961,5 +1021,5 @@
       "status": "active"
     }
   ],
-  "purchases":[]
+  "purchases": []
 }

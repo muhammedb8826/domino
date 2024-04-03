@@ -9,6 +9,7 @@ interface ProductState {
   error: string | null;
   message: string | null;
   errors: string[] | null;
+  searchTerm: string;
 }
 
 const initialState: ProductState = {
@@ -17,6 +18,7 @@ const initialState: ProductState = {
   error: null,
   errors: [],
   message: null,
+  searchTerm: "",
 };
 
 export const getProducts = createAsyncThunk(
@@ -73,7 +75,12 @@ export const deleteProduct = createAsyncThunk(
 export const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    searchProducts: (state, action) => {
+      const searchTerm = action.payload.toLowerCase();
+      state.searchTerm = searchTerm;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getProducts.pending, (state) => {
       state.isLoading = true;
@@ -127,3 +134,4 @@ export const productSlice = createSlice({
 });
 
 export default productSlice.reducer;
+export const { searchProducts } = productSlice.actions;

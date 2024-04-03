@@ -1,8 +1,10 @@
 import Loader from "@/common/Loader";
 import ErroPage from "@/components/common/ErroPage";
+import { getCategories } from "@/redux/features/category/categorySlice";
 import { updateProduct } from "@/redux/features/product/productSlice";
+import { getUnits } from "@/redux/features/unit/unitSlice";
 import { RootState } from "@/redux/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -11,7 +13,14 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
   const { categories, isLoading, error } = useSelector(
     (state: RootState) => state.category
   );
+  const {units} = useSelector((state)=>state.unit);
+
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCategories());
+    dispatch(getUnits());
+  }, [dispatch]);
+
 
   const [formData, setFormData] = useState({
     name: data.name,
@@ -19,25 +28,12 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
     unitPrice: data.unitPrice,
     quantity: data.quantity,
     categoryId: data.categoryId,
-    category: {
-      name: data.category.name,
-    },
+    unitId: data.unitId,
     id: data.id,
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleCategoryChange = (e) => {
-    setFormData({
-      ...formData,
-      categoryId: e.target.value,
-      category: {
-        name: categories.find((category) => category.id === e.target.value)
-          .name,
-      },
-    });
   };
 
   const handleSubmit = (e) => {
@@ -122,7 +118,7 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
                       Category
                     </label>
                     <select
-                      onChange={handleCategoryChange}
+                      onChange={handleChange}
                       value={formData.categoryId}
                       id="category"
                       name="categoryId"
@@ -133,6 +129,29 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
                       {categories.map((category) => (
                         <option key={category.id} value={category.id}>
                           {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="unit"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Units
+                    </label>
+                    <select
+                      onChange={handleChange}
+                      value={formData.unitId}
+                      id="unit"
+                      name="unitId"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      required
+                    >
+                      <option value="">Select Unit</option>
+                      {units.map((unit) => (
+                        <option key={unit.id} value={unit.id}>
+                          {unit.name}
                         </option>
                       ))}
                     </select>

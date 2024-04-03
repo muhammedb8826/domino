@@ -15,12 +15,18 @@ import ErroPage from "@/components/common/ErroPage";
 import { MdDelete, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import Swal from "sweetalert2";
 import { ProductEditModal } from "./ProductEditModal";
+import { getCategories } from "@/redux/features/category/categorySlice";
+import { getUnits } from "@/redux/features/unit/unitSlice";
 
 export const Products = () => {
   const { products, isLoading, error } = useSelector((state) => state.product);
+  const {categories} = useSelector((state)=>state.category);
+  const {units} = useSelector((state)=>state.unit);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getCategories())
+    dispatch(getUnits());
   }, [dispatch]);
 
   const [showPopover, setShowPopover] = useState(null);
@@ -28,6 +34,15 @@ export const Products = () => {
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
 
+
+  // console.log(units);
+  // console.log(categories);
+
+  const matchingUnit = units?.find((unit) => unit.id === products.find((product) => product?.unitId)?.unitId);
+  const matchingCategory = categories?.find((category) => category.id === products.find((product) => product?.categoryId)?.categoryId);
+  
+  
+  
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -123,7 +138,10 @@ export const Products = () => {
         {product.quantity}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {product.category.name}
+        {matchingUnit?.name}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {matchingCategory?.name}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {product.stockLevel}
@@ -239,16 +257,19 @@ export const Products = () => {
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Description
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Unit price
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Quantity
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Unit
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Category
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Stock Level
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
