@@ -61,16 +61,16 @@ export const SupplierSearchInput = ({ handleSupplierInfo, value }) => {
   
     return (
       <>
-        <div className="relativ gap-4">
+        <div className="relative gap-4">
           <label
             htmlFor="input-group-search"
-            className="sr-only mb-3 block text-black dark:text-white"
+            className="mb-3 block text-black dark:text-white"
           >
-            Name :
+            Vendor
           </label>
           <div className="relative flex-1">
-            <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg
+            <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center pointer-events-none">
+              {/* <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +84,7 @@ export const SupplierSearchInput = ({ handleSupplierInfo, value }) => {
                   strokeWidth="2"
                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                 />
-              </svg>
+              </svg> */}
             </div>
             <input
               value={searchInput}
@@ -92,8 +92,8 @@ export const SupplierSearchInput = ({ handleSupplierInfo, value }) => {
               type="text"
               name="supplierFirstName"
               id="input-group-search"
-              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-8 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary dark:text-white"
-              placeholder="Type supplier"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              placeholder="Type vendor"
             />
           </div>
         </div>
