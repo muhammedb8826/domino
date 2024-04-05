@@ -25,8 +25,6 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
   const [formData, setFormData] = useState({
     name: data.name,
     description: data.description,
-    unitPrice: data.unitPrice,
-    quantity: data.quantity,
     categoryId: data.categoryId,
     unitId: data.unitId,
     id: data.id,
@@ -155,40 +153,6 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
                         </option>
                       ))}
                     </select>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="unitPrice"
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                    >
-                      Unit price
-                    </label>
-                    <input
-                      onChange={handleChange}
-                      value={formData.unitPrice}
-                      type="number"
-                      id="unitPrice"
-                      name="unitPrice"
-                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      placeholder="1000"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="quantity"
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                    >
-                      Quantity
-                    </label>
-                    <input
-                      onChange={handleChange}
-                      value={formData.quantity}
-                      type="number"
-                      id="quantity"
-                      name="quantity"
-                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      placeholder="1000"
-                    />
                   </div>
                 </div>
               </div>

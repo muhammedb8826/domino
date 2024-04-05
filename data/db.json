@@ -39,6 +39,13 @@
       "stockLevel": "",
       "categoryId": "b016",
       "unitId": "90fc"
+    },
+    {
+      "name": "Mika",
+      "description": "Take the mika for ",
+      "categoryId": "833f",
+      "unitId": "90fc",
+      "id": "cf4c"
     }
   ],
   "orders": [
@@ -1014,109 +1021,70 @@
   ],
   "purchases": [
     {
-      "id": "ff13",
+      "id": "d2f6",
       "vendorId": "a85f",
       "vendorName": "Muhammed",
       "orderDate": "2024-04-05",
-      "paymentMethod": "check",
-      "amount": 3450,
-      "reference": "958djdd98-CBE",
-      "totalAmount": 3450,
+      "paymentMethod": "mobile-banking",
+      "amount": 0,
+      "reference": "958djdd98",
+      "totalAmount": 0,
+      "totalQuantity": 16,
       "note": "",
       "products": [
         {
-          "productId": [
-            "1975",
-            "08b4"
-          ],
-          "productName": [
-            "T-shirt",
-            "Sticker"
-          ],
+          "productId": "cb4f",
+          "productName": "T-shirt",
+          "quantity": "5",
+          "description": "",
+          "unitPrice": "",
+          "subTotal": 0
+        },
+        {
+          "productId": "a8c3",
+          "productName": "Sticker",
+          "quantity": "5",
+          "description": "",
+          "unitPrice": "",
+          "subTotal": 0
+        },
+        {
+          "productId": "015c",
+          "productName": "Film",
+          "quantity": "6",
+          "description": "",
+          "unitPrice": "",
+          "subTotal": 0
+        }
+      ]
+    },
+    {
+      "id": "a166",
+      "vendorId": "349b",
+      "vendorName": "Teshager",
+      "orderDate": "2024-04-05",
+      "paymentMethod": "check",
+      "amount": 2530,
+      "reference": "958djdd98",
+      "totalAmount": 2530,
+      "totalQuantity": 11,
+      "note": "",
+      "products": [
+        {
+          "productId": "a8c3",
+          "productName": "Sticker",
           "quantity": "5",
           "description": "",
           "unitPrice": "200",
           "subTotal": 1000
         },
         {
-          "productId": [
-            "1975",
-            "08b4"
-          ],
-          "productName": [
-            "T-shirt",
-            "Sticker"
-          ],
-          "quantity": "10",
+          "productId": "cb4f",
+          "productName": "T-shirt",
+          "quantity": "6",
           "description": "",
           "unitPrice": "200",
-          "subTotal": 2000
-        }
-      ]
-    },
-    {
-      "id": "be04",
-      "vendorId": "349b",
-      "vendorName": "Teshager",
-      "orderDate": "2024-04-12",
-      "paymentMethod": "mobile-banking",
-      "amount": 8740,
-      "reference": "958djdd98-CBE",
-      "totalAmount": 8740,
-      "note": "",
-      "products": [
-        {
-          "productId": [
-            "ff36",
-            "1975"
-          ],
-          "productName": [
-            "Film",
-            "T-shirt"
-          ],
-          "quantity": "8",
-          "description": "",
-          "unitPrice": "200",
-          "subTotal": 1600
-        },
-        {
-          "productId": [
-            "ff36",
-            "1975"
-          ],
-          "productName": [
-            "Film",
-            "T-shirt"
-          ],
-          "quantity": "12",
-          "description": "",
-          "unitPrice": "500",
-          "subTotal": 6000
-        }
-      ]
-    },
-    {
-      "id": "af9a",
-      "vendorId": "a85f",
-      "vendorName": "Muhammed",
-      "orderDate": "2024-04-12",
-      "paymentMethod": "bank",
-      "amount": 0,
-      "reference": "958djdd98",
-      "totalAmount": 0,
-      "note": "",
-      "products": [
-        {
-          "productId": [
-            "1975"
-          ],
-          "productName": [
-            "T-shirt"
-          ],
-          "quantity": "10",
-          "description": "",
-          "unitPrice": "",
-          "subTotal": 0
+          "subTotal": 1200
         }
       ]
     }
@@ -1134,6 +1102,44 @@
         {
           "productId": "015c",
           "productName": "Film",
+          "quantity": "5",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "bf3b",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "orderDate": "2024-04-05",
+      "totalQuantity": 9,
+      "note": "",
+      "products": [
+        {
+          "productId": "cb4f",
+          "productName": "T-shirt",
+          "quantity": "5",
+          "description": ""
+        },
+        {
+          "productId": "015c",
+          "productName": "Film",
+          "quantity": "4",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "7ae7",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "orderDate": "2024-04-05",
+      "totalQuantity": 5,
+      "note": "",
+      "products": [
+        {
+          "productId": "cb4f",
+          "productName": "T-shirt",
           "quantity": "5",
           "description": ""
         }

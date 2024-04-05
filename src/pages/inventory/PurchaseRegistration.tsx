@@ -178,11 +178,16 @@ const handleNote = (e)=>{
 
   const [grandTotal, setGrandTotal] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [totalQuantity, setTotalQuantity] = useState(0);
   const [tax, setTax] = useState(0);
   useEffect(() => {
     const total = formData.reduce((acc, curr) => {
       return acc + curr.subTotal;
     }, 0);
+    const quantity = formData.reduce((acc, curr) => {
+      return acc + Number(curr.quantity);
+    }, 0);
+    setTotalQuantity(quantity);
     setTotalAmount(total);
     setTax(total * 0.15);
     setGrandTotal(total+tax)
@@ -231,10 +236,11 @@ const handlePaymentMethod = (e) => {
       amount: grandTotal,
       reference: paymentInfo.reference,
       totalAmount: grandTotal,
+      totalQuantity: totalQuantity,
       note: note,
-      products: formData.map((product) => ({
-        productId: productInfo.map((product) => product.id),
-      productName: productInfo.map((product) => product.name),
+      products: formData.map((product,index) => ({
+        productId: productInfo[index].id,
+      productName: productInfo[index].name,
       quantity: product.quantity,
       description: product.description,
       unitPrice: product.unitPrice,
@@ -551,6 +557,9 @@ const handlePaymentMethod = (e) => {
               <div className="flex justify-between border-t pt-4">
                <strong>Summary</strong>
                <div className="mb-4.5">
+               <p className="mb-2.5 block text-black dark:text-white">
+                  Total Quantity: {totalQuantity}
+                </p>
                 <p className="mb-2.5 block text-black dark:text-white">
                   Total Amount: {totalAmount}
                 </p>

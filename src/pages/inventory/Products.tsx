@@ -140,19 +140,10 @@ const handleFindCategory = (id: string) => {
         {product.description}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {product.unitPrice}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {product.quantity}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {handleFindUnit(product.unitId)}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {handleFindCategory(product.categoryId)}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {product.stockLevel}
       </td>
       <td className="px-6 py-4 relative">
         <Link
@@ -266,19 +257,10 @@ const handleFindCategory = (id: string) => {
                   Description
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Unit price
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Quantity
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Unit
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Category
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Stock Level
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action

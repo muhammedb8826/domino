@@ -1,5 +1,8 @@
 import ErroPage from "@/components/common/ErroPage";
-import { deleteInventory, getInventories } from "@/redux/features/inventory/storeSlice";
+import {
+  deleteInventory,
+  getInventories,
+} from "@/redux/features/inventory/storeSlice";
 import { getPurchases } from "@/redux/features/purchaseSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useRef, useState } from "react";
@@ -12,23 +15,30 @@ import Swal from "sweetalert2";
 import { PurchaseDetailsModal } from "./PurchaseDetailsModal";
 import Breadcrumb from "@/components/Breadcrumb";
 import Loader from "@/common/Loader";
-import { BiPurchaseTag } from "react-icons/bi";
 import { getProducts } from "@/redux/features/product/productSlice";
+import CardOne from "@/components/CardOne";
+import CardTwo from "@/components/CardTwo";
+import CardThree from "@/components/CardThree";
+import CardFour from "@/components/CardFour";
+import { FcSalesPerformance } from "react-icons/fc";
+import { BiPurchaseTag } from "react-icons/bi";
+import { getSales } from "@/redux/features/saleSlice";
 
 export const Store = () => {
-
   const { inventories } = useSelector((state: RootState) => state.inventory);
-  const {purchases} = useSelector((state: RootState) => state.purchase);
-  const { products, isLoading, error } = useSelector((state: RootState) => state.product);
+  const { purchases } = useSelector((state: RootState) => state.purchase);
+  const { products, isLoading, error } = useSelector(
+    (state: RootState) => state.product
+  );
+  const { sales } = useSelector((state: RootState) => state.sale);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getInventories());
     dispatch(getPurchases());
     dispatch(getProducts());
+    dispatch(getSales());
   }, [dispatch]);
-
-
 
   const [showPopover, setShowPopover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -75,14 +85,61 @@ export const Store = () => {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
-  const purchaseQuantity = purchases?.map((purchase)=> purchase.products?.reduce((acc, product) => acc + Number(product.quantity), 0));
-  console.log(purchaseQuantity);
+  const purchaseQuantity = purchases?.map((purchase) =>
+    purchase.products?.reduce(
+      (acc, product) => acc + Number(product.quantity),
+      0
+    )
+  );
+
+  const totalSales = sales?.reduce(
+    (acc, sale) => acc + Number(sale.totalQuantity),
+    0
+  );  
+
+  const totalPurchases = purchases?.reduce(
+    (acc, purchase) => acc + Number(purchase.totalQuantity),
+    0
+  );
+
+  const handleTotalSales = (id: string) => {
+    // Filter sales that contain the product with the given id
+    const salesWithProduct = sales?.filter(sale => sale.products?.some(product => product.productId === id));
   
+    // Calculate total quantity of the product across all filtered sales
+    const totalQuantity = salesWithProduct?.reduce((acc, sale) => {
+      // Find the product in the sale's products array
+      const product = sale.products.find(product => product.productId === id);
+      if (product) {
+        // Add the quantity of this product to the accumulator
+        return acc + parseInt(product.quantity);
+      }
+      return acc;
+    }, 0);
+  
+    return totalQuantity || 0; // Return 0 if totalQuantity is undefined or null
+  }
 
-  // const stockLevel = (sales: number, purchases: number) => {
-  //   return sales - purchases;
-  // };
 
+  const handleTotalPurchases = (id: string) => {
+    // Filter purchases that contain the product with the given id
+    const purchasesWithProduct = purchases?.filter(purchase => purchase.products?.some(product => product.productId === id));
+  
+    // Calculate total quantity of the product across all filtered purchases
+    const totalQuantity = purchasesWithProduct?.reduce((acc, purchase) => {
+      // Find the product in the purchase's products array
+      const product = purchase.products.find(product => product.productId === id);
+      if (product) {
+        // Add the quantity of this product to the accumulator
+        return acc + parseInt(product.quantity);
+      }
+      return acc;
+    }, 0);
+
+
+  
+    return totalQuantity || 0; // Return 0 if totalQuantity is undefined or null
+  }
 
   const handleDeleteProduct = (id: string) => {
     Swal.fire({
@@ -110,20 +167,19 @@ export const Store = () => {
     return <ErroPage error={error} />;
   }
 
-
-  const productListContent = products.map((product, index) => (
+  const productListContent = products?.map((product, index) => (
     <tr key={product.id}>
       <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
         {product.name}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {/* {inventory.sales} */}
+        {handleTotalPurchases(product.id)}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {purchaseQuantity[index]}
+        {handleTotalSales(product.id)}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {/* {inventory.stockLevel} */}
+        {handleTotalPurchases(product.id) - handleTotalSales(product.id)}
       </td>
       <td className="px-6 py-4 relative">
         <Link
@@ -181,20 +237,14 @@ export const Store = () => {
     <Loader />
   ) : (
     <>
-      <Breadcrumb pageName="Inventory" />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+        <CardOne icons={<FcSalesPerformance />} text="Total Sales" totaleSales={totalSales} />
+        <CardTwo icons={<BiPurchaseTag />} text="Total Purchases" totalPurchases={totalPurchases}  />
+        {/* <CardThree />
+        <CardFour /> */}
+      </div>
 
-      <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
-        {/* <div>
-          <Link
-          to={"/dashboard/inventory/purchases/add"}
-            className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
-            type="button"
-          >
-            <BiPurchaseTag />
-            <span className="ml-2">Add</span>
-          </Link>
-        </div> */}
-
+      <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 py-4">
         <label htmlFor="table-search" className="sr-only">
           Search
         </label>
@@ -234,10 +284,10 @@ export const Store = () => {
                   Product name
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Sales
+                  Purchases
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Purchases
+                  Sales
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Stock Level
@@ -333,4 +383,4 @@ export const Store = () => {
       )}
     </>
   );
-}
+};
