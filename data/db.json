@@ -1124,35 +1124,17 @@
   "inventories": [],
   "sales": [
     {
-      "id": "31e0",
+      "id": "3a0d",
       "operatorId": 8,
       "operatorFirstName": "Teshager",
       "orderDate": "2024-04-05",
-      "totalQuantity": 6,
-      "note": ";'l'",
+      "totalQuantity": 5,
+      "note": "",
       "products": [
         {
-          "productId": [
-            "a5ee",
-            "cb4f"
-          ],
-          "productName": [
-            "Banner",
-            "T-shirt"
-          ],
+          "productId": "015c",
+          "productName": "Film",
           "quantity": "5",
-          "description": "payment"
-        },
-        {
-          "productId": [
-            "a5ee",
-            "cb4f"
-          ],
-          "productName": [
-            "Banner",
-            "T-shirt"
-          ],
-          "quantity": "1",
           "description": ""
         }
       ]

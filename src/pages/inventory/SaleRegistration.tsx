@@ -152,9 +152,9 @@ export const SaleRegistration = () => {
         orderDate: orderDate,
         totalQuantity: totalQuantity,
         note: note,
-         products: formData.map((product) => ({
-          productId: productInfo.map((product) => product.id),
-          productName: productInfo.map((product) => product.name),
+         products: formData.map((product, index) => ({
+          productId: productInfo[index].id,
+          productName: productInfo[index].name,
           quantity: product.quantity,
           description: product.description,
         })),
@@ -220,6 +220,7 @@ export const SaleRegistration = () => {
                         onChange={handleOrderDate}
                         value={orderDate}
                         title="Select a date"
+                        required
                         placeholder="Select a date"
                         className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       />

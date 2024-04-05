@@ -81,6 +81,7 @@ export const salesSlice = createSlice({
         builder.addCase(updateSale.fulfilled, (state, action) => {
             const index = state.sales.findIndex((sale) => sale.id === action.payload.id);
             state.sales[index] = action.payload;
+            state.isLoading = false;
         });
         builder.addCase(updateSale.rejected, (state, action) => {
             state.error = action.error.message;
@@ -90,6 +91,7 @@ export const salesSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(deleteSale.fulfilled, (state, action) => {
+            state.isLoading = false;
             state.sales = state.sales.filter((sale) => sale.id !== action.payload.id);
         });
         builder.addCase(deleteSale.rejected, (state, action) => {
