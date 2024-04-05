@@ -32,6 +32,9 @@ import { Purschase } from "./pages/inventory/Purschase";
 import { OrderRegistration } from "./components/order/OrderRegistration";
 import OrderDetailsPage from "./components/order/OrderDetailsPage";
 import { PurchaseRegistration } from "./pages/inventory/PurchaseRegistration";
+import { Store } from "./pages/inventory/Store";
+import {Sale} from "./pages/inventory/Sale";
+import { SaleRegistration } from "./pages/inventory/SaleRegistration";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,6 +82,9 @@ const App = () => {
             <Route path="/dashboard/inventory/suppliers" element={<Suppliers/>}/>
             <Route path="/dashboard/inventory/purchases" element={<Purschase/>}/>
             <Route path="/dashboard/inventory/purchases/add" element={<PurchaseRegistration/>}/>
+            <Route path="/dashboard/inventory/store" element={<Store/>}/>
+            <Route path="/dashboard/inventory/sales" element={<Sale />} />
+            <Route path="/dashboard/inventory/sales/add" element={<SaleRegistration />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

@@ -100,7 +100,7 @@ export const purchasesSlice = createSlice({
         });
         builder.addCase(deletePurchase.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.purchases = state.purchases.filter((purchase) => purchase.id !== action.payload);
+            state.purchases = state.purchases.filter((purchase) => purchase.id !== action.payload.id);
         });
         builder.addCase(deletePurchase.rejected, (state, action) => {
             state.isLoading = false;

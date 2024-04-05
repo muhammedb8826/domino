@@ -38,10 +38,18 @@ export const Products = () => {
   // console.log(units);
   // console.log(categories);
 
-  const matchingUnit = units?.find((unit) => unit.id === products.find((product) => product?.unitId)?.unitId);
-  const matchingCategory = categories?.find((category) => category.id === products.find((product) => product?.categoryId)?.categoryId);
+const handleFindUnit = (id: string) => {
+  const findUnit = units.find((unit) => unit.id === id);
+  // console.log(findUnit);
+  return findUnit?.name;
+}
   
-  
+const handleFindCategory = (id: string) => {
+  const findCategory = categories.find((category) => category.id === id);
+  // console.log(findCategory);
+  return findCategory?.name;
+}
+
   
   // close on click outside
   useEffect(() => {
@@ -138,10 +146,10 @@ export const Products = () => {
         {product.quantity}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {matchingUnit?.name}
+        {handleFindUnit(product.unitId)}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {matchingCategory?.name}
+        {handleFindCategory(product.categoryId)}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {product.stockLevel}

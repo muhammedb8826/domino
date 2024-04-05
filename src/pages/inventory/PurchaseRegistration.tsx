@@ -14,6 +14,7 @@ import {
 import { FaProductHunt } from "react-icons/fa6";
 import { ProductRegistration } from "./ProductRegistration";
 import { CiEdit } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 interface SupplierType {
   id: string;
@@ -33,13 +34,14 @@ interface ProductType {
 export const PurchaseRegistration = () => {
   const { products, searchTerm } = useSelector((state) => state.product);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState([
     {
       quantity: "",
       description: "",
       unitPrice: "",
-      totalPrice: "",
+      subTotal: "",
     },
   ]);
 
@@ -118,11 +120,6 @@ export const PurchaseRegistration = () => {
   const [supplierInfo, setSupplierInfo] = useState({
     id: "",
     firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    address: "",
   });
 
   const handleSupplierInfo = (supplier: SupplierType) => {
@@ -130,11 +127,6 @@ export const PurchaseRegistration = () => {
       ...prevOrderInfo,
       id: supplier.id,
       firstName: supplier.firstName,
-      lastName: supplier.lastName,
-      email: supplier.email,
-      phone: supplier.phone,
-      company: supplier.company,
-      address: supplier.address,
     }));
   };
 
@@ -142,8 +134,13 @@ export const PurchaseRegistration = () => {
     const { name, value } = e.target;
     const list = [...formData];
     list[index][name] = value;
+    if (name === "quantity" || name === "unitPrice") {
+      list[index].subTotal =
+      list[index].quantity * list[index].unitPrice || 0;
+    }
     setFormData(list);
   };
+
 
   const handleAddProduct = () => {
     setFormData([
@@ -152,7 +149,7 @@ export const PurchaseRegistration = () => {
         quantity: "",
         description: "",
         unitPrice: "",
-        totalPrice: "",
+        subTotal: "",
       },
     ]);
     setProductInfo([
@@ -164,6 +161,40 @@ export const PurchaseRegistration = () => {
     ]);
   };
 
+  const [paymentInfo, setPaymentInfo] = useState({
+    paymentMethod: "",
+    amount: "",
+    reference: "",
+  });
+
+  const [orderDate, setOrderDate] = useState("");
+  const [note, setNote] = useState("");
+const handleNote = (e)=>{
+  setNote(e.target.value)
+}
+  const handleOrderDate = (e) => {
+    setOrderDate(e.target.value);
+  };
+
+  const [grandTotal, setGrandTotal] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [tax, setTax] = useState(0);
+  useEffect(() => {
+    const total = formData.reduce((acc, curr) => {
+      return acc + curr.subTotal;
+    }, 0);
+    setTotalAmount(total);
+    setTax(total * 0.15);
+    setGrandTotal(total+tax)
+  }, [formData, tax]);
+const handlePaymentMethod = (e) => {
+  const { name, value } = e.target;
+  setPaymentInfo((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+  };
+
   const handleDeleteRow = (index) => {
     const list = [...formData];
     list.splice(index, 1);
@@ -172,6 +203,50 @@ export const PurchaseRegistration = () => {
     updatedProductInfo.splice(index, 1);
     setProductInfo(updatedProductInfo);
   };
+
+
+  const handleSubmit = ()=>{
+
+   if(supplierInfo.firstName === ""){
+    alert("Please select a supplier");
+   }
+    else if(orderDate === ""){
+      alert("Please select a date");
+    }
+    else if(paymentInfo.paymentMethod === ""){
+      alert("Please select a payment method");
+    }
+    else if(paymentInfo.reference === ""){
+      alert("Please enter a reference");
+    }
+    else if(formData.length === 0){
+      alert("Please add a product");
+    }
+    else{
+    const data = {
+      vendorId: supplierInfo.id,
+      vendorName: supplierInfo.firstName,
+      orderDate: orderDate,
+      paymentMethod: paymentInfo.paymentMethod,
+      amount: grandTotal,
+      reference: paymentInfo.reference,
+      totalAmount: grandTotal,
+      note: note,
+      products: formData.map((product) => ({
+        productId: productInfo.map((product) => product.id),
+      productName: productInfo.map((product) => product.name),
+      quantity: product.quantity,
+      description: product.description,
+      unitPrice: product.unitPrice,
+      subTotal: product.subTotal,
+      })),
+    };
+    dispatch(createPurchase(data)).then(() => {
+      navigate("/dashboard/inventory/purchases");
+      toast.success("Purchase created successfully");
+    });
+  }
+  }
 
   return (
     <>
@@ -203,18 +278,60 @@ export const PurchaseRegistration = () => {
                   <div className="relative">
                     <input
                       type="date"
+                      name="orderDate"
+                      onChange={handleOrderDate}
+                      value={orderDate}
                       title="Select a date"
                       placeholder="Select a date"
                       className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                 </div>
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                    Payment method
+                  </label>
+                  <div className="relative z-20 bg-transparent dark:bg-form-input">
+                    <select
+                    name="paymentMethod"
+                    onChange={handlePaymentMethod}
+                    title="Select payment method" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+                      <option value="cash">Cash</option>
+                      <option value="mobile-banking">Mobile banking</option>
+                      <option value="check">Check</option>
+                      <option value="bank">Bank</option>
+                    </select>
+                    <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                      <svg
+                        className="fill-current"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g opacity="0.8">
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                            fill=""
+                          ></path>
+                        </g>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+
                 <div className="w-full">
-                  <label className="w-1/4 mb-2.5 block text-black dark:text-white">
-                    Vedor Reference
+                  <label className="mb-2.5 block text-black dark:text-white">
+                   Reference
                   </label>
                   <input
+                  onChange={handlePaymentMethod}
+                  name="reference"
                     type="text"
+                    value={paymentInfo.reference}
                     placeholder="Enter your first name"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
@@ -367,7 +484,7 @@ export const PurchaseRegistration = () => {
                               title="Total price of the product"
                               type="number"
                               name="totalPrice"
-                              value={data.totalPrice}
+                              value={data.subTotal}
                               onChange={(e) => handleChange(e, index)}
                               className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             />
@@ -431,18 +548,39 @@ export const PurchaseRegistration = () => {
                 </button>
               </div>
 
+              <div className="flex justify-between border-t pt-4">
+               <strong>Summary</strong>
+               <div className="mb-4.5">
+                <p className="mb-2.5 block text-black dark:text-white">
+                  Total Amount: {totalAmount}
+                </p>
+                <p className="mb-2.5 block text-black dark:text-white">
+                  Tax: {tax}
+                </p>
+                <p className="mb-2.5 block text-black dark:text-white">
+                  Grand Total: {grandTotal}
+                </p>
+                 
+                </div>
+              </div>
+
               <div className="mb-6">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Message
+                  Note
                 </label>
                 <textarea
                   rows={4}
+                  name="note"
+                  onChange={handleNote}
                   placeholder="Type your message"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 ></textarea>
               </div>
 
-              <button className="flex justify-center rounded bg-primary p-3 font-medium text-gray">
+              <button
+              type="submit"
+              onClick={handleSubmit}
+              className="flex justify-center rounded bg-primary p-3 font-medium text-gray">
                 Add Purchase
               </button>
             </div>

@@ -123,8 +123,6 @@ const user = createSlice({
     })
     builder.addCase(getUsers.fulfilled, (state, action) => {
        state.users =action.payload.data;
-       console.log(JSON.stringify(action.payload.data));
-       
       state.isLoading = false;
       state.error = null;
     })

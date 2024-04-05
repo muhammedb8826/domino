@@ -70,21 +70,6 @@ export const SupplierSearchInput = ({ handleSupplierInfo, value }) => {
           </label>
           <div className="relative flex-1">
             <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center pointer-events-none">
-              {/* <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg> */}
             </div>
             <input
               value={searchInput}
@@ -101,12 +86,12 @@ export const SupplierSearchInput = ({ handleSupplierInfo, value }) => {
         {/* <!-- Dropdown menu --> */}
         <div
           id="dropdownSearch"
-          className={`z-10 ${
+          className={`z-50 ${
             isDropdownOpen ? "" : "hidden"
-          } bg-white rounded-lg rounded-t-none border-stroke bg-transparent shadow dark:bg-gray-700 w-full absolute top-12`}
+          } bg-white rounded-lg rounded-t-none border-stroke shadow dark:bg-gray-700 w-full absolute top-19.5`}
         >
           <ul
-            className="max-h-48 px-3 pb-3 overflow-y-auto text-sm text-black dark:text-white"
+            className="max-h-48 px-3 pb-3 bg-white dark:bg-black overflow-y-auto text-sm text-black dark:text-white"
             aria-labelledby="dropdownSearchButton"
           >
             {filteredSuppliers.length > 0 ? (
@@ -119,7 +104,7 @@ export const SupplierSearchInput = ({ handleSupplierInfo, value }) => {
                       id={`checkbox-item-${supplier.id}`}
                       type="radio"
                       name="supplierFirstName"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      className="bg-white w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                     />
                     <label
                       htmlFor={`checkbox-item-${supplier.id}`}
@@ -137,7 +122,7 @@ export const SupplierSearchInput = ({ handleSupplierInfo, value }) => {
           <button
             onClick={handleModalOpen}
             type="button"
-            className="w-full flex items-center p-3 text-sm font-medium text-primary border-[1.5px] border-stroke bg-transparent border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
+            className="w-full flex bg-white dark:bg-black items-center p-3 text-sm font-medium text-primary border-[1.5px] border-stroke border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
           >
               <FaProductHunt className="w-5 h-5 me-2" />
             Add new supplier

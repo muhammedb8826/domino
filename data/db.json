@@ -1,16 +1,27 @@
 {
   "products": [
     {
+      "id": "a5ee",
+      "name": "Banner",
+      "description": "",
+      "unitPrice": "",
+      "quantity": "",
+      "stockLevel": "",
+      "categoryId": "2fa8",
+      "unitId": "890e"
+    },
+    {
+      "id": "cb4f",
       "name": "T-shirt",
       "description": "",
       "unitPrice": "",
       "quantity": "",
-      "categoryId": "2fa8",
-      "unitId": "1bd6",
-      "id": "1975"
+      "stockLevel": "",
+      "categoryId": "833f",
+      "unitId": "8dd4"
     },
     {
-      "id": "ff36",
+      "id": "015c",
       "name": "Film",
       "description": "",
       "unitPrice": "",
@@ -20,34 +31,14 @@
       "unitId": "1bd6"
     },
     {
-      "id": "ac29",
-      "name": "ddd",
-      "description": "",
-      "unitPrice": "",
-      "quantity": "",
-      "stockLevel": "",
-      "categoryId": "b016",
-      "unitId": "1bd6"
-    },
-    {
-      "id": "fb5f",
-      "name": "fdfhdjkfd",
-      "description": "",
-      "unitPrice": "",
-      "quantity": "",
-      "stockLevel": "",
-      "categoryId": "2fa8",
-      "unitId": "1bd6"
-    },
-    {
-      "id": "08b4",
+      "id": "a8c3",
       "name": "Sticker",
       "description": "",
       "unitPrice": "",
       "quantity": "",
       "stockLevel": "",
-      "categoryId": "2fa8",
-      "unitId": "1bd6"
+      "categoryId": "b016",
+      "unitId": "90fc"
     }
   ],
   "orders": [
@@ -1021,5 +1012,150 @@
       "status": "active"
     }
   ],
-  "purchases": []
+  "purchases": [
+    {
+      "id": "ff13",
+      "vendorId": "a85f",
+      "vendorName": "Muhammed",
+      "orderDate": "2024-04-05",
+      "paymentMethod": "check",
+      "amount": 3450,
+      "reference": "958djdd98-CBE",
+      "totalAmount": 3450,
+      "note": "",
+      "products": [
+        {
+          "productId": [
+            "1975",
+            "08b4"
+          ],
+          "productName": [
+            "T-shirt",
+            "Sticker"
+          ],
+          "quantity": "5",
+          "description": "",
+          "unitPrice": "200",
+          "subTotal": 1000
+        },
+        {
+          "productId": [
+            "1975",
+            "08b4"
+          ],
+          "productName": [
+            "T-shirt",
+            "Sticker"
+          ],
+          "quantity": "10",
+          "description": "",
+          "unitPrice": "200",
+          "subTotal": 2000
+        }
+      ]
+    },
+    {
+      "id": "be04",
+      "vendorId": "349b",
+      "vendorName": "Teshager",
+      "orderDate": "2024-04-12",
+      "paymentMethod": "mobile-banking",
+      "amount": 8740,
+      "reference": "958djdd98-CBE",
+      "totalAmount": 8740,
+      "note": "",
+      "products": [
+        {
+          "productId": [
+            "ff36",
+            "1975"
+          ],
+          "productName": [
+            "Film",
+            "T-shirt"
+          ],
+          "quantity": "8",
+          "description": "",
+          "unitPrice": "200",
+          "subTotal": 1600
+        },
+        {
+          "productId": [
+            "ff36",
+            "1975"
+          ],
+          "productName": [
+            "Film",
+            "T-shirt"
+          ],
+          "quantity": "12",
+          "description": "",
+          "unitPrice": "500",
+          "subTotal": 6000
+        }
+      ]
+    },
+    {
+      "id": "af9a",
+      "vendorId": "a85f",
+      "vendorName": "Muhammed",
+      "orderDate": "2024-04-12",
+      "paymentMethod": "bank",
+      "amount": 0,
+      "reference": "958djdd98",
+      "totalAmount": 0,
+      "note": "",
+      "products": [
+        {
+          "productId": [
+            "1975"
+          ],
+          "productName": [
+            "T-shirt"
+          ],
+          "quantity": "10",
+          "description": "",
+          "unitPrice": "",
+          "subTotal": 0
+        }
+      ]
+    }
+  ],
+  "inventories": [],
+  "sales": [
+    {
+      "id": "31e0",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "orderDate": "2024-04-05",
+      "totalQuantity": 6,
+      "note": ";'l'",
+      "products": [
+        {
+          "productId": [
+            "a5ee",
+            "cb4f"
+          ],
+          "productName": [
+            "Banner",
+            "T-shirt"
+          ],
+          "quantity": "5",
+          "description": "payment"
+        },
+        {
+          "productId": [
+            "a5ee",
+            "cb4f"
+          ],
+          "productName": [
+            "Banner",
+            "T-shirt"
+          ],
+          "quantity": "1",
+          "description": ""
+        }
+      ]
+    }
+  ]
 }

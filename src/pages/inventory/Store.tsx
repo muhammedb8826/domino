@@ -1,26 +1,34 @@
-import Loader from "@/common/Loader";
 import ErroPage from "@/components/common/ErroPage";
-import { deletePurchase, getPurchases } from "@/redux/features/purchaseSlice";
+import { deleteInventory, getInventories } from "@/redux/features/inventory/storeSlice";
+import { getPurchases } from "@/redux/features/purchaseSlice";
+import { RootState } from "@/redux/store";
 import { useEffect, useRef, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
-import { MdDelete, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import Swal from "sweetalert2";
-import { PurchaseRegistration } from "./PurchaseRegistration";
-import { PurchaseDetailsModal, PurchaseEditModal } from "./PurchaseDetailsModal";
+import { PurchaseDetailsModal } from "./PurchaseDetailsModal";
 import Breadcrumb from "@/components/Breadcrumb";
+import Loader from "@/common/Loader";
 import { BiPurchaseTag } from "react-icons/bi";
-import { BsTicketDetailed } from "react-icons/bs";
+import { getProducts } from "@/redux/features/product/productSlice";
 
-export const Purschase = () => {
-  const { purchases, isLoading, error } = useSelector((state) => state.purchase);
+export const Store = () => {
 
+  const { inventories } = useSelector((state: RootState) => state.inventory);
+  const {purchases} = useSelector((state: RootState) => state.purchase);
+  const { products, isLoading, error } = useSelector((state: RootState) => state.product);
   const dispatch = useDispatch();
+
   useEffect(() => {
+    dispatch(getInventories());
     dispatch(getPurchases());
+    dispatch(getProducts());
   }, [dispatch]);
+
+
 
   const [showPopover, setShowPopover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -67,6 +75,14 @@ export const Purschase = () => {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
+  const purchaseQuantity = purchases?.map((purchase)=> purchase.products?.reduce((acc, product) => acc + Number(product.quantity), 0));
+  console.log(purchaseQuantity);
+  
+
+  // const stockLevel = (sales: number, purchases: number) => {
+  //   return sales - purchases;
+  // };
+
 
   const handleDeleteProduct = (id: string) => {
     Swal.fire({
@@ -84,7 +100,7 @@ export const Purschase = () => {
           text: "The media has been deleted.",
           icon: "success",
         }).then(() => {
-          dispatch(deletePurchase(id));
+          dispatch(deleteInventory(id));
         });
       }
     });
@@ -94,25 +110,20 @@ export const Purschase = () => {
     return <ErroPage error={error} />;
   }
 
-  const productListContent = purchases.map((purchase, index) => (
-    <tr key={purchase.id}>
+
+  const productListContent = products.map((product, index) => (
+    <tr key={product.id}>
       <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
-       {purchase.id}
+        {product.name}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {purchase.orderDate}
+        {/* {inventory.sales} */}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {purchase.vendorName}
+        {purchaseQuantity[index]}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {/* {purchase.vendorComapany} */}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {/* {purchase.unit.name} */}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {purchase.totalAmount}
+        {/* {inventory.stockLevel} */}
       </td>
       <td className="px-6 py-4 relative">
         <Link
@@ -139,18 +150,18 @@ export const Purschase = () => {
           >
             <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
               <li>
-                <button
-                  onClick={() => handleEditModalOpen(purchase.id)}
-                  type="button"
+                <NavLink
+                  onClick={() => handleEditModalOpen(inventory.id)}
+                  to="#"
                   className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                 >
-                  <BsTicketDetailed />
-                  Details
-                </button>
+                  <FaRegEdit />
+                  Edit
+                </NavLink>
               </li>
               <li>
                 <NavLink
-                  onClick={() => handleDeleteProduct(purchase.id)}
+                  onClick={() => handleDeleteProduct(inventory.id)}
                   to="#"
                   className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                 >
@@ -166,15 +177,14 @@ export const Purschase = () => {
     </tr>
   ));
 
-
   return isLoading ? (
     <Loader />
   ) : (
     <>
-      <Breadcrumb pageName="Purchases" />
+      <Breadcrumb pageName="Inventory" />
 
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
-        <div>
+        {/* <div>
           <Link
           to={"/dashboard/inventory/purchases/add"}
             className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
@@ -183,7 +193,7 @@ export const Purschase = () => {
             <BiPurchaseTag />
             <span className="ml-2">Add</span>
           </Link>
-        </div>
+        </div> */}
 
         <label htmlFor="table-search" className="sr-only">
           Search
@@ -221,22 +231,16 @@ export const Purschase = () => {
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                  Reference
+                  Product name
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Order Date
+                  Sales
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Vendor
+                  Purchases
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Company
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Purchase representative
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Total
+                  Stock Level
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action
