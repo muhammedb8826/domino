@@ -175,14 +175,14 @@ export const OperatorNotification = () => {
                     </td>
                     <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                       <button
-                        className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded text-sm px-6 py-1 text-center me-5 mb-1 ease-linear transition-all duration-150"
+                        className="text-white bg-gradient-to-br from-success to-primary hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded text-sm px-6 py-1 text-center me-5 mb-1 ease-linear transition-all duration-150"
                         onClick={() => handleClick(status.id, itemIndex)}
                         type="button"
                       >
                         Print
                       </button>
                       <button
-                        className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        className="bg-danger text-white active:bg-danger font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         onClick={() => handleReject(status.id, itemIndex)}
                         type="button"
                       >

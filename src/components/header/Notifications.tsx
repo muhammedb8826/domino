@@ -176,14 +176,14 @@ export const Notifications = () => {
                     </td>
                     <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                       <button
-                        className="bg-green-500 text-white active:green-blue-600 font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none me-5 mb-1 ease-linear transition-all duration-150"
+                        className="bg-success text-white active:bg-success font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none me-5 mb-1 ease-linear transition-all duration-150"
                         onClick={() => handleClick(status.id, itemIndex)}
                         type="button"
                       >
                         approve
                       </button>
                       <button
-                        className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        className="bg-danger text-white active:bg-danger font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         onClick={() => handleReject(status.id, itemIndex)}
                         type="button"
                       >

@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import TopBar from './dashboard/TopBar';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { getOrderStatus, getOrders } from '@/redux/features/order/orderSlice';
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -32,7 +36,80 @@ const DropdownNotification = () => {
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
+
+  const { user, isLoading } = useSelector((state: RootState) => state.auth);
+  const { orderStatus, orders } = useSelector((state: RootState) => state.order);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const handleLogout = () => {
+  //   dispatch(logout());
+  //   navigate("/sign-in");
+  // };
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/sign-in");
+    }
+  }, [user, navigate]);
+  useEffect(() => {
+    dispatch(getOrderStatus());
+    dispatch(getOrders());
+  }, [dispatch]);
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const [adminNotification, setAdminNotification] = useState(0);
+  const [operatorNotification, setOperatorNotification] = useState(0);
+  const [receptionistNotification, setReceptionistNotification] = useState(0);
+  const [financeNotification, setFinanceNotification] = useState(0);
+
+  useEffect(() => {
+    const editedOrder = orderStatus.filter(
+      (order) => order.status === "received"
+    );
+    const notification = editedOrder.map((item) =>
+      item.orderItems.filter((item) => item.status === "edited" || item.status === "rejected")
+    );
+    setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
+
+    const operatorNotification = editedOrder.map((item) =>
+      item.orderItems.filter((item) => item.status === "approved")
+    );
+    setOperatorNotification(
+      operatorNotification.reduce((a, b) => a + b.length, 0)
+    );
+
+    const receptionistNotification = editedOrder.map((item) =>
+      item.orderItems.filter((item) => item.status === "paid")
+    );
+    setReceptionistNotification(
+      receptionistNotification.reduce((a, b) => a + b.length, 0)
+    );
+
+    let count = 0;
+
+    const matchedOrderStatus = orderStatus.filter(status => 
+        orders.some(order => order.id === status.orderId)
+    );
+    matchedOrderStatus.forEach(status => {
+        const correspondingOrder = orders.find(order => order.id === status.orderId);
+        if (correspondingOrder.paymentInfo.paymentStatus === "paid") {
+            status.orderItems.forEach(item => {
+                if (item.status !== "paid" && item.status !== "delivered") {
+                    count++;            }
+            });
+        }
+    });
+    
+    setFinanceNotification(count);
+  }, [orderStatus, orders]);
+
+
   return (
+    
     <li className="relative">
       <Link
         ref={trigger}
@@ -70,71 +147,83 @@ const DropdownNotification = () => {
         <div className="px-4.5 py-3">
           <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
         </div>
-
+        
         <ul className="flex h-auto flex-col overflow-y-auto">
+        {user?.email === "admin@domino.com" && (
           <li>
             <Link
+            onClick={() => setDropdownOpen(false)}
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
+              to="/dashboard/notifications"
             >
               <p className="text-sm">
                 <span className="text-black dark:text-white">
-                  Edit your information in a swipe
+                  you have {`${user?.email === "admin@domino.com" ? adminNotification : 0}`} new notifications
                 </span>{' '}
-                Sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim.
+                {/* Sint occaecat cupidatat non proident, sunt in culpa qui officia
+                deserunt mollit anim. */}
               </p>
 
               <p className="text-xs">12 May, 2025</p>
             </Link>
           </li>
+          )}
+          {user?.roles === "operator" && (
           <li>
             <Link
+            onClick={() => setDropdownOpen(false)}
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
+              to="/dashboard/operator-notifications"
             >
               <p className="text-sm">
                 <span className="text-black dark:text-white">
-                  It is a long established fact
+                you have {operatorNotification} new notifications
                 </span>{' '}
-                that a reader will be distracted by the readable.
+                {/* that a reader will be distracted by the readable. */}
               </p>
 
               <p className="text-xs">24 Feb, 2025</p>
             </Link>
           </li>
+          )}
+          {user?.roles === "reception" && (
           <li>
             <Link
+            onClick={() => setDropdownOpen(false)}
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
+              to="/dashboard/receptionist-notifications"
             >
               <p className="text-sm">
                 <span className="text-black dark:text-white">
-                  There are many variations
+                  You have {receptionistNotification} new notifications
                 </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
+                {/* of passages of Lorem Ipsum available, but the majority have
+                suffered */}
               </p>
 
               <p className="text-xs">04 Jan, 2025</p>
             </Link>
           </li>
+          )}
+           {user?.roles === "finance" && (
           <li>
             <Link
+            onClick={() => setDropdownOpen(false)}
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
+              to="/dashboard/finance-notifications"
             >
               <p className="text-sm">
                 <span className="text-black dark:text-white">
-                  There are many variations
+                  You have {financeNotification} new notifications
                 </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
+                {/* of passages of Lorem Ipsum available, but the majority have
+                suffered */}
               </p>
 
               <p className="text-xs">01 Dec, 2024</p>
             </Link>
           </li>
+          )}
         </ul>
       </div>
     </li>

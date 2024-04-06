@@ -39,6 +39,10 @@ import Setting from "./components/setting/Setting";
 import { CommissionList } from "./components/commission/CommissionList";
 import Pricing from "./components/pricing/Pricing";
 import { CustomerList } from "./components/customer/CustomerList";
+import { Notifications } from "./components/header/Notifications";
+import { OperatorNotification } from "./components/header/OperatorNotification";
+import { ReceptionistNotification } from "./components/header/ReceptionistNotification";
+import { FinanceNotification } from "./components/header/FinanceNotification";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -71,7 +75,10 @@ const App = () => {
             <Route path="/order/:id" element={<OrderDetailsPage />} />
           <Route path="/dashboard" element={<DefaultLayout />}>
             <Route index element={<OrdersList />} />
-            {/* <Route path="/dashboard/profile" element={<Profile/>}/> */}
+            <Route path="/dashboard/notifications" element={<Notifications/>}/>
+            <Route path="/dashboard/operator-notifications" element={<OperatorNotification />}/>
+            <Route path="/dashboard/receptionist-notifications" element={<ReceptionistNotification/>}/>
+            <Route path="/dashboard/finance-notifications" element={<FinanceNotification/>}/>
             {/* <Route path="/dashboard/forms/form-elements" element={<FormElements/>}/> */}
             {/* <Route path="/dashboard/forms/form-layout" element={<FormLayout />} /> */}
             {/* <Route path="/dashboard/ui/alerts" element={<Alerts />} /> */}

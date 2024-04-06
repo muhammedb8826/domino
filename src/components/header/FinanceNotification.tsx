@@ -155,7 +155,7 @@ export const FinanceNotification = () => {
                     </td>
                     <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
                       <button
-                        className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        className="bg-primary text-white active:bg-primary font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         onClick={() => handleClick(status.id, itemIndex)}
                         type="button"
                       >
