@@ -11,8 +11,10 @@ import { CiEdit } from "react-icons/ci";
 import Loader from "@/common/Loader";
 import { getUnits } from "@/redux/features/unit/unitSlice";
 import { getUsers } from "@/redux/features/user/userSlice";
+import { RootState } from "@/redux/store";
 
 export const SaleRegistration = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
   const { products, isLoading, error } = useSelector((state) => state.product);
   const { users } = useSelector((state) => state.user);
   const { units } = useSelector((state) => state.unit);
@@ -142,13 +144,14 @@ export const SaleRegistration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(!operatorInfo?.id){
+    if(!user?.id){
       toast.error("Please select operator");
       return;
     }
       const data = {
-        operatorId: operatorInfo?.id,
-        operatorFirstName: operatorInfo?.firstName,
+        operatorId: user?.id,
+        operatorFirstName: user?.first_name,
+        status: "requested",
         orderDate: orderDate,
         totalQuantity: totalQuantity,
         note: note,
@@ -191,22 +194,22 @@ export const SaleRegistration = () => {
                 <div className="mb-4.5 grid sm:grid-cols-2 gap-6">
                   <div className="">
                   <label className="mb-3 block text-black dark:text-white">
-                     Select operator
+                     Operator
                     </label>
                     <select
                       name="operator"
                       onChange={handleSelectedOperator}
                       required
-                      title="choose operator"
+                      title="operator"
                       className="relative z-20 w-full appearance-none rounded bg-transparent p-2 outline-none border transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     >
-                      <option value=""></option>
-                      {users.length > 0 &&
+                      <option value={user?.id}>{user?.first_name}</option>
+                      {/* {users.length > 0 &&
                         operators.map((user) => (
                           <option key={user.id} value={user.id}>
                             {user.first_name}
                           </option>
-                        ))}
+                        ))} */}
                     </select>
                   </div>
                   <div className="">

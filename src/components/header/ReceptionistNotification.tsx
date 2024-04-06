@@ -61,13 +61,13 @@ export const ReceptionistNotification = () => {
   return (
     <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0 min-h-screen">
     <GoBack goback="/dashboard" />
-    <h2 className="m-4 relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <h2 className="m-4 relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800">
       Finance Notifications
-      <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">{receptionistNotification}</div>
+      <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-danger border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">{receptionistNotification}</div>
     </h2>
     <hr />
     {receptionistNotification === 0 && (
-      <p className="text-center text-2xl font-bold text-gray-900 dark:text-white">
+      <p className="text-center text-2xl font-bold text-black dark:text-white">
         No notifications
       </p>
     )}

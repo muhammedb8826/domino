@@ -6,7 +6,7 @@ import { CiMenuKebab } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { PurchaseRegistration } from "./PurchaseRegistration";
 import { PurchaseDetailsModal, PurchaseEditModal } from "./PurchaseDetailsModal";
@@ -14,11 +14,21 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { BiPurchaseTag } from "react-icons/bi";
 import { BsTicketDetailed } from "react-icons/bs";
 import { deleteSale, getSales } from "@/redux/features/saleSlice";
+import { RootState } from "@/redux/store";
 
 export const Sale = () => {
   const { sales, isLoading, error } = useSelector((state) => state.sale);
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/signin");
+    }
+  }, [user, navigate]);
+
   useEffect(() => {
     dispatch(getSales());
   }, [dispatch]);
@@ -90,6 +100,7 @@ export const Sale = () => {
       }
     });
   };
+  
 
   if (error) {
     return <ErroPage error={error} />;
@@ -104,13 +115,13 @@ export const Sale = () => {
         {sale.orderDate}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {sale.operatorName}
+        {sale.operatorFirstName}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {sale.salesPersonName}
+        {sale.products.map((product) => product.quantity).reduce((a, b) => a + Number(b), 0)}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {sale.quantity}
+        {sale.status}
       </td>
       <td className="px-6 py-4 relative">
         <Link
@@ -172,6 +183,8 @@ export const Sale = () => {
       <Breadcrumb pageName="Sales" />
 
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
+        
+      {user?.roles === "operator" && (
         <div>
           <Link
           to={"/dashboard/inventory/sales/add"}
@@ -182,6 +195,7 @@ export const Sale = () => {
             <span className="ml-2">Add</span>
           </Link>
         </div>
+      )}
 
         <label htmlFor="table-search" className="sr-only">
           Search
@@ -228,10 +242,10 @@ export const Sale = () => {
                   Operator
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Sales person
+                  Quantity
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Quantity
+                  Status
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action

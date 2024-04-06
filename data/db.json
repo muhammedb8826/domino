@@ -1152,56 +1152,53 @@
   "inventories": [],
   "sales": [
     {
-      "id": "3a0d",
+      "id": "fbe7",
       "operatorId": 8,
       "operatorFirstName": "Teshager",
-      "orderDate": "2024-04-05",
-      "totalQuantity": 5,
-      "note": "",
-      "products": [
-        {
-          "productId": "015c",
-          "productName": "Film",
-          "quantity": "5",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "bf3b",
-      "operatorId": 8,
-      "operatorFirstName": "Teshager",
-      "orderDate": "2024-04-05",
-      "totalQuantity": 9,
+      "status": "requested",
+      "orderDate": "2024-04-06",
+      "totalQuantity": 4,
       "note": "",
       "products": [
         {
           "productId": "cb4f",
           "productName": "T-shirt",
-          "quantity": "5",
-          "description": ""
-        },
+          "quantity": "4",
+          "description": "The coral t-shirt"
+        }
+      ]
+    },
+    {
+      "id": "8653",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "status": "requested",
+      "orderDate": "2024-04-06",
+      "totalQuantity": 4,
+      "note": "",
+      "products": [
         {
-          "productId": "015c",
-          "productName": "Film",
+          "productId": "a5ee",
+          "productName": "Banner",
           "quantity": "4",
           "description": ""
         }
       ]
     },
     {
-      "id": "7ae7",
+      "id": "291e",
       "operatorId": 8,
       "operatorFirstName": "Teshager",
-      "orderDate": "2024-04-05",
-      "totalQuantity": 5,
+      "status": "requested",
+      "orderDate": "2024-04-06",
+      "totalQuantity": 2,
       "note": "",
       "products": [
         {
-          "productId": "cb4f",
-          "productName": "T-shirt",
-          "quantity": "5",
-          "description": ""
+          "productId": "cf4c",
+          "productName": "Mika",
+          "quantity": "2",
+          "description": "fgfg"
         }
       ]
     }

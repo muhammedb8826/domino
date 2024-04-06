@@ -13,6 +13,7 @@ const TopBar = () => {
 
   const { user, isLoading } = useSelector((state: RootState) => state.auth);
   const { orderStatus, orders } = useSelector((state: RootState) => state.order);
+  const {sales} = useSelector((state: RootState) => state.sale);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const TopBar = () => {
   useEffect(() => {
     dispatch(getOrderStatus());
     dispatch(getOrders());
+    dispatch(sales());
   }, [dispatch]);
 
   const toggleDropdown = () => {
@@ -47,6 +49,9 @@ const TopBar = () => {
     const notification = editedOrder.map((item) =>
       item.orderItems.filter((item) => item.status === "edited" || item.status === "rejected")
     );
+    const filteredSalesStatus = sales.filter((sale) => sale.status === "requested");
+    console.log(filteredSalesStatus);
+    
     setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
 
     const operatorNotification = editedOrder.map((item) =>
@@ -79,7 +84,7 @@ const TopBar = () => {
     });
     
     setFinanceNotification(count);
-  }, [orderStatus, orders]);
+  }, [orderStatus, orders, sales]);
 
   if (isLoading) {
     return <Loading />;

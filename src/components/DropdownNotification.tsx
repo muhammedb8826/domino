@@ -4,8 +4,14 @@ import TopBar from './dashboard/TopBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getOrderStatus, getOrders } from '@/redux/features/order/orderSlice';
+import { Sale } from '@/pages/inventory/Sale';
+import { getSales } from '@/redux/features/saleSlice';
 
 const DropdownNotification = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { orderStatus, orders } = useSelector((state: RootState) => state.order);
+  const {sales, isLoading} = useSelector((state: RootState) => state.sale);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -36,10 +42,6 @@ const DropdownNotification = () => {
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
-
-  const { user, isLoading } = useSelector((state: RootState) => state.auth);
-  const { orderStatus, orders } = useSelector((state: RootState) => state.order);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const handleLogout = () => {
@@ -55,6 +57,7 @@ const DropdownNotification = () => {
   useEffect(() => {
     dispatch(getOrderStatus());
     dispatch(getOrders());
+    dispatch(getSales());
   }, [dispatch]);
 
   const toggleDropdown = () => {
@@ -73,8 +76,9 @@ const DropdownNotification = () => {
     const notification = editedOrder.map((item) =>
       item.orderItems.filter((item) => item.status === "edited" || item.status === "rejected")
     );
+    const filteredSalesStatus = sales?.filter((sale) => sale.status === "requested");
     setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
-
+     setAdminNotification((prev)=>prev+filteredSalesStatus.length);
     const operatorNotification = editedOrder.map((item) =>
       item.orderItems.filter((item) => item.status === "approved")
     );
@@ -105,7 +109,7 @@ const DropdownNotification = () => {
     });
     
     setFinanceNotification(count);
-  }, [orderStatus, orders]);
+  }, [orderStatus, orders, sales]);
 
 
   return (
