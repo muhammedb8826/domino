@@ -45,7 +45,7 @@ export const PurchaseRegistration = () => {
     },
   ]);
 
-  const [idx, setIdx] = useState(0);
+  const [idx, setIdx] = useState(-1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(
     Array(formData.length).fill(false)
   );
@@ -69,6 +69,10 @@ export const PurchaseRegistration = () => {
   ]);
 
   const handleSearchProduct = (e, index) => {
+  
+    const updatedProductInfo = [...productInfo];
+    updatedProductInfo[index] = { id: productInfo[index].id, name: e.target.value };
+    setProductInfo(updatedProductInfo);
     setIdx(index);
     setIsDropdownOpen((prevState) => {
       const newState = [...prevState];
@@ -387,7 +391,7 @@ const handlePaymentMethod = (e) => {
                                   value={productInfo[index]?.name || ""}
                                   id={`checkbox-item-${index}`}
                                   type="text"
-                                  name="name"
+                                 name="name"
                                   className="w-full rounded-lg bg-transparent px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary dark:text-white"
                                   placeholder=""
                                 />
@@ -422,7 +426,7 @@ const handlePaymentMethod = (e) => {
                                           value={productInfo[index]?.name || ""}
                                           id={`checkbox-item-${product.id}`}
                                           type="radio"
-                                          name="productName"
+                                          name="name"
                                           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                                         />
                                         <label

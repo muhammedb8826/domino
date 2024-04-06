@@ -12,6 +12,8 @@ import Swal from "sweetalert2";
 import { getCommissions } from "@/redux/features/commission/commissionSlice";
 import { getOrders } from "@/redux/features/order/orderSlice";
 import { NavLink } from "react-router-dom";
+import Loader from "@/common/Loader";
+import Breadcrumb from "../Breadcrumb";
 
 export const CommissionList = () => {
   const { commissions, isLoading, error } = useSelector(
@@ -64,19 +66,18 @@ export const CommissionList = () => {
     };
   });
 
-  console.log(filteredOrders);
   
-
-  if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
-  return (
+  return isLoading?(<Loader/>):(
+    <>
+    <Breadcrumb pageName="Commissions" />
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div>
           <button
             type="button"
             onClick={handleModalOpen}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <IoBagAdd />
             <span className="ml-2">Add New Commission</span>
@@ -296,5 +297,6 @@ export const CommissionList = () => {
         <CommissionRegistration handleModalOpen={handleModalOpen} />
       )}
     </div>
+  </>
   );
 };

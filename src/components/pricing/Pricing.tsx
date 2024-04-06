@@ -10,6 +10,8 @@ import { FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
 import { RootState } from "@/redux/store";
+import Loader from "@/common/Loader";
+import Breadcrumb from "../Breadcrumb";
 
 const Pricing = () => {
   const { user, token } = useSelector(
@@ -20,9 +22,6 @@ const Pricing = () => {
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  if(user?.email !== "admin@domino.com"){
-    return <ErroPage error="You are not authorized to view this page" />
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -78,17 +77,23 @@ const Pricing = () => {
     });
   };
 
+  if(user?.email !== "admin@domino.com"){
+    return <ErroPage error="You are not authorized to view this page" />
+  }
+
   if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
 
-  return (
+  return isLoading?(<Loader/>): (
+    <>
+    <Breadcrumb pageName="Pricing" />
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div>
           <button
             type="button"
             onClick={handleModalOpen}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <RiPriceTag2Line />
             <span className="ml-2">Add Unit Price</span>
@@ -329,6 +334,7 @@ const Pricing = () => {
       </nav>
       {openModal && <PriceDetailsModal handleModalOpen={handleModalOpen} />}
     </div>
+    </>
   );
 };
 

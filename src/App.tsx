@@ -35,6 +35,10 @@ import { PurchaseRegistration } from "./pages/inventory/PurchaseRegistration";
 import { Store } from "./pages/inventory/Store";
 import {Sale} from "./pages/inventory/Sale";
 import { SaleRegistration } from "./pages/inventory/SaleRegistration";
+import Setting from "./components/setting/Setting";
+import { CommissionList } from "./components/commission/CommissionList";
+import Pricing from "./components/pricing/Pricing";
+import { CustomerList } from "./components/customer/CustomerList";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -67,16 +71,16 @@ const App = () => {
             <Route path="/order/:id" element={<OrderDetailsPage />} />
           <Route path="/dashboard" element={<DefaultLayout />}>
             <Route index element={<OrdersList />} />
-            <Route path="/dashboard/profile" element={<Profile/>}/>
-            <Route path="/dashboard/forms/form-elements" element={<FormElements/>}/>
-            <Route path="/dashboard/forms/form-layout" element={<FormLayout />} />
-            <Route path="/dashboard/ui/alerts" element={<Alerts />} />
+            {/* <Route path="/dashboard/profile" element={<Profile/>}/> */}
+            {/* <Route path="/dashboard/forms/form-elements" element={<FormElements/>}/> */}
+            {/* <Route path="/dashboard/forms/form-layout" element={<FormLayout />} /> */}
+            {/* <Route path="/dashboard/ui/alerts" element={<Alerts />} /> */}
             <Route path="/dashboard/user" element={<User/>}/>
-            <Route path="/dashboard/tables" element={<Tables />} />
-            <Route path="/dashboard/ui/buttons" element={<Buttons />} />
-            <Route path="/dashboard/settings" element={<Settings />} />
-            <Route path="/dashboard/ecommerce" element={<ECommerce/>}/>
-            <Route path="/dashboard/chart" element={<Chart/>}/>
+            <Route path="/dashboard/customers" element={<CustomerList />} />
+            {/* <Route path="/dashboard/ui/buttons" element={<Buttons />} /> */}
+            <Route path="/dashboard/settings" element={<Setting />} />
+            <Route path="/dashboard/pricing" element={<Pricing/>}/>
+            <Route path="/dashboard/commission" element={<CommissionList/>}/>
             <Route path="/dashboard/inventory/products" element={<Products/>}/>
             <Route path="/dashboard/inventory/category" element={<Categories/>}/>
             <Route path="/dashboard/inventory/suppliers" element={<Suppliers/>}/>

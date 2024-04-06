@@ -77,7 +77,7 @@ const handleDeleteRole = (id) => {
 
   return (
     <div
-      className="flex flex-col gap-4 p-4 items-center border overflow-y-auto h-full"
+      className="flex flex-col gap-4 p-4 items-center overflow-y-auto h-full"
       id="style-4"
     >
       <fieldset className="border border-black p-4 mb-2 w-full sm:w-1/2">

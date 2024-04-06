@@ -37,13 +37,13 @@ const Setting = () => {
   return (
     <div className="relative h-screen calc(100% - 2rem) flex flex-col">
       <nav className="flex items-center justify-center h-[15%]">
-        <ul className="my-4 p-2 bg-gray-100 rounded-lg">
+        <ul className="my-4 p-2 bg-gray-100 rounded-lg flex">
           <li>
             <button
               type="button"
               onClick={() => handleButtonClick("machines")}
               className={`${
-                active === "machines" ? "text-white bg-gray-900" : ""
+                active === "machines" ? "text-white bg-black" : ""
               } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
             >
               Machines
@@ -54,7 +54,7 @@ const Setting = () => {
               type="button"
               onClick={() => handleButtonClick("materials")}
               className={`${
-                active === "materials" ? "text-white bg-gray-900" : ""
+                active === "materials" ? "text-white bg-black" : ""
               } px-5 py-1.5  font-medium text-gray-900 rounded-lg`}
             >
               Materials
@@ -65,7 +65,7 @@ const Setting = () => {
               type="button"
               onClick={() => handleButtonClick("units")}
               className={`${
-                active === "units" ? "text-white bg-gray-900" : ""
+                active === "units" ? "text-white bg-black" : ""
               } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
             >
               Units
@@ -76,7 +76,7 @@ const Setting = () => {
               type="button"
               onClick={() => handleButtonClick("services")}
               className={`${
-                active === "services" ? "text-white bg-gray-900" : ""
+                active === "services" ? "text-white bg-black" : ""
               } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
             >
               Services
@@ -87,7 +87,7 @@ const Setting = () => {
               type="button"
               onClick={() => handleButtonClick("roles")}
               className={`${
-                active === "roles" ? "text-white bg-gray-900" : ""
+                active === "roles" ? "text-white bg-black" : ""
               } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
             >
               Roles
@@ -98,7 +98,7 @@ const Setting = () => {
               type="button"
               onClick={() => handleButtonClick("discounts")}
               className={`${
-                active === "discounts" ? "text-white bg-gray-900" : ""
+                active === "discounts" ? "text-white bg-black" : ""
               } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
             >
               Discounts
