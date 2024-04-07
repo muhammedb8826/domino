@@ -6,6 +6,7 @@ import { RootState } from '@/redux/store';
 import { getOrderStatus, getOrders } from '@/redux/features/order/orderSlice';
 import { Sale } from '@/pages/inventory/Sale';
 import { getSales } from '@/redux/features/saleSlice';
+import Loader from '@/common/Loader';
 
 const DropdownNotification = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -68,6 +69,7 @@ const DropdownNotification = () => {
   const [operatorNotification, setOperatorNotification] = useState(0);
   const [receptionistNotification, setReceptionistNotification] = useState(0);
   const [financeNotification, setFinanceNotification] = useState(0);
+  const [storeRepNotification, setStoreRepNotification] = useState(0);
 
   useEffect(() => {
     const editedOrder = orderStatus.filter(
@@ -107,12 +109,14 @@ const DropdownNotification = () => {
             });
         }
     });
-    
+    const matchedSalesStatus = sales.filter(sale => sale.status === "approved");
+    setStoreRepNotification(matchedSalesStatus.length);
+
     setFinanceNotification(count);
   }, [orderStatus, orders, sales]);
 
 
-  return (
+  return isLoading?(<Loader/>):(
     
     <li className="relative">
       <Link
@@ -219,6 +223,25 @@ const DropdownNotification = () => {
               <p className="text-sm">
                 <span className="text-black dark:text-white">
                   You have {financeNotification} new notifications
+                </span>{' '}
+                {/* of passages of Lorem Ipsum available, but the majority have
+                suffered */}
+              </p>
+
+              <p className="text-xs">01 Dec, 2024</p>
+            </Link>
+          </li>
+          )}
+          {user?.roles === "store-representative" && (
+          <li>
+            <Link
+            onClick={() => setDropdownOpen(false)}
+              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+              to="/dashboard/store-notifications"
+            >
+              <p className="text-sm">
+                <span className="text-black dark:text-white">
+                  You have {storeRepNotification} new notifications
                 </span>{' '}
                 {/* of passages of Lorem Ipsum available, but the majority have
                 suffered */}

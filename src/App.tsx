@@ -43,6 +43,8 @@ import { Notifications } from "./components/header/Notifications";
 import { OperatorNotification } from "./components/header/OperatorNotification";
 import { ReceptionistNotification } from "./components/header/ReceptionistNotification";
 import { FinanceNotification } from "./components/header/FinanceNotification";
+import { StoreNotifications } from "./components/header/StoreNotifications";
+import { OperatorStore } from "./pages/inventory/OperatorStore";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,6 +81,7 @@ const App = () => {
             <Route path="/dashboard/operator-notifications" element={<OperatorNotification />}/>
             <Route path="/dashboard/receptionist-notifications" element={<ReceptionistNotification/>}/>
             <Route path="/dashboard/finance-notifications" element={<FinanceNotification/>}/>
+            <Route path="/dashboard/store-notifications" element={<StoreNotifications/>}/>
             {/* <Route path="/dashboard/forms/form-elements" element={<FormElements/>}/> */}
             {/* <Route path="/dashboard/forms/form-layout" element={<FormLayout />} /> */}
             {/* <Route path="/dashboard/ui/alerts" element={<Alerts />} /> */}
@@ -89,6 +92,7 @@ const App = () => {
             <Route path="/dashboard/pricing" element={<Pricing/>}/>
             <Route path="/dashboard/commission" element={<CommissionList/>}/>
             <Route path="/dashboard/inventory/products" element={<Products/>}/>
+            <Route path="/dashboard/inventory/operator-store" element={<OperatorStore/>}/>
             <Route path="/dashboard/inventory/category" element={<Categories/>}/>
             <Route path="/dashboard/inventory/suppliers" element={<Suppliers/>}/>
             <Route path="/dashboard/inventory/purchases" element={<Purschase/>}/>

@@ -105,6 +105,7 @@ export const Sale = () => {
   if (error) {
     return <ErroPage error={error} />;
   }
+  
 
   const productListContent = sales.map((sale, index) => (
     <tr key={sale.id}>

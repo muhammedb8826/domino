@@ -432,6 +432,7 @@ const UserRegistration = ({
                       <option value="operator">Operator</option>
                       <option value="finance">Finance</option>
                       <option value="owner">Owner</option>
+                      <option value="store-representative">Store representative</option>
                     </select>
                   </div>
                   {userData.roles === "operator" && (
@@ -478,7 +479,7 @@ const UserRegistration = ({
                   Close
                 </button>
                 <button
-                  className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="bg-primary text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
                 >
                   {isLoading ? "Saving..." : "Save"}

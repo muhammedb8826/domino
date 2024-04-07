@@ -18,13 +18,13 @@ import { BsTicketDetailed } from "react-icons/bs";
 import { CiMenuKebab } from "react-icons/ci";
 
 export const Notifications = () => {
+  const { sales, isLoading } = useSelector((state: RootState) => state.sale);
   const { user, error } = useSelector(
     (state: RootState) => state.auth
   );
   const { orders, orderStatus } = useSelector(
     (state: RootState) => state.order
   );
-  const { sales, isLoading } = useSelector((state: RootState) => state.sale);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getSales());
@@ -72,21 +72,21 @@ export const Notifications = () => {
   const [data, setData] = useState({});
 
   const handleApproveSale = (id: string) => {
-const findSale = sales.find((sale) => sale.id === id);
-console.log(findSale);
-
-
+    const findSale = sales.find((sale) => sale.id === id);
+    const updatedFindSale = { ...findSale, status: "approved" };
+    dispatch(updateSale(updatedFindSale)).then(() => {
+      const message = "Sale approved successfully";
+      toast.success(message);
+    });
   };
 
   const handleRejectSale = (id: string) => {
-    const updatedSale = sales.map((sale) =>
-      sale.id === id ? { ...sale, status: "rejected" } : sale
-    );
-    console.log(updatedSale);
-    
-    dispatch(updateSale(updatedSale));
-    const message = "Sale rejected successfully";
-    toast.success(message);
+    const findSale = sales.find((sale) => sale.id === id);
+    const updatedFindSale = { ...findSale, status: "rejected" };
+    dispatch(updateSale(updatedFindSale)).then(() => {
+      const message = "Sale rejected successfully";
+      toast.success(message);
+    });
   };
 
   const filteredSalesStatus = sales?.filter(
@@ -94,8 +94,6 @@ console.log(findSale);
   );
 
   const [adminNotification, setAdminNotification] = useState(0);
-  const [filteredSales, setFilteredSalesStatus] = useState(filteredSalesStatus
-  );
 
   useEffect(() => {
     const editedOrder = orderStatus.filter(
@@ -157,7 +155,7 @@ console.log(findSale);
     toast.success(message);
   };
 
-  const productListContent = filteredSales.length > 0 && filteredSales?.map((sale, index) => (
+  const productListContent = filteredSalesStatus.length > 0 && filteredSalesStatus?.map((sale, index) => (
     <tr key={sale.id}>
       <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
         {sale.id}
@@ -174,8 +172,22 @@ console.log(findSale);
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {sale.status}
       </td>
-      <td className="px-6 py-4 relative">
-        <Link
+      <td className="px-4 py-5 flex">
+        <button
+          className="bg-success text-white active:bg-success font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none me-5 mb-1 ease-linear transition-all duration-150"
+          onClick={() => handleApproveSale(sale.id)}
+          type="button"
+        >
+          approve
+        </button>
+        <button
+          className="bg-danger text-white active:bg-danger font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          onClick={() => handleRejectSale(sale.id)}
+          type="button"
+        >
+          reject
+        </button>
+        {/* <Link
           to="#"
           onClick={(event) => {
             handleAction(index);
@@ -185,10 +197,10 @@ console.log(findSale);
           className="flex items-center gap-4"
         >
           <CiMenuKebab />
-        </Link>
+        </Link> */}
 
         {/* <!-- Dropdown Start --> */}
-        {showPopover === index && (
+        {/* {showPopover === index && (
           <div
             ref={dropdownRef}
             onFocus={() => setDropdownOpen(true)}
@@ -220,7 +232,7 @@ console.log(findSale);
               </li>
             </ul>
           </div>
-        )}
+        )} */}
         {/* <!-- Dropdown End --> */}
       </td>
     </tr>
@@ -232,8 +244,8 @@ console.log(findSale);
   return isLoading ? (
     <Loader />
   ) : (
-    <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0 min-h-screen">
-      <GoBack goback="/dashboard" />
+    <section className="bg-white dark:bg-gray-900 wrapper py-4  p-0 min-h-screen">
+      {/* <GoBack goback="/dashboard" /> */}
       <h2 className="m-4 relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800">
         Notifications
         <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-danger border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
@@ -246,105 +258,112 @@ console.log(findSale);
           No notifications
         </p>
       )}
-      <p className="text-black dark:text-white font-medium p-4 border-b">
+      <p className="text-black dark:text-white font-medium p-4">
         {" "}
         Sales notifications
       </p>
       {user?.email === "admin@domino.com" && (
         <>
           <div className="max-w-full overflow-x-auto mb-10">
-            <table className="w-full table-auto">
-              <thead>
-                <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                  <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    Reference
-                  </th>
-                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                    Order Date
-                  </th>
-                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                    Operator
-                  </th>
-                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                    Quantity
-                  </th>
-                  <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                    Status
-                  </th>
-                  <th className="py-4 px-4 font-medium text-black dark:text-white">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{productListContent}</tbody>
-            </table>
+            {filteredSalesStatus.length === 0 ? (
+              <p className="text-center text-2xl font-bold text-black dark:text-white">
+                No sales notifications
+              </p>
+            ) : (
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Reference
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Order Date
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Operator
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Quantity
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Status
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{productListContent}</tbody>
+              </table>
+            )}
           </div>
         </>
       )}
 
-      <p className="text-black dark:text-white font-medium p-4 border-y">
+      <p className="text-black dark:text-white font-medium p-4 border-t">
         {" "}
         Orders notifications
       </p>
 
       {user?.email === "admin@domino.com" && (
         <>
-          {orderStatus.map((status, index) => (
-            <div key={status.id} className="grid grid-cols-1 p-4">
-              <table
-                className="
+
+          <div className="grid grid-cols-1 p-4">
+            <table
+              className="
                col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-              >
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="p-4 w-4 border border-gray-300">
-                      No
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Order
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Customer Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Date
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Delivery date
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      payment status
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Order status
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+            >
+              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="p-4 w-4 border border-gray-300">
+                    No
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-2 border border-gray-300"
+                  >
+                    Order
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-2 border border-gray-300"
+                  >
+                    Customer Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-2 border border-gray-300"
+                  >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-2 border border-gray-300"
+                  >
+                    Delivery date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-2 border border-gray-300"
+                  >
+                    payment status
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-2 border border-gray-300"
+                  >
+                    Order status
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-2 border border-gray-300"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              {orderStatus.map((status, index) => (
+                <tbody key={status.id}>
                   {status.orderItems.map((item, itemIndex) => {
                     const filteredOrder = orders.find(
                       (order) =>
@@ -404,9 +423,9 @@ console.log(findSale);
                     );
                   })}
                 </tbody>
-              </table>
-            </div>
-          ))}
+              ))}
+            </table>
+          </div>
         </>
       )}
     </section>

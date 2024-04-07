@@ -282,7 +282,7 @@ const OrdersList = () => {
                     <li>
                       <NavLink
                         to={`/order/${order.id}`}
-                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
                       >
                         <FaRegEdit />
                         Edit

@@ -1226,43 +1226,43 @@ const OrderDetailsPage = () => {
                           >
                               {orderStat.orderItems[index].status ===
                                 "received" && (
-                                <span className="bg-blue-100 text-blue-800 text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                                <span className="bg-primary text-white text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
                               {orderStat.orderItems[index].status ===
                                 "edited" && (
-                                <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                <span className="bg-warning text-white text-xs font-medium px-2.5 py-0.5 rounded">
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
                               {orderStat.orderItems[index].status ===
                                 "rejected" && (
-                                <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                <span className="bg-danger text-white text-xs font-medium px-2.5 py-0.5 rounded dark:danger dark:text-white">
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
                               {orderStat.orderItems[index].status ===
                                 "approved" && (
-                                <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                <span className="bg-success text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-success dark:text-white">
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
                               {orderStat.orderItems[index].status ===
                                 "printed" && (
-                                <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                <span className="text-white bg-gradient-to-br from-danger to-warning hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 text-xs font-medium px-2.5 py-0.5 rounded">
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
                               {orderStat.orderItems[index].status ===
                                 "paid" && (
-                                <span className="text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-100 dark:bg-sky-400 dark:hover:bg-sky-500 dark:focus:ring-sky-600 text-xs font-medium px-2.5 py-0.5 rounded">
+                                <span className="text-white bg-blend-hue hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-100 dark:bg-sky-400 dark:hover:bg-sky-500 dark:focus:ring-sky-600 text-xs font-medium px-2.5 py-0.5 rounded">
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
                               {orderStat.orderItems[index].status ===
                                 "delivered" && (
-                                <span className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                <span className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
                                   {orderStat.orderItems[index].status}
                                 </span>
                               )}
@@ -1313,7 +1313,7 @@ const OrderDetailsPage = () => {
                                   <button
                                     type="button"
                                     onClick={() => handleModalOpen(index)}
-                                    className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
+                                    className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
                                   >
                                     <FaRegEdit />
                                     Edit
@@ -1331,7 +1331,7 @@ const OrderDetailsPage = () => {
                                   <button
                                     onClick={() => handleCancel(index)}
                                     type="button"
-                                    className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                                    className="text-left text-danger flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
                                   >
                                     <MdDelete /> Delete
                                   </button>
@@ -1615,19 +1615,19 @@ const OrderDetailsPage = () => {
             <strong>Summary</strong>
             <div className="w-full py-4">
               <div className="flex items-center">
-                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-graydark dark:text-white">
                   Grand total :
                 </p>
                 <p className="flex-1">{grandTotal}</p>
               </div>
               <div className="flex items-center">
-                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-graydark dark:text-white">
                   Total payment :
                 </p>
                 <p className="flex-1">{totaTransaction}</p>
               </div>
               <div className="flex items-center">
-                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-graydark dark:text-white">
                   Remaining amount :
                 </p>
                 <p className="flex-1">{remainingAmount}</p>
@@ -1686,14 +1686,14 @@ const OrderDetailsPage = () => {
                       key={index}
                       className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
-                      <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      <td className="px-4 w-4 font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
                         {index + 1}
                       </td>
-                      <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      <td className="px-4 font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
                         {data.date}
                       </td>
 
-                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
                         <label
                           htmlFor={`${data.paymentMethod}-${index}`}
                           className="sr-only peer"
@@ -1705,7 +1705,7 @@ const OrderDetailsPage = () => {
                           name="paymentMethod"
                           value={data.paymentMethod}
                           id={`${data.paymentMethod}-${index}`}
-                          className="text-gray-900 text-sm border-0 focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="text-graydark text-sm border-0 focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           <option value="cash">Cash</option>
                           <option value="bank-transfer">Bank Transfer</option>
@@ -1714,7 +1714,7 @@ const OrderDetailsPage = () => {
                         </select>
                       </td>
 
-                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
                         <label
                           htmlFor={`${data.description}-${index}`}
                           className="sr-only peer"
@@ -1730,7 +1730,7 @@ const OrderDetailsPage = () => {
                           onChange={(e) => handleFormChange(index, e)}
                         />
                       </td>
-                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
                         <label
                           htmlFor={`${data.paymentAmount}-${index}`}
                           className="sr-only peer"
@@ -1748,7 +1748,7 @@ const OrderDetailsPage = () => {
                           min={0}
                         />
                       </td>
-                      <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                      <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
                         <label
                           htmlFor={`${data.reference}-${index}`}
                           className="sr-only peer"
@@ -1798,7 +1798,7 @@ const OrderDetailsPage = () => {
                                       handleDeleteTransaction(index)
                                     }
                                     type="button"
-                                    className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                                    className="text-left text-danger flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
                                   >
                                     <MdDelete /> Delete
                                   </button>

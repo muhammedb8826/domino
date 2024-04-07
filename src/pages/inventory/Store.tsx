@@ -31,6 +31,7 @@ export const Store = () => {
     (state: RootState) => state.product
   );
   const { sales } = useSelector((state: RootState) => state.sale);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -85,6 +86,10 @@ export const Store = () => {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
+
+  const filteredSalesStatus = sales?.filter(
+    (sale) => sale.status === "stocked-out"
+  );
   const purchaseQuantity = purchases?.map((purchase) =>
     purchase.products?.reduce(
       (acc, product) => acc + Number(product.quantity),
@@ -92,7 +97,7 @@ export const Store = () => {
     )
   );
 
-  const totalSales = sales?.reduce(
+  const totalSales = filteredSalesStatus?.reduce(
     (acc, sale) => acc + Number(sale.totalQuantity),
     0
   );  
@@ -104,7 +109,7 @@ export const Store = () => {
 
   const handleTotalSales = (id: string) => {
     // Filter sales that contain the product with the given id
-    const salesWithProduct = sales?.filter(sale => sale.products?.some(product => product.productId === id));
+    const salesWithProduct = filteredSalesStatus?.filter(sale => sale.products?.some(product => product.productId === id));
   
     // Calculate total quantity of the product across all filtered sales
     const totalQuantity = salesWithProduct?.reduce((acc, sale) => {
@@ -162,6 +167,7 @@ export const Store = () => {
       }
     });
   };
+
 
   if (error) {
     return <ErroPage error={error} />;
