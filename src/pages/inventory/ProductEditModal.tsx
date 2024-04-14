@@ -27,6 +27,7 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
     description: data.description,
     categoryId: data.categoryId,
     unitId: data.unitId,
+    minStockLevel: data.minStockLevel,
     id: data.id,
   });
 
@@ -153,6 +154,22 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
                         </option>
                       ))}
                     </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="minStockLevel"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Min Stock Level
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.minStockLevel}
+                      type="number"
+                      id="minStockLevel"
+                      name="minStockLevel"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
                   </div>
                 </div>
               </div>

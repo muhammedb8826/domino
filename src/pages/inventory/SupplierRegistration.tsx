@@ -24,6 +24,11 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(formData.firstName === "" || formData.lastName === "" || formData.phone === "") {
+      toast.error('The field should not be empty')
+      return
+    }
+
     dispatch(createSupplier(formData)).then((res) => {
       if (res.payload) {
         const message = "Supplier registered successfully";
@@ -44,7 +49,7 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
-        <form onSubmit={handleSubmit} className="w-full">
+        {/* <form onSubmit={handleSubmit} className="w-full"> */}
           <div className="relative w-auto my-6 mx-auto max-w-3xl ">
             {/*content*/}
             <div className="border-0 rounded-lg relative flex flex-col w-full bg-white shadow-default dark:border-strokedark dark:bg-boxdark outline-none focus:outline-none">
@@ -202,13 +207,14 @@ export const SupplierRegistration = ({ handleModalOpen }) => {
                 <button
                   className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                   type="submit"
+                  onClick={handleSubmit}
                 >
                   Save
                 </button>
               </div>
             </div>
           </div>
-        </form>
+        {/* </form> */}
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>

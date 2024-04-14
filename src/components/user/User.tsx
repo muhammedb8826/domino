@@ -89,10 +89,6 @@ const User = () => {
     });
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   if (error) {
     return <ErroPage error={error} />;
   }

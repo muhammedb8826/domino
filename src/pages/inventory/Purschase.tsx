@@ -109,10 +109,13 @@ export const Purschase = () => {
         {/* {purchase.vendorComapany} */}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {/* {purchase.unit.name} */}
+        {purchase.purchaseReresentative}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {purchase.totalAmount}
+      </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {purchase.status}
       </td>
       <td className="px-6 py-4 relative">
         <Link
@@ -220,23 +223,26 @@ export const Purschase = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Reference
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Order Date
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Vendor
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Company
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                   Purchase representative
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Total
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Status
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action

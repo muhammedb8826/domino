@@ -15,6 +15,7 @@ import { FaProductHunt } from "react-icons/fa6";
 import { ProductRegistration } from "./ProductRegistration";
 import { CiEdit } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
+import { getUnits } from "@/redux/features/unit/unitSlice";
 
 interface SupplierType {
   id: string;
@@ -32,6 +33,8 @@ interface ProductType {
 }
 
 export const PurchaseRegistration = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { units } = useSelector((state) => state.unit);
   const { products, searchTerm } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,6 +56,7 @@ export const PurchaseRegistration = () => {
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getUnits());
   }, [dispatch]);
 
   const filteredProducts = products.filter(
@@ -68,8 +72,15 @@ export const PurchaseRegistration = () => {
     },
   ]);
 
+  const [UoM, setUoM] = useState([
+    {
+      unitId: "",
+      unitName: "",
+    },
+  ]);
+
   const handleSearchProduct = (e, index) => {
-  
+
     const updatedProductInfo = [...productInfo];
     updatedProductInfo[index] = { id: productInfo[index].id, name: e.target.value };
     setProductInfo(updatedProductInfo);
@@ -80,6 +91,13 @@ export const PurchaseRegistration = () => {
       return newState;
     });
     dispatch(searchProducts(e.target.value));
+    // const unit = units.find((unit) => unit.id === product?.unitId);
+    // const updatedUoM = [...UoM];
+    // updatedUoM[index] = {
+    //   unitId: unit.id,
+    //   unitName: unit.name,
+    // };
+    // setUoM(updatedUoM);
   };
 
   const handleSelectProduct = (product, index) => {
@@ -93,6 +111,13 @@ export const PurchaseRegistration = () => {
       id: product.id,
       name: product.name,
     };
+    const unit = units.find((unit) => unit.id === product.unitId);
+    const updatedUoM = [...UoM];
+    updatedUoM[idx] = {
+      unitId: unit.id,
+      unitName: unit.name,
+    };
+    setUoM(updatedUoM);
     setProductInfo(updatedProductInfo);
   };
 
@@ -140,7 +165,7 @@ export const PurchaseRegistration = () => {
     list[index][name] = value;
     if (name === "quantity" || name === "unitPrice") {
       list[index].subTotal =
-      list[index].quantity * list[index].unitPrice || 0;
+        list[index].quantity * list[index].unitPrice || 0;
     }
     setFormData(list);
   };
@@ -166,16 +191,16 @@ export const PurchaseRegistration = () => {
   };
 
   const [paymentInfo, setPaymentInfo] = useState({
-    paymentMethod: "",
+    paymentMethod: "cash",
     amount: "",
     reference: "",
   });
 
   const [orderDate, setOrderDate] = useState("");
   const [note, setNote] = useState("");
-const handleNote = (e)=>{
-  setNote(e.target.value)
-}
+  const handleNote = (e) => {
+    setNote(e.target.value)
+  }
   const handleOrderDate = (e) => {
     setOrderDate(e.target.value);
   };
@@ -194,14 +219,14 @@ const handleNote = (e)=>{
     setTotalQuantity(quantity);
     setTotalAmount(total);
     setTax(total * 0.15);
-    setGrandTotal(total+tax)
+    setGrandTotal(total + tax)
   }, [formData, tax]);
-const handlePaymentMethod = (e) => {
-  const { name, value } = e.target;
-  setPaymentInfo((prev) => ({
-    ...prev,
-    [name]: value,
-  }));
+  const handlePaymentMethod = (e) => {
+    const { name, value } = e.target;
+    setPaymentInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleDeleteRow = (index) => {
@@ -214,26 +239,17 @@ const handlePaymentMethod = (e) => {
   };
 
 
-  const handleSubmit = ()=>{
-
-   if(supplierInfo.firstName === ""){
-    alert("Please select a supplier");
-   }
-    else if(orderDate === ""){
-      alert("Please select a date");
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(!supplierInfo.id){
+      toast.error("Please select a supplier");
+      return;
     }
-    else if(paymentInfo.paymentMethod === ""){
-      alert("Please select a payment method");
-    }
-    else if(paymentInfo.reference === ""){
-      alert("Please enter a reference");
-    }
-    else if(formData.length === 0){
-      alert("Please add a product");
-    }
-    else{
     const data = {
       vendorId: supplierInfo.id,
+      purchaseReresentative: user.first_name,
+      purchaseReresentativeId: user.id,
+      status: "purchased",
       vendorName: supplierInfo.firstName,
       orderDate: orderDate,
       paymentMethod: paymentInfo.paymentMethod,
@@ -242,22 +258,21 @@ const handlePaymentMethod = (e) => {
       totalAmount: grandTotal,
       totalQuantity: totalQuantity,
       note: note,
-      products: formData.map((product,index) => ({
+      products: formData.map((product, index) => ({
         productId: productInfo[index].id,
-      productName: productInfo[index].name,
-      quantity: product.quantity,
-      description: product.description,
-      unitPrice: product.unitPrice,
-      subTotal: product.subTotal,
+        productName: productInfo[index].name,
+        quantity: product.quantity,
+        description: product.description,
+        unitPrice: product.unitPrice,
+        subTotal: product.subTotal,
+        UoM: UoM[index].unitName,
       })),
     };
     dispatch(createPurchase(data)).then(() => {
       navigate("/dashboard/inventory/purchases");
       toast.success("Purchase created successfully");
     });
-  }
-  }
-
+  };
   return (
     <>
       <Breadcrumb pageName="Purchase Order" />
@@ -265,6 +280,7 @@ const handlePaymentMethod = (e) => {
       <div className="grid grid-cols-1 gap-9">
         <div className="flex flex-col gap-9">
           {/* <!-- Contact Form --> */}
+            <form onSubmit={handleSubmit}>
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
@@ -272,333 +288,356 @@ const handlePaymentMethod = (e) => {
               </h3>
             </div>
 
-            {/* <form action="#"> */}
-            <div className="p-6.5">
-              <div className="mb-4.5 grid sm:grid-cols-2 gap-6">
-                <div className="w-full relative">
-                  <SupplierSearchInput
-                    handleSupplierInfo={handleSupplierInfo}
-                    value={supplierInfo.firstName}
-                  />
-                </div>
-                <div className="">
-                  <label className="mb-3 block text-black dark:text-white">
-                    Order Date
-                  </label>
-                  <div className="relative">
+              <div className="p-6.5">
+                <div className="mb-4.5 grid sm:grid-cols-2 gap-6">
+                  <div className="w-full relative">
+                    <SupplierSearchInput
+                      handleSupplierInfo={handleSupplierInfo}
+                      value={supplierInfo.firstName}
+                    />
+                  </div>
+                  <div className="w-full">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Purchase representative
+                    </label>
                     <input
-                      type="date"
-                      name="orderDate"
-                      onChange={handleOrderDate}
-                      value={orderDate}
-                      title="Select a date"
-                      placeholder="Select a date"
-                      className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      name="reference"
+                      type="text"
+                      readOnly
+                      value={user.first_name}
+                      placeholder="Enter your first name"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
+                  </div>
+                  <div className="">
+                    <label className="mb-3 block text-black dark:text-white">
+                      Order Date
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="date"
+                        name="orderDate"
+                        onChange={handleOrderDate}
+                        value={orderDate}
+                        required
+                        title="Select a date"
+                        placeholder="Select a date"
+                        className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                  <div className="">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Payment method
+                    </label>
+                    <div className="relative z-20 bg-transparent dark:bg-form-input">
+                      <select
+                        name="paymentMethod"
+                        onChange={handlePaymentMethod}
+                        defaultValue="cash"
+                        title="Select payment method" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+                        <option value="cash">Cash</option>
+                        <option value="mobile-banking">Mobile banking</option>
+                        <option value="check">Check</option>
+                        <option value="bank">Bank</option>
+                      </select>
+                      <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                        <svg
+                          className="fill-current"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.8">
+                            <path
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                              fill=""
+                            ></path>
+                          </g>
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="w-full">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Reference
+                    </label>
+                    <input
+                      onChange={handlePaymentMethod}
+                      name="reference"
+                      type="text"
+                      value={paymentInfo.reference}
+                      placeholder="Enter your first name"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                 </div>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">
-                    Payment method
-                  </label>
-                  <div className="relative z-20 bg-transparent dark:bg-form-input">
-                    <select
-                    name="paymentMethod"
-                    onChange={handlePaymentMethod}
-                    title="Select payment method" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
-                      <option value="cash">Cash</option>
-                      <option value="mobile-banking">Mobile banking</option>
-                      <option value="check">Check</option>
-                      <option value="bank">Bank</option>
-                    </select>
-                    <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
-                      <svg
-                        className="fill-current"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g opacity="0.8">
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                            fill=""
-                          ></path>
-                        </g>
-                      </svg>
-                    </span>
+                <div className="max-w-full">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          Product name
+                        </th>
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          Description
+                        </th>
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          Quantity
+                        </th>
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          Unit price
+                        </th>
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          Subtotal
+                        </th>
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          UoM
+                        </th>
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {formData &&
+                        formData.map((data, index) => (
+                          <tr key={index} className="">
+                            <td className="min-w-[220px] relative border border-[#eee] dark:border-strokedark">
+                              <div className="relative">
+                                <label
+                                  htmlFor={`checkbox-item-${index}`}
+                                  className="sr-only mb-3 block text-black dark:text-white"
+                                >
+                                  Product
+                                </label>
+                                <div className="relative">
+                                  <input
+                                    required
+                                    onChange={(e) =>
+                                      handleSearchProduct(e, index)
+                                    }
+                                    value={productInfo[index]?.name || ""}
+                                    id={`checkbox-item-${index}`}
+                                    type="text"
+                                    name="name"
+                                    className="w-full rounded-lg bg-transparent px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary dark:text-white"
+                                    placeholder=""
+                                  />
+                                  <span className="absolute top-1/2 right-4 -translate-y-1/2">
+                                    <IoMdClose
+                                      onClick={() => handleClose(index)}
+                                      className="w-5 h-5"
+                                    />
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* <!-- Dropdown menu --> */}
+                              <div
+                                id="dropdownSearch"
+                                className={`z-10 ${isDropdownOpen[index] ? "" : "hidden"
+                                  } bg-white rounded-lg rounded-t-none border-stroke bg-transparent shadow dark:bg-gray-700 w-full absolute top-12`}
+                              >
+                                <ul
+                                  className="max-h-48 px-3 pb-3 overflow-y-auto text-sm text-black dark:text-white"
+                                  aria-labelledby="dropdownSearchButton"
+                                >
+                                  {filteredProducts.length > 0 ? (
+                                    filteredProducts.map((product) => (
+                                      <li key={product.id}>
+                                        <div className="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                          <input
+                                            onChange={() =>
+                                              handleSelectProduct(product, index)
+                                            }
+                                            value={productInfo[index]?.name || ""}
+                                            id={`checkbox-item-${product.id}`}
+                                            type="radio"
+                                            name="name"
+                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                          />
+                                          <label
+                                            htmlFor={`checkbox-item-${product.id}`}
+                                            className="w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                                          >
+                                            {product.name}
+                                          </label>
+                                        </div>
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="py-2 ms-2 text-sm font-medium">
+                                      No product found
+                                    </li>
+                                  )}
+                                </ul>
+                                <button
+                                  onClick={handleModalOpen}
+                                  type="button"
+                                  className="w-full flex items-center p-3 text-sm font-medium text-primary border-[1.5px] border-stroke bg-transparent border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
+                                >
+                                  <FaProductHunt className="w-5 h-5 me-2" />
+                                  Add new product
+                                </button>
+                              </div>
+                              {modalOpen && (
+                                <ProductRegistration
+                                  handleModalOpen={handleModalOpen}
+                                />
+                              )}
+                            </td>
+                            <td className="border border-[#eee] dark:border-strokedark">
+                              <input
+                                title="Description of the product"
+                                type="text"
+                                name="description"
+                                value={data.description}
+                                onChange={(e) => handleChange(e, index)}
+                                className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                              />
+                            </td>
+                            <td className="border border-[#eee] dark:border-strokedark">
+                              <input
+                                title="Quantity of the product"
+                                type="number"
+                                name="quantity"
+                                value={data.quantity}
+                                required
+                                onChange={(e) => handleChange(e, index)}
+                                className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                              />
+                            </td>
+                            <td className="border border-[#eee] dark:border-strokedark">
+                              <input
+                                title="Unit price of the product"
+                                type="number"
+                                name="unitPrice"
+                                value={data.unitPrice}
+                                required
+                                onChange={(e) => handleChange(e, index)}
+                                className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                              />
+                            </td>
+                            <td className="border border-[#eee] dark:border-strokedark">
+                              <input
+                                title="Total price of the product"
+                                type="number"
+                                name="totalPrice"
+                                value={data.subTotal}
+                                onChange={(e) => handleChange(e, index)}
+                                className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                              />
+                            </td>
+                            <td className="border border-[#eee] dark:border-strokedark">
+                              {UoM.length > 0 &&
+                               UoM[index]?.unitName
+                               }
+                            </td>
+                            <td className="border border-[#eee] px-4 dark:border-strokedark">
+                              <div className="flex items-center space-x-3.5">
+                                <button
+                                  onClick={() => handleDeleteRow(index)}
+                                  type="button"
+                                  className="hover:text-primary"
+                                  title="delete"
+                                >
+                                  <svg
+                                    className="fill-current"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 18 18"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.1594L4.07852 15.4688C4.13477 16.6219 5.09102 17.5219 6.24414 17.5219H11.7004C12.8535 17.5219 13.8098 16.6219 13.866 15.4688L14.3441 6.13127C14.8785 5.90627 15.2441 5.3719 15.2441 4.78127V3.93752C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.0973C10.2379 1.74377 10.3504 1.85627 10.3504 1.9969V2.47502H7.70664V1.9969H7.67852ZM4.02227 3.96565C4.02227 3.85315 4.10664 3.74065 4.24727 3.74065H13.7535C13.866 3.74065 13.9785 3.82502 13.9785 3.96565V4.8094C13.9785 4.9219 13.8941 5.0344 13.7535 5.0344H4.24727C4.13477 5.0344 4.02227 4.95002 4.02227 4.8094V3.96565ZM11.7285 16.2563H6.27227C5.79414 16.2563 5.40039 15.8906 5.37227 15.3844L4.95039 6.2719H13.0785L12.6566 15.3844C12.6004 15.8625 12.2066 16.2563 11.7285 16.2563Z"
+                                      fill=""
+                                    />
+                                    <path
+                                      d="M9.00039 9.11255C8.66289 9.11255 8.35352 9.3938 8.35352 9.75942V13.3313C8.35352 13.6688 8.63477 13.9782 9.00039 13.9782C9.33789 13.9782 9.64727 13.6969 9.64727 13.3313V9.75942C9.64727 9.3938 9.33789 9.11255 9.00039 9.11255Z"
+                                      fill=""
+                                    />
+                                    <path
+                                      d="M11.2502 9.67504C10.8846 9.64692 10.6033 9.90004 10.5752 10.2657L10.4064 12.7407C10.3783 13.0782 10.6314 13.3875 10.9971 13.4157C11.0252 13.4157 11.0252 13.4157 11.0533 13.4157C11.3908 13.4157 11.6721 13.1625 11.6721 12.825L11.8408 10.35C11.8408 9.98442 11.5877 9.70317 11.2502 9.67504Z"
+                                      fill=""
+                                    />
+                                    <path
+                                      d="M6.72245 9.67504C6.38495 9.70317 6.1037 10.0125 6.13182 10.35L6.3287 12.825C6.35683 13.1625 6.63808 13.4157 6.94745 13.4157C6.97558 13.4157 6.97558 13.4157 7.0037 13.4157C7.3412 13.3875 7.62245 13.0782 7.59433 12.7407L7.39745 10.2657C7.39745 9.90004 7.08808 9.64692 6.72245 9.67504Z"
+                                      fill=""
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  // onClick={()=>handleEditModalOpen(category.id)}
+                                  type="submit"
+                                  title="edit"
+                                  className="hover:text-primary text-xl"
+                                >
+                                  <CiEdit />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="my-4">
+                  <button
+                    type="button"
+                    onClick={handleAddProduct}
+                    className="flex items-center justify-center rounded border-[1.5px] border-stroke bg-transparent px-2 py-1 font-medium text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-primary dark:hover:text-primary transition-colors"
+                  >
+                    Add row
+                  </button>
+                </div>
+
+                <div className="flex justify-between border-t pt-4">
+                  <strong>Summary</strong>
+                  <div className="mb-4.5">
+                    <p className="mb-2.5 block text-black dark:text-white">
+                      Total Quantity: {totalQuantity}
+                    </p>
+                    <p className="mb-2.5 block text-black dark:text-white">
+                      Total Amount: {totalAmount}
+                    </p>
+                    <p className="mb-2.5 block text-black dark:text-white">
+                      Tax: {tax}
+                    </p>
+                    <p className="mb-2.5 block text-black dark:text-white">
+                      Grand Total: {grandTotal}
+                    </p>
+
                   </div>
                 </div>
 
-                <div className="w-full">
+                <div className="mb-6">
                   <label className="mb-2.5 block text-black dark:text-white">
-                   Reference
+                    Note
                   </label>
-                  <input
-                  onChange={handlePaymentMethod}
-                  name="reference"
-                    type="text"
-                    value={paymentInfo.reference}
-                    placeholder="Enter your first name"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                  />
+                  <textarea
+                    rows={4}
+                    name="note"
+                    onChange={handleNote}
+                    placeholder="Type your message"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  ></textarea>
                 </div>
-              </div>
-              <div className="max-w-full">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Product name
-                      </th>
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Description
-                      </th>
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Quantity
-                      </th>
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Unit price
-                      </th>
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Subtotal
-                      </th>
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {formData &&
-                      formData.map((data, index) => (
-                        <tr key={index} className="">
-                          <td className="min-w-[220px] relative border border-[#eee] dark:border-strokedark">
-                            <div className="relative">
-                              <label
-                                htmlFor={`checkbox-item-${index}`}
-                                className="sr-only mb-3 block text-black dark:text-white"
-                              >
-                                Product
-                              </label>
-                              <div className="relative">
-                                <input
-                                  onChange={(e) =>
-                                    handleSearchProduct(e, index)
-                                  }
-                                  value={productInfo[index]?.name || ""}
-                                  id={`checkbox-item-${index}`}
-                                  type="text"
-                                 name="name"
-                                  className="w-full rounded-lg bg-transparent px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary dark:text-white"
-                                  placeholder=""
-                                />
-                                <span className="absolute top-1/2 right-4 -translate-y-1/2">
-                                  <IoMdClose
-                                    onClick={() => handleClose(index)}
-                                    className="w-5 h-5"
-                                  />
-                                </span>
-                              </div>
-                            </div>
 
-                            {/* <!-- Dropdown menu --> */}
-                            <div
-                              id="dropdownSearch"
-                              className={`z-10 ${
-                                isDropdownOpen[index] ? "" : "hidden"
-                              } bg-white rounded-lg rounded-t-none border-stroke bg-transparent shadow dark:bg-gray-700 w-full absolute top-12`}
-                            >
-                              <ul
-                                className="max-h-48 px-3 pb-3 overflow-y-auto text-sm text-black dark:text-white"
-                                aria-labelledby="dropdownSearchButton"
-                              >
-                                {filteredProducts.length > 0 ? (
-                                  filteredProducts.map((product) => (
-                                    <li key={product.id}>
-                                      <div className="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                        <input
-                                          onChange={() =>
-                                            handleSelectProduct(product, index)
-                                          }
-                                          value={productInfo[index]?.name || ""}
-                                          id={`checkbox-item-${product.id}`}
-                                          type="radio"
-                                          name="name"
-                                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                        />
-                                        <label
-                                          htmlFor={`checkbox-item-${product.id}`}
-                                          className="w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                                        >
-                                          {product.name}
-                                        </label>
-                                      </div>
-                                    </li>
-                                  ))
-                                ) : (
-                                  <li className="py-2 ms-2 text-sm font-medium">
-                                    No product found
-                                  </li>
-                                )}
-                              </ul>
-                              <button
-                                onClick={handleModalOpen}
-                                type="button"
-                                className="w-full flex items-center p-3 text-sm font-medium text-primary border-[1.5px] border-stroke bg-transparent border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
-                              >
-                                <FaProductHunt className="w-5 h-5 me-2" />
-                                Add new product
-                              </button>
-                            </div>
-                            {modalOpen && (
-                              <ProductRegistration
-                                handleModalOpen={handleModalOpen}
-                              />
-                            )}
-                          </td>
-                          <td className="border border-[#eee] dark:border-strokedark">
-                            <input
-                              title="Description of the product"
-                              type="text"
-                              name="description"
-                              value={data.description}
-                              onChange={(e) => handleChange(e, index)}
-                              className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            />
-                          </td>
-                          <td className="border border-[#eee] dark:border-strokedark">
-                            <input
-                              title="Quantity of the product"
-                              type="number"
-                              name="quantity"
-                              value={data.quantity}
-                              onChange={(e) => handleChange(e, index)}
-                              className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            />
-                          </td>
-                          <td className="border border-[#eee] dark:border-strokedark">
-                            <input
-                              title="Unit price of the product"
-                              type="number"
-                              name="unitPrice"
-                              value={data.unitPrice}
-                              onChange={(e) => handleChange(e, index)}
-                              className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            />
-                          </td>
-                          <td className="border border-[#eee] dark:border-strokedark">
-                            <input
-                              title="Total price of the product"
-                              type="number"
-                              name="totalPrice"
-                              value={data.subTotal}
-                              onChange={(e) => handleChange(e, index)}
-                              className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            />
-                          </td>
-                          <td className="border border-[#eee] px-4 dark:border-strokedark">
-                            <div className="flex items-center space-x-3.5">
-                              <button
-                                onClick={()=>handleDeleteRow(index)}
-                                type="button"
-                                className="hover:text-primary"
-                                title="delete"
-                              >
-                                <svg
-                                  className="fill-current"
-                                  width="18"
-                                  height="18"
-                                  viewBox="0 0 18 18"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.1594L4.07852 15.4688C4.13477 16.6219 5.09102 17.5219 6.24414 17.5219H11.7004C12.8535 17.5219 13.8098 16.6219 13.866 15.4688L14.3441 6.13127C14.8785 5.90627 15.2441 5.3719 15.2441 4.78127V3.93752C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.0973C10.2379 1.74377 10.3504 1.85627 10.3504 1.9969V2.47502H7.70664V1.9969H7.67852ZM4.02227 3.96565C4.02227 3.85315 4.10664 3.74065 4.24727 3.74065H13.7535C13.866 3.74065 13.9785 3.82502 13.9785 3.96565V4.8094C13.9785 4.9219 13.8941 5.0344 13.7535 5.0344H4.24727C4.13477 5.0344 4.02227 4.95002 4.02227 4.8094V3.96565ZM11.7285 16.2563H6.27227C5.79414 16.2563 5.40039 15.8906 5.37227 15.3844L4.95039 6.2719H13.0785L12.6566 15.3844C12.6004 15.8625 12.2066 16.2563 11.7285 16.2563Z"
-                                    fill=""
-                                  />
-                                  <path
-                                    d="M9.00039 9.11255C8.66289 9.11255 8.35352 9.3938 8.35352 9.75942V13.3313C8.35352 13.6688 8.63477 13.9782 9.00039 13.9782C9.33789 13.9782 9.64727 13.6969 9.64727 13.3313V9.75942C9.64727 9.3938 9.33789 9.11255 9.00039 9.11255Z"
-                                    fill=""
-                                  />
-                                  <path
-                                    d="M11.2502 9.67504C10.8846 9.64692 10.6033 9.90004 10.5752 10.2657L10.4064 12.7407C10.3783 13.0782 10.6314 13.3875 10.9971 13.4157C11.0252 13.4157 11.0252 13.4157 11.0533 13.4157C11.3908 13.4157 11.6721 13.1625 11.6721 12.825L11.8408 10.35C11.8408 9.98442 11.5877 9.70317 11.2502 9.67504Z"
-                                    fill=""
-                                  />
-                                  <path
-                                    d="M6.72245 9.67504C6.38495 9.70317 6.1037 10.0125 6.13182 10.35L6.3287 12.825C6.35683 13.1625 6.63808 13.4157 6.94745 13.4157C6.97558 13.4157 6.97558 13.4157 7.0037 13.4157C7.3412 13.3875 7.62245 13.0782 7.59433 12.7407L7.39745 10.2657C7.39745 9.90004 7.08808 9.64692 6.72245 9.67504Z"
-                                    fill=""
-                                  />
-                                </svg>
-                              </button>
-                              <button
-                                // onClick={()=>handleEditModalOpen(category.id)}
-                                type="button"
-                                title="edit"
-                                className="hover:text-primary text-xl"
-                              >
-                                <CiEdit />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="my-4">
                 <button
-                  type="button"
-                  onClick={handleAddProduct}
-                  className="flex items-center justify-center rounded border-[1.5px] border-stroke bg-transparent px-2 py-1 font-medium text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-primary dark:hover:text-primary transition-colors"
-                >
-                  Add row
+                  type="submit"
+                  className="flex justify-center rounded bg-primary p-3 font-medium text-gray">
+                  Add Purchase
                 </button>
               </div>
-
-              <div className="flex justify-between border-t pt-4">
-               <strong>Summary</strong>
-               <div className="mb-4.5">
-               <p className="mb-2.5 block text-black dark:text-white">
-                  Total Quantity: {totalQuantity}
-                </p>
-                <p className="mb-2.5 block text-black dark:text-white">
-                  Total Amount: {totalAmount}
-                </p>
-                <p className="mb-2.5 block text-black dark:text-white">
-                  Tax: {tax}
-                </p>
-                <p className="mb-2.5 block text-black dark:text-white">
-                  Grand Total: {grandTotal}
-                </p>
-                 
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Note
-                </label>
-                <textarea
-                  rows={4}
-                  name="note"
-                  onChange={handleNote}
-                  placeholder="Type your message"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                ></textarea>
-              </div>
-
-              <button
-              type="submit"
-              onClick={handleSubmit}
-              className="flex justify-center rounded bg-primary p-3 font-medium text-gray">
-                Add Purchase
-              </button>
-            </div>
-            {/* </form> */}
           </div>
+            </form>
         </div>
 
         {/* <div className="flex flex-col gap-9">

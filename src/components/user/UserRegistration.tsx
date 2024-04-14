@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { CgClose } from "react-icons/cg";
 import { getMachines } from "@/redux/features/machine/machineSlice";
 import Loading from "../common/Loading";
+import Loader from "@/common/Loader";
 
 interface UserRegistrationProps {
   handleModalOpen: () => void;
@@ -95,9 +96,7 @@ const UserRegistration = ({
     });
   };
 
-  if (isLoading) return <Loading />;
-
-  return (
+  return isLoading? (<Loader/>):(
     <>
       <div className="justify-center items-center flex overflow-hidden fixed inset-0 z-9999 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl md:w-1/2 h-[95%]">

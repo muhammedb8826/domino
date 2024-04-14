@@ -145,6 +145,9 @@ const handleFindCategory = (id: string) => {
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {handleFindCategory(product.categoryId)}
       </td>
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+        {product.minStockLevel}
+      </td>
       <td className="px-6 py-4 relative">
         <Link
           to="#"
@@ -261,6 +264,9 @@ const handleFindCategory = (id: string) => {
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Category
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Min Stock Level
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action

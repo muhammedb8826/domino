@@ -76,29 +76,6 @@ export const OperatorStore = () => {
           setIsEditModalOpen(!isEditModalOpen);
         };
       
-      
-        const handleDeleteProduct = (id: string) => {
-          Swal.fire({
-            title: "Are you sure?",
-            text: "You want to delete this category!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              Swal.fire({
-                title: "Deleted!",
-                text: "The media has been deleted.",
-                icon: "success",
-              }).then(() => {
-                dispatch(deleteSale(id));
-              });
-            }
-          });
-        };
-
         const filteredSalesStatus = sales?.filter(
             (sale) => sale.status === "stocked-out"
           );
@@ -159,16 +136,6 @@ export const OperatorStore = () => {
                         Details
                       </button>
                     </li>
-                    <li>
-                      <NavLink
-                        onClick={() => handleDeleteProduct(sale.id)}
-                        to="#"
-                        className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-                      >
-                        <MdDelete />
-                        Delete
-                      </NavLink>
-                    </li>
                   </ul>
                 </div>
               )}
@@ -185,20 +152,6 @@ export const OperatorStore = () => {
             <Breadcrumb pageName="Operator store" />
       
             <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
-              
-            {user?.roles === "operator" && (
-              <div>
-                <Link
-                to={"/dashboard/inventory/sales/add"}
-                  className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
-                  type="button"
-                >
-                  <BiPurchaseTag />
-                  <span className="ml-2">Add</span>
-                </Link>
-              </div>
-            )}
-      
               <label htmlFor="table-search" className="sr-only">
                 Search
               </label>

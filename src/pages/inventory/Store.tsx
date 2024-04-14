@@ -187,54 +187,8 @@ export const Store = () => {
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {handleTotalPurchases(product.id) - handleTotalSales(product.id)}
       </td>
-      <td className="px-6 py-4 relative">
-        <Link
-          to="#"
-          onClick={(event) => {
-            handleAction(index);
-            event.stopPropagation();
-          }}
-          ref={triggerRef}
-          className="flex items-center gap-4"
-        >
-          <CiMenuKebab />
-        </Link>
-
-        {/* <!-- Dropdown Start --> */}
-        {showPopover === index && (
-          <div
-            ref={dropdownRef}
-            onFocus={() => setDropdownOpen(true)}
-            onBlur={() => setDropdownOpen(false)}
-            className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
-              dropdownOpen ? "block" : "hidden"
-            }`}
-          >
-            <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
-              <li>
-                <NavLink
-                  onClick={() => handleEditModalOpen(inventory.id)}
-                  to="#"
-                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-                >
-                  <FaRegEdit />
-                  Edit
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  onClick={() => handleDeleteProduct(inventory.id)}
-                  to="#"
-                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-                >
-                  <MdDelete />
-                  Delete
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        )}
-        {/* <!-- Dropdown End --> */}
+      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+       stock level
       </td>
     </tr>
   ));
@@ -296,10 +250,10 @@ export const Store = () => {
                   Sales
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Stock Level
+                  Available Qty
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Action
+                  Min Stock Level
                 </th>
               </tr>
             </thead>

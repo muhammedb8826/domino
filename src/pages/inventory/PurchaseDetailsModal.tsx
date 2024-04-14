@@ -1,11 +1,13 @@
 import { IoMdClose } from "react-icons/io"
 
-export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
+export const PurchaseDetailsModal = ({ handleEditModalOpen, data }) => {
+  console.log(data);
+
   return (
     <>
-    <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
-      {/* <form onSubmit={handleSubmit} className="w-full"> */}
-        <div className="relative w-auto my-6 mx-auto max-w-3xl ">
+      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
+        {/* <form onSubmit={handleSubmit} className="w-full"> */}
+        <div className="relative w-auto my-6 mx-auto max-w-3xl">
           {/*content*/}
           <div className="border-0 rounded-lg relative flex flex-col w-full bg-white shadow-default dark:border-strokedark dark:bg-boxdark outline-none focus:outline-none">
             {/*header*/}
@@ -26,14 +28,14 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
             </div>
             {/*body*/}
             <div className="relative p-6 flex-auto">
-            <div className="mb-4.5 grid sm:grid-cols-2 gap-6">
-            <div className="">
+              <div className="mb-4.5 grid sm:grid-cols-2 gap-6">
+                <div className="">
                   <label className="mb-3 block text-black dark:text-white">
                     Vendor
                   </label>
                   <div className="relative">
                     <input
-                    readOnly
+                      readOnly
                       type="text"
                       name="vendor"
                       // onChange={handleOrderDate}
@@ -50,7 +52,7 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                   </label>
                   <div className="relative">
                     <input
-                    readOnly
+                      readOnly
                       type="date"
                       name="orderDate"
                       // onChange={handleOrderDate}
@@ -66,9 +68,9 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                     Payment method
                   </label>
                   <input
-                  readOnly
-                  // onChange={handlePaymentMethod}
-                  name="reference"
+                    readOnly
+                    // onChange={handlePaymentMethod}
+                    name="reference"
                     type="text"
                     value={data.paymentMethod}
                     placeholder="Enter your first name"
@@ -78,13 +80,13 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
 
                 <div className="w-full">
                   <label className="mb-2.5 block text-black dark:text-white">
-                  Amount
+                    Amount
                   </label>
                   <input
-                  readOnly
-                  title="amount"
-                  // onChange={handlePaymentMethod}
-                  name="amount"
+                    readOnly
+                    title="amount"
+                    // onChange={handlePaymentMethod}
+                    name="amount"
                     type="text"
                     value={data.amount}
                     placeholder=""
@@ -94,12 +96,12 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
 
                 <div className="w-full">
                   <label className="mb-2.5 block text-black dark:text-white">
-                   Reference
+                    Reference
                   </label>
                   <input
-                  readOnly
-                  // onChange={handlePaymentMethod}
-                  name="reference"
+                    readOnly
+                    // onChange={handlePaymentMethod}
+                    name="reference"
                     type="text"
                     value={data.reference}
                     placeholder="Enter your first name"
@@ -107,12 +109,12 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                   />
                 </div>
               </div>
-            <div className="max-w-full">
+              <div className="max-w-full">
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gray-2 text-left dark:bg-meta-4">
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Product name
+                        Product
                       </th>
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Description
@@ -121,10 +123,13 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                         Quantity
                       </th>
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Unit price
+                        Price
                       </th>
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Subtotal
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        UoM
                       </th>
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Action
@@ -133,22 +138,22 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                   </thead>
                   <tbody>
                     {data &&
-                      data.products.map((data, index) => (
+                      data.products?.map((data, index) => (
                         <tr key={index} className="">
-                         <td>
-                         <input
+                          <td>
+                            <input
                               title="Product name"
                               readOnly
                               type="text"
                               name="name"
-                              value={data.productName[index]}
+                              value={data.productName}
                               // onChange={(e) => handleChange(e, index)}
                               className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             />
-                         </td>
+                          </td>
                           <td className="border border-[#eee] dark:border-strokedark">
                             <input
-                            readOnly
+                              readOnly
                               title="Description of the product"
                               type="text"
                               name="description"
@@ -159,7 +164,7 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                           </td>
                           <td className="border border-[#eee] dark:border-strokedark">
                             <input
-                            readOnly
+                              readOnly
                               title="Quantity of the product"
                               type="number"
                               name="quantity"
@@ -170,7 +175,7 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                           </td>
                           <td className="border border-[#eee] dark:border-strokedark">
                             <input
-                            readOnly
+                              readOnly
                               title="Unit price of the product"
                               type="number"
                               name="unitPrice"
@@ -181,7 +186,7 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                           </td>
                           <td className="border border-[#eee] dark:border-strokedark">
                             <input
-                            readOnly
+                              readOnly
                               title="Total price of the product"
                               type="number"
                               name="totalPrice"
@@ -190,7 +195,12 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
                               className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             />
                           </td>
-                         
+                          <td className="border border-[#eee] dark:border-strokedark">
+                            {data.UoM}
+                          </td>
+                          <td className="border border-[#eee] dark:border-strokedark">
+                            action
+                          </td>
                         </tr>
                       ))}
                   </tbody>
@@ -215,9 +225,9 @@ export const PurchaseDetailsModal = ({handleEditModalOpen, data}) => {
             </div>
           </div>
         </div>
-      {/* </form> */}
-    </div>
-    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-  </>
+        {/* </form> */}
+      </div>
+      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+    </>
   )
 }
