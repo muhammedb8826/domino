@@ -45,6 +45,7 @@ import { ReceptionistNotification } from "./components/header/ReceptionistNotifi
 import { FinanceNotification } from "./components/header/FinanceNotification";
 import { StoreNotifications } from "./components/header/StoreNotifications";
 import { OperatorStore } from "./pages/inventory/OperatorStore";
+import { SaleDetails } from "./pages/inventory/SaleDetails";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -99,6 +100,7 @@ const App = () => {
             <Route path="/dashboard/inventory/purchases/add" element={<PurchaseRegistration/>}/>
             <Route path="/dashboard/inventory/store" element={<Store/>}/>
             <Route path="/dashboard/inventory/sales" element={<Sale />} />
+            <Route path="/dashboard/inventory/sales/:id" element={<SaleDetails />} />
             <Route path="/dashboard/inventory/sales/add" element={<SaleRegistration />} />
             <Route path="*" element={<NotFound />} />
           </Route>

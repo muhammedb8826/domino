@@ -160,6 +160,8 @@ export const SaleRegistration = () => {
           productName: productInfo[index].name,
           quantity: product.quantity,
           description: product.description,
+          unitId: UoM[index].unitId,
+          unitName: UoM[index].unitName,
         })),
       };
 

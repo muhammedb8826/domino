@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     sales: [],
+    singleSale: {},
     isLoading: false,
     error: null,
 };
@@ -14,6 +15,20 @@ export const getSales = createAsyncThunk("sales/getSales", async () => {
         return response.data;
     } catch (error) {
         console.error("Error fetching sales:", error);
+        throw error;
+    }
+});
+
+export const getSaleById = createAsyncThunk("sales/getSaleById", async (saleId) => {
+    console.log(saleId);
+    
+    try {
+        const response = await axios.get(`${salesURL}/${saleId}`);
+        console.log(response.data);
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching sale by id:", error);
         throw error;
     }
 });
@@ -61,6 +76,17 @@ export const salesSlice = createSlice({
             state.isLoading = false;
         });
         builder.addCase(getSales.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
+        });
+        builder.addCase(getSaleById.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(getSaleById.fulfilled, (state, action) => {
+            state.singleSale = action.payload;
+            state.isLoading = false;
+        });
+        builder.addCase(getSaleById.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoading = false;
         });

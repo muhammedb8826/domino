@@ -188,7 +188,7 @@ export const Store = () => {
         {handleTotalPurchases(product.id) - handleTotalSales(product.id)}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-       stock level
+       {handleTotalPurchases(product.id) - handleTotalSales(product.id) <= Number(product.minStockLevel) ? <span className="text-danger">Low Stock</span> : <span className="text-success">In Stock</span>}
       </td>
     </tr>
   ));

@@ -5,6 +5,7 @@ import { productURL } from "../../api/API";
 
 interface ProductState {
   products: [];
+  singleProduct: null | object;
   isLoading: boolean;
   error: string | null;
   message: string | null;
@@ -14,6 +15,7 @@ interface ProductState {
 
 const initialState: ProductState = {
   products: [],
+  singleProduct: {},
   isLoading: false,
   error: null,
   errors: [],
@@ -33,6 +35,19 @@ export const getProducts = createAsyncThunk(
     }
   }
 );
+
+export const getProductById = createAsyncThunk(
+  "product/getProductById",
+  async (productId) => {
+    try {
+      const response = await axios.get(`${productURL}/${productId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching product by id:", error);
+      throw error;
+    }
+  }
+);  
 
 export const createProduct = createAsyncThunk(
   "product/createProduct",
@@ -90,6 +105,17 @@ export const productSlice = createSlice({
       state.products = action.payload;
     });
     builder.addCase(getProducts.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(getProductById.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getProductById.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.singleProduct = action.payload;
+    });
+    builder.addCase(getProductById.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
