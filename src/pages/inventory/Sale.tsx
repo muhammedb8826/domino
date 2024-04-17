@@ -147,20 +147,18 @@ export const Sale = () => {
               dropdownOpen ? "block" : "hidden"
             }`}
           >
-              {sale.status !== "stocked-out" && (
+              
             <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
               <li>
                 <Link
                 to={`/dashboard/inventory/sales/${sale.id}`}
-                  // onClick={() => handleEditModalOpen(sale.id)}
-                  // type="button"
                   className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                 >
                   <BsTicketDetailed />
                   Details
                 </Link>
               </li>
-              
+              {sale.status !== "stocked-out" && (
               <li>
                 <NavLink
                   onClick={() => handleDeleteProduct(sale.id)}
@@ -171,8 +169,8 @@ export const Sale = () => {
                   Delete
                 </NavLink>
               </li>
-            </ul>
               )}
+            </ul>
           </div>
         )}
         {/* <!-- Dropdown End --> */}

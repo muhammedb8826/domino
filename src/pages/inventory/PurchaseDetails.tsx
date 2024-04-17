@@ -182,7 +182,6 @@ export const PurchaseDetails = () => {
     setFormData(updatedFormData);
   };
 
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!supplierInfo.id) {
@@ -214,10 +213,14 @@ export const PurchaseDetails = () => {
         unitName: product.unitName,
       })),
     };
+    if(singlePurchase.status !== "received") {
     dispatch(updatePurchase(data)).then(() => {
       navigate("/dashboard/inventory/purchases");
       toast.success("Purchase created successfully");
     });
+  } else {
+    toast.error("Purchase already received");
+  }
   };
   return (
     <>
@@ -444,7 +447,7 @@ export const PurchaseDetails = () => {
                                 <button
                                   onClick={() => handleDeleteRow(index)}
                                   type="button"
-                                  className="hover:text-primary"
+                                  className="hover:text-danger"
                                   title="delete"
                                 >
                                   <svg
@@ -472,14 +475,6 @@ export const PurchaseDetails = () => {
                                       fill=""
                                     />
                                   </svg>
-                                </button>
-                                <button
-                                  // onClick={()=>handleEditModalOpen(category.id)}
-                                  type="submit"
-                                  title="edit"
-                                  className="hover:text-primary text-xl"
-                                >
-                                  <CiEdit />
                                 </button>
                               </div>
                             </td>
@@ -529,12 +524,13 @@ export const PurchaseDetails = () => {
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   ></textarea>
                 </div>
-
+                {singlePurchase.status !== "received" && (
                 <button
                   type="submit"
                   className="flex justify-center rounded bg-primary p-3 font-medium text-gray">
-                  Add Purchase
+                  Update
                 </button>
+                )}
               </div>
             </div>
           </form>
