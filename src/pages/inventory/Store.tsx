@@ -90,11 +90,9 @@ export const Store = () => {
   const filteredSalesStatus = sales?.filter(
     (sale) => sale.status === "stocked-out"
   );
-  const purchaseQuantity = purchases?.map((purchase) =>
-    purchase.products?.reduce(
-      (acc, product) => acc + Number(product.quantity),
-      0
-    )
+
+  const filteredPurchasesStatus = purchases?.filter(
+    (sale) => sale.status === "received"
   );
 
   const totalSales = filteredSalesStatus?.reduce(
@@ -128,7 +126,7 @@ export const Store = () => {
 
   const handleTotalPurchases = (id: string) => {
     // Filter purchases that contain the product with the given id
-    const purchasesWithProduct = purchases?.filter(purchase => purchase.products?.some(product => product.productId === id));
+    const purchasesWithProduct = filteredPurchasesStatus?.filter(purchase => purchase.products?.some(product => product.productId === id));
   
     // Calculate total quantity of the product across all filtered purchases
     const totalQuantity = purchasesWithProduct?.reduce((acc, purchase) => {

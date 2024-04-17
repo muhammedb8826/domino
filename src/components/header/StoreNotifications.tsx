@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ErroPage from "../common/ErroPage";
 import { toast } from "react-toastify";
+import { getPurchases, updatePurchase } from "@/redux/features/purchaseSlice";
 
 export const StoreNotifications = () => {
     const { sales, isLoading } = useSelector((state: RootState) => state.sale);
+    const { purchases } = useSelector((state: RootState) => state.purchase);
     const { user, error } = useSelector(
       (state: RootState) => state.auth
     );
@@ -15,10 +17,15 @@ export const StoreNotifications = () => {
     const dispatch = useDispatch();
     useEffect(() => {
       dispatch(getSales());
+      dispatch(getPurchases())
     }, [dispatch]);
 
     const filteredSalesStatus = sales?.filter(
         (sale) => sale.status === "approved" || sale.status === "pending"
+      );
+
+      const filteredPurchasesStatus = purchases?.filter(
+        (sale) => sale.status === "purchased" || sale.status === "pending"
       );
 
     const handleApproveSale = (id: string) => {
@@ -26,6 +33,24 @@ export const StoreNotifications = () => {
         const updatedFindSale = { ...findSale, status: "stocked-out" };
         dispatch(updateSale(updatedFindSale)).then(() => {
           const message = "Sale stocked-out successfully";
+          toast.success(message);
+        });
+      };
+
+      const handleApprovePurchase = (id: string) => {
+        const findPurchase = purchases.find((purchase) => purchase.id === id);
+        const updatedFindPurchase = { ...findPurchase, status: "received" };
+        dispatch(updatePurchase(updatedFindPurchase)).then(() => {
+          const message = "Purchase received successfully";
+          toast.success(message);
+        });
+      };
+      
+      const handleRejectPurchase = (id: string) => {
+        const findPurchase = purchases.find((purchase) => purchase.id === id);
+        const updatedFindPurchase = { ...findPurchase, status: "rejected" };
+        dispatch(updatePurchase(updatedFindPurchase)).then(() => {
+          const message = "Purchase rejected successfully";
           toast.success(message);
         });
       };
@@ -75,6 +100,42 @@ export const StoreNotifications = () => {
         </tr>
       ));
 
+      const purchaseListContent = filteredPurchasesStatus.length > 0 && filteredPurchasesStatus?.map((purchase, index) => (
+        <tr key={purchase.id}>
+          <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
+            {purchase.id}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {purchase.orderDate}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {purchase.purchaseReresentative}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {purchase.products.map((product) => product.quantity).reduce((a, b) => a + Number(b), 0)}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {purchase.status}
+          </td>
+          <td className="px-4 py-5 flex">
+            <button
+              className="bg-primary text-white active:bg-primary font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none me-5 mb-1 ease-linear transition-all duration-150"
+              onClick={() => handleApprovePurchase(purchase.id)}
+              type="button"
+            >
+             Receive
+            </button>
+            <button
+              className="bg-danger text-white active:bg-danger font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              onClick={() => handleRejectPurchase(purchase.id)}
+              type="button"
+            >
+              reject
+            </button>
+          </td>
+        </tr>
+      ));
+
 if(error) {
     return <ErroPage error={error} />;
     }
@@ -85,7 +146,7 @@ if(error) {
       <h2 className="m-4 relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800">
         Notifications
         <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-danger border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-          {filteredSalesStatus.length}
+          {filteredSalesStatus.length+filteredPurchasesStatus.length}
         </div>
       </h2>
       <hr />
@@ -97,6 +158,8 @@ if(error) {
 
 {user?.roles === "store-representative" && (
         <>
+          <p className="p-4">Sales notifications </p>
+
           <div className="max-w-full overflow-x-auto mb-10">
               <table className="w-full table-auto">
                 <thead>
@@ -122,6 +185,34 @@ if(error) {
                   </tr>
                 </thead>
                 <tbody>{productListContent}</tbody>
+              </table>
+          </div>
+          <p className="p-4">Purchase notifications </p>
+          <div className="max-w-full overflow-x-auto mb-10">
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Reference
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Order Date
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Purchase rep
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Quantity
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Status
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{purchaseListContent}</tbody>
               </table>
           </div>
         </>

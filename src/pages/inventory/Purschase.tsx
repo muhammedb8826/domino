@@ -3,21 +3,29 @@ import ErroPage from "@/components/common/ErroPage";
 import { deletePurchase, getPurchases } from "@/redux/features/purchaseSlice";
 import { useEffect, useRef, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDelete, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { PurchaseRegistration } from "./PurchaseRegistration";
-import { PurchaseDetailsModal, PurchaseEditModal } from "./PurchaseDetailsModal";
+import { PurchaseDetailsModal } from "./PurchaseDetailsModal";
 import Breadcrumb from "@/components/Breadcrumb";
 import { BiPurchaseTag } from "react-icons/bi";
 import { BsTicketDetailed } from "react-icons/bs";
+import { RootState } from "@/redux/store";
 
 export const Purschase = () => {
   const { purchases, isLoading, error } = useSelector((state) => state.purchase);
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/signin");
+    }
+  }, [user, navigate]);
+
   useEffect(() => {
     dispatch(getPurchases());
   }, [dispatch]);
@@ -178,6 +186,7 @@ export const Purschase = () => {
       <Breadcrumb pageName="Purchases" />
 
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
+      {user?.roles === "finance" && (
         <div>
           <Link
           to={"/dashboard/inventory/purchases/add"}
@@ -188,7 +197,7 @@ export const Purschase = () => {
             <span className="ml-2">Add</span>
           </Link>
         </div>
-
+)}
         <label htmlFor="table-search" className="sr-only">
           Search
         </label>

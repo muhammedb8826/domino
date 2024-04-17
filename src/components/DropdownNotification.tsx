@@ -12,6 +12,7 @@ const DropdownNotification = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { orderStatus, orders } = useSelector((state: RootState) => state.order);
   const {sales, isLoading} = useSelector((state: RootState) => state.sale);
+  const { purchases } = useSelector((state: RootState) => state.purchase);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -110,11 +111,11 @@ const DropdownNotification = () => {
         }
     });
     const matchedSalesStatus = sales.filter(sale => sale.status === "approved");
-    setStoreRepNotification(matchedSalesStatus.length);
+    const matchedPurchases = purchases.filter(purchase => purchase.status === "purchased");
+    setStoreRepNotification(matchedSalesStatus.length+matchedPurchases.length);
 
     setFinanceNotification(count);
-  }, [orderStatus, orders, sales]);
-
+  }, [orderStatus, orders, sales, purchases]);
 
   return isLoading?(<Loader/>):(
     
