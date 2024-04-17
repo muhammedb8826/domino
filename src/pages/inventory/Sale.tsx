@@ -147,6 +147,7 @@ export const Sale = () => {
               dropdownOpen ? "block" : "hidden"
             }`}
           >
+              {sale.status !== "stocked-out" && (
             <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
               <li>
                 <Link
@@ -159,6 +160,7 @@ export const Sale = () => {
                   Details
                 </Link>
               </li>
+              
               <li>
                 <NavLink
                   onClick={() => handleDeleteProduct(sale.id)}
@@ -170,6 +172,7 @@ export const Sale = () => {
                 </NavLink>
               </li>
             </ul>
+              )}
           </div>
         )}
         {/* <!-- Dropdown End --> */}

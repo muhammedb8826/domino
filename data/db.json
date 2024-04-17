@@ -1026,37 +1026,49 @@
   ],
   "purchases": [
     {
-      "id": "d5d9",
+      "id": "4a8d",
       "vendorId": "a85f",
       "purchaseReresentative": "Teshager",
       "purchaseReresentativeId": 8,
       "status": "purchased",
       "vendorName": "Muhammed",
-      "orderDate": "2024-04-14",
+      "orderDate": "2024-04-17",
       "paymentMethod": "cash",
-      "amount": 10350,
+      "amount": 69115,
       "reference": "",
-      "totalAmount": 10350,
-      "totalQuantity": 7,
+      "totalAmount": 69115,
+      "totalQuantity": 18,
       "note": "",
       "products": [
         {
-          "productId": "0d5a",
-          "productName": "T-shirt",
-          "quantity": "5",
+          "productId": "2c3d",
+          "productName": "Mika",
+          "quantity": "6",
           "description": "",
-          "unitPrice": "1000",
-          "subTotal": 5000,
-          "UoM": "PCS"
+          "unitPrice": "2000",
+          "subTotal": 10000,
+          "unitId": "90fc",
+          "unitName": "M"
         },
         {
           "productId": "5ec2",
           "productName": "Banner",
+          "quantity": "10",
+          "description": "",
+          "unitPrice": "5000",
+          "subTotal": 50000,
+          "unitId": "890e",
+          "unitName": "sqm"
+        },
+        {
+          "productId": "0d5a",
+          "productName": "T-shirt",
           "quantity": "2",
           "description": "",
-          "unitPrice": "2000",
-          "subTotal": 4000,
-          "UoM": "sqm"
+          "unitPrice": "50",
+          "subTotal": 100,
+          "unitId": "8dd4",
+          "unitName": "PCS"
         }
       ]
     }
@@ -1067,7 +1079,7 @@
       "id": "f50e",
       "operatorId": 8,
       "operatorFirstName": "Teshager",
-      "status": "requested",
+      "status": "stocked-out",
       "orderDate": "2024-04-09",
       "totalQuantity": 7,
       "note": "mamae\n",
@@ -1087,6 +1099,33 @@
           "description": "gf",
           "unitId": "890e",
           "unitName": "sqm"
+        }
+      ]
+    },
+    {
+      "id": "410d",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "status": "requested",
+      "orderDate": "2024-04-17",
+      "totalQuantity": 10,
+      "note": "",
+      "products": [
+        {
+          "productId": "5ec2",
+          "productName": "Banner",
+          "quantity": "5",
+          "description": "",
+          "unitId": "890e",
+          "unitName": "sqm"
+        },
+        {
+          "productId": "2c3d",
+          "productName": "Mika",
+          "quantity": "5",
+          "description": "",
+          "unitId": "90fc",
+          "unitName": "M"
         }
       ]
     }

@@ -1,13 +1,12 @@
 import Loader from "@/common/Loader";
 import Breadcrumb from "@/components/Breadcrumb";
 import { getProducts } from "@/redux/features/product/productSlice";
-import { getSaleById, getSales, updateSale } from "@/redux/features/saleSlice";
+import { getSaleById, updateSale } from "@/redux/features/saleSlice";
 import { getUnits } from "@/redux/features/unit/unitSlice";
 import { getUsers } from "@/redux/features/user/userSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { CiEdit } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom"
 
@@ -55,7 +54,7 @@ export const SaleDetails = () => {
     const handleSelectedProduct = (e, index) => {
         const selectedProductId = e.target.value;
         const selectedProductName = products.find(product => product.id === selectedProductId)?.name || '';
-    
+
         setFormData(prevState => {
             const updatedFormData = [...prevState];
             updatedFormData[index] = {
@@ -63,7 +62,7 @@ export const SaleDetails = () => {
                 productId: selectedProductId,
                 productName: selectedProductName,
             };
-    
+
             // Find the unit corresponding to the selected product
             const product = products.find(product => product.id === selectedProductId);
             if (product) {
@@ -76,7 +75,7 @@ export const SaleDetails = () => {
                     };
                 }
             }
-    
+
             return updatedFormData;
         });
     };
@@ -100,7 +99,7 @@ export const SaleDetails = () => {
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
-        
+
         setFormData(prevState => {
             const updatedFormData = [...prevState];
             updatedFormData[index] = {
@@ -214,12 +213,6 @@ export const SaleDetails = () => {
                                             className="relative z-20 w-full appearance-none rounded bg-transparent p-2 outline-none border transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                         >
                                             <option value={user?.id}>{user?.first_name}</option>
-                                            {/* {users.length > 0 &&
-                            operators.map((user) => (
-                              <option key={user.id} value={user.id}>
-                                {user.first_name}
-                              </option>
-                            ))} */}
                                         </select>
                                     </div>
                                     <div className="">
@@ -327,14 +320,14 @@ export const SaleDetails = () => {
                                                             />
                                                         </td>
                                                         <td className="border border-[#eee] dark:border-strokedark">
-                                                        {data.unitName}
+                                                            {data.unitName}
                                                         </td>
                                                         <td className="border border-[#eee] px-4 dark:border-strokedark">
                                                             <div className="flex items-center space-x-3.5">
                                                                 <button
                                                                     onClick={() => handleDeleteRow(index)}
                                                                     type="button"
-                                                                    className="hover:text-primary"
+                                                                    className="hover:text-danger"
                                                                     title="delete"
                                                                 >
                                                                     <svg
@@ -362,14 +355,6 @@ export const SaleDetails = () => {
                                                                             fill=""
                                                                         />
                                                                     </svg>
-                                                                </button>
-                                                                <button
-                                                                    // onClick={()=>handleEditModalOpen(category.id)}
-                                                                    type="button"
-                                                                    title="edit"
-                                                                    className="hover:text-primary text-xl"
-                                                                >
-                                                                    <CiEdit />
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -416,7 +401,7 @@ export const SaleDetails = () => {
                                     // onClick={handleSubmit}
                                     className="flex justify-center rounded bg-primary p-3 font-medium text-gray"
                                 >
-                                    Add Purchase
+                                    Update
                                 </button>
                             </div>
                         </form>

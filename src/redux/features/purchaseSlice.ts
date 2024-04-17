@@ -5,6 +5,7 @@ import { purchasesURL } from "../api/API";
 
 const initialState = {
     purchases: [],
+    singlePurchase: {},
     isLoading: false,
     error: null,
 }
@@ -15,6 +16,16 @@ export const getPurchases = createAsyncThunk("purchase/getPurchases", async () =
         return response.data;
     } catch (error) {
         console.error("Error fetching purchases:", error);
+        throw error;
+    }
+});
+
+export const getPurchasesById = createAsyncThunk("purchase/getPurchasesById", async (purchaseId) => {
+    try {
+        const response = await axios.get(`${purchasesURL}/${purchaseId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching purchase by id:", error);
         throw error;
     }
 });
@@ -65,7 +76,17 @@ export const purchasesSlice = createSlice({
             state.isLoading = false;
             state.error = action.error.message;
         });
-
+        builder.addCase(getPurchasesById.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(getPurchasesById.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.singlePurchase = action.payload;
+        });
+        builder.addCase(getPurchasesById.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        });
         builder.addCase(createPurchase.pending, (state) => {
             state.isLoading = true;
         });

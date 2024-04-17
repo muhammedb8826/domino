@@ -142,14 +142,15 @@ export const Purschase = () => {
           >
             <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
               <li>
-                <button
+                <Link
+                to={`/dashboard/inventory/purchases/${purchase.id}`}
                   onClick={() => handleEditModalOpen(purchase.id)}
                   type="button"
                   className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                 >
                   <BsTicketDetailed />
                   Details
-                </button>
+                </Link>
               </li>
               <li>
                 <NavLink

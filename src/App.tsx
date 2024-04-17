@@ -46,6 +46,7 @@ import { FinanceNotification } from "./components/header/FinanceNotification";
 import { StoreNotifications } from "./components/header/StoreNotifications";
 import { OperatorStore } from "./pages/inventory/OperatorStore";
 import { SaleDetails } from "./pages/inventory/SaleDetails";
+import { PurchaseDetails } from "./pages/inventory/PurchaseDetails";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -97,6 +98,7 @@ const App = () => {
             <Route path="/dashboard/inventory/category" element={<Categories/>}/>
             <Route path="/dashboard/inventory/suppliers" element={<Suppliers/>}/>
             <Route path="/dashboard/inventory/purchases" element={<Purschase/>}/>
+            <Route path="/dashboard/inventory/purchases/:id" element={<PurchaseDetails />}/>
             <Route path="/dashboard/inventory/purchases/add" element={<PurchaseRegistration/>}/>
             <Route path="/dashboard/inventory/store" element={<Store/>}/>
             <Route path="/dashboard/inventory/sales" element={<Sale />} />
