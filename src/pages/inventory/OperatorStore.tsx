@@ -1,5 +1,5 @@
 import { BiPurchaseTag } from "react-icons/bi";
-import { OperatorStoreDetailsModal, PurchaseDetailsModal } from "./OperatorStoreDetailsModal";
+import { OperatorStoreDetailsModal, PurchaseDetailsModal } from "./OperatorStoreSaleDetails";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Breadcrumb from "@/components/Breadcrumb";
 import Loader from "@/common/Loader";
@@ -96,7 +96,7 @@ export const OperatorStore = () => {
             // Calculate total requested quantity for the productName
             let totalRequestedQuantity = 0;
             
-            sales.forEach((sale) => {
+            filteredSalesStatus.forEach((sale) => {
               sale.products.forEach((product) => {
                 if (product.productName.toLowerCase() === productName.toLowerCase()) {
                   totalRequestedQuantity += parseInt(product.quantity, 10);
@@ -172,7 +172,13 @@ export const OperatorStore = () => {
               {handleRequestedQuantity(data.name)}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {handleRequestedQuantity(data.name) * printedArea}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
               {handlePrintedQuantity(data.name)}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {printedArea}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
              {handleRequestedQuantity(data.name) - handlePrintedQuantity(data.name)}
@@ -226,14 +232,15 @@ export const OperatorStore = () => {
                 >
                   <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
                     <li>
-                      <button
-                        onClick={() => handleEditModalOpen(sale.id)}
-                        type="button"
+                      <Link
+                      to={`/dashboard/inventory/operator-store/${sale.id}`}
+                        // onClick={() => handleEditModalOpen(sale.id)}
+                        // type="button"
                         className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                       >
                         <BsTicketDetailed />
                         Details
-                      </button>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -328,14 +335,20 @@ export const OperatorStore = () => {
                    <table className="w-full table-auto">
                      <thead>
                        <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                         <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                         <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                            Material
                          </th>
                          <th className="py-4 px-4 font-medium text-black dark:text-white">
-                           Total requested qty
+                           Requested qty
                          </th>
-                         <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                           Total printed qty
+                         <th className="py-4 px-4 font-medium text-black dark:text-white">
+                           Requested unit
+                         </th>
+                         <th className="py-4 px-4 font-medium text-black dark:text-white">
+                           Printed qty
+                         </th>
+                         <th className="py-4 px-4 font-medium text-black dark:text-white">
+                           Printed unit
                          </th>
                          <th className="py-4 px-4 font-medium text-black dark:text-white">
                            Available qty

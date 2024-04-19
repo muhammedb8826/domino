@@ -1267,7 +1267,7 @@
       "id": "7961",
       "operatorId": 8,
       "operatorFirstName": "Teshager",
-      "status": "requested",
+      "status": "stocked-out",
       "orderDate": "2024-04-19",
       "totalQuantity": 4,
       "note": "",

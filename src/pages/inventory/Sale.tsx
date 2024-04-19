@@ -319,12 +319,6 @@ export const Sale = () => {
           </nav>
         </div>
       </div>
-      {/* {isEditModalOpen && (
-        <PurchaseDetailsModal
-          handleEditModalOpen={handleEditModalOpen}
-          data={data}
-        />
-      )} */}
     </>
   );
 }

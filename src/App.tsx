@@ -47,6 +47,7 @@ import { StoreNotifications } from "./components/header/StoreNotifications";
 import { OperatorStore } from "./pages/inventory/OperatorStore";
 import { SaleDetails } from "./pages/inventory/SaleDetails";
 import { PurchaseDetails } from "./pages/inventory/PurchaseDetails";
+import { OperatorStoreDetailsModal, OperatorStoreSaleDetails } from "./pages/inventory/OperatorStoreSaleDetails";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -103,6 +104,7 @@ const App = () => {
             <Route path="/dashboard/inventory/store" element={<Store/>}/>
             <Route path="/dashboard/inventory/sales" element={<Sale />} />
             <Route path="/dashboard/inventory/sales/:id" element={<SaleDetails />} />
+            <Route path="/dashboard/inventory/operator-store/:id" element={<OperatorStoreSaleDetails />} />
             <Route path="/dashboard/inventory/sales/add" element={<SaleRegistration />} />
             <Route path="*" element={<NotFound />} />
           </Route>
