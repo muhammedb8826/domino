@@ -7,7 +7,6 @@ import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { PurchaseDetailsModal } from "./PurchaseDetailsModal";
 import Breadcrumb from "@/components/Breadcrumb";
 import { BiPurchaseTag } from "react-icons/bi";
 import { BsTicketDetailed } from "react-icons/bs";
@@ -339,12 +338,6 @@ export const Purschase = () => {
           </nav>
         </div>
       </div>
-      {isEditModalOpen && (
-        <PurchaseDetailsModal
-          handleEditModalOpen={handleEditModalOpen}
-          data={data}
-        />
-      )}
     </>
   );
 }

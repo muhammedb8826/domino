@@ -884,16 +884,18 @@ const OrderDetailsPage = () => {
 
   return (
     <>
-      <section className="bg-white dark:bg-gray-900 wrapper py-4 mb-10 border p-0 min-h-screen">
+    <div className="grid grid-cols-1 gap-9">
+    <div className="flex flex-col gap-9 max-w-[1250px] mx-auto">
+      <section className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4 mb-10">
         <GoBack goback="/dashboard" />
-        <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
-          Edit Order
+        <h2 className="ps-4 my-4 text-2xl font-bold text-graydark dark:text-white">
+          Order Details
         </h2>
         <div className={`grid gap-4 sm:grid-cols-3 sm:gap-6 mb-4 p-4`}>
           <div className="w-full">
             <label
               htmlFor="name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-3 block text-black dark:text-white"
             >
               Series
             </label>
@@ -903,14 +905,14 @@ const OrderDetailsPage = () => {
               value={orderInfo.series}
               readOnly
               id="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               placeholder="Type product name"
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="date"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-3 block text-black dark:text-white"
             >
               Date
             </label>
@@ -920,10 +922,36 @@ const OrderDetailsPage = () => {
               onSelectedDateChanged={handleDatePickerChange}
               // value={orderInfo.date}
               style={{
-                padding: "0.25rem",
-                paddingLeft: "2.5rem",
-                border: "1px solid #ccc",
-                color: "#333",
+                width: '100%',
+                borderRadius: '3px',
+                borderWidth: '1px',
+                borderColor: '#ccc',
+                backgroundColor: 'transparent',
+                paddingTop: '0.6rem',
+                paddingBottom: '0.6rem',
+                paddingLeft: '2.5rem',
+                paddingRight: '1rem',
+                fontWeight: '500', // equivalent to font-medium
+                outline: 'none',
+                transition: 'border 0.3s',
+                '&:focus': {
+                  borderColor: 'primary',
+                },
+                '&:active': {
+                  borderColor: 'primary',
+                },
+                '&:disabled': {
+                  cursor: 'default',
+                  // backgroundColor: 'whiter',
+                  borderColor: '#3d4d60', // assuming this is a valid Tailwind class
+                  backgroundColor: '#1d2a39', // assuming this is a valid Tailwind class
+                  '&:focus': {
+                    borderColor: 'primary',
+                  },
+                },
+                '&:disabled:focus': {
+                  borderColor: 'primary',
+                },
               }}
             />
           </div>
@@ -956,19 +984,46 @@ const OrderDetailsPage = () => {
           <div className="w-full">
             <label
               htmlFor="deliveryDate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-3 block text-black dark:text-white"
             >
               Delivery date
             </label>
             <Datepicker
+            className=""
               title="Delivery date"
               onSelectedDateChanged={handleDeliveryDatePickerChange}
               // value={orderInfo.deliveryDate}
               style={{
-                padding: "0.25rem",
-                paddingLeft: "2.5rem",
-                border: "1px solid #ccc",
-                color: "#333",
+                width: '100%',
+                borderRadius: '3px',
+                borderWidth: '1px',
+                borderColor: '#ccc',
+                backgroundColor: 'transparent',
+                paddingTop: '0.6rem',
+                paddingBottom: '0.6rem',
+                paddingLeft: '2.5rem',
+                paddingRight: '1rem',
+                fontWeight: '500', // equivalent to font-medium
+                outline: 'none',
+                transition: 'border 0.3s',
+                '&:focus': {
+                  borderColor: 'primary',
+                },
+                '&:active': {
+                  borderColor: 'primary',
+                },
+                '&:disabled': {
+                  cursor: 'default',
+                  // backgroundColor: 'whiter',
+                  borderColor: '#3d4d60', // assuming this is a valid Tailwind class
+                  backgroundColor: '#1d2a39', // assuming this is a valid Tailwind class
+                  '&:focus': {
+                    borderColor: 'primary',
+                  },
+                },
+                '&:disabled:focus': {
+                  borderColor: 'primary',
+                },
               }}
             />
           </div>
@@ -982,80 +1037,45 @@ const OrderDetailsPage = () => {
               Orders List{" "}
             </button>
 
-            <div className="px-4">
-              <table
-                className="
-               w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-              >
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="p-4 w-4 border border-gray-300">
+
+            <div className="max-w-full px-4">
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       No
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Material
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Services
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Width
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Height
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Quantity
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Amount
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Total sqm
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      T.Sqm
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Discount
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Total
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Status
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
                       {/* Action */}
                       <span className="font-semibold flex justify-center items-center">
                         <CiSettings className="text-xl font-bold" />
@@ -1075,14 +1095,12 @@ const OrderDetailsPage = () => {
                     formData.map((data, index) => (
                       <tr
                         key={index}
-                        className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
-                        <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           {index + 1}
                         </td>
                         <td
-                          scope="row"
-                          className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
+                          className="min-w-[200px] relative border border-[#eee] dark:border-strokedark"
                         >
                           <Select
                             styles={{
@@ -1104,7 +1122,10 @@ const OrderDetailsPage = () => {
                             className="w-full"
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <td
+                          className="min-w-[200px] relative border border-[#eee] dark:border-strokedark"
+                        >
+
                           <Select
                             styles={{
                               control: (baseStyles, state) => ({
@@ -1122,7 +1143,7 @@ const OrderDetailsPage = () => {
                             }
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           <input
                             title="width"
                             type="number"
@@ -1136,7 +1157,7 @@ const OrderDetailsPage = () => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           <input
                             title="height"
                             type="number"
@@ -1150,7 +1171,7 @@ const OrderDetailsPage = () => {
                             min={0}
                           />
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           <input
                             title="quantity"
                             type="number"
@@ -1164,13 +1185,13 @@ const OrderDetailsPage = () => {
                             min={0}
                           />
                         </td>
-                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           {calculatedUnitPrices[index] || 0}
                         </td>
-                        <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           {totalUnits[index] || 0}
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-40">
+                        <td className="border border-[#eee] dark:border-strokedark whitespace-nowrap min-w-[150px]">
                           <div className="flex items-center gap-2">
                             <span className="flex-1 px-2">
                               {discountPerItem?.[index] !== undefined
@@ -1178,10 +1199,10 @@ const OrderDetailsPage = () => {
                                 : null}
                             </span>
                             {discountPerItem && discountPerItem[index] > 0 && (
-                              <p className="text-gray-900 sm:text-sm flex items-center justify-center w-1/4">
+                              <p className="text-graydark sm:text-sm flex items-center justify-center w-1/4">
                                 {levels && levels[index] ? (
                                   levels[index] > 0 ? (
-                                    <span className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
+                                    <span className="text-white bg-gradient-to-br from-meta-7 to-meta-8 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded text-xs px-1  text-center">
                                       Level <sup>{levels[index]}</sup>
                                     </span>
                                   ) : (
@@ -1206,23 +1227,23 @@ const OrderDetailsPage = () => {
                                 checked={data.isDiscounted}
                                 className="sr-only peer"
                               />
-                              <div className="relative w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                              <div className="relative w-8 h-4 bg-bodydark1 peer-focus:outline-none rounded-full peer dark:bg-graydark peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-3 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-graydark peer-checked:bg-primary"></div>
                             </label>
                           </div>
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-20">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           <p className="p-1">
                             {totalBirrAfterDiscount
                               ? totalBirrAfterDiscount[index]
                               : 0}
                           </p>
                         </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-16">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           {orderStat && (
                             <div
                             onMouseEnter={handleMouseEnter}
                             onMouseLeave={handleMouseLeave}
-                            className="border flex items-center justify-center w-full relative"
+                            className="flex items-center justify-center w-full relative"
                           >
                               {orderStat.orderItems[index].status ===
                                 "received" && (
@@ -1286,7 +1307,7 @@ const OrderDetailsPage = () => {
                             </div>
                           )}
                         </td>
-                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
+                        <td className="border border-[#eee] dark:border-strokedark">
                           <button
                             onClick={() => handleAction(index)}
                             title="action"
@@ -1344,7 +1365,7 @@ const OrderDetailsPage = () => {
                     ))}
                 </tbody>
               </table>
-            </div>
+              </div>
 
             <div className="p-4 flex items-center justify-between">
               <button
@@ -1987,6 +2008,8 @@ const OrderDetailsPage = () => {
           </>
         )}
       </section>
+      </div>
+    </div>
       {modalOpen && (
         <StatusEditModal
           handleModalOpen={handleModalOpen}

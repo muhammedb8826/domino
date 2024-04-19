@@ -877,17 +877,17 @@
       "adminApproval": false,
       "orderItems": [
         {
-          "status": "edited",
+          "status": "printed",
           "note": "",
           "printed": false,
-          "adminApproval": false,
+          "adminApproval": true,
           "completed": false
         },
         {
-          "status": "received",
+          "status": "printed",
           "note": "",
           "printed": false,
-          "adminApproval": false,
+          "adminApproval": true,
           "completed": false
         }
       ]
@@ -982,14 +982,14 @@
       "tinNumber": ""
     },
     {
-      "id": "cd27",
       "firstName": "Babi",
       "lastName": "teshager",
+      "email": "DDDD@gmail.com",
       "phone": "09-5656-6363",
-      "email": "",
       "company": "",
       "address": "",
-      "tinNumber": ""
+      "tinNumber": "",
+      "id": "cd27"
     }
   ],
   "categories": [
@@ -1073,7 +1073,34 @@
       ]
     }
   ],
-  "inventories": [],
+  "printedTransactions": [
+    {
+      "id": "acb4",
+      "machine": "DTF",
+      "material": "T-shirt",
+      "service": "Print and Material",
+      "unitPrice": 12500,
+      "status": "recieved",
+      "commissionPrice": 0,
+      "width": "5",
+      "height": "5",
+      "quantity": "5",
+      "orderId": "605e"
+    },
+    {
+      "id": "8320",
+      "machine": "UV",
+      "material": "Film",
+      "service": "Print and Material",
+      "unitPrice": 10000,
+      "status": "recieved",
+      "commissionPrice": 0,
+      "width": "2",
+      "height": "5",
+      "quantity": "5",
+      "orderId": "605e"
+    }
+  ],
   "sales": [
     {
       "id": "f50e",

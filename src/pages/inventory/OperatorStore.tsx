@@ -1,5 +1,5 @@
 import { BiPurchaseTag } from "react-icons/bi";
-import { PurchaseDetailsModal } from "./PurchaseDetailsModal";
+import { OperatorStoreDetailsModal, PurchaseDetailsModal } from "./OperatorStoreDetailsModal";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Breadcrumb from "@/components/Breadcrumb";
 import Loader from "@/common/Loader";
@@ -12,10 +12,14 @@ import Swal from "sweetalert2";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { getPrintedTransactions } from "@/redux/features/printedTransactionsSlice";
+import { getProducts } from "@/redux/features/product/productSlice";
 
 export const OperatorStore = () => {
 
         const { sales, isLoading, error } = useSelector((state) => state.sale);
+        const { printedTransactions } = useSelector((state) => state.printedTransaction);
+        const { products } = useSelector((state) => state.product);
         const { user } = useSelector((state: RootState) => state.auth);
       
         const dispatch = useDispatch();
@@ -29,12 +33,19 @@ export const OperatorStore = () => {
       
         useEffect(() => {
           dispatch(getSales());
+          dispatch(getPrintedTransactions())
+          dispatch(getProducts());
         }, [dispatch]);
       
         const [showPopover, setShowPopover] = useState(null);
         const [dropdownOpen, setDropdownOpen] = useState(false);
         const triggerRef = useRef<any>(null);
         const dropdownRef = useRef<any>(null);
+        const [active, setActive] = useState('home');
+
+        const handlChangeTab = (newActiveState) => {
+          setActive(newActiveState);
+        }
       
         // close on click outside
         useEffect(() => {
@@ -79,12 +90,59 @@ export const OperatorStore = () => {
         const filteredSalesStatus = sales?.filter(
             (sale) => sale.status === "stocked-out"
           );
+
+
+          const handleRequestedQuantity = (productName) => {
+            // Calculate total requested quantity for the productName
+            let totalRequestedQuantity = 0;
+            
+            sales.forEach((sale) => {
+              sale.products.forEach((product) => {
+                if (product.productName === productName) {
+                  totalRequestedQuantity += parseInt(product.quantity, 10);
+                }
+              });
+            });
+            
+            return totalRequestedQuantity;
+          };
+
+          const handlePrintedQuantity = (productName) => {
+            // Calculate total printed quantity for the productName
+            let totalPrintedQuantity = 0;
+            
+            printedTransactions.forEach((transaction) => {
+              if (transaction.material === productName) {
+                totalPrintedQuantity += parseInt(transaction.quantity, 10);
+              }
+            });
+            
+            return totalPrintedQuantity;
+          };
+
         
-      
         if (error) {
           return <ErroPage error={error} />;
         }
       
+
+        const listContent = products.map((data, index) => (
+          <tr key={data.id}>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {data.name}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {handleRequestedQuantity(data.name)}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {handlePrintedQuantity(data.name)}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+             {handleRequestedQuantity(data.name) - handlePrintedQuantity(data.name)}
+            </td>
+          </tr>
+        ));
+
         const productListContent = filteredSalesStatus.map((sale, index) => (
           <tr key={sale.id}>
             <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
@@ -144,13 +202,188 @@ export const OperatorStore = () => {
           </tr>
         ));
       
+        const printedListContent = printedTransactions.map((data, index) => (
+          <tr key={data.id}>
+            <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
+             {data.orderId}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {data.material}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {data.service}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {data.date}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {data.operator}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {data.quantity}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {data.width} x {data.height}
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              {Number(data.quantity) * Number(data.width) * Number(data.height)}
+            </td>
+          </tr>
+        ));
       
         return isLoading ? (
           <Loader />
         ) : (
           <>
-            <Breadcrumb pageName="Operator store" />
-      
+            {/* <Breadcrumb pageName="Operator store" /> */}
+            <nav>
+              <ul className="list-reset py-4 pl-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
+                <li className="text-gray-500 text-sm dark:text-gray-400">
+                  <button type="button" onClick={() => handlChangeTab("home")} className={`${active === 'home' ? 'text-white bg-black': ''} px-5 py-1.5 font-medium text-gray-900`}>Home</button> 
+                </li>
+                <li className="text-gray-500 text-sm dark:text-gray-400">
+                <button type="button" onClick={() => handlChangeTab("printed")} className={`${active === 'printed' ? 'text-white bg-black': ''} px-5 py-1.5 font-medium text-gray-900`}>Printed transactions</button> 
+                </li>
+                <li className="text-gray-500 text-sm dark:text-gray-400">
+                <button type="button" onClick={() => handlChangeTab("requested")} className={`${active === 'requested' ? 'text-white bg-black': ''} px-5 py-1.5 font-medium text-gray-900`}>Requested transactions</button> 
+                </li>
+              </ul>
+            </nav>
+            {active === 'home' && (
+               <>
+               <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
+                 <label htmlFor="table-search" className="sr-only">
+                   Search
+                 </label>
+                 <div className="relative">
+                   <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                     <svg
+                       className="w-4 h-4 text-gray-500"
+                       aria-hidden="true"
+                       xmlns="http://www.w3.org/2000/svg"
+                       fill="none"
+                       viewBox="0 0 20 20"
+                     >
+                       <path
+                         stroke="currentColor"
+                         strokeLinecap="round"
+                         strokeLinejoin="round"
+                         strokeWidth="2"
+                         d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                       />
+                     </svg>
+                   </div>
+                   <input
+                     type="text"
+                     id="table-search-products"
+                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 ps-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                     placeholder="Search for products"
+                   />
+                 </div>
+               </div>
+         
+               <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+                 <div className="max-w-full overflow-hidden overflow-x-auto">
+                   <table className="w-full table-auto">
+                     <thead>
+                       <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                         <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                           Material
+                         </th>
+                         <th className="py-4 px-4 font-medium text-black dark:text-white">
+                           Total requested qty
+                         </th>
+                         <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                           Total printed qty
+                         </th>
+                         <th className="py-4 px-4 font-medium text-black dark:text-white">
+                           Available qty
+                         </th>
+                       </tr>
+                     </thead>
+                     <tbody>{listContent}</tbody>
+                   </table>
+                   <nav
+                     className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+                     aria-label="Table navigation"
+                   >
+                     <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                       Showing{" "}
+                       <span className="font-semibold text-gray-900 dark:text-white">
+                         1-10
+                       </span>{" "}
+                       of{" "}
+                       <span className="font-semibold text-gray-900 dark:text-white">
+                         1000
+                       </span>
+                     </span>
+                     <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 bg-gray-2 text-left dark:bg-meta-4">
+                       <li>
+                         <a
+                           href="#"
+                           className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                         >
+                           Previous
+                         </a>
+                       </li>
+                       <li>
+                         <a
+                           href="#"
+                           className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                         >
+                           1
+                         </a>
+                       </li>
+                       <li>
+                         <a
+                           href="#"
+                           className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                         >
+                           2
+                         </a>
+                       </li>
+                       <li>
+                         <a
+                           href="#"
+                           aria-current="page"
+                           className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                         >
+                           3
+                         </a>
+                       </li>
+                       <li>
+                         <a
+                           href="#"
+                           className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                         >
+                           4
+                         </a>
+                       </li>
+                       <li>
+                         <a
+                           href="#"
+                           className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                         >
+                           5
+                         </a>
+                       </li>
+                       <li>
+                         <a
+                           href="#"
+                           className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                         >
+                           Next
+                         </a>
+                       </li>
+                     </ul>
+                   </nav>
+                 </div>
+               </div>
+               </>
+            )}
+
+            {active === 'printed' && (
+              <>
             <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
               <label htmlFor="table-search" className="sr-only">
                 Search
@@ -187,27 +420,33 @@ export const OperatorStore = () => {
                 <table className="w-full table-auto">
                   <thead>
                     <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                      <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Reference
                       </th>
-                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                        Order Date
+                      <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                        Material
                       </th>
-                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                        Operator
-                      </th>
-                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                        Quantity
-                      </th>
-                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                        Status
+                      <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                        Service
                       </th>
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Action
+                        Date
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Operator
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Quantity
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Printed unit
+                      </th>
+                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                        Total printed unit
                       </th>
                     </tr>
                   </thead>
-                  <tbody>{productListContent}</tbody>
+                  <tbody>{printedListContent}</tbody>
                 </table>
                 <nav
                   className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
@@ -285,12 +524,153 @@ export const OperatorStore = () => {
                 </nav>
               </div>
             </div>
-            {isEditModalOpen && (
-              <PurchaseDetailsModal
+            </>
+            )}
+
+            {active === 'requested' && (
+                            <>
+                            <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
+                              <label htmlFor="table-search" className="sr-only">
+                                Search
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                                  <svg
+                                    className="w-4 h-4 text-gray-500"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      stroke="currentColor"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                                    />
+                                  </svg>
+                                </div>
+                                <input
+                                  type="text"
+                                  id="table-search-products"
+                                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 ps-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                  placeholder="Search for products"
+                                />
+                              </div>
+                            </div>
+                      
+                            <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+                              <div className="max-w-full overflow-hidden overflow-x-auto">
+                                <table className="w-full table-auto">
+                                  <thead>
+                                    <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                                      <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                                        Reference
+                                      </th>
+                                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                                        Order Date
+                                      </th>
+                                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                                        Operator
+                                      </th>
+                                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                                        Quantity
+                                      </th>
+                                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                                        Status
+                                      </th>
+                                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                                        Action
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>{productListContent}</tbody>
+                                </table>
+                                <nav
+                                  className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+                                  aria-label="Table navigation"
+                                >
+                                  <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                                    Showing{" "}
+                                    <span className="font-semibold text-gray-900 dark:text-white">
+                                      1-10
+                                    </span>{" "}
+                                    of{" "}
+                                    <span className="font-semibold text-gray-900 dark:text-white">
+                                      1000
+                                    </span>
+                                  </span>
+                                  <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 bg-gray-2 text-left dark:bg-meta-4">
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                      >
+                                        Previous
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                      >
+                                        1
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                      >
+                                        2
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        aria-current="page"
+                                        className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                                      >
+                                        3
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                      >
+                                        4
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                      >
+                                        5
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                      >
+                                        Next
+                                      </a>
+                                    </li>
+                                  </ul>
+                                </nav>
+                              </div>
+                            </div>
+                            </>
+              )}
+            {/* {isEditModalOpen && (
+              <OperatorStoreDetailsModal
                 handleEditModalOpen={handleEditModalOpen}
                 data={data}
               />
-            )}
+            )} */}
           </>
         );
 

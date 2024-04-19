@@ -1,9 +1,25 @@
+import Loader from "@/common/Loader"
+import ErroPage from "@/components/common/ErroPage"
+import { getOrders } from "@/redux/features/order/orderSlice"
+import { useEffect } from "react"
 import { IoMdClose } from "react-icons/io"
+import { useDispatch, useSelector } from "react-redux"
 
-export const PurchaseDetailsModal = ({ handleEditModalOpen, data }) => {
-  console.log(data);
+export const OperatorStoreDetailsModal = ({ handleEditModalOpen, data }) => {
+const {orders, isLoading, error } = useSelector((state) => state.order)
+const dispatch = useDispatch();
+useEffect (() => {
+  dispatch(getOrders())
+}, [dispatch])
 
-  return (
+console.log(orders);
+
+
+if (error) {
+  return <ErroPage error={error}/>  
+}
+
+  return isLoading? (<Loader/>):(
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-999 bg-black/50 outline-none focus:outline-none">
         {/* <form onSubmit={handleSubmit} className="w-full"> */}
@@ -13,7 +29,7 @@ export const PurchaseDetailsModal = ({ handleEditModalOpen, data }) => {
             {/*header*/}
             <div className="flex items-start justify-between border-b border-stroke py-4 px-6.5 dark:border-strokedark rounded-t">
               <h3 className="text-3xl text-black dark:text-white font-semibold text">
-                Purchase Details
+                Store Details
               </h3>
               <button
                 title="close"
@@ -123,16 +139,10 @@ export const PurchaseDetailsModal = ({ handleEditModalOpen, data }) => {
                         Quantity
                       </th>
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Price
-                      </th>
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Subtotal
-                      </th>
-                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         UoM
                       </th>
                       <th className="py-4 px-4 font-medium text-black dark:text-white">
-                        Action
+                        Order Status
                       </th>
                     </tr>
                   </thead>
@@ -174,32 +184,15 @@ export const PurchaseDetailsModal = ({ handleEditModalOpen, data }) => {
                             />
                           </td>
                           <td className="border border-[#eee] dark:border-strokedark">
-                            <input
-                              readOnly
-                              title="Unit price of the product"
-                              type="number"
-                              name="unitPrice"
-                              value={data.unitPrice}
-                              // onChange={(e) => handleChange(e, index)}
-                              className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            />
-                          </td>
-                          <td className="border border-[#eee] dark:border-strokedark">
-                            <input
-                              readOnly
-                              title="Total price of the product"
-                              type="number"
-                              name="totalPrice"
-                              value={data.subTotal}
-                              // onChange={(e) => handleChange(e, index)}
-                              className="w-full rounded  bg-transparent p-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            />
-                          </td>
-                          <td className="border border-[#eee] dark:border-strokedark">
                             {data.UoM}
                           </td>
                           <td className="border border-[#eee] dark:border-strokedark">
-                            action
+                            {orders.map((order) => {
+                              if(data.productName === order.orderItems.map((item) => item.material)){
+                                return data.productName
+                              }
+                            }
+                          )}
                           </td>
                         </tr>
                       ))}

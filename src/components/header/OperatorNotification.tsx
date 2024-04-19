@@ -6,6 +6,7 @@ import { getOrderStatus, getOrders, updateOrderStatus } from "@/redux/features/o
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { createPrintedTransaction } from "@/redux/features/printedTransactionsSlice";
 
 export const OperatorNotification = () => {
 
@@ -47,12 +48,29 @@ export const OperatorNotification = () => {
           }
           return item;
         });
-    
+
         const data = {
           ...findOrderStatusId,
           orderItems: updatedStatus,
         };
+        const orderId = data.orderId;  
+        const findItem = orders.find((item) => item.id === orderId);
+        const filteredOrder = findItem.orderItems.find(
+          (_, i) => i === index
+        ); 
+
+        const printedData = {
+          ...filteredOrder,
+          width: findItem?.orderMeasures[index].width,
+          height: findItem?.orderMeasures[index].height,
+          quantity: findItem?.orderMeasures[index].quantity,
+          orderId: findItem?.id,
+        };
+
+        dispatch(createPrintedTransaction(printedData));
         dispatch(updateOrderStatus(data));
+        // console.log(data);
+        
         const message = "Order status updated successfully";
         toast.success(message);
       };    

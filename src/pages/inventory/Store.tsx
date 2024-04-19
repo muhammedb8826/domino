@@ -1,31 +1,18 @@
 import ErroPage from "@/components/common/ErroPage";
-import {
-  deleteInventory,
-  getInventories,
-} from "@/redux/features/inventory/storeSlice";
 import { getPurchases } from "@/redux/features/purchaseSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useRef, useState } from "react";
-import { CiMenuKebab } from "react-icons/ci";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
 import Swal from "sweetalert2";
-import { PurchaseDetailsModal } from "./PurchaseDetailsModal";
-import Breadcrumb from "@/components/Breadcrumb";
 import Loader from "@/common/Loader";
 import { getProducts } from "@/redux/features/product/productSlice";
 import CardOne from "@/components/CardOne";
 import CardTwo from "@/components/CardTwo";
-import CardThree from "@/components/CardThree";
-import CardFour from "@/components/CardFour";
 import { FcSalesPerformance } from "react-icons/fc";
 import { BiPurchaseTag } from "react-icons/bi";
 import { getSales } from "@/redux/features/saleSlice";
 
 export const Store = () => {
-  const { inventories } = useSelector((state: RootState) => state.inventory);
   const { purchases } = useSelector((state: RootState) => state.purchase);
   const { products, isLoading, error } = useSelector(
     (state: RootState) => state.product
@@ -35,13 +22,11 @@ export const Store = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getInventories());
     dispatch(getPurchases());
     dispatch(getProducts());
     dispatch(getSales());
   }, [dispatch]);
 
-  const [showPopover, setShowPopover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
@@ -72,21 +57,6 @@ export const Store = () => {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
-  const handleAction = (index) => {
-    setDropdownOpen(!dropdownOpen);
-    setShowPopover(index);
-  };
-
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [data, setData] = useState({});
-
-  const handleEditModalOpen = (id: string) => {
-    const findData = purchases.find((data) => data.id === id);
-    setData(findData);
-    setIsEditModalOpen(!isEditModalOpen);
-  };
-
-
   const filteredSalesStatus = sales?.filter(
     (sale) => sale.status === "stocked-out"
   );
@@ -100,7 +70,7 @@ export const Store = () => {
     0
   );  
 
-  const totalPurchases = purchases?.reduce(
+  const totalPurchases = filteredPurchasesStatus?.reduce(
     (acc, purchase) => acc + Number(purchase.totalQuantity),
     0
   );
@@ -143,29 +113,6 @@ export const Store = () => {
   
     return totalQuantity || 0; // Return 0 if totalQuantity is undefined or null
   }
-
-  const handleDeleteProduct = (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You want to delete this category!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "The media has been deleted.",
-          icon: "success",
-        }).then(() => {
-          dispatch(deleteInventory(id));
-        });
-      }
-    });
-  };
-
 
   if (error) {
     return <ErroPage error={error} />;
@@ -333,12 +280,12 @@ export const Store = () => {
           </nav>
         </div>
       </div>
-      {isEditModalOpen && (
+      {/* {isEditModalOpen && (
         <PurchaseDetailsModal
           handleEditModalOpen={handleEditModalOpen}
           data={data}
         />
-      )}
+      )} */}
     </>
   );
 };

@@ -16,8 +16,8 @@ import discountReducer from "./features/dicount/dicountSlice";
 import supplierReducer from "./features/supplier/suppliersSlice";
 import categoryReducer from "./features/category/categorySlice";
 import purchaseReducer from "./features/purchaseSlice";
-import inventoryReducer from "./features/inventory/storeSlice";
 import saleReducer from "./features/saleSlice";
+import printedTransactionsReducer from "./features/printedTransactionsSlice";
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -37,8 +37,8 @@ const store = configureStore({
         supplier: supplierReducer,
         category: categoryReducer,
         purchase: purchaseReducer,
-        inventory: inventoryReducer,
         sale: saleReducer,
+        printedTransaction: printedTransactionsReducer,
     },
 });
 

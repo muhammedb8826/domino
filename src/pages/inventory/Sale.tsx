@@ -1,15 +1,11 @@
 import Loader from "@/common/Loader";
 import ErroPage from "@/components/common/ErroPage";
-import { deletePurchase, getPurchases } from "@/redux/features/purchaseSlice";
 import { useEffect, useRef, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDelete, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { MdDelete} from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { PurchaseRegistration } from "./PurchaseRegistration";
-import { PurchaseDetailsModal, PurchaseEditModal } from "./PurchaseDetailsModal";
 import Breadcrumb from "@/components/Breadcrumb";
 import { BiPurchaseTag } from "react-icons/bi";
 import { BsTicketDetailed } from "react-icons/bs";
@@ -68,16 +64,6 @@ export const Sale = () => {
     setDropdownOpen(!dropdownOpen);
     setShowPopover(index);
   };
-
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [data, setData] = useState({});
-
-  const handleEditModalOpen = (id: string) => {
-    const findData = sales.find((data) => data.id === id);
-    setData(findData);
-    setIsEditModalOpen(!isEditModalOpen);
-  };
-
 
   const handleDeleteProduct = (id: string) => {
     Swal.fire({
@@ -333,12 +319,12 @@ export const Sale = () => {
           </nav>
         </div>
       </div>
-      {isEditModalOpen && (
+      {/* {isEditModalOpen && (
         <PurchaseDetailsModal
           handleEditModalOpen={handleEditModalOpen}
           data={data}
         />
-      )}
+      )} */}
     </>
   );
 }
