@@ -98,7 +98,7 @@ export const OperatorStore = () => {
             
             sales.forEach((sale) => {
               sale.products.forEach((product) => {
-                if (product.productName === productName) {
+                if (product.productName.toLowerCase() === productName.toLowerCase()) {
                   totalRequestedQuantity += parseInt(product.quantity, 10);
                 }
               });
@@ -112,7 +112,7 @@ export const OperatorStore = () => {
             let totalPrintedQuantity = 0;
             
             printedTransactions.forEach((transaction) => {
-              if (transaction.material === productName) {
+              if (transaction.material.toLowerCase() === productName.toLowerCase()) {
                 totalPrintedQuantity += parseInt(transaction.quantity, 10);
               }
             });
@@ -120,13 +120,50 @@ export const OperatorStore = () => {
             return totalPrintedQuantity;
           };
 
+
+          // const handleRequestedArea = (productName) => {
+          //   // Calculate total area for requested quantities for the productName
+          //   let totalRequestedArea = 0;
+          
+          //   sales.forEach((sale) => {
+          //     sale.products.forEach((product) => {
+          //       if (product.productName === productName) {
+          //         const width = parseFloat(product.width);
+          //         const height = parseFloat(product.height);
+          //         const quantity = parseInt(product.quantity, 10);
+          //         totalRequestedArea += width * height * quantity;
+          //       }
+          //     });
+          //   });
+          
+          //   return totalRequestedArea;
+          // };
+
+          const handlePrintedArea = (productName) => {
+            // Calculate total area for printed quantities for the productName
+            let totalPrintedArea = 0;
+          
+            printedTransactions.forEach((transaction) => {
+              if (transaction.material.toLowerCase() === productName.toLowerCase()) {
+                const width = parseFloat(transaction.width);
+                const height = parseFloat(transaction.height);
+                const quantity = parseInt(transaction.quantity, 10);
+                totalPrintedArea += width * height * quantity;
+              }
+            });
+          
+            return totalPrintedArea;
+          };
         
         if (error) {
           return <ErroPage error={error} />;
         }
       
 
-        const listContent = products.map((data, index) => (
+        const listContent = products.map((data, index) =>  {
+          // const requestedArea = handleRequestedArea(data.name);
+          const printedArea = handlePrintedArea(data.name);
+          return (
           <tr key={data.id}>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
               {data.name}
@@ -140,8 +177,12 @@ export const OperatorStore = () => {
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
              {handleRequestedQuantity(data.name) - handlePrintedQuantity(data.name)}
             </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {handleRequestedQuantity(data.name) * printedArea - printedArea}
+            </td>
           </tr>
-        ));
+          );
+        });
 
         const productListContent = filteredSalesStatus.map((sale, index) => (
           <tr key={sale.id}>
@@ -298,6 +339,9 @@ export const OperatorStore = () => {
                          </th>
                          <th className="py-4 px-4 font-medium text-black dark:text-white">
                            Available qty
+                         </th>
+                         <th className="py-4 px-4 font-medium text-black dark:text-white">
+                           Available unit
                          </th>
                        </tr>
                      </thead>

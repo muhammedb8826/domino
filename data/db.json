@@ -23,6 +23,22 @@
       "categoryId": "0620",
       "unitId": "90fc",
       "minStockLevel": "1"
+    },
+    {
+      "id": "b51f",
+      "name": "Sticker",
+      "description": "",
+      "categoryId": "2fa8",
+      "unitId": "90fc",
+      "minStockLevel": "1"
+    },
+    {
+      "id": "2cce",
+      "name": "Screen",
+      "description": "",
+      "categoryId": "2fa8",
+      "unitId": "90fc",
+      "minStockLevel": "1"
     }
   ],
   "orders": [
@@ -199,6 +215,51 @@
         "Biniyam-DTF-T-shirt-3x5"
       ],
       "totalQuantity": 11,
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      }
+    },
+    {
+      "id": "b9a8",
+      "series": "Pepsi-2024",
+      "date": "Feb 27, 2024",
+      "deliveryDate": "Apr 10, 2024",
+      "orderType": "In person",
+      "description": "",
+      "customerId": "1710821022900",
+      "customerPhone": "09-1196-8989",
+      "customerFirstName": "Pepsi",
+      "customerEmail": "pepsi@gmail.com",
+      "commissionPhone": "",
+      "commissionFirstName": "",
+      "commissionEmail": "",
+      "orderItems": [
+        {
+          "machine": "BANNER",
+          "material": "Screen",
+          "service": "Print and Material",
+          "unitPrice": 400,
+          "status": "recieved"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "2",
+          "height": "2",
+          "quantity": "2",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 400,
+      "grandTotal": 460,
+      "fileNames": [
+        "Pepsi-BANNER-Screen-2x2"
+      ],
+      "totalQuantity": 2,
       "paymentInfo": {
         "paymentMethod": "cash",
         "paymentReference": "",
@@ -867,6 +928,25 @@
           "id": "1710814124476"
         }
       }
+    },
+    {
+      "id": "42fa",
+      "transactions": [
+        {
+          "date": "Apr 19, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "pending"
+        }
+      ],
+      "order": {
+        "id": "b9a8",
+        "customer": {
+          "id": "1710821022900"
+        }
+      }
     }
   ],
   "orderStatus": [
@@ -925,6 +1005,21 @@
           "note": "",
           "printed": false,
           "adminApproval": false,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "0985",
+      "orderId": "b9a8",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "printed",
+          "note": "",
+          "printed": false,
+          "adminApproval": true,
           "completed": false
         }
       ]
@@ -1099,6 +1194,18 @@
       "height": "5",
       "quantity": "5",
       "orderId": "605e"
+    },
+    {
+      "id": "c6b9",
+      "machine": "BANNER",
+      "material": "Screen",
+      "service": "Print and Material",
+      "unitPrice": 400,
+      "status": "recieved",
+      "width": "2",
+      "height": "2",
+      "quantity": "2",
+      "orderId": "b9a8"
     }
   ],
   "sales": [
@@ -1150,6 +1257,25 @@
           "productId": "2c3d",
           "productName": "Mika",
           "quantity": "5",
+          "description": "",
+          "unitId": "90fc",
+          "unitName": "M"
+        }
+      ]
+    },
+    {
+      "id": "7961",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "status": "requested",
+      "orderDate": "2024-04-19",
+      "totalQuantity": 4,
+      "note": "",
+      "products": [
+        {
+          "productId": "2cce",
+          "productName": "Screen",
+          "quantity": "4",
           "description": "",
           "unitId": "90fc",
           "unitName": "M"
