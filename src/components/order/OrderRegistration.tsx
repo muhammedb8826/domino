@@ -718,7 +718,7 @@ const [paymentTransaction, setPaymentTransaction] = useState([{
               <button
                 onClick={handleAddRow}
                 type="button"
-                className="bg-gray-200 rounded px-2 font-semibold flex items-center gap-4"
+                className="bg-gray-2 rounded px-2 font-semibold flex items-center gap-4"
               >
                 New order
               </button>

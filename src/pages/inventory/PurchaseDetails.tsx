@@ -525,11 +525,15 @@ export const PurchaseDetails = () => {
                   ></textarea>
                 </div>
                 {singlePurchase.status !== "received" && (
+                  <>
+                  {user?.roles === 'finance' && (
                 <button
                   type="submit"
                   className="flex justify-center rounded bg-primary p-3 font-medium text-gray">
                   Update
                 </button>
+                )}
+                </>
                 )}
               </div>
             </div>

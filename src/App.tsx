@@ -48,6 +48,7 @@ import { OperatorStore } from "./pages/inventory/OperatorStore";
 import { SaleDetails } from "./pages/inventory/SaleDetails";
 import { PurchaseDetails } from "./pages/inventory/PurchaseDetails";
 import { OperatorStoreDetailsModal, OperatorStoreSaleDetails } from "./pages/inventory/OperatorStoreSaleDetails";
+import CommissionDetailsPage from "./components/commission/CommissionDetailsPage";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -94,6 +95,7 @@ const App = () => {
             <Route path="/dashboard/settings" element={<Setting />} />
             <Route path="/dashboard/pricing" element={<Pricing/>}/>
             <Route path="/dashboard/commission" element={<CommissionList/>}/>
+            <Route path="/dashboard/commission/:id" element={<CommissionDetailsPage/>}/>
             <Route path="/dashboard/inventory/products" element={<Products/>}/>
             <Route path="/dashboard/inventory/operator-store" element={<OperatorStore/>}/>
             <Route path="/dashboard/inventory/category" element={<Categories/>}/>

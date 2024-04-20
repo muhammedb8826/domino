@@ -223,18 +223,17 @@
       }
     },
     {
-      "id": "b9a8",
       "series": "Pepsi-2024",
       "date": "Feb 27, 2024",
       "deliveryDate": "Apr 10, 2024",
       "orderType": "In person",
       "description": "",
-      "customerId": "1710821022900",
       "customerPhone": "09-1196-8989",
       "customerFirstName": "Pepsi",
+      "commissionId": "1713587815494",
       "customerEmail": "pepsi@gmail.com",
-      "commissionPhone": "",
-      "commissionFirstName": "",
+      "commissionPhone": "09-1222-6666",
+      "commissionFirstName": "Eyoel",
       "commissionEmail": "",
       "orderItems": [
         {
@@ -242,7 +241,9 @@
           "material": "Screen",
           "service": "Print and Material",
           "unitPrice": 400,
-          "status": "recieved"
+          "status": "recieved",
+          "commissionPrice": 8,
+          "commissionPercent": "2"
         }
       ],
       "orderMeasures": [
@@ -255,17 +256,29 @@
         }
       ],
       "totalBirr": 400,
-      "grandTotal": 460,
+      "totalCommission": 8,
       "fileNames": [
-        "Pepsi-BANNER-Screen-2x2"
+        "Pepsi-Pepsi-BANNER-Screen-2x2"
       ],
       "totalQuantity": 2,
+      "grandTotal": 460,
+      "vat": 60,
+      "discounts": [
+        0
+      ],
+      "levels": [
+        null
+      ],
+      "totalBirrAfterDiscount": [
+        400
+      ],
       "paymentInfo": {
         "paymentMethod": "cash",
         "paymentReference": "",
         "paymentAmount": 0,
         "paymentStatus": "not paid"
-      }
+      },
+      "id": "b9a8"
     }
   ],
   "customers": [
@@ -302,7 +315,16 @@
       "email": ""
     }
   ],
-  "commissions": [],
+  "commissions": [
+    {
+      "id": "1713587815494",
+      "phone": "09-1222-6666",
+      "companyType": "",
+      "firstName": "Eyoel",
+      "lastName": "",
+      "email": ""
+    }
+  ],
   "services": [
     {
       "id": "e4b1",
@@ -938,7 +960,7 @@
           "description": "",
           "paymentAmount": "",
           "reference": "",
-          "status": "pending"
+          "status": "paid"
         }
       ],
       "order": {
@@ -1164,6 +1186,33 @@
           "subTotal": 100,
           "unitId": "8dd4",
           "unitName": "PCS"
+        }
+      ]
+    },
+    {
+      "id": "aaa8",
+      "vendorId": "2e13",
+      "purchaseReresentative": "Muktar",
+      "purchaseReresentativeId": 11,
+      "status": "received",
+      "vendorName": "Dawit",
+      "orderDate": "2024-04-20",
+      "paymentMethod": "check",
+      "amount": 1437.5,
+      "reference": "",
+      "totalAmount": 1437.5,
+      "totalQuantity": 5,
+      "note": "",
+      "products": [
+        {
+          "productId": "b51f",
+          "productName": "Sticker",
+          "quantity": "5",
+          "description": "",
+          "unitPrice": "250",
+          "subTotal": 1250,
+          "unitId": "90fc",
+          "unitName": "M"
         }
       ]
     }

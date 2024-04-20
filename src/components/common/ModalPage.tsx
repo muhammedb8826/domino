@@ -233,7 +233,7 @@ const ModalPage = ({ handleModalOpen, id, orders }) => {
       <div className="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse mx-auto">
         <button
           type="submit"
-          className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-700 border border-transparent rounded-md shadow-sm hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:ml-3 sm:w-auto sm:text-sm"
+          className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-primary border border-transparent rounded-md shadow-sm hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:ml-3 sm:w-auto sm:text-sm"
         >
           Save
         </button>

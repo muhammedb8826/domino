@@ -431,13 +431,13 @@ const CommissionDetailsPage = () => {
             <button
               onClick={handleAddRow}
               type="button"
-              className="bg-gray-200 rounded px-2 font-semibold flex items-center gap-4"
+              className="bg-gray-2 rounded px-2 font-semibold flex items-center gap-4"
             >
               Add transaction
             </button>
             <button
               type="button"
-              className="bg-gray-200 rounded px-2 font-semibold flex items-center gap-4"
+              className="bg-gray-2 rounded px-2 font-semibold flex items-center gap-4"
             >
               Download
             </button>
@@ -445,7 +445,7 @@ const CommissionDetailsPage = () => {
 
           <button
             type="submit"
-            className="float-right text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="float-right text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             update
           </button>

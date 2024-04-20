@@ -195,7 +195,7 @@ export const CommissionList = () => {
                 <ul className="py-2 text-sm text-gray-700">
                   <li key={`${commission.id}-${index}-1`}>
                     <NavLink
-                      to={`/commission/${commission.id}`}
+                      to={`/dashboard/commission/${commission.id}`}
                       className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
                     >
                       <FaRegEdit />
