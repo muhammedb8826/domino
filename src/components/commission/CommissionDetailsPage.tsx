@@ -15,6 +15,7 @@ import {
 import { GoBack } from "../common/GoBack";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { RootState } from "@/redux/store";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -26,6 +27,7 @@ const CommissionDetailsPage = () => {
   const { singleCommission, isLoading, error } = useSelector(
     (state) => state.commission
   );
+  const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrders());
@@ -202,7 +204,7 @@ const CommissionDetailsPage = () => {
   if (error) {
     return <ErroPage error={error} />;
   }
-
+ 
   return (
     <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0 min-h-screen">
       <GoBack goback="/dashboard" />
@@ -442,13 +444,15 @@ const CommissionDetailsPage = () => {
               Download
             </button>
           </div>
-
+          {user?.email === "admin@domino.com" || user.roles === 'finance' ? (
           <button
             type="submit"
             className="float-right text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             update
           </button>
+          ): ''}
+
         </div>
       </form>
     </section>
