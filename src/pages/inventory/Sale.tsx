@@ -169,7 +169,7 @@ export const Sale = () => {
     <Loader />
   ) : (
     <>
-      <Breadcrumb pageName="Sales" />
+      <Breadcrumb pageName="Store request" />
 
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
         
