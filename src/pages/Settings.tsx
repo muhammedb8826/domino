@@ -19,7 +19,6 @@ const Settings = () => {
 
   const handleEditRow = (idx) => {
     setRowToEdit(idx);
-
     setModalOpen(true);
   };
 

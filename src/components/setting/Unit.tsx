@@ -83,8 +83,8 @@ const Unit = () => {
   if (error) return <ErroPage error={error} />;
 
   return (
-    <div className="flex flex-col gap-4 p-4 items-center overflow-y-auto h-full" id="style-4">
-      <fieldset className="border border-black p-4 mb-2 w-full sm:w-1/2">
+    <div className="rounded-sm px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 overflow-y-auto h-full" id="style-4">
+      <fieldset className="border border-stroke bg-white dark:bg-black p-4 mb-2 w-full mx-auto">
         <legend className="bg-black text-white border px-2">
           Add new unit
         </legend>
@@ -93,7 +93,7 @@ const Unit = () => {
             <div>
               <label
                 htmlFor="unitName"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="mb-3 block text-sm font-medium text-black dark:text-white"
               >
                 Unit name
               </label>
@@ -103,7 +103,7 @@ const Unit = () => {
               onChange={handleChange}
               name="name"
                 id="unitName"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 placeholder="eg, cm, m, kare"
                 required
               />
@@ -111,7 +111,7 @@ const Unit = () => {
             <div>
               <label
                 htmlFor="width"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="mb-3 block text-sm font-medium text-black dark:text-white"
               >
                 Width
               </label>
@@ -121,7 +121,7 @@ const Unit = () => {
               name="width"
               value={formData.width || ""}
               onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 placeholder="eg, 10, 20"
                 required
               />
@@ -129,7 +129,7 @@ const Unit = () => {
             <div>
               <label
                 htmlFor="height"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="mb-3 block text-sm font-medium text-black dark:text-white"
               >
                 Height
               </label>
@@ -139,7 +139,7 @@ const Unit = () => {
               id="height"
               value={formData.height || ""}
               onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 placeholder="eg, 10, 20"
                 required
               />
@@ -147,7 +147,7 @@ const Unit = () => {
             <div className="flex items-end justify-center">
             <button
               type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Add new
             </button>
@@ -155,49 +155,42 @@ const Unit = () => {
           </div>
         </form>
       </fieldset>
-
-      <div className="grid grid-cols-1 gap-4 w-full sm:w-1/2">
-  
-        <div className="p-4 bg-white border rounded-lg shadow sm:p-8 h-[370px] relative overflow-hidden">
-          <div className="flex items-center justify-between mb-4">
-            <h5 className="text-l font-bold leading-none text-gray-900 ">
-              Unit Names
-            </h5>
-            <h5 className="text-l font-bold leading-none text-gray-900 ">
-              Dimensions(wxh)
-            </h5>
-            <p className="text-sm font-medium text-blue-600 hover:underline">
-              Actions
-            </p>
-          </div>
-          <ul
-            role="list"
-            className="divide-y divide-gray-200 overflow-y-auto h-full"
-          >
-            {units.length === 0 && (
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-xl font-semibold text-gray-900">
-                  No data found
-                  </p>
-                  </div>
-                  )}
-            {units && units.map((unit) => (
-              <li className="py-2" key={unit.id}>
-                <div className="flex items-center">
-                  <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate h-full">
-                      {unit.name}
-                    </p>
-                  </div>
-                  <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate h-full">
-                      {unit.width} x {unit.height}
-                    </p>
-                  </div>
-                  <div className="inline-flex gap-2 items-center text-base font-semibold text-gray-900">
-                  <button
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+            <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  Unit Names
+                </th>
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  Dimensions(wxh)
+                </th>
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {units.length === 0 && (
+                <tr>
+                  <td className="py-4 px-4 text-center text-gray-900 dark:text-white" colSpan={3}>
+                    No data found
+                  </td>
+                </tr>
+              )}
+              {units && units.map((unit) => (
+                <tr key={unit.id}>
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    {unit.name}
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    {unit.width} x {unit.height}
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <button
                       title="edit"
-                      className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:blue-red-300 font-medium rounded-lg px-3 py-2 my-2 text-center"
+                      className="me-2 text-primary hover:text-white border border-blue-700 hover:bg-primary focus:ring-4 focus:outline-none focus:blue-red-300 font-medium rounded-lg px-3 py-2 my-2 text-center"
                       type="button"
                       onClick={() => handleModalOpen(unit.id)}
                     >
@@ -206,19 +199,94 @@ const Unit = () => {
 
                     <button
                       title="delete"
-                      className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-center"
+                      className="ms-2 text-danger hover:text-white border border-red-700 hover:bg-danger focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-center"
                       type="button"
                       onClick={()=>handleDeleteUnit(unit.id)}
                     >
                       <MdDelete className="w-5 h-5" />
                     </button>
-                  </div>
-                </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <nav
+            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            aria-label="Table navigation"
+          >
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+              Showing{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1-10
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1000
+              </span>
+            </span>
+            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Previous
+                </a>
               </li>
-            ))}
-          </ul>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  1
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  2
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  aria-current="page"
+                  className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                >
+                  3
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  4
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  5
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
+
       {modalOpen && <UnitEditModal handleModalOpen={handleModalOpen} data={data} />}
 
    </div>

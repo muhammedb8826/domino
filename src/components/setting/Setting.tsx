@@ -36,9 +36,9 @@ const Setting = () => {
 
   return (
     <div className="relative h-screen calc(100% - 2rem) flex flex-col">
-      <nav className="flex items-center justify-center h-[15%]">
-        <ul className="my-4 p-2 bg-gray-100 rounded-lg flex">
-          <li>
+      <nav className="">
+        <ul className="list-reset py-4 pl-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
+          <li className="text-gray-500 text-sm dark:text-gray-400">
             <button
               type="button"
               onClick={() => handleButtonClick("machines")}
@@ -49,7 +49,7 @@ const Setting = () => {
               Machines
             </button>
           </li>
-          <li>
+          <li className="text-gray-500 text-sm dark:text-gray-400">
             <button
               type="button"
               onClick={() => handleButtonClick("materials")}
@@ -60,7 +60,7 @@ const Setting = () => {
               Materials
             </button>
           </li>
-          <li>
+          <li className="text-gray-500 text-sm dark:text-gray-400">
             <button
               type="button"
               onClick={() => handleButtonClick("units")}
@@ -71,7 +71,7 @@ const Setting = () => {
               Units
             </button>
           </li>
-          <li>
+          <li className="text-gray-500 text-sm dark:text-gray-400">
             <button
               type="button"
               onClick={() => handleButtonClick("services")}
@@ -82,7 +82,7 @@ const Setting = () => {
               Services
             </button>
           </li>
-          <li>
+          {/* <li className="text-gray-500 text-sm dark:text-gray-400">
             <button
               type="button"
               onClick={() => handleButtonClick("roles")}
@@ -92,8 +92,8 @@ const Setting = () => {
             >
               Roles
             </button>
-          </li>
-          <li>
+          </li> */}
+          <li className="text-gray-500 text-sm dark:text-gray-400">
             <button
               type="button"
               onClick={() => handleButtonClick("discounts")}

@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getPrintedTransactions } from "@/redux/features/printedTransactionsSlice";
 import { getProducts } from "@/redux/features/product/productSlice";
+import { getUnits } from "@/redux/features/unit/unitSlice";
 
 export const OperatorStore = () => {
 
@@ -21,6 +22,7 @@ export const OperatorStore = () => {
         const { printedTransactions } = useSelector((state) => state.printedTransaction);
         const { products } = useSelector((state) => state.product);
         const { user } = useSelector((state: RootState) => state.auth);
+        const { units } = useSelector((state) => state.unit);
       
         const dispatch = useDispatch();
         const navigate = useNavigate();
@@ -35,6 +37,7 @@ export const OperatorStore = () => {
           dispatch(getSales());
           dispatch(getPrintedTransactions())
           dispatch(getProducts());
+          dispatch(getUnits())
         }, [dispatch]);
       
         const [showPopover, setShowPopover] = useState(null);
@@ -77,67 +80,63 @@ export const OperatorStore = () => {
           setDropdownOpen(!dropdownOpen);
           setShowPopover(index);
         };
-      
-        const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-        const [data, setData] = useState({});
-      
-        const handleEditModalOpen = (id: string) => {
-          const findData = sales.find((data) => data.id === id);
-          setData(findData);
-          setIsEditModalOpen(!isEditModalOpen);
-        };
-      
+        
         const filteredSalesStatus = sales?.filter(
             (sale) => sale.status === "stocked-out"
           );
 
 
-          const handleRequestedQuantity = (productName) => {
-            // Calculate total requested quantity for the productName
-            let totalRequestedQuantity = 0;
+          // const handleRequestedQuantity = (productName) => {
+          //   // Calculate total requested quantity for the productName
+          //   let totalRequestedQuantity = 0;
             
-            filteredSalesStatus.forEach((sale) => {
-              sale.products.forEach((product) => {
-                if (product.productName.toLowerCase() === productName.toLowerCase()) {
-                  totalRequestedQuantity += parseInt(product.quantity, 10);
-                }
-              });
-            });
-            
-            return totalRequestedQuantity;
-          };
-
-          const handlePrintedQuantity = (productName) => {
-            // Calculate total printed quantity for the productName
-            let totalPrintedQuantity = 0;
-            
-            printedTransactions.forEach((transaction) => {
-              if (transaction.material.toLowerCase() === productName.toLowerCase()) {
-                totalPrintedQuantity += parseInt(transaction.quantity, 10);
-              }
-            });
-            
-            return totalPrintedQuantity;
-          };
-
-
-          // const handleRequestedArea = (productName) => {
-          //   // Calculate total area for requested quantities for the productName
-          //   let totalRequestedArea = 0;
-          
-          //   sales.forEach((sale) => {
+          //   filteredSalesStatus.forEach((sale) => {
           //     sale.products.forEach((product) => {
-          //       if (product.productName === productName) {
-          //         const width = parseFloat(product.width);
-          //         const height = parseFloat(product.height);
-          //         const quantity = parseInt(product.quantity, 10);
-          //         totalRequestedArea += width * height * quantity;
+          //       if (product.productName.toLowerCase() === productName.toLowerCase()) {
+          //         totalRequestedQuantity += parseInt(product.quantity, 10);
           //       }
           //     });
           //   });
-          
-          //   return totalRequestedArea;
+            
+          //   return totalRequestedQuantity;
           // };
+
+          // const handlePrintedQuantity = (productName) => {
+          //   // Calculate total printed quantity for the productName
+          //   let totalPrintedQuantity = 0;
+            
+          //   printedTransactions.forEach((transaction) => {
+          //     if (transaction.material.toLowerCase() === productName.toLowerCase()) {
+          //       totalPrintedQuantity += parseInt(transaction.quantity, 10);
+          //     }
+          //   });
+            
+          //   return totalPrintedQuantity;
+          // };
+
+
+          const handleRequestedArea = (productName) => {
+            // Calculate total area for requested quantities for the productName
+            let totalRequestedArea = 0;
+          
+            filteredSalesStatus.forEach((sale) => {
+              sale.products.forEach((product) => {
+                if (product.productName === productName) {
+                  const matchingUnit = units.find((unit) => unit.id === product.unitId);
+                  console.log(matchingUnit);
+                  
+                  if(matchingUnit){
+                  const width = matchingUnit.width;
+                  const height = matchingUnit.height;
+                  const quantity = parseInt(product.quantity, 10);
+                  totalRequestedArea += parseInt(width) * parseInt(height) * quantity;
+                  }
+                }
+              });
+            });
+          
+            return totalRequestedArea;
+          };
 
           const handlePrintedArea = (productName) => {
             // Calculate total area for printed quantities for the productName
@@ -154,37 +153,37 @@ export const OperatorStore = () => {
           
             return totalPrintedArea;
           };
+
+          const handleUnitName = (unitId) => {
+            const unit = units.find((unit) => unit.id === unitId);
+            return unit ? unit.name : "";
+          };
         
         if (error) {
           return <ErroPage error={error} />;
         }
       
 
-        const listContent = products.map((data, index) =>  {
-          // const requestedArea = handleRequestedArea(data.name);
+        const listContent = products.map((data) =>  {
+          const requestedArea = handleRequestedArea(data.name);
           const printedArea = handlePrintedArea(data.name);
+          const unitName = handleUnitName(data.unitId);
           return (
           <tr key={data.id}>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
               {data.name}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {handleRequestedQuantity(data.name)}
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {handleRequestedQuantity(data.name) * printedArea}
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {handlePrintedQuantity(data.name)}
+              {requestedArea}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
               {printedArea}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-             {handleRequestedQuantity(data.name) - handlePrintedQuantity(data.name)}
+            {requestedArea - printedArea}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {handleRequestedQuantity(data.name) * printedArea - printedArea}
+            {unitName}
             </td>
           </tr>
           );
@@ -338,23 +337,17 @@ export const OperatorStore = () => {
                          <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                            Material
                          </th>
-                         <th className="py-4 px-4 font-medium text-black dark:text-white">
-                           Requested qty
+                         <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                           Requested (in units)
+                         </th>
+                         <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                           Printed (in units)
                          </th>
                          <th className="py-4 px-4 font-medium text-black dark:text-white">
-                           Requested unit
+                           Available stock (in units)
                          </th>
                          <th className="py-4 px-4 font-medium text-black dark:text-white">
-                           Printed qty
-                         </th>
-                         <th className="py-4 px-4 font-medium text-black dark:text-white">
-                           Printed unit
-                         </th>
-                         <th className="py-4 px-4 font-medium text-black dark:text-white">
-                           Available qty
-                         </th>
-                         <th className="py-4 px-4 font-medium text-black dark:text-white">
-                           Available unit
+                            Unit
                          </th>
                        </tr>
                      </thead>
@@ -465,7 +458,7 @@ export const OperatorStore = () => {
                 </div>
                 <input
                   type="text"
-                  id="table-search-products"
+                  id="table-search-printed"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 ps-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   placeholder="Search for products"
                 />
@@ -610,7 +603,7 @@ export const OperatorStore = () => {
                                 </div>
                                 <input
                                   type="text"
-                                  id="table-search-products"
+                                  id="table-search-requested"
                                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 ps-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                   placeholder="Search for products"
                                 />
