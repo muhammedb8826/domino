@@ -2,6 +2,7 @@ import Loader from "@/common/Loader";
 import ErroPage from "@/components/common/ErroPage";
 import { getCategories } from "@/redux/features/category/categorySlice";
 import { createProduct } from "@/redux/features/product/productSlice";
+import { createStock } from "@/redux/features/stockSlice";
 import { getUnits } from "@/redux/features/unit/unitSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ useEffect(() => {
     categoryId: "",
     unitId: "", 
     minStockLevel: "1",
+    initialStock: "0",
   });
 
   const handleChange = (e) => {
@@ -37,16 +39,23 @@ useEffect(() => {
     if (!formData.name || !formData.categoryId || !formData.unitId) {
       return toast.error("All fields are required");
     }
+    const date = new Date();
     const data = {
+      id: date.getTime().toString(),
       name: formData.name,
       description: formData.description,
       categoryId: formData.categoryId,
       unitId: formData.unitId,
       minStockLevel: formData.minStockLevel,
+      initialStock: formData.initialStock,
     };
-
-
+    const stockData = {
+      productId: data.id,
+      quantity: data.initialStock,
+       };
+     
     dispatch(createProduct(data)).then(() => {
+      dispatch(createStock(stockData));
         handleModalOpen(false);
         const message = "Product created successfully";
         toast.success(message);
@@ -172,6 +181,22 @@ useEffect(() => {
                       type="number"
                       id="minStockLevel"
                       name="minStockLevel"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="initialStock"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Initial Stock
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.initialStock}
+                      type="number"
+                      id="initialStock"
+                      name="initialStock"
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>

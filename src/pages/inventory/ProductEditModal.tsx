@@ -2,6 +2,7 @@ import Loader from "@/common/Loader";
 import ErroPage from "@/components/common/ErroPage";
 import { getCategories } from "@/redux/features/category/categorySlice";
 import { updateProduct } from "@/redux/features/product/productSlice";
+import { getStock, getStockById, updateStock } from "@/redux/features/stockSlice";
 import { getUnits } from "@/redux/features/unit/unitSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
@@ -14,12 +15,17 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
     (state: RootState) => state.category
   );
   const {units} = useSelector((state)=>state.unit);
+  const {stock} = useSelector((state)=>state.stock);
+  const stockId = stock.find((stock)=>stock.productId === data.id)?.id;
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCategories());
+    dispatch(getStockById(stockId));
+    dispatch(getStock());
     dispatch(getUnits());
-  }, [dispatch]);
+    // dispatch(getStockById(data.id));
+  }, [dispatch, stockId]);
 
 
   const [formData, setFormData] = useState({
@@ -28,6 +34,7 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
     categoryId: data.categoryId,
     unitId: data.unitId,
     minStockLevel: data.minStockLevel,
+    initialStock: data.initialStock,
     id: data.id,
   });
 
@@ -37,7 +44,13 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+  
+    // Calculate new stock quantity by adding the new quantity to the existing one
+    const newQuantity = Number(stock.find(product => product.productId === data.id)?.quantity || 0) 
+                      + Number(formData.initialStock);
+  
     dispatch(updateProduct(formData)).then(() => {
+      dispatch(updateStock({ id: stockId, productId: data.id, quantity: newQuantity.toString() }));
       handleEditModalOpen(false);
       const message = "Product updated successfully";
       toast.success(message);
@@ -168,6 +181,22 @@ export const ProductEditModal = ({ handleEditModalOpen, data }) => {
                       type="number"
                       id="minStockLevel"
                       name="minStockLevel"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="initialStock"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Initial Stock
+                    </label>
+                    <input
+                      onChange={handleChange}
+                      value={formData.initialStock}
+                      type="number"
+                      id="initialStock"
+                      name="initialStock"
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>

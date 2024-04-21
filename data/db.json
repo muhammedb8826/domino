@@ -1,44 +1,22 @@
 {
   "products": [
     {
+      "name": "Banner",
+      "description": "",
+      "categoryId": "2fa8",
+      "unitId": "3e4a",
+      "minStockLevel": "1",
+      "initialStock": "5",
+      "id": "1713703632140"
+    },
+    {
+      "id": "1713727389192",
       "name": "T-shirt",
-      "description": "This corall t-shirt",
+      "description": "",
       "categoryId": "833f",
       "unitId": "8dd4",
-      "minStockLevel": "2",
-      "id": "0d5a"
-    },
-    {
-      "name": "Banner",
-      "description": "mesh",
-      "categoryId": "2fa8",
-      "unitId": "890e",
-      "minStockLevel": "2",
-      "id": "5ec2"
-    },
-    {
-      "id": "2c3d",
-      "name": "Mika",
-      "description": "",
-      "categoryId": "0620",
-      "unitId": "90fc",
-      "minStockLevel": "1"
-    },
-    {
-      "id": "b51f",
-      "name": "Sticker",
-      "description": "",
-      "categoryId": "2fa8",
-      "unitId": "90fc",
-      "minStockLevel": "1"
-    },
-    {
-      "id": "2cce",
-      "name": "Screen",
-      "description": "",
-      "categoryId": "2fa8",
-      "unitId": "90fc",
-      "minStockLevel": "1"
+      "minStockLevel": "1",
+      "initialStock": "10"
     }
   ],
   "orders": [
@@ -1107,6 +1085,16 @@
       "address": "",
       "tinNumber": "",
       "id": "cd27"
+    },
+    {
+      "id": "d604",
+      "firstName": "intial stock",
+      "lastName": "initial stock",
+      "phone": "123-45-678",
+      "email": "mrol3943@gmail.com",
+      "company": "domino",
+      "address": "Addis Ababa",
+      "tinNumber": "123"
     }
   ],
   "categories": [
@@ -1143,193 +1131,65 @@
   ],
   "purchases": [
     {
-      "id": "4a8d",
+      "id": "4cdb",
       "vendorId": "a85f",
-      "purchaseReresentative": "Teshager",
-      "purchaseReresentativeId": 8,
+      "purchaseReresentative": "Muktar",
+      "purchaseReresentativeId": 11,
       "status": "received",
       "vendorName": "Muhammed",
-      "orderDate": "2024-04-17",
+      "orderDate": "2024-04-22",
       "paymentMethod": "cash",
-      "amount": 69115,
+      "amount": 690,
       "reference": "",
-      "totalAmount": 69115,
-      "totalQuantity": 18,
+      "totalAmount": 690,
+      "totalQuantity": 3,
       "note": "",
       "products": [
         {
-          "productId": "2c3d",
-          "productName": "Mika",
-          "quantity": "6",
-          "description": "",
-          "unitPrice": "2000",
-          "subTotal": 10000,
-          "unitId": "90fc",
-          "unitName": "M"
-        },
-        {
-          "productId": "5ec2",
+          "productId": "1713703632140",
           "productName": "Banner",
-          "quantity": "10",
+          "quantity": "3",
           "description": "",
-          "unitPrice": "5000",
-          "subTotal": 50000,
-          "unitId": "890e",
-          "unitName": "sqm"
-        },
+          "unitPrice": "200",
+          "subTotal": 600,
+          "unitId": "3e4a",
+          "unitName": "Roll"
+        }
+      ]
+    }
+  ],
+  "printedTransactions": [],
+  "sales": [
+    {
+      "id": "fabf",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "status": "approved",
+      "orderDate": "2024-04-22",
+      "totalQuantity": 15,
+      "note": "",
+      "products": [
         {
-          "productId": "0d5a",
+          "productId": "1713727389192",
           "productName": "T-shirt",
-          "quantity": "2",
+          "quantity": "15",
           "description": "",
-          "unitPrice": "50",
-          "subTotal": 100,
           "unitId": "8dd4",
           "unitName": "PCS"
         }
       ]
-    },
-    {
-      "id": "aaa8",
-      "vendorId": "2e13",
-      "purchaseReresentative": "Muktar",
-      "purchaseReresentativeId": 11,
-      "status": "received",
-      "vendorName": "Dawit",
-      "orderDate": "2024-04-20",
-      "paymentMethod": "check",
-      "amount": 1437.5,
-      "reference": "",
-      "totalAmount": 1437.5,
-      "totalQuantity": 5,
-      "note": "",
-      "products": [
-        {
-          "productId": "b51f",
-          "productName": "Sticker",
-          "quantity": "5",
-          "description": "",
-          "unitPrice": "250",
-          "subTotal": 1250,
-          "unitId": "90fc",
-          "unitName": "M"
-        }
-      ]
     }
   ],
-  "printedTransactions": [
+  "stock": [
     {
-      "id": "acb4",
-      "machine": "DTF",
-      "material": "T-shirt",
-      "service": "Print and Material",
-      "unitPrice": 12500,
-      "status": "recieved",
-      "commissionPrice": 0,
-      "width": "5",
-      "height": "5",
-      "quantity": "5",
-      "orderId": "605e"
+      "id": "f3f9",
+      "productId": "1713703632140",
+      "quantity": "8"
     },
     {
-      "id": "8320",
-      "machine": "UV",
-      "material": "Film",
-      "service": "Print and Material",
-      "unitPrice": 10000,
-      "status": "recieved",
-      "commissionPrice": 0,
-      "width": "2",
-      "height": "5",
-      "quantity": "5",
-      "orderId": "605e"
-    },
-    {
-      "id": "c6b9",
-      "machine": "BANNER",
-      "material": "Screen",
-      "service": "Print and Material",
-      "unitPrice": 400,
-      "status": "recieved",
-      "width": "2",
-      "height": "2",
-      "quantity": "2",
-      "orderId": "b9a8"
-    }
-  ],
-  "sales": [
-    {
-      "id": "f50e",
-      "operatorId": 8,
-      "operatorFirstName": "Teshager",
-      "status": "stocked-out",
-      "orderDate": "2024-04-09",
-      "totalQuantity": 7,
-      "note": "mamae\n",
-      "products": [
-        {
-          "productId": "2c3d",
-          "productName": "Mika",
-          "quantity": "5",
-          "description": "dd545",
-          "unitId": "90fc",
-          "unitName": "M"
-        },
-        {
-          "productId": "5ec2",
-          "productName": "Banner",
-          "quantity": "2",
-          "description": "gf",
-          "unitId": "890e",
-          "unitName": "sqm"
-        }
-      ]
-    },
-    {
-      "id": "410d",
-      "operatorId": 8,
-      "operatorFirstName": "Teshager",
-      "status": "requested",
-      "orderDate": "2024-04-17",
-      "totalQuantity": 10,
-      "note": "",
-      "products": [
-        {
-          "productId": "5ec2",
-          "productName": "Banner",
-          "quantity": "5",
-          "description": "",
-          "unitId": "890e",
-          "unitName": "sqm"
-        },
-        {
-          "productId": "2c3d",
-          "productName": "Mika",
-          "quantity": "5",
-          "description": "",
-          "unitId": "90fc",
-          "unitName": "M"
-        }
-      ]
-    },
-    {
-      "id": "7961",
-      "operatorId": 8,
-      "operatorFirstName": "Teshager",
-      "status": "stocked-out",
-      "orderDate": "2024-04-19",
-      "totalQuantity": 4,
-      "note": "",
-      "products": [
-        {
-          "productId": "2cce",
-          "productName": "Screen",
-          "quantity": "4",
-          "description": "",
-          "unitId": "90fc",
-          "unitName": "M"
-        }
-      ]
+      "id": "e65b",
+      "productId": "1713727389192",
+      "quantity": "10"
     }
   ]
 }

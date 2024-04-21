@@ -11,13 +11,19 @@ import CardTwo from "@/components/CardTwo";
 import { FcSalesPerformance } from "react-icons/fc";
 import { BiPurchaseTag } from "react-icons/bi";
 import { getSales } from "@/redux/features/saleSlice";
+import { getStock, updateStock } from "@/redux/features/stockSlice";
+import { Link, NavLink } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import { CiMenuKebab } from "react-icons/ci";
 
-export const Store = () => {
+export const Stock = () => {
   const { purchases } = useSelector((state: RootState) => state.purchase);
   const { products, isLoading, error } = useSelector(
     (state: RootState) => state.product
   );
   const { sales } = useSelector((state: RootState) => state.sale);
+  const {stock} = useSelector((state: RootState) => state.stock);
   
   const dispatch = useDispatch();
 
@@ -25,11 +31,26 @@ export const Store = () => {
     dispatch(getPurchases());
     dispatch(getProducts());
     dispatch(getSales());
+    dispatch(getStock());
   }, [dispatch]);
 
+  const [showPopover, setShowPopover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [data, setData] = useState({});
+  const handleModalOpen = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleEditModalOpen = (id: string) => {
+    const findData = products.find((data) => data.id === id);
+    setData(findData);
+    setIsEditModalOpen(!isEditModalOpen);
+  };
 
   // close on click outside
   useEffect(() => {
@@ -56,6 +77,37 @@ export const Store = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
+
+    // close on click outside
+    useEffect(() => {
+      const clickHandler = ({ target }: MouseEvent) => {
+        if (!dropdownRef.current) return;
+        if (
+          !dropdownOpen ||
+          dropdownRef.current.contains(target) ||
+          triggerRef.current.contains(target)
+        )
+          return;
+        setDropdownOpen(false);
+      };
+      document.addEventListener("click", clickHandler);
+      return () => document.removeEventListener("click", clickHandler);
+    });
+  
+    // close if the esc key is pressed
+    useEffect(() => {
+      const keyHandler = ({ keyCode }: KeyboardEvent) => {
+        if (!dropdownOpen || keyCode !== 27) return;
+        setDropdownOpen(false);
+      };
+      document.addEventListener("keydown", keyHandler);
+      return () => document.removeEventListener("keydown", keyHandler);
+    });
+  
+    const handleAction = (index) => {
+      setDropdownOpen(!dropdownOpen);
+      setShowPopover(index);
+    };
 
   const filteredSalesStatus = sales?.filter(
     (sale) => sale.status === "stocked-out"
@@ -108,9 +160,6 @@ export const Store = () => {
       }
       return acc;
     }, 0);
-
-
-  
     return totalQuantity || 0; // Return 0 if totalQuantity is undefined or null
   }
 
@@ -118,25 +167,78 @@ export const Store = () => {
     return <ErroPage error={error} />;
   }
 
-  const productListContent = products?.map((product, index) => (
-    <tr key={product.id}>
+  const productListContent = stock?.map((s, index) => {
+    const product = products?.find((product) => product.id === s.productId);
+  
+    const isLowStock = Number(s.quantity) <= Number(product?.minStockLevel);
+    const rowClassName = isLowStock ? "bg-danger/25 dark:bg-danger/80" : "";
+
+    return (
+      <tr key={s.id} className={rowClassName}>
       <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
-        {product.name}
+      {product?.name}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {handleTotalPurchases(product.id)}
+        {s.quantity}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {handleTotalSales(product.id)}
+      {product?.initialStock}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {handleTotalPurchases(product.id) - handleTotalSales(product.id)}
+      {product?.minStockLevel}
       </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-       {handleTotalPurchases(product.id) - handleTotalSales(product.id) <= Number(product.minStockLevel) ? <span className="text-danger">Low Stock</span> : <span className="text-success">In Stock</span>}
+      <td className="px-6 py-4 relative">
+        <Link
+          to="#"
+          onClick={(event) => {
+            handleAction(index);
+            event.stopPropagation();
+          }}
+          ref={triggerRef}
+          className="flex items-center gap-4"
+        >
+          <CiMenuKebab />
+        </Link>
+
+        {/* <!-- Dropdown Start --> */}
+        {showPopover === index && (
+          <div
+            ref={dropdownRef}
+            onFocus={() => setDropdownOpen(true)}
+            onBlur={() => setDropdownOpen(false)}
+            className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+              dropdownOpen ? "block" : "hidden"
+            }`}
+          >
+            <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
+              <li>
+                <NavLink
+                  onClick={() => handleEditModalOpen(s.productId)}
+                  to="#"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <FaRegEdit />
+                  Edit
+                </NavLink>
+              </li>
+              {/* <li>
+                <NavLink
+                  onClick={() => handleDeleteProduct(product.id)}
+                  to="#"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <MdDelete />
+                  Delete
+                </NavLink>
+              </li> */}
+            </ul>
+          </div>
+        )}
+        {/* <!-- Dropdown End --> */}
       </td>
     </tr>
-  ));
+    );
+  });
 
   return isLoading ? (
     <Loader />
@@ -189,16 +291,16 @@ export const Store = () => {
                   Product name
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Purchases
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Sales
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Available Qty
+                  Quantity
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Min Stock Level
+                  Initial stock
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Min stock level
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Action
                 </th>
               </tr>
             </thead>

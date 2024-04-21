@@ -32,7 +32,7 @@ import { Purschase } from "./pages/inventory/Purschase";
 import { OrderRegistration } from "./components/order/OrderRegistration";
 import OrderDetailsPage from "./components/order/OrderDetailsPage";
 import { PurchaseRegistration } from "./pages/inventory/PurchaseRegistration";
-import { Store } from "./pages/inventory/Store";
+import { Stock, Store } from "./pages/inventory/Stock";
 import {Sale} from "./pages/inventory/Sale";
 import { SaleRegistration } from "./pages/inventory/SaleRegistration";
 import Setting from "./components/setting/Setting";
@@ -103,7 +103,7 @@ const App = () => {
             <Route path="/dashboard/inventory/purchases" element={<Purschase/>}/>
             <Route path="/dashboard/inventory/purchases/:id" element={<PurchaseDetails />}/>
             <Route path="/dashboard/inventory/purchases/add" element={<PurchaseRegistration/>}/>
-            <Route path="/dashboard/inventory/store" element={<Store/>}/>
+            <Route path="/dashboard/inventory/stock" element={<Stock/>}/>
             <Route path="/dashboard/inventory/sales" element={<Sale />} />
             <Route path="/dashboard/inventory/sales/:id" element={<SaleDetails />} />
             <Route path="/dashboard/inventory/operator-store/:id" element={<OperatorStoreSaleDetails />} />

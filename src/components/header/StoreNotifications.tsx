@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import ErroPage from "../common/ErroPage";
 import { toast } from "react-toastify";
 import { getPurchases, updatePurchase } from "@/redux/features/purchaseSlice";
+import { getStock, updateStock } from "@/redux/features/stockSlice";
 
 export const StoreNotifications = () => {
     const { sales, isLoading } = useSelector((state: RootState) => state.sale);
     const { purchases } = useSelector((state: RootState) => state.purchase);
+    const { stock } = useSelector((state: RootState) => state.stock);
     const { user, error } = useSelector(
       (state: RootState) => state.auth
     );
@@ -17,7 +19,8 @@ export const StoreNotifications = () => {
     const dispatch = useDispatch();
     useEffect(() => {
       dispatch(getSales());
-      dispatch(getPurchases())
+      dispatch(getPurchases());
+      dispatch(getStock());
     }, [dispatch]);
 
     const filteredSalesStatus = sales?.filter(
@@ -28,18 +31,64 @@ export const StoreNotifications = () => {
         (sale) => sale.status === "purchased" || sale.status === "pending"
       );
 
-    const handleApproveSale = (id: string) => {
+      const handleApproveSale = (id: string) => {
+        // Find the sale by ID
         const findSale = sales.find((sale) => sale.id === id);
-        const updatedFindSale = { ...findSale, status: "stocked-out" };
-        dispatch(updateSale(updatedFindSale)).then(() => {
-          const message = "Sale stocked-out successfully";
-          toast.success(message);
+    
+        if (!findSale) {
+            toast.error("Sale not found");
+            return;
+        }
+    
+        // Update the sale status
+        const updatedFindSale = { ...findSale, status: "stocked-out" };  
+        // Update stock quantities based on sale products
+        updatedFindSale.products.forEach((saleProduct) => {
+            const stockProduct = stock.find((product) => product.productId === saleProduct.productId);
+            if (stockProduct) {
+                const newQuantity = Number(stockProduct.quantity) - Number(saleProduct.quantity);             
+                if (newQuantity >= 0) {
+                    const updatedStockProduct = { ...stockProduct, quantity: newQuantity.toString() };
+                    dispatch(updateStock(updatedStockProduct));
+                    dispatch(updateSale(updatedFindSale)).then(() => {
+                      const message = "Sale stocked-out successfully";
+                      toast.success(message);
+                    });
+                } else {
+                    toast.error(`Not enough stock for product ${saleProduct.productName}`);
+                    return;
+                }
+            } else {
+                toast.error(`Stock not found for product ${saleProduct.productName}`);
+                return;
+            }
         });
-      };
-
+        // Dispatch and handle success message
+    };
       const handleApprovePurchase = (id: string) => {
         const findPurchase = purchases.find((purchase) => purchase.id === id);
+        if(!findPurchase) {
+          toast.error("Purchase not found");
+          return;
+        }
+
         const updatedFindPurchase = { ...findPurchase, status: "received" };
+        // Update stock quantities based on purchase products
+        updatedFindPurchase.products.forEach((purchaseProduct) => {
+          const stockProduct = stock.find((product) => product.productId === purchaseProduct.productId);
+          if (stockProduct) {
+            const newQuantity = Number(stockProduct.quantity) + Number(purchaseProduct.quantity);
+            const updatedStockProduct = { ...stockProduct, quantity: newQuantity.toString() };
+            dispatch(updateStock(updatedStockProduct));
+          } else {
+            const newStockProduct = {
+              productId: purchaseProduct.productId,
+              quantity: purchaseProduct.quantity,
+            };
+            dispatch(updateStock(newStockProduct));
+          }
+        });
+
         dispatch(updatePurchase(updatedFindPurchase)).then(() => {
           const message = "Purchase received successfully";
           toast.success(message);
