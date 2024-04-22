@@ -245,8 +245,8 @@ export const Stock = () => {
   ) : (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardOne icons={<FcSalesPerformance />} text="Total Sales" totaleSales={totalSales} />
-        <CardTwo icons={<BiPurchaseTag />} text="Total Purchases" totalPurchases={totalPurchases}  />
+        <CardOne icons={<FcSalesPerformance />} text="Total Sales" count={totalSales} />
+        <CardTwo icons={<BiPurchaseTag />} text="Total Purchases" count={totalPurchases}  />
         {/* <CardThree />
         <CardFour /> */}
       </div>

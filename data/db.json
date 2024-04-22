@@ -300,7 +300,16 @@
       "companyType": "",
       "firstName": "Eyoel",
       "lastName": "",
-      "email": ""
+      "email": "",
+      "data": [
+        {
+          "date": "Apr 22, 2024",
+          "description": "",
+          "paymentAmount": "",
+          "status": "Earning"
+        }
+      ],
+      "balance": 8
     }
   ],
   "services": [
@@ -1075,26 +1084,6 @@
       "company": "",
       "address": "",
       "tinNumber": ""
-    },
-    {
-      "firstName": "Babi",
-      "lastName": "teshager",
-      "email": "DDDD@gmail.com",
-      "phone": "09-5656-6363",
-      "company": "",
-      "address": "",
-      "tinNumber": "",
-      "id": "cd27"
-    },
-    {
-      "id": "d604",
-      "firstName": "intial stock",
-      "lastName": "initial stock",
-      "phone": "123-45-678",
-      "email": "mrol3943@gmail.com",
-      "company": "domino",
-      "address": "Addis Ababa",
-      "tinNumber": "123"
     }
   ],
   "categories": [

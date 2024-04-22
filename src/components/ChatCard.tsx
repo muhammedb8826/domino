@@ -4,17 +4,30 @@ import UserTwo from '../images/user/user-02.png';
 import UserThree from '../images/user/user-03.png';
 import UserFour from '../images/user/user-04.png';
 import UserFive from '../images/user/user-05.png';
+import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getCustomers } from '@/redux/features/customer/customerSlice';
+import Loader from '@/common/Loader';
+import { getOrders } from '@/redux/features/order/orderSlice';
+import { GiRank3 } from "react-icons/gi";
 
 const ChatCard = () => {
-  return (
+  const {customers, isLoading} = useSelector((state: RootState) => state.customer);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCustomers());
+  }, [dispatch]);
+
+  return isLoading?(<Loader/>):(
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
-        Chats
+        Top 10 Customers
       </h4>
-
-      <div>
+    {customers.map((customer, index) => (
+      <div key={customer.id}>
         <Link
-          to="/"
+          to="#"
           className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
         >
           <div className="relative h-14 w-14 rounded-full">
@@ -25,13 +38,13 @@ const ChatCard = () => {
           <div className="flex flex-1 items-center justify-between">
             <div>
               <h5 className="font-medium text-black dark:text-white">
-                Devid Heilo
+                {customer.firstName}
               </h5>
-              <p>
+              <p className='inline-flex'>
                 <span className="text-sm text-black dark:text-white">
-                  Hello, how are you?
+                  {customer.email}
                 </span>
-                <span className="text-xs"> . 12 min</span>
+                {/* <span className="text-xs"> <GiRank3 /></span> */}
               </p>
             </div>
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
@@ -39,7 +52,7 @@ const ChatCard = () => {
             </div>
           </div>
         </Link>
-        <Link
+        {/* <Link
           to="/"
           className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
         >
@@ -140,8 +153,9 @@ const ChatCard = () => {
               </p>
             </div>
           </div>
-        </Link>
+        </Link> */}
       </div>
+    ))}
     </div>
   );
 };

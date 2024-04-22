@@ -80,7 +80,8 @@ const App = () => {
             <Route path="/add-order" element={<OrderRegistration />} />
             <Route path="/order/:id" element={<OrderDetailsPage />} />
           <Route path="/dashboard" element={<DefaultLayout />}>
-            <Route index element={<OrdersList />} />
+            <Route index element={<ECommerce />} />
+            <Route path="/dashboard/orders" element={<OrdersList />} />
             <Route path="/dashboard/notifications" element={<Notifications/>}/>
             <Route path="/dashboard/operator-notifications" element={<OperatorNotification />}/>
             <Route path="/dashboard/receptionist-notifications" element={<ReceptionistNotification/>}/>
