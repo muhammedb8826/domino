@@ -5,6 +5,7 @@ import { priceURL } from "../../api/API";
 
 const initialState= {
     prices: [],
+    singlePrice: {},
     isLoading: false,
     error: "",
 }
@@ -22,6 +23,18 @@ export const getprice = createAsyncThunk(
         }
     }
 );
+
+export const getpriceById = createAsyncThunk(
+    "prices/getPriceById",
+    async (id) => {
+        try {
+        const response = await axios.get(`${priceURL}/${id}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+});
 
 export const createprice = createAsyncThunk(
     "prices/createPrice",
@@ -64,7 +77,20 @@ const priceSlice = createSlice({
             state.isLoading = false;
             state.error = action.error.message!;
         });
-
+        builder.addCase(getpriceById.pending, (state) => {
+            state.isLoading = true;
+            state.error = "";
+        });
+        builder.addCase(getpriceById.fulfilled, (state, action) => {
+            state.isLoading = false;
+            console.log(action.payload);
+            
+            state.singlePrice = action.payload;
+        });
+        builder.addCase(getpriceById.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message!;
+        });
         builder.addCase(createprice.pending, (state) => {
             state.isLoading = true;
             state.error = "";

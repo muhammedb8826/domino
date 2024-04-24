@@ -5,121 +5,40 @@ import { getMachines } from "../../redux/features/machine/machineSlice";
 import { getMaterials } from "../../redux/features/material/materialSlice";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import { getUnits } from "../../redux/features/unit/unitSlice";
-import AsyncSelect from "react-select/async";
+import Select from "react-select";
 import { toast } from "react-toastify";
 import { createprice } from "../../redux/features/price/pricingSlice";
 import { RiPriceTag2Line } from "react-icons/ri";
 import { RootState } from "@/redux/store";
 import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
+import { getProducts } from "@/redux/features/product/productSlice";
+import Loader from "@/common/Loader";
 // import options from "tailwind-datepicker-react/types/Options";
 
 const PriceDetailsModal = ({ handleModalOpen }) => {
 
-  const { user, token, isLoading, error } = useSelector(
+  const { user, isLoading, error } = useSelector(
     (state: RootState) => state.auth
   );
 
-  const { machines, isLoading: machineLoading, error: machineError } = useSelector((state) => state.machine);
-  const { materials, isLoading: materialLoading, error: materialError } = useSelector((state) => state.material);
-  const { units, isLoading: unitLoading, error: unitError } = useSelector((state) => state.unit);
-  const { services, isLoading: serviceLoading, error: serviceError } = useSelector((state) => state.service);
+  const { services } = useSelector((state) => state.service);
+  const { products } = useSelector((state) => state.product);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getMachines());
-    dispatch(getMaterials());
-    dispatch(getServices());
-    dispatch(getUnits());
+    dispatch(getProducts());
   }, [dispatch]);
 
-  const [machineOptions, setMachineOptions] = useState([]);
-  const [materialOptions, setMaterialOptions] = useState([]);
-  const [serviceOptions, setServiceOptions] = useState([]);
-  const [unitOptions, setUnitOptions] = useState([]);
   const [formData, setFormData] = useState({
-    machine: "",
-    material: "",
-    service: "",
-    unit: "",
+    productId: "",
+    serviceId: "",
     unitPrice: "",
   });
 
-  if(user?.email !== "admin@domino.com"){
+  if (user?.email !== "admin@domino.com") {
     return <ErroPage error="You are not authorized to view this page" />
   }
-
-  const mapOptions = (data) => {
-    return data.map((item) => ({
-      value: item.id,
-      label: item.name,
-    }));
-  };
-
-  useEffect(() => {
-    if (!machineLoading && machines) setMachineOptions(mapOptions(machines));
-  }, [machineLoading, machines]);
-  
-  useEffect(() => {
-    if (!materialLoading && materials) setMaterialOptions(mapOptions(materials));
-  }, [materialLoading, materials]);
-  
-  useEffect(() => {
-    if (!serviceLoading && services) setServiceOptions(mapOptions(services));
-  }, [serviceLoading, services]);
-  
-  useEffect(() => {
-    if (!unitLoading && units) setUnitOptions(mapOptions(units));
-  }, [unitLoading, units]);
-
-  const loadOptions = (inputValue: string, callback) => {
-    setTimeout(() => {
-      const filteredOption = machineOptions.filter((option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      callback(filteredOption);
-    }, 1000);
-  };
-
-  const loadOptionsMaterial = (inputValue: string, callback) => {
-    setTimeout(() => {
-      const filteredOption = materialOptions.filter((option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      callback(filteredOption);
-    }, 1000);
-  };
-
-  const loadOptionsService = (inputValue: string, callback) => {
-    setTimeout(() => {
-      const filteredOption = serviceOptions.filter((option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      callback(filteredOption);
-    }, 1000);
-  };
-
-  const loadOptionsUnit = (inputValue: string, callback) => {
-    setTimeout(() => {
-      const filteredOption = unitOptions.filter((option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      callback(filteredOption);
-    }, 1000);
-  };
-
-  const handleMachine = (selectedOption) => {
-    setFormData({ ...formData, machine: selectedOption.value});
-  };
-  const handleMaterial = (selectedOption) => {
-    setFormData({ ...formData, material: selectedOption.value });
-  };
-  const handleService = (selectedOption) => {
-    setFormData({ ...formData, service: selectedOption.value });
-  };
-  const handleUnit = (selectedOption) => {
-    setFormData({ ...formData, unit: selectedOption.value });
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -129,54 +48,50 @@ const PriceDetailsModal = ({ handleModalOpen }) => {
     }));
   }
 
+  const serviceOptions = services?.map((item) => ({
+    value: item.id,
+    label: item.name,
+  }));
+
+  const productOptions = products?.map((item) => ({
+    value: item.id,
+    label: item.name,
+  }));
+
+  const handleServiceChange = (selectedOption) => {
+    setFormData({ ...formData, serviceId: selectedOption.value })
+  }
+
+  const handleProductChange = (selectedOption) => {
+    setFormData({ ...formData, productId: selectedOption.value })
+  }
+
+  console.log(formData);
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(formData);
-const {machine, material, service, unit, unitPrice} = formData;
-const machineName = machines.find((item) => item.id === machine);
-const materialName = materials.find((item) => item.id === material);
-const serviceName = services.find((item) => item.id === service);
-const unitName = units.find((item) => item.id === unit);
-
-
-
-const data = {
-  machine: machineName,
-  material: materialName,
-  service: serviceName,
-  unit: unitName,
-  unitPrice
-}    
-    dispatch(createprice(data)).then((res) => {
+    dispatch(createprice(formData)).then((res) => {
       if (res.payload) {
-        const message = "Price added successfully";
+        const message = "Price set successfully";
         toast.success(message);
         setFormData({
-          machine: "",
-          material: "",
-          service: "",
-          unit: "",
+          productId: "",
+          serviceId: "",
           unitPrice: "",
         });
         handleModalOpen(false);
       }
     });
-  }
+  };
 
-  if (machineLoading) return <div>Loading...</div>;
-  if (machineError) return <div>Error: {machineError}</div>;
-
-  if(isLoading){
-    return <Loading/>
-  }
-
-  if(error){
+  if (error) {
     return <ErroPage error={error} />
   }
 
-  return (
+  return isLoading ? (<Loader />) : (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <form className="md:w-1/2" onSubmit={handleSubmit}>
@@ -185,7 +100,7 @@ const data = {
             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
               {/*header*/}
               <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                <h3 className="text-3xl font-semibold">Price Setting</h3>
+                <h3 className="text-3xl text-black dark:text-white font-semibold text">Price Setting</h3>
                 <button
                   title="close"
                   type="button"
@@ -198,91 +113,48 @@ const data = {
                 </button>
               </div>
               {/*body*/}
-              <div className="relative p-6 flex-1 grid grid-cols-4 gap-2">
+              <div className="relative p-6 flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div>
                   <label
                     htmlFor="machines"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
                   >
                     Choose Machine
                   </label>
-                  <AsyncSelect
-                    cacheOptions
-                    loadOptions={loadOptions}
-                    defaultOptions
-                    onChange={handleMachine}
+                  <Select
+                    options={productOptions}
+                    onChange={(selectedOption) => handleProductChange(selectedOption)}
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor="machines"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    htmlFor="services"
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
                   >
-                    Choose Material
+                    Choose service
                   </label>
-                  <AsyncSelect
-                    cacheOptions
-                    loadOptions={loadOptionsMaterial}
-                    defaultOptions
-                    onChange={handleMaterial}
+                  <Select
+                    options={serviceOptions}
+                    onChange={(selectedOption) => handleServiceChange(selectedOption)}
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor="machines"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    htmlFor="unit-price"
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
                   >
-                    Choose Service
+                    Unit price
                   </label>
-                  <AsyncSelect
-                    cacheOptions
-                    loadOptions={loadOptionsService}
-                    defaultOptions
-                    onChange={handleService}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="machines"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Choose Unit
-                  </label>
-                  <AsyncSelect
-                    cacheOptions
-                    loadOptions={loadOptionsUnit}
-                    defaultOptions
-                    onChange={handleUnit}
-                  />
-                </div>
-                <div className="col-span-2">
-                <label
-                  htmlFor="unit-price"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Unit price
-                </label>
-                <div className="flex gap-2">
-                  <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md">
-                  <RiPriceTag2Line />
-                  </span>
                   <input
                     onChange={handleChange}
                     type="number"
                     id="unit-price"
-                    className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5"
+                    className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-2 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     placeholder="eg, 100"
                     name="unitPrice"
                     required
                   />
-                  <button
-                    type="submit"
-                    className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-                  >
-                    Add price
-                  </button>
                 </div>
-              </div>
               </div>
               {/*footer*/}
               <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
@@ -294,7 +166,7 @@ const data = {
                   Close
                 </button>
                 <button
-                  className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="bg-primary text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
                 >
                   Save Changes
