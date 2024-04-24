@@ -5,8 +5,8 @@
       "description": "",
       "categoryId": "2fa8",
       "unitId": "3e4a",
-      "minStockLevel": "1",
-      "initialStock": "5",
+      "minStockLevel": "20",
+      "initialStock": "0",
       "id": "1713703632140"
     },
     {
@@ -17,6 +17,24 @@
       "unitId": "8dd4",
       "minStockLevel": "1",
       "initialStock": "10"
+    },
+    {
+      "name": "Banner 3m",
+      "description": "",
+      "categoryId": "2fa8",
+      "unitId": "3e4a",
+      "minStockLevel": "1",
+      "initialStock": "0",
+      "id": "1713788033326"
+    },
+    {
+      "id": "1713788868422",
+      "name": "Mica Glass 8mm",
+      "description": "",
+      "categoryId": "0620",
+      "unitId": "890e",
+      "minStockLevel": "1",
+      "initialStock": "0"
     }
   ],
   "orders": [
@@ -257,6 +275,184 @@
         "paymentStatus": "not paid"
       },
       "id": "b9a8"
+    },
+    {
+      "series": "Teshager-2024",
+      "date": "Apr 22, 2024",
+      "deliveryDate": "Apr 22, 2024",
+      "orderType": "telegram",
+      "description": "",
+      "customerPhone": "12-3333-4444",
+      "customerFirstName": "Makbail",
+      "commissionId": "1713587815494",
+      "customerEmail": "",
+      "commissionPhone": "09-1222-6666",
+      "commissionFirstName": "Eyoel",
+      "commissionEmail": "",
+      "orderItems": [
+        {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Print and Material",
+          "unitPrice": 9000,
+          "status": "recieved",
+          "commissionPrice": 180,
+          "commissionPercent": "2"
+        },
+        {
+          "machine": "BANNER",
+          "material": "sticker",
+          "service": "Print",
+          "unitPrice": 0,
+          "status": "recieved",
+          "commissionPrice": 0,
+          "commissionPercent": "2"
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "10",
+          "height": "9",
+          "quantity": "1",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "5",
+          "height": "5",
+          "quantity": "1",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 9000,
+      "totalCommission": 180,
+      "fileNames": [
+        "Makbail-Makbail-DTF-T-shirt-10x9",
+        "Makbail-Makbail-BANNER-sticker-5x5"
+      ],
+      "totalQuantity": 2,
+      "grandTotal": 10062.5,
+      "vat": 1312.5,
+      "discounts": [
+        0,
+        0
+      ],
+      "levels": [
+        null,
+        null
+      ],
+      "userInputDiscount": "250",
+      "totalBirrAfterDiscount": [
+        9000,
+        0
+      ],
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "not paid"
+      },
+      "id": "7323"
+    },
+    {
+      "series": "Makbail-2024",
+      "date": "Apr 22, 2024",
+      "deliveryDate": "Apr 22, 2024",
+      "orderType": "telegram",
+      "description": "askljf lasdfjladfsadfsd",
+      "customerPhone": "12-3333-4444",
+      "customerFirstName": "Makbail",
+      "commissionId": "1713797722434",
+      "customerEmail": "",
+      "commissionPhone": "12-2222-2222",
+      "commissionFirstName": "yoni",
+      "commissionEmail": "support_cpwd@htmicrochip.com",
+      "orderItems": [
+        {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Material",
+          "unitPrice": 3000,
+          "status": "recieved",
+          "commissionPrice": 60,
+          "isDiscounted": false,
+          "commissionPercent": "2"
+        },
+        {
+          "machine": "DTF",
+          "material": "T-shirt",
+          "service": "Print",
+          "unitPrice": 1000,
+          "status": "recieved",
+          "commissionPrice": 20,
+          "commissionPercent": "2"
+        },
+        {
+          "machine": "Canvas printer",
+          "material": "Banner 3M wide",
+          "service": "Print and Material",
+          "unitPrice": 10000,
+          "status": "recieved",
+          "commissionPrice": 0
+        }
+      ],
+      "orderMeasures": [
+        {
+          "unitName": null,
+          "width": "1",
+          "height": "1",
+          "quantity": "10",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "1",
+          "height": "1",
+          "quantity": "1",
+          "unitPrice": null
+        },
+        {
+          "unitName": null,
+          "width": "10",
+          "height": "10",
+          "quantity": "1",
+          "unitPrice": null
+        }
+      ],
+      "totalBirr": 14000,
+      "totalCommission": 80,
+      "fileNames": [
+        "Makbail-Makbail-DTF-T-shirt-1x1",
+        "Makbail-Makbail-DTF-T-shirt-1x1",
+        "Makbail-Makbail-Canvas printer-Banner 3M wide-10x10"
+      ],
+      "totalQuantity": 12,
+      "grandTotal": 14950,
+      "vat": 1950,
+      "discounts": [
+        0,
+        0,
+        0
+      ],
+      "levels": [
+        null,
+        null,
+        "1"
+      ],
+      "userInputDiscount": "1000",
+      "totalBirrAfterDiscount": [
+        3000,
+        1000,
+        10000
+      ],
+      "paymentInfo": {
+        "paymentMethod": "cash",
+        "paymentReference": "",
+        "paymentAmount": 0,
+        "paymentStatus": "partial"
+      },
+      "id": "1a82"
     }
   ],
   "customers": [
@@ -291,6 +487,14 @@
       "firstName": "Teshager",
       "lastName": "",
       "email": ""
+    },
+    {
+      "id": "1713794719680",
+      "phone": "12-3333-4444",
+      "companyType": "company",
+      "firstName": "Makbail",
+      "lastName": "domino",
+      "email": ""
     }
   ],
   "commissions": [
@@ -310,6 +514,23 @@
         }
       ],
       "balance": 8
+    },
+    {
+      "id": "1713797722434",
+      "phone": "12-2222-2222",
+      "companyType": "individual",
+      "firstName": "yoni",
+      "lastName": "yo",
+      "email": "support_cpwd@htmicrochip.com",
+      "data": [
+        {
+          "date": "Apr 22, 2024",
+          "description": "",
+          "paymentAmount": "80",
+          "status": "Paid"
+        }
+      ],
+      "balance": 0
     }
   ],
   "services": [
@@ -324,6 +545,10 @@
     {
       "id": "b664",
       "name": "Print"
+    },
+    {
+      "id": "c8c2",
+      "name": "Material"
     }
   ],
   "machines": [
@@ -332,8 +557,16 @@
       "name": "DTF"
     },
     {
-      "id": "f084",
-      "name": "BANNER"
+      "id": "a78b",
+      "name": "Canvas printer"
+    },
+    {
+      "id": "a20c",
+      "name": "Crystal UV printer"
+    },
+    {
+      "id": "958e",
+      "name": "Sublimation Printer"
     }
   ],
   "materials": [
@@ -352,14 +585,38 @@
     {
       "id": "5609",
       "name": "sticker"
+    },
+    {
+      "id": "02f9",
+      "name": "Banner 3M wide"
+    },
+    {
+      "id": "8071",
+      "name": "Banner 5M wide"
+    },
+    {
+      "id": "62c5",
+      "name": "Mica Glass 8mm"
+    },
+    {
+      "id": "4ef3",
+      "name": "Cap"
+    },
+    {
+      "id": "7488",
+      "name": "Scarf"
+    },
+    {
+      "id": "565d",
+      "name": "Gawon"
     }
   ],
   "units": [
     {
       "id": "90fc",
       "name": "M",
-      "width": "10",
-      "height": "10"
+      "width": "1",
+      "height": "1"
     },
     {
       "id": "1bd6",
@@ -382,7 +639,7 @@
     {
       "id": "3e4a",
       "name": "Roll",
-      "width": "100",
+      "width": "3",
       "height": "100"
     }
   ],
@@ -410,124 +667,58 @@
       "unitPrice": "100"
     },
     {
-      "id": "32cb",
+      "id": "976b",
       "machine": {
-        "id": "8b9a",
-        "name": "UV"
+        "id": "a78b",
+        "name": "Canvas printer"
       },
       "material": {
-        "id": "e4b1",
-        "name": "Film"
+        "id": "02f9",
+        "name": "Banner 3M wide"
       },
       "service": {
         "id": "e4b1",
         "name": "Print and Material"
       },
       "unit": {
-        "id": "90fc",
-        "name": "M",
-        "width": "10",
-        "height": "10"
-      },
-      "unitPrice": "200"
-    },
-    {
-      "id": "624d",
-      "machine": {
-        "id": "f084",
-        "name": "BANNER"
-      },
-      "material": {
-        "id": "1f8f",
-        "name": "Screen"
-      },
-      "service": {
-        "id": "e4b1",
-        "name": "Print and Material"
-      },
-      "unit": {
-        "id": "90fc",
-        "name": "M",
-        "width": "10",
-        "height": "10"
-      },
-      "unitPrice": "50"
-    },
-    {
-      "id": "ec50",
-      "machine": {
-        "id": "54dd",
-        "name": "DTF"
-      },
-      "material": {
-        "id": "9944",
-        "name": "T-shirt"
-      },
-      "service": {
-        "id": "1324",
-        "name": "Print and Heat press"
-      },
-      "unit": {
-        "id": "8dd4",
-        "name": "PCS",
+        "id": "890e",
+        "name": "sqm",
         "width": "1",
         "height": "1"
       },
-      "unitPrice": "200"
+      "unitPrice": "100"
     },
     {
-      "id": "9c22",
+      "id": "59aa",
       "machine": {
-        "id": "f084",
-        "name": "BANNER"
+        "id": "a20c",
+        "name": "Crystal UV printer"
       },
       "material": {
-        "id": "1f8f",
-        "name": "Screen"
+        "id": "62c5",
+        "name": "Mica Glass 8mm"
       },
       "service": {
-        "id": "b664",
-        "name": "Print"
+        "id": "e4b1",
+        "name": "Print and Material"
       },
       "unit": {
-        "id": "90fc",
-        "name": "M",
-        "width": "10",
-        "height": "10"
+        "id": "890e",
+        "name": "sqm",
+        "width": "1",
+        "height": "1"
       },
       "unitPrice": "300"
     },
     {
-      "id": "ceb6",
+      "id": "2ba7",
       "machine": {
-        "id": "f084",
-        "name": "BANNER"
+        "id": "a20c",
+        "name": "Crystal UV printer"
       },
       "material": {
-        "id": "1f8f",
-        "name": "Screen"
-      },
-      "service": {
-        "id": "1324",
-        "name": "Print and Heat press"
-      },
-      "unit": {
-        "id": "90fc",
-        "name": "M",
-        "width": "10",
-        "height": "10"
-      },
-      "unitPrice": "400"
-    },
-    {
-      "id": "955d",
-      "machine": {
-        "id": "f084",
-        "name": "BANNER"
-      },
-      "material": {
-        "id": "5609",
-        "name": "sticker"
+        "id": "62c5",
+        "name": "Mica Glass 8mm"
       },
       "service": {
         "id": "b664",
@@ -539,7 +730,73 @@
         "width": "1",
         "height": "1"
       },
-      "unitPrice": "200"
+      "unitPrice": "100"
+    },
+    {
+      "id": "5b70",
+      "machine": {
+        "id": "54dd",
+        "name": "DTF"
+      },
+      "material": {
+        "id": "9944",
+        "name": "T-shirt"
+      },
+      "service": {
+        "id": "c8c2",
+        "name": "Material"
+      },
+      "unit": {
+        "id": "8dd4",
+        "name": "PCS",
+        "width": "1",
+        "height": "1"
+      },
+      "unitPrice": "300"
+    },
+    {
+      "id": "c51f",
+      "machine": {
+        "id": "54dd",
+        "name": "DTF"
+      },
+      "material": {
+        "id": "9944",
+        "name": "T-shirt"
+      },
+      "service": {
+        "id": "b664",
+        "name": "Print"
+      },
+      "unit": {
+        "id": "890e",
+        "name": "sqm",
+        "width": "1",
+        "height": "1"
+      },
+      "unitPrice": "1000"
+    },
+    {
+      "id": "c5f8",
+      "machine": {
+        "id": "54dd",
+        "name": "DTF"
+      },
+      "material": {
+        "id": "4ef3",
+        "name": "Cap"
+      },
+      "service": {
+        "id": "c8c2",
+        "name": "Material"
+      },
+      "unit": {
+        "id": "8dd4",
+        "name": "PCS",
+        "width": "1",
+        "height": "1"
+      },
+      "unitPrice": "250"
     }
   ],
   "roles": [
@@ -956,6 +1213,44 @@
           "id": "1710821022900"
         }
       }
+    },
+    {
+      "id": "505a",
+      "transactions": [
+        {
+          "date": "Apr 22, 2024",
+          "paymentMethod": "cash",
+          "description": "",
+          "paymentAmount": "",
+          "reference": "",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "7323",
+        "customer": {
+          "id": "1710822546278"
+        }
+      }
+    },
+    {
+      "id": "55ec",
+      "transactions": [
+        {
+          "date": "Apr 22, 2024",
+          "paymentMethod": "bank-transfer",
+          "description": "123123123123123",
+          "paymentAmount": "8000",
+          "reference": "234234234234",
+          "status": "paid"
+        }
+      ],
+      "order": {
+        "id": "1a82",
+        "customer": {
+          "id": "1713794719680"
+        }
+      }
     }
   ],
   "orderStatus": [
@@ -988,10 +1283,10 @@
       "adminApproval": false,
       "orderItems": [
         {
-          "status": "edited",
+          "status": "approved",
           "note": "",
           "printed": false,
-          "adminApproval": false,
+          "adminApproval": true,
           "completed": false
         }
       ]
@@ -1029,6 +1324,57 @@
           "note": "",
           "printed": false,
           "adminApproval": true,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "3f35",
+      "orderId": "7323",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "printed",
+          "note": "gdfg",
+          "printed": false,
+          "adminApproval": true,
+          "completed": false
+        },
+        {
+          "status": "printed",
+          "note": "sdfsd",
+          "printed": false,
+          "adminApproval": true,
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "1f2e",
+      "orderId": "1a82",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "edited",
+          "note": "asdfasdfsadfasdf",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "edited",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "rejected",
+          "note": "sdfsdfsdf",
+          "printed": false,
+          "adminApproval": false,
           "completed": false
         }
       ]
@@ -1145,15 +1491,71 @@
           "unitName": "Roll"
         }
       ]
+    },
+    {
+      "id": "8c9d",
+      "vendorId": "284b",
+      "purchaseReresentative": "fin",
+      "purchaseReresentativeId": 14,
+      "status": "received",
+      "vendorName": "Aster",
+      "orderDate": "2024-04-22",
+      "paymentMethod": "cash",
+      "amount": 1150,
+      "reference": "xxxx",
+      "totalAmount": 1150,
+      "totalQuantity": 1,
+      "note": "",
+      "products": [
+        {
+          "productId": "1713788868422",
+          "productName": "Mica Glass 8mm",
+          "quantity": "1",
+          "description": "",
+          "unitPrice": "1000",
+          "subTotal": 1000,
+          "unitId": "890e",
+          "unitName": "sqm"
+        }
+      ]
     }
   ],
-  "printedTransactions": [],
+  "printedTransactions": [
+    {
+      "id": "ea48",
+      "machine": "DTF",
+      "material": "T-shirt",
+      "service": "Print and Material",
+      "unitPrice": 10000,
+      "status": "recieved",
+      "commissionPrice": 200,
+      "commissionPercent": "2",
+      "width": "10",
+      "height": "10",
+      "quantity": "1",
+      "orderId": "7323"
+    },
+    {
+      "id": "1ff9",
+      "machine": "BANNER",
+      "material": "sticker",
+      "service": "Print",
+      "unitPrice": 5000,
+      "status": "recieved",
+      "commissionPrice": 100,
+      "commissionPercent": "2",
+      "width": "5",
+      "height": "5",
+      "quantity": "1",
+      "orderId": "7323"
+    }
+  ],
   "sales": [
     {
       "id": "fabf",
       "operatorId": 8,
       "operatorFirstName": "Teshager",
-      "status": "approved",
+      "status": "rejected",
       "orderDate": "2024-04-22",
       "totalQuantity": 15,
       "note": "",
@@ -1167,18 +1569,47 @@
           "unitName": "PCS"
         }
       ]
+    },
+    {
+      "id": "52e9",
+      "operatorId": 12,
+      "operatorFirstName": "ope",
+      "status": "stocked-out",
+      "orderDate": "2024-04-22",
+      "totalQuantity": 1,
+      "note": "",
+      "products": [
+        {
+          "productId": "1713788868422",
+          "productName": "Mica Glass 8mm",
+          "quantity": "1",
+          "description": "",
+          "unitId": "890e",
+          "unitName": "sqm"
+        }
+      ]
     }
   ],
   "stock": [
     {
       "id": "f3f9",
       "productId": "1713703632140",
-      "quantity": "8"
+      "quantity": "28"
     },
     {
       "id": "e65b",
       "productId": "1713727389192",
       "quantity": "10"
+    },
+    {
+      "id": "c938",
+      "productId": "1713788033326",
+      "quantity": "0"
+    },
+    {
+      "id": "f105",
+      "productId": "1713788868422",
+      "quantity": "0"
     }
   ]
 }
