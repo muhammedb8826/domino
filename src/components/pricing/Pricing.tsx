@@ -12,15 +12,25 @@ import Swal from "sweetalert2";
 import { RootState } from "@/redux/store";
 import Loader from "@/common/Loader";
 import Breadcrumb from "../Breadcrumb";
+import { Link, NavLink } from "react-router-dom";
+import { IoPricetagsOutline } from "react-icons/io5";
+import { PriceEditModal } from "./PriceEditModal";
+import { getProducts } from "@/redux/features/product/productSlice";
+import { getUnits } from "@/redux/features/unit/unitSlice";
+import { getServices } from "@/redux/features/service/servicesSlice";
 
 const Pricing = () => {
-  const { user, token } = useSelector(
+  const { user } = useSelector(
     (state: RootState) => state.auth
   );
   const { prices, isLoading, error } = useSelector((state) => state.price);
+  const {units} = useSelector((state) => state.unit);
+  const {products} = useSelector((state) => state.product);
+  const {services} = useSelector((state) => state.service);
 
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const [id, setId] = useState(null);
 
 
   useEffect(() => {
@@ -43,9 +53,13 @@ const Pricing = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getprice());
+    dispatch(getUnits());
+    dispatch(getProducts());
+    dispatch(getServices());
   }, [dispatch]);
 
   const [openModal, setOpenModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
@@ -53,6 +67,12 @@ const Pricing = () => {
   const handleModalOpen = () => {
     setOpenModal((prev) => !prev);
   };
+
+  const handleEditModal = (id) => {
+    setOpenEditModal((prev) => !prev);
+    setId(id);
+  };
+
 
   const handleDeletePrice = (id) => {
     Swal.fire({
@@ -77,25 +97,26 @@ const Pricing = () => {
     });
   };
 
-  if(user?.email !== "admin@domino.com"){
+  if (user?.email !== "admin@domino.com") {
     return <ErroPage error="You are not authorized to view this page" />
   }
 
-  if (isLoading) return <Loading />;
   if (error) return <ErroPage error={error} />;
 
-  return isLoading?(<Loader/>): (
+  return isLoading ? (<Loader />) : (
     <>
-    <Breadcrumb pageName="Pricing" />
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
-      <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+      <Breadcrumb pageName="Pricing" />
+      <div
+        className={`rounded-sm border-stroke bg-white dark:bg-meta-4 px-4 flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 py-4`}
+      >
+
         <div>
           <button
             type="button"
             onClick={handleModalOpen}
             className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            <RiPriceTag2Line />
+            <IoPricetagsOutline />
             <span className="ml-2">Add Unit Price</span>
           </button>
         </div>
@@ -127,213 +148,186 @@ const Pricing = () => {
         </div>
       </div>
 
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-all-search"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label htmlFor="checkbox-all-search" className="sr-only">
-                  checkbox
-                </label>
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Machine
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Material
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Service
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Unit
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Measures(wxh)
-            </th>
-            <th scope="col" className="px-6 py-3">
-              price
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {prices && prices.length === 0 && (
-            <tr>
-              <td colSpan={7} className="text-center">
-                No data found
-              </td>
-            </tr>
-          )}
-          {prices &&
-            prices.map((price, index) => (
-              <tr
-                key={price.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-              >
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  {price.machine && price.machine.name}
+
+      <div className="rounded-sm border border-stroke border-t-0 bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+
+                <th className="py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  Product
                 </th>
-                <td className="px-6 py-4">
-                  {price.material && price.material.name}
-                </td>
-                <td className="px-6 py-4">{price && price.service.name}</td>
-                <td className="px-6 py-4">{price.unit && price.unit.name}</td>
-                <td className="px-6 py-4">
-                  {price.unit && price.unit.width}x{price.unit.height}
-                </td>
-                <td className="px-6 py-4">{price.unitPrice}</td>
-                <td className="px-6 py-4 relative">
-                  <button
-                    onClick={() => handleAction(index)}
-                    title="action"
-                    data-popover-target={`popover-bottom-${index}`}
-                    data-popover-trigger="click"
-                    id={`dropdownAvatarNameButton-${price.id}-${index}`}
-                    type="button"
-                    className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                  >
-                    <CiMenuKebab />
-                  </button>
-                  {showPopover === index && (
-                    <div
-                      ref={popoverRef}
-                      className="absolute z-40 right-32 -top-14 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-                    >
-                      {/* Dropdown content */}
-                      <div className="px-4 py-3 text-sm text-gray-900">
-                        <div className="font-medium">Pro User</div>
-                        <div className="truncate">email</div>
-                      </div>
-                      <ul className="py-2 text-sm text-gray-700">
-                        <li>
-                          <button
-                            type="button"
-                            className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                          >
-                            <FaRegEdit />
-                            Edit
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => handleDeletePrice(price.id)}
-                            type="button"
-                            className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                          >
-                            <MdDelete /> Delete
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </td>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Unit
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Dimension(wxh)
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Service
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Selling price
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Action
+                </th>
               </tr>
-            ))}
-        </tbody>
-      </table>
-      <nav
-        className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-        aria-label="Table navigation"
-      >
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-          Showing{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            1-10
-          </span>{" "}
-          of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            1000
-          </span>
-        </span>
-        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Previous
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              1
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              2
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              aria-current="page"
-              className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-            >
-              3
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              4
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              5
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Next
-            </a>
-          </li>
-        </ul>
-      </nav>
+            </thead>
+            <tbody>
+              {prices && prices.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="text-center">
+                    No data found
+                  </td>
+                </tr>
+              )}
+              {prices &&
+                prices.map((price, index) => {
+                  const product = products.find((product) => product.id === price.productId);
+                  const unit = units.find((unit) => unit.id === product?.unitId);
+                  const service = services.find((service) => service.id === price.serviceId);     
+                 return <tr
+                    key={price.id}>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      {product?.name}
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      {unit?.name}
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      {unit?.width} x {unit?.height}
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      {service?.name}
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      {price.unitPrice}
+                    </td>
+                    <td className="px-6 py-4 relative">
+                      <button
+                        onClick={() => handleAction(index)}
+                        title="action"
+                        type="button"
+                        className="text-black dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      >
+                        <CiMenuKebab />
+                      </button>
+                      {showPopover === index && (
+                        <div
+                          ref={popoverRef}
+                          className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                        >
+                          {/* Dropdown content */}
+                          <ul className="py-2 text-sm text-gray-700">
+                            <li>
+                              <Link
+                                to="#"
+                                onClick={() => handleEditModal(price.id)}
+                                className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
+                              >
+                                <FaRegEdit />
+                                Edit
+                              </Link>{" "}
+                            </li>
+                            {user?.email === "admin@domino.com" && (
+                              <li>
+                                <button
+                                  onClick={() => handleDeletePrice(price.id)}
+                                  type="button"
+                                  className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                                >
+                                  <MdDelete /> Delete
+                                </button>
+                              </li>
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+               })}
+            </tbody>
+          </table>
+          <nav
+            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            aria-label="Table navigation"
+          >
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+              Showing{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1-10
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1000
+              </span>
+            </span>
+            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Previous
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  1
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  2
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  aria-current="page"
+                  className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                >
+                  3
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  4
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  5
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
       {openModal && <PriceDetailsModal handleModalOpen={handleModalOpen} />}
-    </div>
+      {openEditModal && <PriceEditModal handleEditModal={handleEditModal} id={id} />}
     </>
   );
 };
