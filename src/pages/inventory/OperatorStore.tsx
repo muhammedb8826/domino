@@ -85,36 +85,6 @@ export const OperatorStore = () => {
             (sale) => sale.status === "stocked-out"
           );
 
-
-          // const handleRequestedQuantity = (productName) => {
-          //   // Calculate total requested quantity for the productName
-          //   let totalRequestedQuantity = 0;
-            
-          //   filteredSalesStatus.forEach((sale) => {
-          //     sale.products.forEach((product) => {
-          //       if (product.productName.toLowerCase() === productName.toLowerCase()) {
-          //         totalRequestedQuantity += parseInt(product.quantity, 10);
-          //       }
-          //     });
-          //   });
-            
-          //   return totalRequestedQuantity;
-          // };
-
-          // const handlePrintedQuantity = (productName) => {
-          //   // Calculate total printed quantity for the productName
-          //   let totalPrintedQuantity = 0;
-            
-          //   printedTransactions.forEach((transaction) => {
-          //     if (transaction.material.toLowerCase() === productName.toLowerCase()) {
-          //       totalPrintedQuantity += parseInt(transaction.quantity, 10);
-          //     }
-          //   });
-            
-          //   return totalPrintedQuantity;
-          // };
-
-
           const handleRequestedArea = (productName) => {
             // Calculate total area for requested quantities for the productName
             let totalRequestedArea = 0;

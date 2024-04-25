@@ -66,10 +66,6 @@ const PriceDetailsModal = ({ handleModalOpen }) => {
     setFormData({ ...formData, productId: selectedOption.value })
   }
 
-  console.log(formData);
-
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -116,10 +112,10 @@ const PriceDetailsModal = ({ handleModalOpen }) => {
               <div className="relative p-6 flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div>
                   <label
-                    htmlFor="machines"
+                    htmlFor="products"
                     className="mb-3 block text-sm font-medium text-black dark:text-white"
                   >
-                    Choose Machine
+                    Choose Product
                   </label>
                   <Select
                     options={productOptions}

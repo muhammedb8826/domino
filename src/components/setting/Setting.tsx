@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { RootState } from "@/redux/store";
+import JobOrderProducts from "./JobOrderProducts";
 
 const Setting = () => { 
   const { user, token, isLoading, error } = useSelector(
@@ -109,7 +110,7 @@ const Setting = () => {
 
       <div className="rounded-lg h-[80%] overflow-hidden">
         {active === "machines" && <Machine />}
-        {active === "materials" && <Material />}
+        {active === "materials" && <JobOrderProducts />}
         {active === "units" && <Unit />}
         {active === "services" && <Services />}
         {active === "roles" && <Role />}

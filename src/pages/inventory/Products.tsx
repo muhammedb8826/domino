@@ -12,21 +12,25 @@ import {
 import Loader from "@/common/Loader";
 import { Link, NavLink } from "react-router-dom";
 import ErroPage from "@/components/common/ErroPage";
-import { MdDelete, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { MdDelete, MdOutlineBorderLeft, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import Swal from "sweetalert2";
 import { ProductEditModal } from "./ProductEditModal";
 import { getCategories } from "@/redux/features/category/categorySlice";
 import { getUnits } from "@/redux/features/unit/unitSlice";
+import { createJobOrderProduct, deleteJobOrderProduct, getJobOrdersProducts } from "@/redux/features/jobOrderProductsSlice";
+import { RxBorderSolid } from "react-icons/rx";
 
 export const Products = () => {
   const { products, isLoading, error } = useSelector((state) => state.product);
-  const {categories} = useSelector((state)=>state.category);
-  const {units} = useSelector((state)=>state.unit);
+  const { categories } = useSelector((state) => state.category);
+  const { units } = useSelector((state) => state.unit);
+  const {jobOrderProducts} = useSelector((state) => state.jobOrderProduct);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getCategories())
     dispatch(getUnits());
+    dispatch(getJobOrdersProducts());
   }, [dispatch]);
 
   const [showPopover, setShowPopover] = useState(null);
@@ -34,23 +38,52 @@ export const Products = () => {
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
 
+  const handleAddToProduct = (id: string) => {
+    dispatch(createJobOrderProduct({ productId: id.toString(), status: "added" })).then(() => {   
+      Swal.fire({
+        title: "Success",
+        text: "Product added to order successfully",
+        icon: "success",
+      });
+    });
+  };
 
-  // console.log(units);
-  // console.log(categories);
+  const handleDeleteProductFromOrder = (id: string) => {
+    const jobOrderProduct = jobOrderProducts.find((jobOrderProduct) => jobOrderProduct.productId === id);
 
-const handleFindUnit = (id: string) => {
-  const findUnit = units.find((unit) => unit.id === id);
-  // console.log(findUnit);
-  return findUnit?.name;
-}
-  
-const handleFindCategory = (id: string) => {
-  const findCategory = categories.find((category) => category.id === id);
-  // console.log(findCategory);
-  return findCategory?.name;
-}
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this product from order!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The transaction has been deleted.",
+          icon: "success",
+        }).then(() => {
+          dispatch(deleteJobOrderProduct(jobOrderProduct.id))
+        });
+      }
+    });
+  }
 
-  
+
+
+  const handleFindUnit = (id: string) => {
+    const findUnit = units.find((unit) => unit.id === id);
+    return findUnit?.name;
+  }
+
+  const handleFindCategory = (id: string) => {
+    const findCategory = categories.find((category) => category.id === id);
+    return findCategory?.name;
+  }
+
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -89,6 +122,7 @@ const handleFindCategory = (id: string) => {
     setIsModalOpen(!isModalOpen);
   };
 
+
   const handleEditModalOpen = (id: string) => {
     const findData = products.find((data) => data.id === id);
     setData(findData);
@@ -121,7 +155,9 @@ const handleFindCategory = (id: string) => {
     return <ErroPage error={error} />;
   }
 
-  const productListContent = products.map((product, index) => (
+  const productListContent = products.map((product, index) => {
+    const jobOrderProduct = jobOrderProducts.find((jobOrderProduct) => jobOrderProduct.productId === product.id);
+   return (
     <tr key={product.id}>
       <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
         <img
@@ -170,11 +206,34 @@ const handleFindCategory = (id: string) => {
             ref={dropdownRef}
             onFocus={() => setDropdownOpen(true)}
             onBlur={() => setDropdownOpen(false)}
-            className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
-              dropdownOpen ? "block" : "hidden"
-            }`}
+            className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen ? "block" : "hidden"
+              }`}
           >
             <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
+              { jobOrderProduct ? (
+                <li>
+                <Link
+                  to="#"
+                  onClick={() => handleDeleteProductFromOrder(product.id)}
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-danger lg:text-base"
+                >
+                  <RxBorderSolid />
+                  Delete from Order
+                </Link>{" "}
+              </li>
+              ) : (
+                <li>
+                <Link
+                  to="#"
+                  onClick={() => handleAddToProduct(product.id)}
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <MdOutlineBorderLeft />
+                  Add to Order
+                </Link>{" "}
+              </li>
+              )}
+              
               <li>
                 <NavLink
                   onClick={() => handleEditModalOpen(product.id)}
@@ -189,7 +248,7 @@ const handleFindCategory = (id: string) => {
                 <NavLink
                   onClick={() => handleDeleteProduct(product.id)}
                   to="#"
-                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-danger lg:text-base"
                 >
                   <MdDelete />
                   Delete
@@ -201,7 +260,8 @@ const handleFindCategory = (id: string) => {
         {/* <!-- Dropdown End --> */}
       </td>
     </tr>
-  ));
+)
+});
 
   return isLoading ? (
     <Loader />
