@@ -19,6 +19,7 @@
       "initialStock": "10"
     },
     {
+<<<<<<< HEAD
       "name": "Banner 3m",
       "description": "",
       "categoryId": "2fa8",
@@ -33,6 +34,13 @@
       "description": "",
       "categoryId": "0620",
       "unitId": "890e",
+=======
+      "id": "1714005604020",
+      "name": "Sticker",
+      "description": "",
+      "categoryId": "833f",
+      "unitId": "90fc",
+>>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
       "minStockLevel": "1",
       "initialStock": "0"
     }
@@ -544,11 +552,15 @@
     },
     {
       "id": "b664",
+<<<<<<< HEAD
       "name": "Print"
     },
     {
       "id": "c8c2",
       "name": "Material"
+=======
+      "name": "Print only"
+>>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
     }
   ],
   "machines": [
@@ -645,6 +657,7 @@
   ],
   "prices": [
     {
+<<<<<<< HEAD
       "productId": "1713703632140",
       "serviceId": "e4b1",
       "unitPrice": "2000",
@@ -783,11 +796,34 @@
       },
       "unitPrice": "250"
 =======
+=======
+>>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
       "id": "7c45",
       "productId": "1713727389192",
       "serviceId": "1324",
       "unitPrice": "200"
+<<<<<<< HEAD
 >>>>>>> 69f92c4e03bab02b56dd7c1ba44292da072504dd
+=======
+    },
+    {
+      "productId": "1713727389192",
+      "serviceId": "e4b1",
+      "unitPrice": "125",
+      "id": "0189"
+    },
+    {
+      "id": "1a51",
+      "productId": "1713727389192",
+      "serviceId": "b664",
+      "unitPrice": "100"
+    },
+    {
+      "id": "1371",
+      "productId": "1713703632140",
+      "serviceId": "e4b1",
+      "unitPrice": "2000"
+>>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
     }
   ],
   "roles": [
@@ -1593,6 +1629,7 @@
       "quantity": "10"
     },
     {
+<<<<<<< HEAD
       "id": "c938",
       "productId": "1713788033326",
       "quantity": "0"
@@ -1601,6 +1638,28 @@
       "id": "f105",
       "productId": "1713788868422",
       "quantity": "0"
+=======
+      "id": "0a68",
+      "productId": "1714005604020",
+      "quantity": "0"
+    }
+  ],
+  "jobOrderProducts": [
+    {
+      "id": "ff4d",
+      "productId": "1713727389192",
+      "status": "added"
+    },
+    {
+      "id": "ea02",
+      "productId": "1714005604020",
+      "status": "added"
+    },
+    {
+      "id": "994a",
+      "productId": "1713703632140",
+      "status": "added"
+>>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
     }
   ]
 }

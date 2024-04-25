@@ -46,7 +46,7 @@ const SignIn = () => {
     <section className="flex items-center justify-center w-full h-screen">
     <div className="w-full max-w-xs">
       <div className="flex justify-center py-2">
-        <NavLink to="/" className="flex text-3xl items-center">
+        <NavLink to="/" className="text-graydark flex text-3xl items-center">
           <span className="">IAN PLC</span>
         </NavLink>
       </div>
@@ -56,7 +56,7 @@ const SignIn = () => {
       >
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-graydark text-sm font-bold mb-2"
             htmlFor="username"
           >
             Username
@@ -72,7 +72,7 @@ const SignIn = () => {
         </div>
         <div className="mb-6">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-graydark text-sm font-bold mb-2"
             htmlFor="password"
           >
             Password
@@ -86,7 +86,7 @@ const SignIn = () => {
             placeholder="******************"
           />
           {error ? (
-            <p className="text-red-500 text-xs italic">
+            <p className="text-danger text-xs italic">
               Incorrect username or password{" "}
             </p>
           ) : (
@@ -130,7 +130,7 @@ const SignIn = () => {
             </button>
           )}
           <a
-            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+            className="inline-block align-baseline font-bold text-sm text-meta-5 hover:text-meta-5/80"
             href="#"
           >
             Forgot Password?

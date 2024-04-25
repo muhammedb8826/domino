@@ -19,6 +19,7 @@ import purchaseReducer from "./features/purchaseSlice";
 import saleReducer from "./features/saleSlice";
 import printedTransactionsReducer from "./features/printedTransactionsSlice";
 import stockReducer from "./features/stockSlice";
+import jobOrderProductReducer from "./features/jobOrderProductsSlice";
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -41,6 +42,7 @@ const store = configureStore({
         sale: saleReducer,
         printedTransaction: printedTransactionsReducer,
         stock: stockReducer,
+        jobOrderProduct: jobOrderProductReducer,
     },
 });
 

@@ -5,7 +5,7 @@ import ErroPage from "../common/ErroPage";
 import Loading from "../common/Loading";
 import { deleteprice, getprice } from "../../redux/features/price/pricingSlice";
 import PriceDetailsModal from "./PriceDetailsModal";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineBorderLeft } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
@@ -24,14 +24,17 @@ const Pricing = () => {
     (state: RootState) => state.auth
   );
   const { prices, isLoading, error } = useSelector((state) => state.price);
-  const {units} = useSelector((state) => state.unit);
-  const {products} = useSelector((state) => state.product);
-  const {services} = useSelector((state) => state.service);
+  const { units } = useSelector((state) => state.unit);
+  const { products } = useSelector((state) => state.product);
+  const { services } = useSelector((state) => state.service);
 
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const [id, setId] = useState(null);
 
+  const [formData, setFormData] = useState({
+    priceId: "",
+  });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -97,6 +100,25 @@ const Pricing = () => {
     });
   };
 
+  const [isChecked, setIsChecked] = useState(new Array(prices.length).fill(false));
+
+  const handleCheck = (index) => {
+    setIsChecked((prev) => {
+      const newState = [...prev];
+      newState[index] = !newState[index];
+      return newState;
+    });
+  };
+
+  const handleCheckAll = () => {
+    if (isChecked.every((value) => value === true)) {
+      setIsChecked(new Array(prices.length).fill(false));
+    } else {
+      setIsChecked(new Array(prices.length).fill(true));
+    }
+  };
+
+
   if (user?.email !== "admin@domino.com") {
     return <ErroPage error="You are not authorized to view this page" />
   }
@@ -154,8 +176,34 @@ const Pricing = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-
-                <th className="py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  <div>
+                    <label
+                      htmlFor="mainCheckboxLabelOne"
+                      className="flex cursor-pointer select-none items-center"
+                    >
+                      <div className="relative">
+                        <input
+                          title="Select all"
+                          type="checkbox"
+                          id="mainCheckboxLabelOne"
+                          className="sr-only"
+                          checked={isChecked.every((value) => value === true)}
+                          onChange={handleCheckAll}
+                        />
+                        <div
+                          className={`mr-4 flex h-5 w-5 items-center justify-center rounded border border-graydark ${isChecked.every((value) => value === true) ? 'border-primary bg-gray dark:bg-transparent' : 'border-gray dark:border-strokedark bg-transparent'
+                            }`}
+                        >
+                          <span
+                            className={`h-2.5 w-2.5 rounded-sm ${isChecked.every((value) => value === true) ? 'bg-primary' : 'bg-transparent'}`}
+                          ></span>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Product
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -187,67 +235,96 @@ const Pricing = () => {
                 prices.map((price, index) => {
                   const product = products.find((product) => product.id === price.productId);
                   const unit = units.find((unit) => unit.id === product?.unitId);
-                  const service = services.find((service) => service.id === price.serviceId);     
-                 return <tr
-                    key={price.id}>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {product?.name}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {unit?.name}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {unit?.width} x {unit?.height}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {service?.name}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      {price.unitPrice}
-                    </td>
-                    <td className="px-6 py-4 relative">
-                      <button
-                        onClick={() => handleAction(index)}
-                        title="action"
-                        type="button"
-                        className="text-black dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                      >
-                        <CiMenuKebab />
-                      </button>
-                      {showPopover === index && (
-                        <div
-                          ref={popoverRef}
-                          className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-                        >
-                          {/* Dropdown content */}
-                          <ul className="py-2 text-sm text-gray-700">
-                            <li>
-                              <Link
-                                to="#"
-                                onClick={() => handleEditModal(price.id)}
-                                className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
+                  const service = services.find((service) => service.id === price.serviceId);
+                  return (
+                    <tr key={price.id}>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <div>
+                          <label
+                            htmlFor={`checkboxLabelOne${index}`}
+                            className="flex cursor-pointer select-none items-center"
+                          >
+                            <div className="relative">
+                              <input
+                              title="Select this item for action"
+                                type="checkbox"
+                                id={`checkboxLabelOne${index}`}
+                                className="sr-only"
+                                checked={isChecked[index] || false} // Ensure a boolean value is set
+                                onChange={() => {
+                                  handleCheck(index);
+                                }}
+                              />
+                              <div
+                                className={`mr-4 flex h-5 w-5 items-center justify-center rounded border border-graydark ${isChecked[index] ? 'border-primary bg-gray dark:bg-transparent' : 'border-gray dark:border-strokedark bg-transparent'
+                                  }`}
                               >
-                                <FaRegEdit />
-                                Edit
-                              </Link>{" "}
-                            </li>
-                            {user?.email === "admin@domino.com" && (
-                              <li>
-                                <button
-                                  onClick={() => handleDeletePrice(price.id)}
-                                  type="button"
-                                  className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                                >
-                                  <MdDelete /> Delete
-                                </button>
-                              </li>
-                            )}
-                          </ul>
+                                <span
+                                  className={`h-2.5 w-2.5 rounded-sm ${isChecked[index] ? 'bg-primary' : 'bg-transparent'}`}
+                                ></span>
+                              </div>
+                            </div>
+                          </label>
                         </div>
-                      )}
-                    </td>
-                  </tr>
-               })}
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        {product?.name}
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        {unit?.name}
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        {unit?.width} x {unit?.height}
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        {service?.name}
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        {price.unitPrice}
+                      </td>
+                      <td className="px-6 py-4 relative">
+                        <button
+                          onClick={() => handleAction(index)}
+                          title="action"
+                          type="button"
+                          className="text-black dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                        >
+                          <CiMenuKebab />
+                        </button>
+                        {showPopover === index && (
+                          <div
+                            ref={popoverRef}
+                            className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                          >
+                            {/* Dropdown content */}
+                            <ul className="py-2 text-sm text-gray-700">
+                              <li>
+                                <Link
+                                  to="#"
+                                  onClick={() => handleEditModal(price.id)}
+                                  className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-2"
+                                >
+                                  <FaRegEdit />
+                                  Edit
+                                </Link>{" "}
+                              </li>
+                              {user?.email === "admin@domino.com" && (
+                                <li>
+                                  <button
+                                    onClick={() => handleDeletePrice(price.id)}
+                                    type="button"
+                                    className="text-left text-danger flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-2"
+                                  >
+                                    <MdDelete /> Delete
+                                  </button>
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                      </td>
+                    </tr>)
+                })}
             </tbody>
           </table>
           <nav

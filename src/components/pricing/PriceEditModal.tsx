@@ -8,8 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getpriceById, updateprice } from "@/redux/features/price/pricingSlice";
 import toast from "react-hot-toast";
 import { getServices } from "@/redux/features/service/servicesSlice";
+import ErroPage from "../common/ErroPage";
 
 export const PriceEditModal = ({handleEditModal, id}) => {
+  const { user } = useSelector((state: RootState) => state.auth);
     const { services } = useSelector( (state) => state.service );
     const { products } = useSelector( (state) => state.product );
     const { prices, isLoading } = useSelector( (state) => state.price );
@@ -50,9 +52,9 @@ const singlePrice = prices?.find((price) => price.id === id.toString());
         setFormData({ ...formData, productId: selectedOption.value })
     }
 
-    // if (user?.email !== "admin@domino.com") {
-    //     return <ErroPage error="You are not authorized to view this page" />
-    //   }
+    if (user?.email !== "admin@domino.com") {
+        return <ErroPage error="You are not authorized to view this page" />
+      }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -68,10 +70,6 @@ const singlePrice = prices?.find((price) => price.id === id.toString());
          });
     }
 
-    console.log(formData);
-    
-    
-  
     return isLoading ? (<Loader />) : (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -97,10 +95,10 @@ const singlePrice = prices?.find((price) => price.id === id.toString());
                   <div className="relative p-6 flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <div>
                       <label
-                        htmlFor="machines"
+                        htmlFor="products"
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                       >
-                        Choose Machine
+                        Choose Product
                       </label>
                       <Select
                         options={productOptions}
