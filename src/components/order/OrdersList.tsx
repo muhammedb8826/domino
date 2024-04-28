@@ -22,6 +22,8 @@ import CardThree from "../CardThree";
 import CardFour from "../CardFour";
 import Loader from "@/common/Loader";
 import Breadcrumb from "../Breadcrumb";
+import { getCustomers } from "@/redux/features/customer/customerSlice";
+import { getPayments } from "@/redux/features/paymentSlice";
 // import { getCommissions, updateCommission } from "@/redux/features/commission/commissionSlice";
 
 interface User {
@@ -49,10 +51,14 @@ const OrdersList = () => {
   const { orders, orderStatus, isLoading, error } = useSelector(
     (state: RootState) => state.order
   );
+  const { customers } = useSelector((state: RootState) => state.customer);
+  const {payments} = useSelector((state: RootState) => state.payment);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrders());
+    dispatch(getCustomers());
+    dispatch(getPayments());
   }, [dispatch]);
 
   const [selectedOption, setSelectedOption] = useState("all");
@@ -80,15 +86,15 @@ const OrdersList = () => {
     switch (selectedOption) {
       case "paid":
         return orders.filter(
-          (order) => order.paymentInfo.paymentStatus === "paid"
+          (order) => order.payment.paymentStatus === "paid"
         );
       case "partial":
         return orders.filter(
-          (order) => order.paymentInfo.paymentStatus === "partial"
+          (order) => order.payment.paymentStatus === "partial"
         );
       case "not-paid":
         return orders.filter(
-          (order) => order.paymentInfo.paymentStatus === "not paid"
+          (order) => order.payment.paymentStatus === "not paid"
         );
       case "date":
         return orders
@@ -113,7 +119,7 @@ const OrdersList = () => {
       order.customerPhone?.toLowerCase().includes(search.toLowerCase()) ||
       order.grandTotal?.toString().includes(search) ||
       order.deliveryDate?.toLowerCase().includes(search.toLowerCase()) ||
-      order.paymentInfo.paymentStatus
+      order.payment.paymentStatus
         ?.toLowerCase()
         .includes(search.toLowerCase()) ||
       order.orderItems.some((item) =>
@@ -215,103 +221,103 @@ const OrdersList = () => {
   const orderListContent =
     filterDate.length > 0
       ? filterDate.map((order, index: number) => (
-          <tr key={order.id}>
-            <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-              <h5 className="font-medium text-black dark:text-white">
-                <NavLink
-                  to={`/order/${order.id}`}
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  {order.series}
-                </NavLink>{" "}
-              </h5>
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {/* <FaFirstOrderAlt className="w-8 h-8 rounded-full" /> */}
-              <div className="ps-3">
-                <div className="text-base font-semibold">
-                  {order.customerFirstName}
-                  {order.customerLastName}
-                </div>
-                <div className="font-normal text-gray-500">
-                  {order.customerPhone}
-                </div>
-              </div>
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {order.grandTotal?.toLocaleString()}
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {order.paymentInfo?.paymentStatus === "not paid" && (
-                <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger">
-                  {order.paymentInfo?.paymentStatus}
-                </span>
-              )}
-              {order.paymentInfo?.paymentStatus === "partial" && (
-                <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-sm font-medium text-warning">
-                  {order.paymentInfo?.paymentStatus}
-                </span>
-              )}
-              {order.paymentInfo?.paymentStatus === "paid" && (
-                <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                  {order.paymentInfo?.paymentStatus}
-                </span>
-              )}
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {order.date}
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {order.deliveryDate}
-            </td>
-            <td className="px-6 py-4 relative">
-              <button
-                onClick={() => handleAction(index)}
-                title="action"
-                type="button"
-                className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        <tr key={order.id}>
+          <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+            <h5 className="font-medium text-black dark:text-white">
+              <NavLink
+                to={`/order/${order.id}`}
+                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
               >
-                <CiMenuKebab />
-              </button>
-              {showPopover === index && (
-                <div
-                  ref={popoverRef}
-                  className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-                >
-                  <ul className="py-2 text-sm text-gray-700">
+                {order.series}
+              </NavLink>{" "}
+            </h5>
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {/* <FaFirstOrderAlt className="w-8 h-8 rounded-full" /> */}
+            <div className="ps-3">
+              <div className="text-base font-semibold">
+                {customers.find((customer) => customer.id === order.customerId)?.firstName} {" "}
+                {customers.find((customer) => customer.id === order.customerId)?.lastName}
+              </div>
+              <div className="font-normal text-gray-500">
+                {customers.find((customer) => customer.id === order.customerId)?.phone}
+              </div>
+            </div>
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {order.grandTotal?.toLocaleString()}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {order.payment?.status === "not paid" && (
+              <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger">
+                {order.payment?.status}
+              </span>
+            )}
+            {order.payment?.status === "partial" && (
+              <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-sm font-medium text-warning">
+                {order.payment?.status}
+              </span>
+            )}
+            {order.payment?.status === "paid" && (
+              <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
+                {order.payment?.status}
+              </span>
+            )}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {order.date}
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+            {order.deliveryDate}
+          </td>
+          <td className="px-6 py-4 relative">
+            <button
+              onClick={() => handleAction(index)}
+              title="action"
+              type="button"
+              className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              <CiMenuKebab />
+            </button>
+            {showPopover === index && (
+              <div
+                ref={popoverRef}
+                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+              >
+                <ul className="py-2 text-sm text-gray-700">
+                  <li>
+                    <NavLink
+                      to={`/order/${order.id}`}
+                      className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
+                    >
+                      <FaRegEdit />
+                      Edit
+                    </NavLink>{" "}
+                  </li>
+                  {user?.email === "admin@domino.com" && (
                     <li>
-                      <NavLink
-                        to={`/order/${order.id}`}
-                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        type="button"
+                        className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
                       >
-                        <FaRegEdit />
-                        Edit
-                      </NavLink>{" "}
+                        <MdDelete /> Delete
+                      </button>
                     </li>
-                    {user?.email === "admin@domino.com" && (
-                      <li>
-                        <button
-                          onClick={() => handleDeleteOrder(order.id)}
-                          type="button"
-                          className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                        >
-                          <MdDelete /> Delete
-                        </button>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              )}
-            </td>
-          </tr>
-        ))
+                  )}
+                </ul>
+              </div>
+            )}
+          </td>
+        </tr>
+      ))
       : null;
 
   return isLoading ? (
     <Loader />
   ) : (
     <>
-    <Breadcrumb pageName="Orders" />
+      <Breadcrumb pageName="Orders" />
       {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardOne />
         <CardTwo />
@@ -323,11 +329,10 @@ const OrdersList = () => {
         className={`rounded-sm border border-stroke border-b-0 bg-white px-4 flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 py-4`}
       >
         <div
-          className={`${
-            user?.email !== "admin@domino.com" && user?.roles !== "reception"
+          className={`${user?.email !== "admin@domino.com" && user?.roles !== "reception"
               ? "hidden"
               : ""
-          }`}
+            }`}
         >
           <NavLink
             to="/add-order"

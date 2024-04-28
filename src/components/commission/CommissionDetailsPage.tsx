@@ -9,7 +9,7 @@ import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import {
   getCommissionById,
-  getCommissionTransactions,
+  getCommissions,
   updateCommission,
 } from "@/redux/features/commission/commissionSlice";
 import { GoBack } from "../common/GoBack";
@@ -31,7 +31,7 @@ const CommissionDetailsPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrders());
-    dispatch(getCommissionTransactions());
+    dispatch(getCommissions());
     dispatch(getCommissionById(id)).then((res) => {
       if (res.payload) {
         const commission = res.payload;

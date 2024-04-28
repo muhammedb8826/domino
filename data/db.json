@@ -10,13 +10,13 @@
       "id": "1713703632140"
     },
     {
-      "id": "1713727389192",
       "name": "T-shirt",
       "description": "",
       "categoryId": "833f",
       "unitId": "8dd4",
       "minStockLevel": "1",
-      "initialStock": "10"
+      "initialStock": "10",
+      "id": "1713727389192"
     },
     {
       "id": "1714005604020",
@@ -30,242 +30,95 @@
   ],
   "orders": [
     {
-      "series": "Coca Cola-2024",
-      "date": "Mar 17, 2024",
-      "deliveryDate": "Mar 27, 2024",
-      "orderType": "telegram",
+      "id": "16c3052d-5e69-4ecf-9e5c-db96cbee6c37",
+      "series": "IAN-O-0000-2024",
+      "date": "Apr 28, 2024",
+      "deliveryDate": "Apr 28, 2024",
+      "orderSource": "telegram",
       "description": "",
-      "customerPhone": "12-4566-6788",
-      "customerFirstName": "Coca Cola",
-      "customerEmail": "cocacola@gmail.com",
-      "commissionPhone": "",
-      "commissionFirstName": "",
-      "commissionEmail": "",
+      "customerId": "1714080981152",
+      "salesPartnerId": "1714325336867",
       "orderItems": [
         {
-          "machine": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 12500,
-          "status": "recieved",
-          "commissionPrice": 0
-        },
-        {
-          "machine": "UV",
-          "material": "Film",
-          "service": "Print and Material",
-          "unitPrice": 10000,
-          "status": "recieved",
-          "commissionPrice": 0
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "5",
-          "height": "5",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
+          "productId": "1713727389192",
+          "serviceId": "e4b1",
+          "priceId": "0189",
+          "unitPrice": 2000,
           "width": "2",
-          "height": "5",
-          "quantity": "5",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 22500,
-      "totalCommission": 0,
-      "fileNames": [
-        "Coca Cola-Coca Cola-DTF-T-shirt-5x5",
-        "Coca Cola-Coca Cola-UV-Film-2x5"
-      ],
-      "totalQuantity": 10,
-      "grandTotal": 25875,
-      "vat": 3375,
-      "discounts": [
-        0,
-        0
-      ],
-      "levels": [
-        "1",
-        null
-      ],
-      "totalBirrAfterDiscount": [
-        12500,
-        10000
-      ],
-      "paymentInfo": {
-        "paymentMethod": "cash",
-        "paymentReference": "",
-        "paymentAmount": 0,
-        "paymentStatus": "partial"
-      },
-      "id": "605e"
-    },
-    {
-      "id": "b96d",
-      "series": "Teshager-2024",
-      "date": "Mar 19, 2024",
-      "deliveryDate": "Mar 22, 2024",
-      "orderType": "phone",
-      "description": "",
-      "customerId": "1710822546278",
-      "customerPhone": "09-1156-8989",
-      "customerFirstName": "Teshager",
-      "customerEmail": "",
-      "commissionPhone": "",
-      "commissionFirstName": "",
-      "commissionEmail": "",
-      "orderItems": [
-        {
-          "machine": "BANNER",
-          "material": "sticker",
-          "service": "Print",
-          "unitPrice": 43200,
-          "status": "recieved"
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "6",
-          "height": "6",
-          "quantity": "6",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 43200,
-      "grandTotal": 49680,
-      "fileNames": [
-        "Teshager-BANNER-sticker-6x6"
-      ],
-      "totalQuantity": 6,
-      "paymentInfo": {
-        "paymentMethod": "cash",
-        "paymentReference": "",
-        "paymentAmount": 0,
-        "paymentStatus": "not paid"
-      }
-    },
-    {
-      "id": "48ad",
-      "series": "Biniyam-2024",
-      "date": "Mar 20, 2024",
-      "deliveryDate": "Mar 22, 2024",
-      "orderType": "phone",
-      "description": "",
-      "customerId": "1710814124476",
-      "customerPhone": "09-1144-0266",
-      "customerFirstName": "Biniyam",
-      "customerEmail": "bini@gmail.com",
-      "commissionPhone": "",
-      "commissionFirstName": "",
-      "commissionEmail": "",
-      "orderItems": [
-        {
-          "machine": "UV",
-          "material": "Film",
-          "service": "Print and Material",
-          "unitPrice": 30000,
+          "height": "4",
+          "quantity": "2",
           "status": "recieved"
         },
         {
-          "machine": "DTF",
-          "material": "T-shirt",
-          "service": "Print and Material",
-          "unitPrice": 9000,
+          "productId": "1713703632140",
+          "serviceId": "e4b1",
+          "priceId": "1371",
+          "unitPrice": 32000,
+          "width": "2",
+          "height": "4",
+          "quantity": "2",
           "status": "recieved"
         }
       ],
-      "orderMeasures": [
-        {
-          "unitName": null,
-          "width": "6",
-          "height": "5",
-          "quantity": "5",
-          "unitPrice": null
-        },
-        {
-          "unitName": null,
-          "width": "3",
-          "height": "5",
-          "quantity": "6",
-          "unitPrice": null
-        }
-      ],
-      "totalBirr": 39000,
-      "grandTotal": 44850,
+      "totalBirr": 34000,
+      "tax": 5100,
+      "grandTotal": 39100,
       "fileNames": [
-        "Biniyam-UV-Film-6x5",
-        "Biniyam-DTF-T-shirt-3x5"
+        "Muhammed-T-shirt-2x4",
+        "Muhammed-Banner-2x4"
       ],
-      "totalQuantity": 11,
-      "paymentInfo": {
-        "paymentMethod": "cash",
-        "paymentReference": "",
-        "paymentAmount": 0,
-        "paymentStatus": "not paid"
-      }
+      "totalQuantity": 4
     },
     {
-      "series": "Pepsi-2024",
-      "date": "Feb 27, 2024",
-      "deliveryDate": "Apr 10, 2024",
-      "orderType": "In person",
+      "id": "4ed6e252-3c29-45d1-bef6-e4f7004771b4",
+      "series": "IAN-O-0001-2024",
+      "date": "Apr 28, 2024",
+      "deliveryDate": "Apr 28, 2024",
+      "orderSource": "",
       "description": "",
-      "customerPhone": "09-1196-8989",
-      "customerFirstName": "Pepsi",
-      "commissionId": "1713587815494",
-      "customerEmail": "pepsi@gmail.com",
-      "commissionPhone": "09-1222-6666",
-      "commissionFirstName": "Eyoel",
-      "commissionEmail": "",
+      "customerId": "1714080981152",
+      "salesPartnerId": "",
       "orderItems": [
         {
-          "machine": "BANNER",
-          "material": "Screen",
-          "service": "Print and Material",
-          "unitPrice": 400,
-          "status": "recieved",
-          "commissionPrice": 8,
-          "commissionPercent": "2"
-        }
-      ],
-      "orderMeasures": [
-        {
-          "unitName": null,
+          "productId": "1713727389192",
+          "serviceId": "e4b1",
+          "priceId": "0189",
+          "unitPrice": 1000,
           "width": "2",
           "height": "2",
           "quantity": "2",
-          "unitPrice": null
+          "status": "recieved"
+        },
+        {
+          "productId": "1713703632140",
+          "serviceId": "e4b1",
+          "priceId": "1371",
+          "unitPrice": 16000,
+          "width": "2",
+          "height": "2",
+          "quantity": "2",
+          "status": "recieved"
+        },
+        {
+          "productId": "1713727389192",
+          "serviceId": "1324",
+          "priceId": "7c45",
+          "unitPrice": 1600,
+          "width": "2",
+          "height": "2",
+          "quantity": "2",
+          "status": "recieved"
         }
       ],
-      "totalBirr": 400,
-      "totalCommission": 8,
+      "totalBirr": 18600,
+      "tax": 2790,
+      "grandTotal": 21390,
       "fileNames": [
-        "Pepsi-Pepsi-BANNER-Screen-2x2"
+        "Muhammed-T-shirt-2x2",
+        "Muhammed-Banner-2x2",
+        "Muhammed-T-shirt-2x2"
       ],
-      "totalQuantity": 2,
-      "grandTotal": 460,
-      "vat": 60,
-      "discounts": [
-        0
-      ],
-      "levels": [
-        null
-      ],
-      "totalBirrAfterDiscount": [
-        400
-      ],
-      "paymentInfo": {
-        "paymentMethod": "cash",
-        "paymentReference": "",
-        "paymentAmount": 0,
-        "paymentStatus": "not paid"
-      },
-      "id": "b9a8"
+      "totalQuantity": 6
     }
   ],
   "customers": [
@@ -300,25 +153,189 @@
       "firstName": "Teshager",
       "lastName": "",
       "email": ""
+    },
+    {
+      "id": "1714080874774",
+      "phone": "",
+      "companyType": "",
+      "firstName": "",
+      "lastName": "",
+      "email": ""
+    },
+    {
+      "id": "1714080981152",
+      "phone": "09-0507-8826",
+      "companyType": "individual",
+      "firstName": "Muhammed",
+      "lastName": "B",
+      "email": "mrol3943@gmail.com"
+    }
+  ],
+  "salesPartners": [
+    {
+      "id": "1714309322405",
+      "phone": "09-0507-8826",
+      "companyType": "",
+      "firstName": "Muhammed",
+      "lastName": "",
+      "email": ""
+    },
+    {
+      "id": "1714325336867",
+      "phone": "09-1104-4506",
+      "companyType": "",
+      "firstName": "Teshager",
+      "lastName": "Assefa",
+      "email": ""
     }
   ],
   "commissions": [
     {
-      "id": "1713587815494",
-      "phone": "09-1222-6666",
-      "companyType": "",
-      "firstName": "Eyoel",
-      "lastName": "",
-      "email": "",
-      "data": [
+      "id": "dd52",
+      "orderId": null,
+      "transactions": [
         {
-          "date": "Apr 22, 2024",
+          "date": "Apr 28, 2024",
+          "amount": 40,
+          "percent": 2,
           "description": "",
-          "paymentAmount": "",
-          "status": "Earning"
+          "status": "pending"
         }
-      ],
-      "balance": 8
+      ]
+    },
+    {
+      "id": "8100",
+      "orderId": null,
+      "transactions": [
+        {
+          "date": "Apr 28, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "05c4",
+      "orderId": "16c3052d-5e69-4ecf-9e5c-db96cbee6c37",
+      "transactions": [
+        {
+          "date": "Apr 28, 2024",
+          "amount": 40,
+          "percent": 2,
+          "description": "",
+          "status": "pending"
+        },
+        {
+          "date": "Apr 28, 2024",
+          "amount": 320,
+          "percent": 1,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "0358",
+      "orderId": "4ed6e252-3c29-45d1-bef6-e4f7004771b4",
+      "transactions": [
+        {
+          "date": "Apr 28, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        },
+        {
+          "date": "Apr 28, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        },
+        {
+          "date": "Apr 28, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "payments": [
+    {
+      "id": "2c66",
+      "orderId": null,
+      "transactions": [
+        {
+          "date": "Apr 28, 2024",
+          "paymentMethod": "cash",
+          "reference": "958djdd98CBE",
+          "amount": "2000",
+          "status": "pending",
+          "description": ""
+        },
+        {
+          "date": "Apr 28, 2024",
+          "paymentMethod": "mobile-banking",
+          "reference": "",
+          "amount": "300",
+          "status": "pending",
+          "description": "payment"
+        }
+      ]
+    },
+    {
+      "id": "6890",
+      "orderId": null,
+      "transactions": [
+        {
+          "date": "Apr 28, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": 0,
+          "status": "pending",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "292b",
+      "orderId": "16c3052d-5e69-4ecf-9e5c-db96cbee6c37",
+      "transactions": [
+        {
+          "date": "Apr 28, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": "300",
+          "status": "pending",
+          "description": ""
+        },
+        {
+          "date": "Apr 28, 2024",
+          "paymentMethod": "mobile-banking",
+          "reference": "",
+          "amount": "1000",
+          "status": "pending",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "765a",
+      "orderId": "4ed6e252-3c29-45d1-bef6-e4f7004771b4",
+      "transactions": [
+        {
+          "date": "Apr 28, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": "",
+          "status": "pending",
+          "description": ""
+        }
+      ]
     }
   ],
   "services": [
@@ -366,7 +383,7 @@
   "units": [
     {
       "id": "90fc",
-      "name": "M",
+      "name": "Meter",
       "width": "10",
       "height": "10"
     },
@@ -384,7 +401,7 @@
     },
     {
       "id": "890e",
-      "name": "sqm",
+      "name": "Sqm",
       "width": "1",
       "height": "1"
     },
@@ -421,35 +438,6 @@
       "unitPrice": "2000"
     }
   ],
-  "roles": [
-    {
-      "id": "5932",
-      "name": " Reception",
-      "description": "She can create an order"
-    }
-  ],
-  "permissions": [
-    {
-      "id": 1,
-      "name": "create",
-      "description": "Can create items"
-    },
-    {
-      "id": 2,
-      "name": "read",
-      "description": "Can read items"
-    },
-    {
-      "id": 3,
-      "name": "update",
-      "description": "Can update items"
-    },
-    {
-      "id": 4,
-      "name": "delete",
-      "description": "Can delete items"
-    }
-  ],
   "dicounts": [
     {
       "id": "2b12",
@@ -476,393 +464,10 @@
       "discountPercentage": "50"
     }
   ],
-  "commissionTransactions": [],
-  "paymentTransactions": [
-    {
-      "id": "6b3f",
-      "transactions": [
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "50000",
-          "reference": "958djdd98-CBE",
-          "status": "paid"
-        },
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "bank-transfer",
-          "description": "",
-          "paymentAmount": "69000",
-          "status": "paid",
-          "reference": "958djdd98-Abyssinia"
-        },
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "check",
-          "description": "",
-          "paymentAmount": "600",
-          "status": "paid",
-          "reference": ""
-        }
-      ],
-      "order": {
-        "id": "9f9c",
-        "customer": {
-          "id": "1710809287639"
-        }
-      }
-    },
-    {
-      "id": "a8cf",
-      "transactions": [
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "27600",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "5fb6",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "99dc",
-      "transactions": [
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "11500",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "1efb",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    },
-    {
-      "id": "ec0f",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "553c",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "c3a5",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "1311",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "4991",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "974f",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "d7a6",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "a2fe",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "6f2a",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "1459",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "3afb",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "c37f",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    },
-    {
-      "id": "b1d7",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "d240",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "7bf0",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "50000",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "c159",
-        "customer": {
-          "id": "1710809287639"
-        }
-      }
-    },
-    {
-      "id": "d1ce",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "81da",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "242b",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "bdba",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "9618",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "8a83",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    },
-    {
-      "id": "96a0",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "5002",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "605e",
-        "customer": {
-          "id": "1710809287639"
-        }
-      }
-    },
-    {
-      "id": "250b",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "b96d",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "cf19",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "48ad",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "42fa",
-      "transactions": [
-        {
-          "date": "Apr 19, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "b9a8",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    }
-  ],
   "orderStatus": [
     {
-      "id": "ed70",
-      "orderId": "605e",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
-        {
-          "status": "printed",
-          "note": "",
-          "printed": false,
-          "adminApproval": true,
-          "completed": false
-        },
-        {
-          "status": "printed",
-          "note": "",
-          "printed": false,
-          "adminApproval": true,
-          "completed": false
-        }
-      ]
-    },
-    {
-      "id": "3e46",
-      "orderId": "b96d",
+      "id": "aa03",
+      "orderId": "16c3052d-5e69-4ecf-9e5c-db96cbee6c37",
       "status": "received",
       "adminApproval": false,
       "orderItems": [
@@ -872,15 +477,7 @@
           "printed": false,
           "adminApproval": false,
           "completed": false
-        }
-      ]
-    },
-    {
-      "id": "74be",
-      "orderId": "48ad",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
+        },
         {
           "status": "received",
           "note": "",
@@ -898,16 +495,30 @@
       ]
     },
     {
-      "id": "0985",
-      "orderId": "b9a8",
+      "id": "4a83",
+      "orderId": "4ed6e252-3c29-45d1-bef6-e4f7004771b4",
       "status": "received",
       "adminApproval": false,
       "orderItems": [
         {
-          "status": "printed",
+          "status": "received",
           "note": "",
           "printed": false,
-          "adminApproval": true,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
           "completed": false
         }
       ]
@@ -1057,7 +668,7 @@
     {
       "id": "e65b",
       "productId": "1713727389192",
-      "quantity": "10"
+      "quantity": "30"
     },
     {
       "id": "0a68",
@@ -1077,7 +688,7 @@
       "status": "added"
     },
     {
-      "id": "994a",
+      "id": "ef1a",
       "productId": "1713703632140",
       "status": "added"
     }

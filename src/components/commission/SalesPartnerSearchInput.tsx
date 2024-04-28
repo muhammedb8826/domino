@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { CommissionRegistration } from "./CommissionRegistrationModal";
-import { searchUsers } from "../../redux/features/commission/commissionSlice";
+import { SalesPartnerRegistration } from "./SalesPartnerRegistrationModal";
 import { useDispatch, useSelector } from "react-redux";
-import { getCommissions } from "@/redux/features/commission/commissionSlice";
+import { getSalesPartners, setSearchTerm } from "@/redux/features/salesPartnersSlice";
+import Loader from "@/common/Loader";
 
 
-const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
+export const SalesPartnerSearchInput = ({ handleCommissionInfo, value }) => {
     const dispatch = useDispatch();
-    const { commissions, searchTerm } = useSelector((state) => state.commission);
+    const { salesPartners, isLoading, searchTerm } = useSelector((state) => state.salesPartner);
 
     const [searchInput, setSearchInput] = useState(value || "");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -18,10 +18,10 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
   }, [value]);
 
   useEffect(() => {
-      dispatch(getCommissions());
+      dispatch(getSalesPartners());
   }, [dispatch]);
     
-      const filteredCommission = commissions.filter(
+      const filteredCommission = salesPartners.filter(
         (commission) =>
           commission.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           commission.id?.toString().includes(searchTerm) ||
@@ -32,11 +32,9 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
       const handleSearchUser = (e) => {
         setSearchInput(e.target.value);
         setIsDropdownOpen(true);
-        dispatch(searchUsers(e.target.value));
+        dispatch(setSearchTerm(e.target.value));
       };
       const handleSelectCustomer = (commission) => {
-        console.log(commission);
-        
         setSearchInput(commission.firstName);
         setIsDropdownOpen(false);
         handleCommissionInfo(commission);
@@ -58,7 +56,7 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
         };
       }, []);
  
-    return (
+    return isLoading ? (<Loader/>):(
     <>
         <div className="relative">
               <label
@@ -150,9 +148,7 @@ const CommissionSearchInput = ({ handleCommissionInfo, value }) => {
                 Add sales partner
               </button>
             </div>
-            {modalOpen && <CommissionRegistration handleModalOpen={handleModalOpen} />}
+            {modalOpen && <SalesPartnerRegistration handleModalOpen={handleModalOpen} />}
     </>
   )
 }
-
-export default CommissionSearchInput

@@ -21,7 +21,7 @@ import { getprice } from "../../redux/features/price/pricingSlice";
 import { MdDelete } from "react-icons/md";
 import { StatusEditModal } from "./StatusEditModal";
 import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
-import CommissionSearchInput from "../commission/CommissionSearchInput";
+import { SalesPartnerSearchInput } from "../commission/SalesPartnerSearchInput";
 import {
   createCommissionTransaction,
   getCommissionTransactions,
@@ -33,9 +33,12 @@ import {
   getCustomers,
   getPaymentTransactions,
   updateCustomer,
-  updatePaymentTransaction,
 } from "@/redux/features/customer/customerSlice";
 import { RootState } from "@/redux/store";
+import { getProducts } from "@/redux/features/product/productSlice";
+import { getJobOrdersProducts } from "@/redux/features/jobOrderProductsSlice";
+import { getPayments } from "@/redux/features/paymentSlice";
+import { getSalesPartners } from "@/redux/features/salesPartnersSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -54,24 +57,39 @@ const OrderDetailsPage = () => {
   );
   const { prices } = useSelector((state) => state.price);
   const { services } = useSelector((state) => state.service);
+  const { jobOrderProducts } = useSelector((state) => state.jobOrderProduct);
+  const { products } = useSelector((state) => state.product);
+  const {payments} = useSelector((state) => state.payment);
+  const { customers } = useSelector((state) => state.customer);
   const { discounts } = useSelector((state) => state.discount);
   const { user } = useSelector((state: RootState) => state.auth);
+  const {salesPartners} = useSelector((state) => state.salesPartner);
+  const {commissions} = useSelector((state) => state.commission);
 
+
+  const findPayment = payments.find((payment) => payment.orderId === id);
+  const findCommission = commissions.find((commission) => commission.orderId === id);
   const findOrderStatus = orderStatus.find((status) => status.orderId === id);
-
+  console.log(findOrderStatus);
+  
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getprice());
     dispatch(getServices());
     dispatch(getDiscounts());
     dispatch(getCommissions());
+    dispatch(getCustomers());
+    dispatch(getProducts());
+    dispatch(getJobOrdersProducts());
+    dispatch(getSalesPartners());
     dispatch(getOrderStatus()).then((res) => {
       if (res.payload) {
         const status = res.payload.find((status) => status.orderId === id);
         setOrderStatus(status);
       }
     });
-    dispatch(getPaymentTransactions()).then((res) => {
+    dispatch(getPayments()).then((res) => {
       if (res.payload) {
         const customer = res.payload.find(
           (customer) => customer.order?.id === id
@@ -91,37 +109,20 @@ const OrderDetailsPage = () => {
             series: order.series,
             date: order.date,
             deliveryDate: order.deliveryDate,
-            orderType: order.orderType,
+            orderSource: order.orderSource,
             description: order.description,
-            customerPhone: order.customerPhone,
-            customerFirstName: order.customerFirstName,
-            commissionId: order.commissionId,
-            customerEmail: order.customerEmail,
-            commissionPhone: order.commissionPhone,
-            commissionFirstName: order.commissionFirstName,
-            commissionEmail: order.commissionEmail,
+            customerId: order.customeId,
+            salesPartnerId: order.salesPartnerId,
           });
           setFormData(order.orderItems);
-          setMeasuresFormData(order.orderMeasures);
           setTotalBirr(order.totalBirr);
           setTotalQuantity(order.totalQuantity);
           setFileName(order.fileNames);
           setDiscountPerItem(order.discounts);
           setLevels(order.levels);
-          setTotalBirrAfterDiscount(order.totalBirrAfterDiscount);
           setGrandTotal(order.grandTotal);
-          setVat(order.vat);
-          setUserInputDiscount(order.userInputDiscount);
-          setPaymentInfo(order.paymentInfo);
-          setCommissionPercent(
-            order.orderItems.map((item) => item.commissionPercent)
-          );
-          setCommissionPrice(
-            order.orderItems.map((item) => item.commissionPrice)
-          );
-          setTotalCommission(order.totalCommission);
-        }
-      })
+          setTax(order.tax);
+        }})
       .catch((error) => {
         console.error("Error fetching orders:", error);
       });
@@ -183,6 +184,8 @@ const OrderDetailsPage = () => {
     }, 1500);
   };
 
+
+
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const [showPopover2, setShowPopover2] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -224,50 +227,52 @@ const OrderDetailsPage = () => {
     setShowPopover2((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const [paymentInfo, setPaymentInfo] = useState({
-    paymentMethod: "cash",
-    paymentReference: "",
-    paymentAmount: 0,
-    paymentStatus: "not paid",
-  });
-  // const [collapseDisount, setCollapseDiscount] = useState(false);
+  const [payment, setPayment] = useState([
+    {
+      date: formattedDate,
+      paymentMethod: "cash",
+      reference: "",
+      amount: 0,
+      status: "pending",
+      description: "",
+    }
+  ]);
+
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
     deliveryDate: formattedDate,
-    orderType: "",
+    orderSource: "",
     description: "",
-    customerPhone: "",
-    customerFirstName: "",
-    customerEmail: "",
-    commissionId: "",
-    commissionPhone: "",
-    commissionFirstName: "",
-    commissionEmail: "",
+    customerId: "",
+    salesPartnerId: "",
   });
 
   const [formData, setFormData] = useState([
     {
-      machine: "",
-      material: "",
-      service: "",
+      productId: "",
+      serviceId: "",
+      priceId: "",
       unitPrice: null,
+      width: "",
+      height: "",
+      quantity: "",
       status: "recieved",
       isDiscounted: false,
     },
   ]);
 
-  const [measuresFormData, setMeasuresFormData] = useState([
+  const [commission, setCommission] = useState([
     {
-      unitName: null,
-      width: null,
-      height: null,
-      quantity: null,
-      unitPrice: null,
-    },
+
+      date: formattedDate,
+      amount: 0,
+      percent: 0,
+      description: "",
+      status: "pending",
+    }
   ]);
 
-  const [calculatedUnitPrices, setCalculatedUnitPrices] = useState([]);
   const [totalUnits, setTotalUnits] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
@@ -396,24 +401,18 @@ const OrderDetailsPage = () => {
     setFormData((prevFormData) => [
       ...prevFormData,
       {
-        machine: "",
-        material: "",
-        service: "",
+        productId: "",
+        serviceId: "",
+        priceId: "",
         unitPrice: null,
+        width: "",
+        height: "",
+        quantity: "",
         status: "recieved",
         isDiscounted: false,
       },
     ]);
-    setMeasuresFormData((prevFormData) => [
-      ...prevFormData,
-      {
-        unitName: null,
-        width: null,
-        height: null,
-        quantity: null,
-        unitPrice: null,
-      },
-    ]);
+
     setOrderStatus((prev) => ({
       ...prev,
       orderItems: [
@@ -429,34 +428,26 @@ const OrderDetailsPage = () => {
     }));
   };
 
-  const handleInputChanges = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { name, value } = e.target;
-    setMeasuresFormData((prevFormData) => {
-      const updatedFormData = prevFormData.map((item, i) => {
-        if (i === index) {
-          return {
-            ...item,
-            [name]: value,
-          };
-        }
-        return item;
-      });
-      return updatedFormData;
-    });
-  };
+  // const handleInputChanges = (
+  //   index: number,
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   setMeasuresFormData((prevFormData) => {
+  //     const updatedFormData = prevFormData.map((item, i) => {
+  //       if (i === index) {
+  //         return {
+  //           ...item,
+  //           [name]: value,
+  //         };
+  //       }
+  //       return item;
+  //     });
+  //     return updatedFormData;
+  //   });
+  // };
 
   // calculate unit price and total quantity
-
-  useEffect(() => {
-    const totalQuantity = measuresFormData.reduce(
-      (acc, { quantity }) => acc + Number(quantity || 0),
-      0
-    );
-    setTotalQuantity(totalQuantity);
-  }, [measuresFormData]);
 
   useEffect(() => {
     if (totalBirrAfterDiscount) {
@@ -474,32 +465,6 @@ const OrderDetailsPage = () => {
     }
   }, [totalBirrAfterDiscount, userInputDiscount]);
 
-  useEffect(() => {
-    const calculatedUnitPrices = measuresFormData.map((data, index) => {
-      const matchingPrice = filteredData[index];
-      if (!matchingPrice) {
-        return 0;
-      }
-      const { width, height, quantity } = data;
-      const { unitPrice } = matchingPrice;
-      const calculatedUnitPrice = unitPrice * (width * height) * quantity;
-      return calculatedUnitPrice;
-    });
-    setCalculatedUnitPrices(calculatedUnitPrices);
-  }, [measuresFormData, filteredData]);
-
-  useEffect(() => {
-    const totalUnits = measuresFormData.map((data, index) => {
-      const matchingPrice = filteredData[index];
-      if (!matchingPrice) {
-        return 0;
-      }
-      const { width, height, quantity } = data;
-      const calculatedUnitPrice = width * height * quantity;
-      return calculatedUnitPrice;
-    });
-    setTotalUnits(totalUnits);
-  }, [measuresFormData, filteredData]);
 
   // calculate discount
 
@@ -601,26 +566,26 @@ const OrderDetailsPage = () => {
     }));
   };
 
-  useEffect(() => {
-    if (totaTransaction > 0 && grandTotal > 0 && totaTransaction < grandTotal) {
-      setPaymentInfo((prev) => ({
-        ...prev,
-        paymentStatus: "partial",
-      }));
-    }
-    if (totaTransaction === grandTotal) {
-      setPaymentInfo((prev) => ({
-        ...prev,
-        paymentStatus: "paid",
-      }));
-    }
-    if (totaTransaction === 0) {
-      setPaymentInfo((prev) => ({
-        ...prev,
-        paymentStatus: "not paid",
-      }));
-    }
-  }, [grandTotal, totaTransaction]);
+  // useEffect(() => {
+  //   if (totaTransaction > 0 && grandTotal > 0 && totaTransaction < grandTotal) {
+  //     setPaymentInfo((prev) => ({
+  //       ...prev,
+  //       paymentStatus: "partial",
+  //     }));
+  //   }
+  //   if (totaTransaction === grandTotal) {
+  //     setPaymentInfo((prev) => ({
+  //       ...prev,
+  //       paymentStatus: "paid",
+  //     }));
+  //   }
+  //   if (totaTransaction === 0) {
+  //     setPaymentInfo((prev) => ({
+  //       ...prev,
+  //       paymentStatus: "not paid",
+  //     }));
+  //   }
+  // }, [grandTotal, totaTransaction]);
 
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
@@ -699,88 +664,112 @@ const OrderDetailsPage = () => {
     }));
   };
 
-  // setting options for material and machine
-
-  const uniqueMachineMaterialCombinations = new Set();
-  prices.forEach(({ machine, material }) => {
-    const combination = `${material.name}-(${machine.name})`;
-    uniqueMachineMaterialCombinations.add(combination);
+  const productOptions = jobOrderProducts?.map((item) => {
+    const product = products?.find((product) => product.id === item.productId);
+    const value = item.product?.id || (product ? product.id : null);
+    const label = item.product?.name || (product ? product.name : null);
+    return {
+      value,
+      label,
+    };
   });
 
-  const uniqueOptions = Array.from(uniqueMachineMaterialCombinations).map(
-    (combination) => ({
-      value: combination,
-      label: combination,
-    })
-  );
+  const serviceOptions = services?.map((item) => ({
+    value: item.id,
+    label: item.name,
+  }));
 
-  const serviceName = services.map((data) => {
-    return data.name;
-  });
+  useEffect(() => {
+    const totalBirr = formData.reduce((acc, c) => acc + c.unitPrice || 0, 0);
+    const totalQuantity = formData.reduce((acc, c) => acc + Number(c.quantity) || 0, 0);
+    setTotalBirr(totalBirr);
+    setTotalQuantity(totalQuantity)
+    const granTotal = totalBirr + totalBirr * 0.15;
+    setGrandTotal(granTotal);
 
-  const serviceOptions = [];
-  for (let i = 0; i < services.length; i++) {
-    const serviceLabel = `${serviceName[i]}`;
-    const serviceValue = `${serviceName[i]}`;
-    serviceOptions.push({ value: serviceValue, label: serviceLabel });
-  }
+    const combination = formData.map((item) => {
+      const customer = customers.find((customer) => customer.id === orderInfo.customerId);
+      const product = products.find((product) => product.id === item.productId);
+      if (!customer || !product) return "";
+      return `${customer?.firstName}-${product?.name}-${item.width}x${item.height}`;
+    });
+    setFileName(combination);
+  }, [formData, orderInfo.customerId, customers, products]);
 
-  const handleCancel = (index) => {
-    // const updatedFormData = [...formData];
-    // const filteredData = updatedFormData.filter((_, i) => i !== index);
-    // setFormData(filteredData);
-    // // After filtering data, recalculate totalBirr and vat
-    // const totalBirr = filteredData.reduce((acc, item) => acc + item.totalBirr || 0, 0);
-    // const vat = totalBirr * 0.15;
-    // setTotalBirr(totalBirr);
-    // setVat(vat);
+  const calculateUnitPrice = (formDataItem) => {
+    const { width, height, quantity, priceId, } = formDataItem;
+    const price = prices?.find((price) => price.id === priceId.toString());
+    if (width && height && quantity && price) {
+      return ((parseFloat(width) * parseFloat(height)) * parseFloat(quantity)) * parseFloat(price.unitPrice);
+    }
+    return null;
   };
 
-  const handleMaterialSelect = (selectedOption, index) => {
-    const { value } = selectedOption;
-    const str = value;
-    const parts = str.split("-("); // Split the string at "-("
-    const material = parts[0]; // Extract "T-shirt"
-    const machine = parts[1].substring(0, parts[1].length - 1); // Extract "DTF" by removing the last character ")"
+  const handleInputChanges = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
     setFormData((prevFormData) => {
-      const updatedFormData = prevFormData.map((item, i) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index][name] = value;
+      updatedFormData[index].unitPrice = calculateUnitPrice(updatedFormData[index]);
+      return updatedFormData;
+    });
+  };
+
+  const findSellingPrice = (productId, serviceId) => {
+    const price = prices.find(
+      (price) => price.productId === productId && price.serviceId === serviceId
+    );
+    return price ? price.id : "";
+  };
+
+  const handleProductSelect = (selectedOption, index) => {
+    const { value } = selectedOption;
+    const serviceId = formData[index].serviceId;
+    const priceId = findSellingPrice(value, serviceId);
+  
+    setFormData((prevFormData) => {
+      return prevFormData.map((item, i) => {
         if (i === index) {
           return {
             ...item,
-            machine: machine, // Update machine property
-            material: material,
+            productId: value,
+            priceId: priceId?.toString(),
+            unitPrice: calculateUnitPrice({
+              ...item,
+              productId: value,
+              priceId: priceId?.toString(),
+            }),
           };
         }
         return item;
       });
-      return updatedFormData;
     });
   };
 
   const handleServiceSelect = (selectedOption, index) => {
     const { value } = selectedOption;
+    const productId = formData[index].productId;
+    const priceId = findSellingPrice(productId, value);
+  
     setFormData((prevFormData) => {
-      const updatedFormData = prevFormData.map((item, i) => {
+      return prevFormData.map((item, i) => {
         if (i === index) {
           return {
             ...item,
-            service: value, // Update service property
+            serviceId: value,
+            priceId: priceId?.toString(),
+            unitPrice: calculateUnitPrice({
+              ...item,
+              serviceId: value,
+              priceId: priceId?.toString(),
+            }),
           };
         }
         return item;
       });
-      return updatedFormData;
     });
   };
-
-  useEffect(() => {
-    const data = [...formData];
-    const units = [...measuresFormData];
-    const combination = data.map((item, index) => {
-      return `${orderInfo.customerFirstName}-${item.machine}-${item.material}-${units[index].width}x${units[index].height}`;
-    });
-    setFileName(combination);
-  }, [formData, measuresFormData, orderInfo.customerFirstName]);
 
   useEffect(() => {
     const matchingPriceData = formData.map((unitPrice) => {
@@ -1110,16 +1099,15 @@ const OrderDetailsPage = () => {
                                 borderColor: state.isFocused ? "grey" : "none",
                               }),
                             }}
-                            value={uniqueOptions.find(
-                              (option) =>
-                                option.value ===
-                                `${data.material}-(${data.machine})`
-                            )}
-                            options={uniqueOptions}
+                            options={productOptions}
                             onChange={(selectedOption) =>
-                              handleMaterialSelect(selectedOption, index)
+                              handleProductSelect(selectedOption, index)
                             }
+                             value={productOptions.find(
+                                    (option) => option.value === data.productId
+                                  )}
                             className="w-full"
+                            required
                           />
                         </td>
                         <td
@@ -1134,13 +1122,12 @@ const OrderDetailsPage = () => {
                                 borderColor: state.isFocused ? "grey" : "none",
                               }),
                             }}
-                            value={serviceOptions.find(
-                              (option) => option.value === data.service
-                            )}
                             options={serviceOptions}
                             onChange={(selectedOption) =>
                               handleServiceSelect(selectedOption, index)
                             }
+                            value={serviceOptions.find((option) => option.value === data.serviceId)}
+                            required
                           />
                         </td>
                         <td className="border border-[#eee] dark:border-strokedark">
@@ -1150,7 +1137,7 @@ const OrderDetailsPage = () => {
                             name="width"
                             id="width"
                             onChange={(e) => handleInputChanges(index, e)}
-                            value={measuresFormData[index]?.width || ""}
+                            value={data.width || ""}
                             className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
                             placeholder="0"
                             required
@@ -1164,7 +1151,7 @@ const OrderDetailsPage = () => {
                             name="height"
                             id="height"
                             onChange={(e) => handleInputChanges(index, e)}
-                            value={measuresFormData[index]?.height || ""}
+                            value={data.height || ""}
                             className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
                             placeholder="0"
                             required
@@ -1178,7 +1165,7 @@ const OrderDetailsPage = () => {
                             name="quantity"
                             id="quantity"
                             onChange={(e) => handleInputChanges(index, e)}
-                            value={measuresFormData[index]?.quantity || ""}
+                            value={data.quantity || ""}
                             className="text-gray-900 sm:text-sm border-0 block w-full p-2.5"
                             placeholder="0"
                             required
@@ -1870,9 +1857,9 @@ const OrderDetailsPage = () => {
               } grid grid-cols-2 gap-4 px-4`}
             >
               <div className="w-full relative">
-                <CommissionSearchInput
+                <SalesPartnerSearchInput
                   handleCommissionInfo={handleCommissionInfo}
-                  value={orderInfo.commissionFirstName}
+                  value={salesPartners.find((partner) => partner.id === orderInfo.salesPartnerId)?.firstName}
                 />
               </div>
               <div className="">

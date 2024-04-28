@@ -3,8 +3,7 @@ import { IoBagAdd } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import { useEffect, useRef, useState } from "react";
-import { CommissionRegistration } from "./CommissionRegistrationModal";
+import { useEffect, useRef, useState } from "react"; 
 import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
@@ -14,6 +13,7 @@ import { getOrders } from "@/redux/features/order/orderSlice";
 import { NavLink } from "react-router-dom";
 import Loader from "@/common/Loader";
 import Breadcrumb from "../Breadcrumb";
+import { SalesPartnerRegistration } from "./SalesPartnerRegistrationModal";
 
 export const CommissionList = () => {
   const { commissions, isLoading, error } = useSelector(

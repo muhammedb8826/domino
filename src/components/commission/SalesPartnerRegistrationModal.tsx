@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
-import { createCommission } from "@/redux/features/commission/commissionSlice";
+import { createSalesPartner } from "@/redux/features/salesPartnersSlice";
 
-export const CommissionRegistration = ({ handleModalOpen }) => {
+export const SalesPartnerRegistration = ({ handleModalOpen }) => {
 const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         id: Date.now().toString(),
@@ -37,7 +37,10 @@ const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createCommission(formData)).then((res)=>{
+    if(!formData.phone ||!formData.firstName || !formData.lastName){
+        return toast.error("All fields are required")
+    }
+    dispatch(createSalesPartner(formData)).then((res)=>{
         if(res.payload){
             const message = "Commission registered successfully"
             toast.success(message)
@@ -50,7 +53,7 @@ const dispatch = useDispatch();
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}> */}
           <div className="relative w-auto my-6 mx-auto max-w-3xl">
             {/*content*/}
             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -171,6 +174,7 @@ const dispatch = useDispatch();
                   Close
                 </button>
                 <button
+                onClick={handleSubmit}
                   className="bg-primary text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
                 >
@@ -179,7 +183,7 @@ const dispatch = useDispatch();
               </div>
             </div>
           </div>
-        </form>
+        {/* </form> */}
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>

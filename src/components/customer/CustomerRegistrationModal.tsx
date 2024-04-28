@@ -37,6 +37,9 @@ const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(!formData.phone || !formData.companyType || !formData.firstName || !formData.lastName || !formData.email){
+        return toast.error("Please fill all fields")
+    }
     dispatch(createCustomer(formData)).then((res)=>{
         if(res.payload){
             const message = "Customer registered successfully"
@@ -50,7 +53,7 @@ const dispatch = useDispatch();
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}> */}
           <div className="relative w-auto my-6 mx-auto max-w-3xl">
             {/*content*/}
             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -173,13 +176,14 @@ const dispatch = useDispatch();
                 <button
                   className="bg-primary text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
+                  onClick={handleSubmit}
                 >
                   Save Changes
                 </button>
               </div>
             </div>
           </div>
-        </form>
+        {/* </form> */}
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>

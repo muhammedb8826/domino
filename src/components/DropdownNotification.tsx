@@ -46,10 +46,6 @@ const DropdownNotification = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const handleLogout = () => {
-  //   dispatch(logout());
-  //   navigate("/sign-in");
-  // };
 
   useEffect(() => {
     if (!user) {
@@ -103,7 +99,7 @@ const DropdownNotification = () => {
     );
     matchedOrderStatus.forEach(status => {
         const correspondingOrder = orders.find(order => order.id === status.orderId);
-        if (correspondingOrder.paymentInfo.paymentStatus === "paid") {
+        if (correspondingOrder.payment?.status === "paid") {
             status.orderItems.forEach(item => {
                 if (item.status !== "paid" && item.status !== "delivered") {
                     count++;            }

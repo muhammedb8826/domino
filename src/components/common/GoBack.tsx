@@ -7,6 +7,6 @@ interface IGoBack {
 
 export const GoBack = ({goback}: IGoBack) => {
   return (
-    <NavLink to={goback} className="text-secondary flex items-center"><IoChevronBackOutline />Back</NavLink>
+    <NavLink to={goback} className="px-4 text-secondary flex items-center mb-4"><IoChevronBackOutline />Back</NavLink>
   )
 }
