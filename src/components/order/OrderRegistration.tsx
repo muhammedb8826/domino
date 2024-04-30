@@ -83,7 +83,11 @@ export const OrderRegistration = () => {
       level: 0,
       total: 0,
       isDiscounted: false,
-      status: "recieved",
+      status: "received",
+      note: "",
+      printed: false,
+      adminApproval: false,
+      completed: false
     }
   ]);
 
@@ -183,18 +187,22 @@ export const OrderRegistration = () => {
       ...prevFormData,
       {
         productId: "",
-        serviceId: "",
-        priceId: "",
-        unitPrice: null,
-        width: "",
-        height: "",
-        quantity: "",
-        unit: 0,
-        level: 0,
-        discount: 0,
-        total: 0,
-        isDiscounted: false,
-        status: "recieved",
+      serviceId: "",
+      priceId: "",
+      unitPrice: null,
+      width: "",
+      height: "",
+      quantity: "",
+      unit: 0,
+      discount: 0,
+      level: 0,
+      total: 0,
+      isDiscounted: false,
+      status: "received",
+      note: "",
+      printed: false,
+      adminApproval: false,
+      completed: false
       },
     ]);
     setCommission((prev) => [
@@ -470,18 +478,22 @@ export const OrderRegistration = () => {
     setFormData([
       {
         productId: "",
-        serviceId: "",
-        priceId: "",
-        unitPrice: null,
-        width: "",
-        height: "",
-        quantity: "",
-        unit: 0,
-        discount: 0,
-        level: 0,
-        total: 0,
-        isDiscounted: false,
-        status: "recieved",
+      serviceId: "",
+      priceId: "",
+      unitPrice: null,
+      width: "",
+      height: "",
+      quantity: "",
+      unit: 0,
+      discount: 0,
+      level: 0,
+      total: 0,
+      isDiscounted: false,
+      status: "received",
+      note: "",
+      printed: false,
+      adminApproval: false,
+      completed: false
       },
     ]);
     setTotalQuantity(0);
@@ -517,20 +529,17 @@ export const OrderRegistration = () => {
       grandTotal,
       fileNames: fileName,
       totalQuantity,
+      status: "received",
+      adminApproval: false,
     };
     dispatch(createOrder(orderData));
+
     const paymentData = {
       orderId: orderData.id,
       transactions: payment,
     };
     dispatch(createPayment(paymentData));
-    const statusData = {
-      orderId: orderData.id,
-      status: "received",
-      adminApproval: false,
-      orderItems: Array(formData.length).fill({ status: "received", note: "", printed: false, adminApproval: false, completed: false }),
-    };
-    dispatch(createOrderStatus(statusData));
+
     const commissionData = {
       orderId: orderData.id,
       transactions: commission,

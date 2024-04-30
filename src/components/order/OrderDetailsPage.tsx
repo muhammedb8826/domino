@@ -23,10 +23,7 @@ import { StatusEditModal } from "./StatusEditModal";
 import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
 import { SalesPartnerSearchInput } from "../commission/SalesPartnerSearchInput";
 import {
-  createCommissionTransaction,
-  getCommissionTransactions,
   getCommissions,
-  updateCommissionTranscation,
 } from "@/redux/features/commission/commissionSlice";
 import Swal from "sweetalert2";
 import {
@@ -40,6 +37,7 @@ import { getJobOrdersProducts } from "@/redux/features/jobOrderProductsSlice";
 import { getPayments, updatePayment } from "@/redux/features/paymentSlice";
 import { getSalesPartners } from "@/redux/features/salesPartnersSlice";
 import { IoMdClose } from "react-icons/io";
+import Loader from "@/common/Loader";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -53,7 +51,7 @@ interface CustomerType {
 
 const OrderDetailsPage = () => {
   const { id } = useParams();
-  const { singleOrder, orderStatus, isLoading, error } = useSelector(
+  const { singleOrder, isLoading, error } = useSelector(
     (state) => state.order
   );
   const { prices } = useSelector((state) => state.price);
@@ -70,7 +68,6 @@ const OrderDetailsPage = () => {
 
   const findPayment = payments.find((payment) => payment.orderId === id);
   const findCommission = commissions.find((commission) => commission.orderId === id);
-  const findOrderStatus = orderStatus.find((status) => status.orderId === id);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -104,7 +101,6 @@ const OrderDetailsPage = () => {
           setTotalBirr(order.totalBirr);
           setTotalQuantity(order.totalQuantity);
           setFileName(order.fileNames);
-          setLevels(order.levels);
           setGrandTotal(order.grandTotal);
           setTax(order.tax);
         }
@@ -114,7 +110,7 @@ const OrderDetailsPage = () => {
       });
   }, [dispatch, id]);
 
-  const [fileName, setFileName] = useState(singleOrder?.fileNames || []);
+  const [fileName, setFileName] = useState([]);
   const [tooltipMessages, setTooltipMessages] = useState([]);
 
   const [icons, setIcons] = useState([]);
@@ -244,7 +240,6 @@ const OrderDetailsPage = () => {
   const [totalBirr, setTotalBirr] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [dataIndex, setDataIndex] = useState(0);
-  const [levels, setLevels] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
   const [tax, setTax] = useState(0);
   const [userInputDiscount, setUserInputDiscount] = useState(0);
@@ -255,7 +250,6 @@ const OrderDetailsPage = () => {
   const [collapseDisount, setCollapseDiscount] = useState(false);
   const [totaTransaction, setTotalTransaction] = useState(0);
   const [remainingAmount, setRemainingAmount] = useState(0);
-  const [orderStat, setOrderStatus] = useState(findOrderStatus);
 
 
   const handleCustomerInfo = (customer: CustomerType) => {
@@ -368,7 +362,7 @@ const OrderDetailsPage = () => {
 
 
   useEffect(() => {
-    const totalBirr = formData.reduce((acc, c) => acc + c.unitPrice || 0, 0);
+    const totalBirr = formData.reduce((acc, c) => acc + c.total || 0, 0);
     const totalQuantity = formData.reduce((acc, c) => acc + Number(c.quantity) || 0, 0);
     setTotalBirr(totalBirr);
     setTotalQuantity(totalQuantity);
@@ -687,9 +681,10 @@ const OrderDetailsPage = () => {
     });
 
     const transactions = {
-      ...transactionData,
-      transactions: updatedTransactionsStatus,
+      ...updatedTransactionsStatus,
+      id: findPayment?.id,
     };
+
     dispatch(updatePayment(transactions)).then((res) => {
       if (res.payload) {
         setPayment(res.payload.transactions);
@@ -713,7 +708,7 @@ const OrderDetailsPage = () => {
     return <ErroPage error={error} />;
   }
 
-  return (
+  return isLoading?(<Loader/>):(
     <>
       <section className="max-w-[1250px] mx-auto rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4 mb-10">
         <GoBack goback="/dashboard" />
@@ -964,6 +959,11 @@ const OrderDetailsPage = () => {
                         <th
                           className="py-4 px-4 font-medium text-black dark:text-white"
                         >
+                          Status
+                        </th>
+                        <th
+                          className="py-4 px-4 font-medium text-black dark:text-white"
+                        >
                           {/* Action */}
                           <span className="font-semibold flex justify-center items-center">
                             <CiSettings className="text-xl font-bold" />
@@ -1107,63 +1107,63 @@ const OrderDetailsPage = () => {
                               {data.total}
                             </td>
                             <td className="px-4 py-2 border border-[#eee] dark:border-strokedark">
-                              {orderStat && (
+                              {singleOrder && (
                                 <div
                                   onMouseEnter={handleMouseEnter}
                                   onMouseLeave={handleMouseLeave}
                                   className="flex items-center justify-center w-full relative"
                                 >
-                                  {orderStat.orderItems[index].status ===
+                                  {data.status ===
                                     "received" && (
                                       <span className="bg-primary text-white text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                                        {orderStat.orderItems[index].status}
+                                        {data.status}
                                       </span>
                                     )}
-                                  {orderStat.orderItems[index].status ===
+                                  {data.status ===
                                     "edited" && (
                                       <span className="bg-warning text-white text-xs font-medium px-2.5 py-0.5 rounded">
-                                        {orderStat.orderItems[index].status}
+                                        {data.status}
                                       </span>
                                     )}
-                                  {orderStat.orderItems[index].status ===
+                                  {data.status ===
                                     "rejected" && (
                                       <span className="bg-danger text-white text-xs font-medium px-2.5 py-0.5 rounded dark:danger dark:text-white">
-                                        {orderStat.orderItems[index].status}
+                                        {data.status}
                                       </span>
                                     )}
-                                  {orderStat.orderItems[index].status ===
+                                  {data.status ===
                                     "approved" && (
                                       <span className="bg-success text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-success dark:text-white">
-                                        {orderStat.orderItems[index].status}
+                                        {data.status}
                                       </span>
                                     )}
-                                  {orderStat.orderItems[index].status ===
+                                  {data.status ===
                                     "printed" && (
                                       <span className="text-white bg-gradient-to-br from-danger to-warning hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                        {orderStat.orderItems[index].status}
+                                        {data.status}
                                       </span>
                                     )}
-                                  {orderStat.orderItems[index].status ===
+                                  {data.status ===
                                     "paid" && (
                                       <span className="text-white bg-blend-hue hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-100 dark:bg-sky-400 dark:hover:bg-sky-500 dark:focus:ring-sky-600 text-xs font-medium px-2.5 py-0.5 rounded">
-                                        {orderStat.orderItems[index].status}
+                                        {data.status}
                                       </span>
                                     )}
-                                  {orderStat.orderItems[index].status ===
+                                  {data.status ===
                                     "delivered" && (
                                       <span className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                        {orderStat.orderItems[index].status}
+                                        {data.status}
                                       </span>
                                     )}
                                   {invisibleTooltip && ( // Show tooltip only if visibleTooltip state is true
                                     <>
-                                      {orderStat.orderItems[index].note !== "" ?
+                                      {data.note !== "" ?
                                         (
                                           <div
                                             role="tooltip"
                                             className="absolute z-10 inline-block p-1 text-xs font-medium text-gray-100 bg-gray-800 border border-gray-300 rounded-lg shadow-sm tooltip"
                                           >
-                                            {orderStat.orderItems[index].note}
+                                            {data.note}
                                             <div
                                               className="tooltip-arrow"
                                               data-popper-arrow

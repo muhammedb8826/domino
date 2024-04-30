@@ -44,54 +44,64 @@
   ],
   "orders": [
     {
+      "id": "fa76a874-3863-4499-b9cb-99185a9f7d95",
       "series": "IAN-O-0000-2024",
       "date": "Apr 30, 2024",
       "deliveryDate": "Apr 30, 2024",
-      "orderSource": "phone",
+      "orderSource": "telegram",
       "description": "",
-      "customerId": "1710821022900",
+      "customerId": "1710809287639",
       "salesPartnerId": "1714343286476",
       "orderItems": [
         {
           "productId": "1713727389192",
           "serviceId": "e4b1",
           "priceId": "0189",
-          "unitPrice": 17500,
-          "width": "5",
-          "height": "7",
+          "unitPrice": 8000,
+          "width": "4",
+          "height": "4",
           "quantity": "4",
-          "unit": 140,
-          "discount": 2625,
-          "level": "1",
-          "total": 14875,
-          "isDiscounted": true,
-          "status": "recieved"
+          "unit": 64,
+          "discount": 0,
+          "level": 0,
+          "total": 8000,
+          "isDiscounted": false,
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
         },
         {
           "productId": "1713703632140",
           "serviceId": "e4b1",
           "priceId": "8d73",
-          "unitPrice": 96000,
-          "width": "6",
-          "height": "4",
-          "quantity": "2",
-          "unit": 48,
-          "level": 0,
-          "discount": 0,
-          "total": 96000,
+          "unitPrice": 250000,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unit": 125,
+          "discount": 37500,
+          "level": "1",
+          "total": 212500,
           "isDiscounted": true,
-          "status": "recieved"
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
         }
       ],
-      "totalBirr": 110875,
-      "tax": 17025,
+      "totalBirr": 220500,
+      "tax": 33075,
+      "grandTotal": 253575,
       "fileNames": [
-        "Pepsi-T-shirt-5x7",
-        "Pepsi-Banner-6x4"
+        "Coca Cola-T-shirt-4x4",
+        "Coca Cola-Banner-5x5"
       ],
-      "totalQuantity": 6,
-      "grandTotal": 127506.25,
-      "id": "7c7ed2ed-25da-4526-9768-32b42285c35a"
+      "totalQuantity": 9,
+      "status": "received",
+      "adminApproval": false
     }
   ],
   "customers": [
@@ -148,19 +158,32 @@
   ],
   "commissions": [
     {
-      "id": "850f",
-      "orderId": "7c7ed2ed-25da-4526-9768-32b42285c35a",
+      "id": "5727",
+      "orderId": null,
       "transactions": [
         {
           "date": "Apr 30, 2024",
-          "amount": 350,
-          "percent": 2,
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "0dbd",
+      "orderId": "fa76a874-3863-4499-b9cb-99185a9f7d95",
+      "transactions": [
+        {
+          "date": "Apr 30, 2024",
+          "amount": 0,
+          "percent": 0,
           "description": "",
           "status": "pending"
         },
         {
           "date": "Apr 30, 2024",
-          "amount": 1920,
+          "amount": 5000,
           "percent": 2,
           "description": "",
           "status": "pending"
@@ -170,12 +193,12 @@
   ],
   "payments": [
     {
-      "id": "6f8d",
-      "orderId": "7c7ed2ed-25da-4526-9768-32b42285c35a",
+      "id": "7c5e",
+      "orderId": null,
       "transactions": [
         {
           "date": "Apr 30, 2024",
-          "paymentMethod": "cash",
+          "paymentMethod": "bank-transfer",
           "reference": "958djdd98",
           "amount": "5000",
           "status": "pending",
@@ -185,37 +208,36 @@
           "date": "Apr 30, 2024",
           "paymentMethod": "check",
           "reference": "958djdd98CBE",
-          "amount": "25000",
+          "amount": "5000",
           "status": "pending",
-          "description": "uufffdfd"
+          "description": ""
         }
       ]
-    }
-  ],
-  "orderStatus": [
+    },
     {
-      "id": "1a92",
-      "orderId": "7c7ed2ed-25da-4526-9768-32b42285c35a",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
+      "id": "13c7",
+      "orderId": "fa76a874-3863-4499-b9cb-99185a9f7d95",
+      "transactions": [
         {
-          "status": "received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
+          "date": "Apr 30, 2024",
+          "paymentMethod": "bank-transfer",
+          "reference": "958djdd98",
+          "amount": "5000",
+          "status": "pending",
+          "description": "payment"
         },
         {
-          "status": "received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
+          "date": "Apr 30, 2024",
+          "paymentMethod": "mobile-banking",
+          "reference": "444CBE",
+          "amount": "2500",
+          "status": "pending",
+          "description": "pay partial remaining amount"
         }
       ]
     }
   ],
+  "orderStatus": [],
   "machines": [
     {
       "id": "54dd",

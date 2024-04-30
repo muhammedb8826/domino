@@ -48,7 +48,7 @@ interface User {
 
 const OrdersList = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { orders, orderStatus, isLoading, error } = useSelector(
+  const { orders, isLoading, error } = useSelector(
     (state: RootState) => state.order
   );
   const { customers } = useSelector((state: RootState) => state.customer);
@@ -176,18 +176,6 @@ const OrdersList = () => {
     });
 
   const handleDeleteOrder = (id) => {
-    orderStatus.map((order) => {
-      if (order.id === id) {
-        if (order.status === "approved") {
-          return Swal.fire({
-            title: "Error!",
-            text: "You can't delete a received order",
-            icon: "error",
-          });
-        }
-      }
-    });
-
     Swal.fire({
       title: "Are you sure?",
       text: "You want to delete this order!",
@@ -204,10 +192,6 @@ const OrdersList = () => {
           icon: "success",
         }).then(() => {
           dispatch(deleteOrder(id));
-          const orderStatusId = orderStatus.find(
-            (order) => order.orderId === id
-          );
-          dispatch(deleteOrderStatus(orderStatusId?.id));
         });
       }
       setShowPopover(null);
