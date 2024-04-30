@@ -60,7 +60,7 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
         <div className="relative">
               <label
                 htmlFor="input-group-search"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="mb-3 block text-black dark:text-white"
               >
                 Customer
               </label>
@@ -88,7 +88,7 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
                   type="text"
                   name="customerName"
                   id="input-group-search"
-                  className="block w-full p-1 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-8 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   placeholder="Search by name, phone, or company type"
                 />
               </div>
@@ -99,10 +99,10 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
               id="dropdownSearch"
               className={`z-10 ${
                 isDropdownOpen ? "" : "hidden"
-              } bg-white rounded-lg rounded-t-none shadow dark:bg-gray-700 w-full absolute top-15 border border-gray-200 dark:border-gray-600 dark:border-opacity-50`}
+              } bg-white rounded-lg rounded-t-none border-stroke bg-transparent shadow dark:bg-gray-700 w-full absolute top-20`}
             >
               <ul
-                className="max-h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
+                className="max-h-48 px-3 pb-3 overflow-y-auto text-sm text-black dark:text-white"
                 aria-labelledby="dropdownSearchButton"
               >
                 {filteredCustomers.length > 0 ? (
@@ -133,7 +133,7 @@ const CustomerSearchInput = ({ handleCustomerInfo, value }) => {
               <button
                 onClick={handleModalOpen}
                 type="button"
-                className="w-full flex items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
+                className="w-full flex items-center p-3 text-sm font-medium text-primary border-[1.5px] border-stroke bg-transparent border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
               >
                 <svg
                   className="w-4 h-4 me-2"

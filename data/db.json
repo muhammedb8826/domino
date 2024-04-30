@@ -19,139 +19,79 @@
       "id": "1713727389192"
     },
     {
-<<<<<<< HEAD
-      "name": "Banner 3m",
-      "description": "",
-      "categoryId": "2fa8",
-      "unitId": "3e4a",
-      "minStockLevel": "1",
-      "initialStock": "0",
-      "id": "1713788033326"
-    },
-    {
-      "id": "1713788868422",
-      "name": "Mica Glass 8mm",
-      "description": "",
-      "categoryId": "0620",
-      "unitId": "890e",
-=======
       "id": "1714005604020",
       "name": "Sticker",
       "description": "",
       "categoryId": "833f",
       "unitId": "90fc",
->>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
       "minStockLevel": "1",
       "initialStock": "0"
     }
   ],
-  "orders": [
+  "services": [
     {
-      "id": "16c3052d-5e69-4ecf-9e5c-db96cbee6c37",
-      "series": "IAN-O-0000-2024",
-      "date": "Apr 28, 2024",
-      "deliveryDate": "Apr 28, 2024",
-      "orderSource": "telegram",
-      "description": "",
-      "customerId": "1714080981152",
-      "salesPartnerId": "1714325336867",
-      "orderItems": [
-        {
-          "productId": "1713727389192",
-          "serviceId": "e4b1",
-          "priceId": "0189",
-          "unitPrice": 2000,
-          "width": "2",
-          "height": "4",
-          "quantity": "2",
-          "status": "recieved"
-        },
-        {
-          "productId": "1713703632140",
-          "serviceId": "e4b1",
-          "priceId": "1371",
-          "unitPrice": 32000,
-          "width": "2",
-          "height": "4",
-          "quantity": "2",
-          "status": "recieved"
-        }
-      ],
-      "totalBirr": 34000,
-      "tax": 5100,
-      "grandTotal": 39100,
-      "fileNames": [
-        "Muhammed-T-shirt-2x4",
-        "Muhammed-Banner-2x4"
-      ],
-      "totalQuantity": 4
+      "id": "e4b1",
+      "name": "Print and Material"
     },
     {
-      "id": "4ed6e252-3c29-45d1-bef6-e4f7004771b4",
-      "series": "IAN-O-0001-2024",
-      "date": "Apr 28, 2024",
-      "deliveryDate": "Apr 28, 2024",
-      "orderSource": "",
+      "id": "1324",
+      "name": "Print and Heat press"
+    },
+    {
+      "id": "b664",
+      "name": "Print only"
+    }
+  ],
+  "orders": [
+    {
+      "series": "IAN-O-0000-2024",
+      "date": "Apr 30, 2024",
+      "deliveryDate": "Apr 30, 2024",
+      "orderSource": "phone",
       "description": "",
-      "customerId": "1714080981152",
-      "salesPartnerId": "",
+      "customerId": "1710821022900",
+      "salesPartnerId": "1714343286476",
       "orderItems": [
         {
           "productId": "1713727389192",
           "serviceId": "e4b1",
           "priceId": "0189",
-          "unitPrice": 1000,
-          "width": "2",
-          "height": "2",
-          "quantity": "2",
+          "unitPrice": 17500,
+          "width": "5",
+          "height": "7",
+          "quantity": "4",
+          "unit": 140,
+          "discount": 2625,
+          "level": "1",
+          "total": 14875,
+          "isDiscounted": true,
           "status": "recieved"
         },
         {
           "productId": "1713703632140",
           "serviceId": "e4b1",
-          "priceId": "1371",
-          "unitPrice": 16000,
-          "width": "2",
-          "height": "2",
+          "priceId": "8d73",
+          "unitPrice": 96000,
+          "width": "6",
+          "height": "4",
           "quantity": "2",
-          "status": "recieved"
-        },
-        {
-          "productId": "1713727389192",
-          "serviceId": "1324",
-          "priceId": "7c45",
-          "unitPrice": 1600,
-          "width": "2",
-          "height": "2",
-          "quantity": "2",
+          "unit": 48,
+          "level": 0,
+          "discount": 0,
+          "total": 96000,
+          "isDiscounted": true,
           "status": "recieved"
         }
       ],
-      "totalBirr": 18600,
-      "tax": 2790,
-      "grandTotal": 21390,
+      "totalBirr": 110875,
+      "tax": 17025,
       "fileNames": [
-        "Pepsi-Pepsi-BANNER-Screen-2x2"
+        "Pepsi-T-shirt-5x7",
+        "Pepsi-Banner-6x4"
       ],
-      "totalQuantity": 2,
-      "grandTotal": 460,
-      "vat": 60,
-      "discounts": [
-        0
-      ],
-      "levels": [
-        null
-      ],
-      "totalBirrAfterDiscount": [
-        400
-      ],
-      "paymentInfo": {
-        "paymentMethod": "cash",
-        "paymentReference": "",
-        "paymentAmount": 0,
-        "paymentStatus": "not paid"
-      },
-      "id": "b9a8"
+      "totalQuantity": 6,
+      "grandTotal": 127506.25,
+      "id": "7c7ed2ed-25da-4526-9768-32b42285c35a"
     }
   ],
   "customers": [
@@ -186,95 +126,42 @@
       "firstName": "Teshager",
       "lastName": "",
       "email": ""
+    },
+    {
+      "id": "1714343248651",
+      "phone": "09-0507-8826",
+      "companyType": "individual",
+      "firstName": "Muhammed",
+      "lastName": "Berisso",
+      "email": "mrol3943@gmail.com"
     }
   ],
-  "commissions": [
+  "salesPartners": [
     {
-      "id": "1714309322405",
+      "id": "1714343286476",
       "phone": "09-0507-8826",
       "companyType": "",
-      "firstName": "Muhammed",
-      "lastName": "",
-      "email": ""
-    },
-    {
-      "id": "1714325336867",
-      "phone": "09-1104-4506",
-      "companyType": "",
       "firstName": "Teshager",
-      "lastName": "Assefa",
-      "email": ""
+      "lastName": "A",
+      "email": "mrol3943@gmail.com"
     }
   ],
   "commissions": [
     {
-      "id": "dd52",
-      "orderId": null,
+      "id": "850f",
+      "orderId": "7c7ed2ed-25da-4526-9768-32b42285c35a",
       "transactions": [
         {
-          "date": "Apr 28, 2024",
-          "amount": 40,
-          "percent": 2,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "8100",
-      "orderId": null,
-      "transactions": [
-        {
-          "date": "Apr 28, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "05c4",
-      "orderId": "16c3052d-5e69-4ecf-9e5c-db96cbee6c37",
-      "transactions": [
-        {
-          "date": "Apr 28, 2024",
-          "amount": 40,
+          "date": "Apr 30, 2024",
+          "amount": 350,
           "percent": 2,
           "description": "",
           "status": "pending"
         },
         {
-          "date": "Apr 28, 2024",
-          "amount": 320,
-          "percent": 1,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "0358",
-      "orderId": "4ed6e252-3c29-45d1-bef6-e4f7004771b4",
-      "transactions": [
-        {
-          "date": "Apr 28, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        },
-        {
-          "date": "Apr 28, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        },
-        {
-          "date": "Apr 28, 2024",
-          "amount": 0,
-          "percent": 0,
+          "date": "Apr 30, 2024",
+          "amount": 1920,
+          "percent": 2,
           "description": "",
           "status": "pending"
         }
@@ -283,49 +170,50 @@
   ],
   "payments": [
     {
-      "id": "2c66",
-      "orderId": null,
+      "id": "6f8d",
+      "orderId": "7c7ed2ed-25da-4526-9768-32b42285c35a",
       "transactions": [
         {
-          "date": "Apr 28, 2024",
+          "date": "Apr 30, 2024",
           "paymentMethod": "cash",
-          "reference": "958djdd98CBE",
-          "amount": "2000",
-          "status": "pending",
-          "description": ""
-        },
-        {
-          "date": "Apr 28, 2024",
-          "paymentMethod": "mobile-banking",
-          "reference": "",
-          "amount": "300",
+          "reference": "958djdd98",
+          "amount": "5000",
           "status": "pending",
           "description": "payment"
+        },
+        {
+          "date": "Apr 30, 2024",
+          "paymentMethod": "check",
+          "reference": "958djdd98CBE",
+          "amount": "25000",
+          "status": "pending",
+          "description": "uufffdfd"
         }
-      ],
-      "balance": 8
+      ]
     }
   ],
-  "services": [
+  "orderStatus": [
     {
-      "id": "e4b1",
-      "name": "Print and Material"
-    },
-    {
-      "id": "1324",
-      "name": "Print and Heat press"
-    },
-    {
-      "id": "b664",
-<<<<<<< HEAD
-      "name": "Print"
-    },
-    {
-      "id": "c8c2",
-      "name": "Material"
-=======
-      "name": "Print only"
->>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
+      "id": "1a92",
+      "orderId": "7c7ed2ed-25da-4526-9768-32b42285c35a",
+      "status": "received",
+      "adminApproval": false,
+      "orderItems": [
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        }
+      ]
     }
   ],
   "machines": [
@@ -422,154 +310,16 @@
   ],
   "prices": [
     {
-<<<<<<< HEAD
       "productId": "1713703632140",
       "serviceId": "e4b1",
       "unitPrice": "2000",
       "id": "8d73"
     },
     {
-<<<<<<< HEAD
-      "id": "976b",
-      "machine": {
-        "id": "a78b",
-        "name": "Canvas printer"
-      },
-      "material": {
-        "id": "02f9",
-        "name": "Banner 3M wide"
-      },
-      "service": {
-        "id": "e4b1",
-        "name": "Print and Material"
-      },
-      "unit": {
-        "id": "890e",
-        "name": "sqm",
-        "width": "1",
-        "height": "1"
-      },
-      "unitPrice": "100"
-    },
-    {
-      "id": "59aa",
-      "machine": {
-        "id": "a20c",
-        "name": "Crystal UV printer"
-      },
-      "material": {
-        "id": "62c5",
-        "name": "Mica Glass 8mm"
-      },
-      "service": {
-        "id": "e4b1",
-        "name": "Print and Material"
-      },
-      "unit": {
-        "id": "890e",
-        "name": "sqm",
-        "width": "1",
-        "height": "1"
-      },
-      "unitPrice": "300"
-    },
-    {
-      "id": "2ba7",
-      "machine": {
-        "id": "a20c",
-        "name": "Crystal UV printer"
-      },
-      "material": {
-        "id": "62c5",
-        "name": "Mica Glass 8mm"
-      },
-      "service": {
-        "id": "b664",
-        "name": "Print"
-      },
-      "unit": {
-        "id": "890e",
-        "name": "sqm",
-        "width": "1",
-        "height": "1"
-      },
-      "unitPrice": "100"
-    },
-    {
-      "id": "5b70",
-      "machine": {
-        "id": "54dd",
-        "name": "DTF"
-      },
-      "material": {
-        "id": "9944",
-        "name": "T-shirt"
-      },
-      "service": {
-        "id": "c8c2",
-        "name": "Material"
-      },
-      "unit": {
-        "id": "8dd4",
-        "name": "PCS",
-        "width": "1",
-        "height": "1"
-      },
-      "unitPrice": "300"
-    },
-    {
-      "id": "c51f",
-      "machine": {
-        "id": "54dd",
-        "name": "DTF"
-      },
-      "material": {
-        "id": "9944",
-        "name": "T-shirt"
-      },
-      "service": {
-        "id": "b664",
-        "name": "Print"
-      },
-      "unit": {
-        "id": "890e",
-        "name": "sqm",
-        "width": "1",
-        "height": "1"
-      },
-      "unitPrice": "1000"
-    },
-    {
-      "id": "c5f8",
-      "machine": {
-        "id": "54dd",
-        "name": "DTF"
-      },
-      "material": {
-        "id": "4ef3",
-        "name": "Cap"
-      },
-      "service": {
-        "id": "c8c2",
-        "name": "Material"
-      },
-      "unit": {
-        "id": "8dd4",
-        "name": "PCS",
-        "width": "1",
-        "height": "1"
-      },
-      "unitPrice": "250"
-=======
-=======
->>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
       "id": "7c45",
       "productId": "1713727389192",
       "serviceId": "1324",
       "unitPrice": "200"
-<<<<<<< HEAD
->>>>>>> 69f92c4e03bab02b56dd7c1ba44292da072504dd
-=======
     },
     {
       "productId": "1713727389192",
@@ -588,7 +338,6 @@
       "productId": "1713703632140",
       "serviceId": "e4b1",
       "unitPrice": "2000"
->>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
     }
   ],
   "dicounts": [
@@ -615,486 +364,6 @@
       "level": "4",
       "minumumMeterSquare": "1000",
       "discountPercentage": "50"
-    }
-  ],
-  "commissionTransactions": [],
-  "paymentTransactions": [
-    {
-      "id": "6b3f",
-      "transactions": [
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "50000",
-          "reference": "958djdd98-CBE",
-          "status": "paid"
-        },
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "bank-transfer",
-          "description": "",
-          "paymentAmount": "69000",
-          "status": "paid",
-          "reference": "958djdd98-Abyssinia"
-        },
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "check",
-          "description": "",
-          "paymentAmount": "600",
-          "status": "paid",
-          "reference": ""
-        }
-      ],
-      "order": {
-        "id": "9f9c",
-        "customer": {
-          "id": "1710809287639"
-        }
-      }
-    },
-    {
-      "id": "a8cf",
-      "transactions": [
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "27600",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "5fb6",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "99dc",
-      "transactions": [
-        {
-          "date": "Mar 21, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "11500",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "1efb",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    },
-    {
-      "id": "ec0f",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "553c",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "c3a5",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "1311",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "4991",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "974f",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "d7a6",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "a2fe",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "6f2a",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "1459",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "3afb",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "c37f",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    },
-    {
-      "id": "b1d7",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "d240",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "7bf0",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "50000",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "c159",
-        "customer": {
-          "id": "1710809287639"
-        }
-      }
-    },
-    {
-      "id": "d1ce",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "81da",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "242b",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "bdba",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "9618",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "8a83",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    },
-    {
-      "id": "96a0",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "5002",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "605e",
-        "customer": {
-          "id": "1710809287639"
-        }
-      }
-    },
-    {
-      "id": "250b",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "b96d",
-        "customer": {
-          "id": "1710822546278"
-        }
-      }
-    },
-    {
-      "id": "cf19",
-      "transactions": [
-        {
-          "date": "Mar 22, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "pending"
-        }
-      ],
-      "order": {
-        "id": "48ad",
-        "customer": {
-          "id": "1710814124476"
-        }
-      }
-    },
-    {
-      "id": "42fa",
-      "transactions": [
-        {
-          "date": "Apr 19, 2024",
-          "paymentMethod": "cash",
-          "description": "",
-          "paymentAmount": "",
-          "reference": "",
-          "status": "paid"
-        }
-      ],
-      "order": {
-        "id": "b9a8",
-        "customer": {
-          "id": "1710821022900"
-        }
-      }
-    }
-  ],
-  "orderStatus": [
-    {
-      "id": "aa03",
-      "orderId": "16c3052d-5e69-4ecf-9e5c-db96cbee6c37",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
-        {
-          "status": "edited",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        },
-        {
-          "status": "received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        }
-      ]
-    },
-    {
-      "id": "3e46",
-      "orderId": "b96d",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
-        {
-          "status": "edited",
-          "note": "",
-          "printed": false,
-          "adminApproval": true,
-          "completed": false
-        }
-      ]
-    },
-    {
-      "id": "4a83",
-      "orderId": "4ed6e252-3c29-45d1-bef6-e4f7004771b4",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
-        {
-          "status": "received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        },
-        {
-          "status": "received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        },
-        {
-          "status": "received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        }
-      ]
-    },
-    {
-      "id": "3f35",
-      "orderId": "7323",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
-        {
-          "status": "printed",
-          "note": "gdfg",
-          "printed": false,
-          "adminApproval": true,
-          "completed": false
-        },
-        {
-          "status": "printed",
-          "note": "sdfsd",
-          "printed": false,
-          "adminApproval": true,
-          "completed": false
-        }
-      ]
-    },
-    {
-      "id": "1f2e",
-      "orderId": "1a82",
-      "status": "received",
-      "adminApproval": false,
-      "orderItems": [
-        {
-          "status": "edited",
-          "note": "asdfasdfsadfasdf",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        },
-        {
-          "status": "edited",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        },
-        {
-          "status": "rejected",
-          "note": "sdfsdfsdf",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        }
-      ]
     }
   ],
   "suppliers": [
@@ -1319,16 +588,6 @@
       "quantity": "30"
     },
     {
-<<<<<<< HEAD
-      "id": "c938",
-      "productId": "1713788033326",
-      "quantity": "0"
-    },
-    {
-      "id": "f105",
-      "productId": "1713788868422",
-      "quantity": "0"
-=======
       "id": "0a68",
       "productId": "1714005604020",
       "quantity": "0"
@@ -1349,7 +608,6 @@
       "id": "ef1a",
       "productId": "1713703632140",
       "status": "added"
->>>>>>> dc465b3d0ebdf0ec6a9f8588d5b86d165eb31156
     }
   ]
 }

@@ -42,7 +42,7 @@ const dispatch = useDispatch();
     }
     dispatch(createSalesPartner(formData)).then((res)=>{
         if(res.payload){
-            const message = "Commission registered successfully"
+            const message = "Sales partner registered successfully"
             toast.success(message)
             resetForm();
             handleModalOpen()

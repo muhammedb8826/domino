@@ -23,6 +23,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { v4 as uuidv4 } from 'uuid';
 import { createCommission } from "@/redux/features/commission/commissionSlice";
 import { createPayment } from "@/redux/features/paymentSlice";
+import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -44,6 +45,7 @@ export const OrderRegistration = () => {
   const { orders } = useSelector((state) => state.order);
   const { customers } = useSelector((state) => state.customer);
   const { user } = useSelector((state) => state.auth);
+  const { discounts } = useSelector((state) => state.discount);
 
 
   const dispatch = useDispatch();
@@ -54,6 +56,7 @@ export const OrderRegistration = () => {
     dispatch(getJobOrdersProducts());
     dispatch(getProducts());
     dispatch(getCustomers());
+    dispatch(getDiscounts());
   }, [dispatch]);
 
   const [orderInfo, setOrderInfo] = useState({
@@ -75,6 +78,11 @@ export const OrderRegistration = () => {
       width: "",
       height: "",
       quantity: "",
+      unit: 0,
+      discount: 0,
+      level: 0,
+      total: 0,
+      isDiscounted: false,
       status: "recieved",
     }
   ]);
@@ -133,19 +141,6 @@ export const OrderRegistration = () => {
     setRemainingAmount(grandTotal - totalTransaction);
   }, [payment, grandTotal]);
 
-  const handleAddPaymentRow = () => {
-    setPayment((prev) => [
-      ...prev,
-      {
-        date: formattedDate,
-        paymentMethod: "cash",
-        reference: "",
-        amount: 0,
-        status: "pending",
-        description: "",
-      }
-    ])
-  };
 
   const handleSalesPerson = (commission: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
@@ -169,6 +164,20 @@ export const OrderRegistration = () => {
     });
   };
 
+  const handleAddPaymentRow = () => {
+    setPayment((prev) => [
+      ...prev,
+      {
+        date: formattedDate,
+        paymentMethod: "cash",
+        reference: "",
+        amount: 0,
+        status: "pending",
+        description: "",
+      }
+    ])
+  };
+
   const handleAddRow = () => {
     setFormData((prevFormData) => [
       ...prevFormData,
@@ -180,6 +189,11 @@ export const OrderRegistration = () => {
         width: "",
         height: "",
         quantity: "",
+        unit: 0,
+        level: 0,
+        discount: 0,
+        total: 0,
+        isDiscounted: false,
         status: "recieved",
       },
     ]);
@@ -260,7 +274,7 @@ export const OrderRegistration = () => {
   }));
 
   useEffect(() => {
-    const totalBirr = formData.reduce((acc, c) => acc + c.unitPrice || 0, 0);
+    const totalBirr = formData.reduce((acc, c) => acc + c.total || 0, 0);
     const totalQuantity = formData.reduce((acc, c) => acc + Number(c.quantity) || 0, 0);
     setTotalBirr(totalBirr);
     setTotalQuantity(totalQuantity);
@@ -282,6 +296,93 @@ export const OrderRegistration = () => {
     setFileName(combination);
   }, [formData, orderInfo.customerId, customers, products, commission]);
 
+  const handleInputChanges = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[index][name] = value;
+      updatedFormData[index].unitPrice = calculateUnitPrice(updatedFormData[index]);
+      updatedFormData[index].unit = (parseFloat(updatedFormData[index].width) * parseFloat(updatedFormData[index].height)) * parseFloat(updatedFormData[index].quantity) || 0;
+      
+      // Recalculate discount if the checkbox is checked
+      if (updatedFormData[index].isDiscounted) {
+        const unit = updatedFormData[index].unit;
+  
+        // Find the appropriate discount data based on the unit's range
+        const discountData = discounts.find(discount => {
+          const minSquare = parseFloat(discount.minumumMeterSquare);
+          const nextDiscount = discounts.find(d => parseFloat(d.minumumMeterSquare) > minSquare);
+          const maxSquare = nextDiscount ? parseFloat(nextDiscount.minumumMeterSquare) : Infinity;
+          return unit >= minSquare && unit < maxSquare;
+        });
+  
+        // If discount data is found, apply the discount
+        if (discountData) {
+          updatedFormData[index].level = discountData.level;
+          const discountPercentage = parseFloat(discountData.discountPercentage) / 100;
+          updatedFormData[index].discount = discountPercentage * updatedFormData[index].unitPrice;
+          updatedFormData[index].total = updatedFormData[index].unitPrice - updatedFormData[index].discount;
+        } else {
+          // If no discount data is found, reset level and discount
+          updatedFormData[index].level = 0;
+          updatedFormData[index].discount = 0;
+          updatedFormData[index].total = updatedFormData[index].unitPrice;
+        }
+      } else {
+        // If checkbox is not checked, reset level, discount, and total
+        updatedFormData[index].level = 0;
+        updatedFormData[index].discount = 0;
+        updatedFormData[index].total = updatedFormData[index].unitPrice;
+      }
+  
+      return updatedFormData;
+    });
+  };
+
+  const handleDiscountChange = (index, e) => {
+    const { checked } = e.target;
+    setFormData((prevFormData) => {
+      const updatedData = [...prevFormData];
+      updatedData[index] = {
+        ...updatedData[index],
+        isDiscounted: checked,
+      };
+  
+      // Calculate discount if the checkbox is checked
+      if (checked) {
+        const unit = updatedData[index].unit;
+  
+        // Find the appropriate discount data based on the unit's range
+        const discountData = discounts.find(discount => {
+          const minSquare = parseFloat(discount.minumumMeterSquare);
+          const nextDiscount = discounts.find(d => parseFloat(d.minumumMeterSquare) > minSquare);
+          const maxSquare = nextDiscount ? parseFloat(nextDiscount.minumumMeterSquare) : Infinity;
+          return unit >= minSquare && unit < maxSquare;
+        });
+  
+        // If discount data is found, apply the discount
+        if (discountData) {
+          updatedData[index].level = discountData.level;
+          const discountPercentage = parseFloat(discountData.discountPercentage) / 100;
+          updatedData[index].discount = discountPercentage * updatedData[index].unitPrice;
+          updatedData[index].total = updatedData[index].unitPrice - updatedData[index].discount;
+        } else {
+          // If no discount data is found, reset level and discount
+          updatedData[index].level = 0;
+          updatedData[index].discount = 0;
+          updatedData[index].total = updatedData[index].unitPrice;
+        }
+      } else {
+        // If checkbox is not checked, reset level, discount, and total
+        updatedData[index].level = 0;
+        updatedData[index].discount = 0;
+        updatedData[index].total = updatedData[index].unitPrice;
+      }
+  
+      return updatedData;
+    });
+  };
+
   const calculateUnitPrice = (formDataItem) => {
     const { width, height, quantity, priceId, } = formDataItem;
     const price = prices?.find((price) => price.id === priceId.toString());
@@ -289,40 +390,6 @@ export const OrderRegistration = () => {
       return ((parseFloat(width) * parseFloat(height)) * parseFloat(quantity)) * parseFloat(price.unitPrice);
     }
     return null;
-  };
-
-  const handleInputChanges = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => {
-      const updatedFormData = [...prevFormData];
-      updatedFormData[index][name] = value;
-      updatedFormData[index].unitPrice = calculateUnitPrice(updatedFormData[index]);
-      return updatedFormData;
-    });
-  };
-
-  const handleCommissionChange = (index, e) => {
-    const { name, value } = e.target;
-    setCommission((prev) => {
-      const updatedData = [...prev];
-      updatedData[index] = {
-        ...updatedData[index],
-        [name]: value,
-      };
-      return updatedData;
-    });
-
-    const percent = parseFloat(value); // Parse string to float
-    if (!isNaN(percent)) { // Check if parsing was successful
-      const amount = (percent / 100) * (formData[index]?.unitPrice || 0); // Check formData[index] existence and unitPrice validity
-      const updatedCommission = [...commission];
-      updatedCommission[index] = {
-        ...updatedCommission[index],
-        percent,
-        amount,
-      };
-      setCommission(updatedCommission);
-    }
   };
 
   const findSellingPrice = (productId, serviceId) => {
@@ -360,6 +427,30 @@ export const OrderRegistration = () => {
     });
   };
 
+  const handleCommissionChange = (index, e) => {
+    const { name, value } = e.target;
+    setCommission((prev) => {
+      const updatedData = [...prev];
+      updatedData[index] = {
+        ...updatedData[index],
+        [name]: value,
+      };
+      return updatedData;
+    });
+
+    const percent = parseFloat(value); // Parse string to float
+    if (!isNaN(percent)) { // Check if parsing was successful
+      const amount = (percent / 100) * (formData[index]?.unitPrice || 0); // Check formData[index] existence and unitPrice validity
+      const updatedCommission = [...commission];
+      updatedCommission[index] = {
+        ...updatedCommission[index],
+        percent,
+        amount,
+      };
+      setCommission(updatedCommission);
+    }
+  };
+
   const handleCollapseDiscount = () => {
     setCollapseDiscount((prev) => !prev);
   };
@@ -385,6 +476,11 @@ export const OrderRegistration = () => {
         width: "",
         height: "",
         quantity: "",
+        unit: 0,
+        discount: 0,
+        level: 0,
+        total: 0,
+        isDiscounted: false,
         status: "recieved",
       },
     ]);
@@ -456,8 +552,7 @@ export const OrderRegistration = () => {
   if (error) return <ErroPage error={error} />;
 
   return isLoading ? (<Loader />) : (
-    <>
-      <section className="bg-white dark:bg-gray-900 wrapper py-4 p-0 min-h-screen">
+      <section className="max-w-[1250px] mx-auto rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4 mb-10">
         <GoBack goback="/dashboard" />
         <h2 className="px-4 text-title-md2 font-semibold text-black dark:text-white">
           New order
@@ -509,39 +604,63 @@ export const OrderRegistration = () => {
               <div className="grid sm:grid-cols-3 sm:gap-6 mb-4 p-4">
                 <div className="w-full">
                   <label
-                    htmlFor="name"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    htmlFor="series"
+                    className="mb-3 block text-black dark:text-white"
                   >
                     Series
                   </label>
                   <input
                     type="text"
-                    name="name"
+                    name="series"
                     value="IAN-O-YYYY"
                     readOnly
-                    id="name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Type product name"
+                    id="series"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
                 </div>
                 <div className="w-full">
                   <label
                     htmlFor="date"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="mb-3 block text-black dark:text-white"
                   >
                     Date
                   </label>
                   <Datepicker
-                    title="Registration date"
-                    name="date"
-                    onSelectedDateChanged={handleDatePickerChange}
+                  title="date"
+                  onSelectedDateChanged= {handleDatePickerChange}
+                style={{
+                  width: '100%',
+                  borderRadius: '3px',
+                  borderWidth: '1px',
+                  borderColor: '#ccc',
+                  backgroundColor: 'transparent',
+                  paddingTop: '0.6rem',
+                  paddingBottom: '0.6rem',
+                  paddingLeft: '2.5rem',
+                  paddingRight: '1rem',
+                  fontWeight: '500', // equivalent to font-medium
+                  outline: 'none',
+                  transition: 'border 0.3s',
+                  '&:focus': {
+                    borderColor: 'primary',
+                  },
+                  '&:active': {
+                    borderColor: 'primary',
+                  },
+                  '&:disabled': {
+                    cursor: 'default',
+                    // backgroundColor: 'whiter',
+                    borderColor: '#3d4d60', // assuming this is a valid Tailwind class
+                    backgroundColor: '#1d2a39', // assuming this is a valid Tailwind class
+                    '&:focus': {
+                      borderColor: 'primary',
+                    },
+                  },
+                  '&:disabled:focus': {
+                    borderColor: 'primary',
+                  },
+                }}
                     value={orderInfo.date}
-                    style={{
-                      padding: "0.25rem",
-                      paddingLeft: "2.5rem",
-                      border: "1px solid #ccc",
-                      color: "#333",
-                    }}
                   />
                 </div>
                 <div className="w-full relative">
@@ -553,7 +672,7 @@ export const OrderRegistration = () => {
                 <div>
                   <label
                     htmlFor="orderSource"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="mb-3 block text-black dark:text-white"
                   >
                     Order source
                   </label>
@@ -564,7 +683,7 @@ export const OrderRegistration = () => {
                     value={orderInfo.orderSource}
                     id="orderSource"
                     required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   >
                     <option value="">Select order source</option>
                     <option value="telegram">Telegram</option>
@@ -576,7 +695,7 @@ export const OrderRegistration = () => {
                 <div className="w-full">
                   <label
                     htmlFor="deliveryDate"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="mb-3 block text-black dark:text-white"
                   >
                     Delivery date
                   </label>
@@ -585,10 +704,36 @@ export const OrderRegistration = () => {
                     onSelectedDateChanged={handleDeliveryDatePickerChange}
                     value={orderInfo.deliveryDate}
                     style={{
-                      padding: "0.25rem",
-                      paddingLeft: "2.5rem",
-                      border: "1px solid #ccc",
-                      color: "#333",
+                      width: '100%',
+                      borderRadius: '3px',
+                      borderWidth: '1px',
+                      borderColor: '#ccc',
+                      backgroundColor: 'transparent',
+                      paddingTop: '0.6rem',
+                      paddingBottom: '0.6rem',
+                      paddingLeft: '2.5rem',
+                      paddingRight: '1rem',
+                      fontWeight: '500', // equivalent to font-medium
+                      outline: 'none',
+                      transition: 'border 0.3s',
+                      '&:focus': {
+                        borderColor: 'primary',
+                      },
+                      '&:active': {
+                        borderColor: 'primary',
+                      },
+                      '&:disabled': {
+                        cursor: 'default',
+                        // backgroundColor: 'whiter',
+                        borderColor: '#3d4d60', // assuming this is a valid Tailwind class
+                        backgroundColor: '#1d2a39', // assuming this is a valid Tailwind class
+                        '&:focus': {
+                          borderColor: 'primary',
+                        },
+                      },
+                      '&:disabled:focus': {
+                        borderColor: 'primary',
+                      },
                     }}
                   />
                 </div>
@@ -601,23 +746,20 @@ export const OrderRegistration = () => {
                 >
                   Orders List{" "}
                 </button>
-                <div className="relative rounded-sm border-b border-stroke bg-white py-6 dark:border-strokedark dark:bg-boxdark sm:px-4 xl:pb-1">
-                  <div className="max-w-full">
-                    <table
-                      className={`w-full table-auto`}
-                    >
+                  <div className="max-w-full px-4">
+                    <table className="w-full table-auto">
                       <thead>
                         <tr className="bg-gray-2 text-left dark:bg-meta-4">
                           <th className="py-4 px-4 font-medium text-black dark:text-white">
                             No
                           </th>
                           <th
-                            className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white"
+                            className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
                           >
                             Product
                           </th>
                           <th
-                            className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white"
+                            className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
                           >
                             Services
                           </th>
@@ -644,6 +786,21 @@ export const OrderRegistration = () => {
                           <th
                             className="py-4 px-4 font-medium text-black dark:text-white"
                           >
+                            Unit
+                          </th>
+                          <th
+                            className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
+                          >
+                            Discount
+                          </th>
+                          <th
+                            className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
+                          >
+                            Total
+                          </th>
+                          <th
+                            className="py-4 px-4 font-medium text-black dark:text-white"
+                          >
                             {/* Action */}
                             <span className="font-semibold flex justify-center items-center">
                               <CiSettings className="text-xl font-bold" />
@@ -664,7 +821,7 @@ export const OrderRegistration = () => {
                             <tr
                               key={index}
                             >
-                              <td className="w-4 border-b text-graydark border-[#eee] py-2 px-4 dark:border-strokedark">
+                              <td className="border-b text-graydark border-[#eee] py-2 px-4 dark:border-strokedark">
                                 {index + 1}
                               </td>
                               <td
@@ -708,7 +865,7 @@ export const OrderRegistration = () => {
                                   required
                                 />
                               </td>
-                              <td className="border-b text-graydark border-[#eee] dark:border-strokedark">
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                                 <input
                                   title="width"
                                   type="number"
@@ -722,7 +879,7 @@ export const OrderRegistration = () => {
                                   min={0}
                                 />
                               </td>
-                              <td className="border-b text-graydark border-[#eee] dark:border-strokedark">
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                                 <input
                                   title="height"
                                   type="number"
@@ -736,7 +893,7 @@ export const OrderRegistration = () => {
                                   min={0}
                                 />
                               </td>
-                              <td className="border-b text-graydark border-[#eee] dark:border-strokedark">
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                                 <input
                                   title="quantity"
                                   type="number"
@@ -750,10 +907,43 @@ export const OrderRegistration = () => {
                                   min={0}
                                 />
                               </td>
-                              <td className="border-b text-graydark border-[#eee] dark:border-strokedark">
-                                { data.unitPrice}
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                                {data.unitPrice}
                               </td>
-                              <td className="border-b text-graydark border-[#eee] dark:border-strokedark">
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                                {data.unit}
+                              </td>
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                                <div className="flex items-center gap-2 relative">
+                                  <span className="flex-1 px-2">
+                                    {data.discount}
+                                  </span>
+                                  {data.discount > 0 ? (
+                                    <sup className="absolute right-0 -top-2 text-black ">
+                                          Level {data.level}
+                                        </sup>
+                                         ): null}
+                                  <label
+                                    key={index}
+                                    className="inline-flex items-center cursor-pointer w-1/4"
+                                    htmlFor={`isDiscounted-${index}`}
+                                  >
+                                    <input
+                                      onChange={(e) => handleDiscountChange(index, e)}
+                                      type="checkbox"
+                                      name="isDiscounted"
+                                      id={`isDiscounted-${index}`}
+                                      checked={data.isDiscounted}
+                                      className="sr-only peer"
+                                    />
+                                    <div className="relative w-10 h-4 bg-bodydark1 peer-focus:outline-none rounded-full peer dark:bg-graydark peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[1px] after:bg-white after:border-gray-3 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-graydark peer-checked:bg-primary"></div>
+                                  </label>
+                                </div>
+                              </td>
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                                {data.total}
+                              </td>
+                              <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                                 <button
                                   onClick={() => handleCancel(index)}
                                   title="action"
@@ -784,7 +974,6 @@ export const OrderRegistration = () => {
                       Download
                     </button>
                   </div>
-                </div>
                 <div className="flex justify-between pt-4 px-4">
                   <strong className="text-graydark">
                     Totals
@@ -1278,6 +1467,5 @@ export const OrderRegistration = () => {
 
 
       </section>
-    </>
   );
 };
