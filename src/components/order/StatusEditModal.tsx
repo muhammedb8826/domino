@@ -1,17 +1,13 @@
-import { updateOrderStatus } from "@/redux/features/order/orderSlice";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 export const StatusEditModal = ({
   handleModalOpen,
   dataIndex,
-  orderStat,
-  setOrderStatus,
+  formData,
+  setFormData
 }) => {
-  console.log("orderStat", orderStat);
-  const dispatch = useDispatch();
 
   const [status, setStatus] = useState("");
   const [note, setNote] = useState("");
@@ -25,7 +21,7 @@ export const StatusEditModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedOrderItems = orderStat.orderItems.map((item, index) => {
+    const updatedOrderItems = formData.map((item, index) => {
       if (index === dataIndex) {
         // Create a new object to maintain immutability
         return {
@@ -36,15 +32,9 @@ export const StatusEditModal = ({
       }
       return item;
     });
-    const data = {
-      ...orderStat,
-      orderItems: updatedOrderItems,
-    };
+    setFormData(updatedOrderItems)
 
     // console.log("data", data);
-
-    setOrderStatus(data);
-    dispatch(updateOrderStatus(data));
     const message = "Order status updated successfully";
     toast.success(message);
     setStatus("");

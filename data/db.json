@@ -44,10 +44,9 @@
   ],
   "orders": [
     {
-      "id": "fa76a874-3863-4499-b9cb-99185a9f7d95",
       "series": "IAN-O-0000-2024",
-      "date": "Apr 30, 2024",
-      "deliveryDate": "Apr 30, 2024",
+      "date": "May 2, 2024",
+      "deliveryDate": "May 2, 2024",
       "orderSource": "telegram",
       "description": "",
       "customerId": "1710809287639",
@@ -57,16 +56,16 @@
           "productId": "1713727389192",
           "serviceId": "e4b1",
           "priceId": "0189",
-          "unitPrice": 8000,
-          "width": "4",
-          "height": "4",
-          "quantity": "4",
-          "unit": 64,
-          "discount": 0,
-          "level": 0,
-          "total": 8000,
-          "isDiscounted": false,
-          "status": "received",
+          "unitPrice": 20000,
+          "width": "2",
+          "height": "8",
+          "quantity": "10",
+          "unit": 160,
+          "discount": 4000,
+          "level": "2",
+          "total": 16000,
+          "isDiscounted": true,
+          "status": "edited",
           "note": "",
           "printed": false,
           "adminApproval": false,
@@ -76,14 +75,14 @@
           "productId": "1713703632140",
           "serviceId": "e4b1",
           "priceId": "8d73",
-          "unitPrice": 250000,
+          "unitPrice": 200000,
           "width": "5",
-          "height": "5",
+          "height": "4",
           "quantity": "5",
-          "unit": 125,
-          "discount": 37500,
+          "unit": 100,
+          "discount": 30000,
           "level": "1",
-          "total": 212500,
+          "total": 170000,
           "isDiscounted": true,
           "status": "received",
           "note": "",
@@ -92,16 +91,15 @@
           "completed": false
         }
       ],
-      "totalBirr": 220500,
-      "tax": 33075,
-      "grandTotal": 253575,
+      "totalBirr": 186000,
+      "tax": 27900,
       "fileNames": [
-        "Coca Cola-T-shirt-4x4",
-        "Coca Cola-Banner-5x5"
+        "Coca Cola-T-shirt-2x8",
+        "Coca Cola-Banner-5x4"
       ],
-      "totalQuantity": 9,
-      "status": "received",
-      "adminApproval": false
+      "totalQuantity": 15,
+      "grandTotal": 213900,
+      "id": "6f718d82-04bb-433f-8427-fb2843bcbc42"
     }
   ],
   "customers": [
@@ -158,34 +156,21 @@
   ],
   "commissions": [
     {
-      "id": "5727",
-      "orderId": null,
+      "id": "d9e3",
+      "orderId": "6f718d82-04bb-433f-8427-fb2843bcbc42",
       "transactions": [
         {
-          "date": "Apr 30, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "0dbd",
-      "orderId": "fa76a874-3863-4499-b9cb-99185a9f7d95",
-      "transactions": [
-        {
-          "date": "Apr 30, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
+          "date": "May 2, 2024",
+          "amount": 800,
+          "percent": 4,
+          "description": "payment",
+          "status": "paid"
         },
         {
-          "date": "Apr 30, 2024",
-          "amount": 5000,
-          "percent": 2,
-          "description": "",
+          "date": "May 2, 2024",
+          "amount": 6000,
+          "percent": 3,
+          "description": "payment",
           "status": "pending"
         }
       ]
@@ -193,46 +178,32 @@
   ],
   "payments": [
     {
-      "id": "7c5e",
-      "orderId": null,
+      "id": "fcd1",
+      "orderId": "6f718d82-04bb-433f-8427-fb2843bcbc42",
       "transactions": [
         {
-          "date": "Apr 30, 2024",
+          "date": "May 2, 2024",
           "paymentMethod": "bank-transfer",
-          "reference": "958djdd98",
-          "amount": "5000",
-          "status": "pending",
-          "description": "payment"
-        },
-        {
-          "date": "Apr 30, 2024",
-          "paymentMethod": "check",
           "reference": "958djdd98CBE",
-          "amount": "5000",
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "13c7",
-      "orderId": "fa76a874-3863-4499-b9cb-99185a9f7d95",
-      "transactions": [
-        {
-          "date": "Apr 30, 2024",
-          "paymentMethod": "bank-transfer",
-          "reference": "958djdd98",
-          "amount": "5000",
-          "status": "pending",
+          "amount": "10000",
+          "status": "paid",
           "description": "payment"
         },
         {
-          "date": "Apr 30, 2024",
-          "paymentMethod": "mobile-banking",
-          "reference": "444CBE",
-          "amount": "2500",
+          "date": "May 2, 2024",
+          "paymentMethod": "cash",
+          "reference": "2525cc",
+          "amount": "11111",
           "status": "pending",
-          "description": "pay partial remaining amount"
+          "description": "kg"
+        },
+        {
+          "date": "May 2, 2024",
+          "paymentMethod": "check",
+          "reference": "111111",
+          "amount": "2000",
+          "status": "paid",
+          "description": "gf"
         }
       ]
     }

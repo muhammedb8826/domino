@@ -7,7 +7,7 @@ import {
   updateOrder,
   updateOrderStatus,
 } from "../../redux/features/order/orderSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -18,12 +18,13 @@ import { CiMenuKebab, CiSettings } from "react-icons/ci";
 import Select from "react-select";
 import { getServices } from "../../redux/features/service/servicesSlice";
 import { getprice } from "../../redux/features/price/pricingSlice";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlinePayment } from "react-icons/md";
 import { StatusEditModal } from "./StatusEditModal";
 import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
 import { SalesPartnerSearchInput } from "../commission/SalesPartnerSearchInput";
 import {
   getCommissions,
+  updateCommission,
 } from "@/redux/features/commission/commissionSlice";
 import Swal from "sweetalert2";
 import {
@@ -71,6 +72,30 @@ const OrderDetailsPage = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getOrdersById(id))
+    .then((res) => {
+      if (res.payload) {
+        const order = res.payload;
+        setOrderInfo({
+          series: order.series,
+          date: order.date,
+          deliveryDate: order.deliveryDate,
+          orderSource: order.orderSource,
+          description: order.description,
+          customerId: order.customerId,
+          salesPartnerId: order.salesPartnerId,
+        });
+        setFormData(order.orderItems);
+        setTotalBirr(order.totalBirr);
+        setTotalQuantity(order.totalQuantity);
+        setFileName(order.fileNames);
+        setGrandTotal(order.grandTotal);
+        setTax(order.tax);
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching orders:", error);
+    });
     dispatch(getprice());
     dispatch(getServices());
     dispatch(getDiscounts());
@@ -81,33 +106,6 @@ const OrderDetailsPage = () => {
     dispatch(getSalesPartners());
     dispatch(getOrderStatus());
     dispatch(getPayments());
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    dispatch(getOrdersById(id))
-      .then((res) => {
-        if (res.payload) {
-          const order = res.payload;
-          setOrderInfo({
-            series: order.series,
-            date: order.date,
-            deliveryDate: order.deliveryDate,
-            orderSource: order.orderSource,
-            description: order.description,
-            customerId: order.customeId,
-            salesPartnerId: order.salesPartnerId,
-          });
-          setFormData(order.orderItems);
-          setTotalBirr(order.totalBirr);
-          setTotalQuantity(order.totalQuantity);
-          setFileName(order.fileNames);
-          setGrandTotal(order.grandTotal);
-          setTax(order.tax);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching orders:", error);
-      });
   }, [dispatch, id]);
 
   const [fileName, setFileName] = useState([]);
@@ -169,8 +167,39 @@ const OrderDetailsPage = () => {
 
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const [showPopover2, setShowPopover2] = useState<number | null>(null);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const triggerRef = useRef<any>(null);
+  const dropdownRef = useRef<any>(null);
+
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (!dropdownRef.current) return;
+      if (
+        !dropdownOpen ||
+        dropdownRef.current.contains(target) ||
+        triggerRef.current.contains(target)
+      )
+        return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
+  });
+
+  // close if the esc key is pressed
+  useEffect(() => {
+    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+      if (!dropdownOpen || keyCode !== 27) return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener("keydown", keyHandler);
+    return () => document.removeEventListener("keydown", keyHandler);
+  });
+
+
   const popoverRef = useRef<HTMLDivElement>(null);
-  const popoverRef2 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -180,32 +209,27 @@ const OrderDetailsPage = () => {
       ) {
         setShowPopover(null);
       }
-      if (
-        popoverRef2.current &&
-        !popoverRef2.current.contains(event.target as Node)
-      ) {
-        setShowPopover2(null);
-      }
     };
 
     if (showPopover !== null) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    if (showPopover2 !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    // if (showPopover2 !== null) {
+    //   document.addEventListener("mousedown", handleClickOutside);
+    // }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showPopover, showPopover2]);
+  }, [showPopover]);
 
   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
 
   const handleAction2 = (index: number) => {
-    setShowPopover2((prevIndex) => (prevIndex === index ? null : index));
+    setDropdownOpen(!dropdownOpen);
+    setShowPopover2(index);
   };
 
   const [payment, setPayment] = useState(findPayment?.transactions || []);
@@ -229,13 +253,20 @@ const OrderDetailsPage = () => {
       width: "",
       height: "",
       quantity: "",
-      status: "recieved",
+      unit: 0,
+      discount: 0,
+      level: 0,
+      total: 0,
       isDiscounted: false,
-    },
+      status: "received",
+      note: "",
+      printed: false,
+      adminApproval: false,
+      completed: false
+    }
   ]);
 
   const [commission, setCommission] = useState(findCommission?.transactions || []);
-
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -243,13 +274,13 @@ const OrderDetailsPage = () => {
   const [grandTotal, setGrandTotal] = useState(0);
   const [tax, setTax] = useState(0);
   const [userInputDiscount, setUserInputDiscount] = useState(0);
-  const [totalBirrAfterDiscount, setTotalBirrAfterDiscount] = useState([]);
-  const [commissionPrice, setCommissionPrice] = useState([]);
-  const [commissionPercent, setCommissionPercent] = useState([]);
   const [totalCommission, setTotalCommission] = useState(null);
   const [collapseDisount, setCollapseDiscount] = useState(false);
   const [totaTransaction, setTotalTransaction] = useState(0);
   const [remainingAmount, setRemainingAmount] = useState(0);
+
+
+  console.log(formData);
 
 
   const handleCustomerInfo = (customer: CustomerType) => {
@@ -266,6 +297,70 @@ const OrderDetailsPage = () => {
     }));
   };
 
+  const handleFormChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setPayment((prev) => {
+      const updatedData = prev.map((item, i) => {
+        if (i === index) {
+          return {
+            ...item,
+            [name]: value,
+          };
+        }
+        return item;
+      });
+      const totalTransaction = updatedData.reduce(
+        (acc, c) => acc + Number(c.amount || 0),
+        0
+      );
+      setTotalTransaction(totalTransaction);
+      setRemainingAmount(grandTotal - totalTransaction);
+      return updatedData;
+    });
+  };
+
+  const handlePaymentMethod = (index, e) => {
+    setPayment((prev) => {
+      const updatedData = [...prev];
+      updatedData[index] = {
+        ...updatedData[index],
+        paymentMethod: e.target.value,
+      };
+      return updatedData;
+    });
+  };
+
+  const handlePayPayment = (index) => {
+    const updatedTransactionsStatus = payment.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          status: "paid",
+        };
+      }
+      return item; // Return unchanged items
+    });
+    setPayment(updatedTransactionsStatus);
+    setDropdownOpen(!dropdownOpen)
+  };
+
+  const handlePayCommission = (index: number) => {
+    const updatedTransactionsStatus = commission.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          status: "paid",
+        };
+      }
+      return item; // Return unchanged items
+    });
+    setCommission(updatedTransactionsStatus);
+    setDropdownOpen(!dropdownOpen)
+  };
+
   const handleAddPaymentRow = () => {
     setPayment((prev) => [
       ...prev,
@@ -280,19 +375,8 @@ const OrderDetailsPage = () => {
     ])
   };
 
-  const handlePaymentMethod = (index, e) => {
-    setPayment((prev) => {
-      const updatedData = [...prev];
-      updatedData[index] = {
-        ...updatedData[index],
-        paymentMethod: e.target.value,
-      };
-      return updatedData;
-    });
-  };
 
-
-  const handleCancelPayment = (index) => {
+  const handleCancelPayment = (index: number) => {
     const updatedTransactions = [...payment];
     Swal.fire({
       title: "Are you sure?",
@@ -319,7 +403,6 @@ const OrderDetailsPage = () => {
     });
   };
 
-
   const handleCollapseDiscount = () => {
     setCollapseDiscount((prev) => !prev);
   };
@@ -328,6 +411,7 @@ const OrderDetailsPage = () => {
     setModalOpen((prev) => !prev);
     setDataIndex(index);
   };
+
 
   const handleAddRow = () => {
     setFormData((prevFormData) => [
@@ -340,24 +424,28 @@ const OrderDetailsPage = () => {
         width: "",
         height: "",
         quantity: "",
-        status: "recieved",
+        unit: 0,
+        discount: 0,
+        level: 0,
+        total: 0,
         isDiscounted: false,
+        status: "received",
+        note: "",
+        printed: false,
+        adminApproval: false,
+        completed: false
       },
     ]);
-
-    setOrderStatus((prev) => ({
+    setCommission((prev) => [
       ...prev,
-      orderItems: [
-        ...prev.orderItems,
-        {
-          status: "received",
-          note: "",
-          printed: false,
-          adminApproval: false,
-          completed: false,
-        },
-      ],
-    }));
+      {
+        date: formattedDate,
+        amount: 0,
+        percent: 0,
+        description: "",
+        status: "pending",
+      }
+    ]);
   };
 
 
@@ -383,22 +471,6 @@ const OrderDetailsPage = () => {
     });
     setFileName(combination);
   }, [formData, orderInfo.customerId, customers, products, commission]);
-
-
-  const handleFormChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { name, value } = e.target;
-    setPayment((prev) => {
-      const updatedData = [...prev];
-      updatedData[index] = {
-        ...updatedData[index],
-        [name]: value,
-      };
-      return updatedData;
-    });
-  };
 
   // customer and order info handling
   const handleOrderInfo = (e) => {
@@ -474,43 +546,51 @@ const OrderDetailsPage = () => {
   const handleInputChanges = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => {
-      const updatedFormData = [...prevFormData];
-      updatedFormData[index][name] = value;
-      updatedFormData[index].unitPrice = calculateUnitPrice(updatedFormData[index]);
-      updatedFormData[index].unit = (parseFloat(updatedFormData[index].width) * parseFloat(updatedFormData[index].height)) * parseFloat(updatedFormData[index].quantity) || 0;
+      return prevFormData.map((item, i) => {
+        if (i !== index) return item; // If not the target item, return as is
 
-      // Recalculate discount if the checkbox is checked
-      if (updatedFormData[index].isDiscounted) {
-        const unit = updatedFormData[index].unit;
+        // Create a new object with updated values for the target item
+        const updatedItem = {
+          ...item,
+          [name]: value,
+          unitPrice: calculateUnitPrice(item),
+          unit: (parseFloat(item.width) * parseFloat(item.height)) * parseFloat(item.quantity) || 0,
+          // Rest of the logic for discount calculation
+        };
 
-        // Find the appropriate discount data based on the unit's range
-        const discountData = discounts.find(discount => {
-          const minSquare = parseFloat(discount.minumumMeterSquare);
-          const nextDiscount = discounts.find(d => parseFloat(d.minumumMeterSquare) > minSquare);
-          const maxSquare = nextDiscount ? parseFloat(nextDiscount.minumumMeterSquare) : Infinity;
-          return unit >= minSquare && unit < maxSquare;
-        });
+        // Recalculate discount if the checkbox is checked
+        if (updatedItem.isDiscounted) {
+          const unit = updatedItem.unit;
 
-        // If discount data is found, apply the discount
-        if (discountData) {
-          updatedFormData[index].level = discountData.level;
-          const discountPercentage = parseFloat(discountData.discountPercentage) / 100;
-          updatedFormData[index].discount = discountPercentage * updatedFormData[index].unitPrice;
-          updatedFormData[index].total = updatedFormData[index].unitPrice - updatedFormData[index].discount;
+          // Find the appropriate discount data based on the unit's range
+          const discountData = discounts.find(discount => {
+            const minSquare = parseFloat(discount.minumumMeterSquare);
+            const nextDiscount = discounts.find(d => parseFloat(d.minumumMeterSquare) > minSquare);
+            const maxSquare = nextDiscount ? parseFloat(nextDiscount.minumumMeterSquare) : Infinity;
+            return unit >= minSquare && unit < maxSquare;
+          });
+
+          // If discount data is found, apply the discount
+          if (discountData) {
+            updatedItem.level = discountData.level;
+            const discountPercentage = parseFloat(discountData.discountPercentage) / 100;
+            updatedItem.discount = discountPercentage * updatedItem.unitPrice;
+            updatedItem.total = updatedItem.unitPrice - updatedItem.discount;
+          } else {
+            // If no discount data is found, reset level and discount
+            updatedItem.level = 0;
+            updatedItem.discount = 0;
+            updatedItem.total = updatedItem.unitPrice;
+          }
         } else {
-          // If no discount data is found, reset level and discount
-          updatedFormData[index].level = 0;
-          updatedFormData[index].discount = 0;
-          updatedFormData[index].total = updatedFormData[index].unitPrice;
+          // If checkbox is not checked, reset level, discount, and total
+          updatedItem.level = 0;
+          updatedItem.discount = 0;
+          updatedItem.total = updatedItem.unitPrice;
         }
-      } else {
-        // If checkbox is not checked, reset level, discount, and total
-        updatedFormData[index].level = 0;
-        updatedFormData[index].discount = 0;
-        updatedFormData[index].total = updatedFormData[index].unitPrice;
-      }
 
-      return updatedFormData;
+        return updatedItem;
+      });
     });
   };
 
@@ -673,26 +753,22 @@ const OrderDetailsPage = () => {
       }
     });
 
-    const updatedTransactionsStatus = payment.map((item) => {
-      return {
-        ...item,
-        status: "paid",
-      };
-    });
-
-    const transactions = {
-      ...updatedTransactionsStatus,
-      id: findPayment?.id,
+    const paymentData = {
+      ...findPayment,
+      transactions: payment
     };
 
-    dispatch(updatePayment(transactions)).then((res) => {
+    dispatch(updatePayment(paymentData)).then((res) => {
       if (res.payload) {
         setPayment(res.payload.transactions);
       }
     });
-    dispatch(updateOrderStatus(orderStat));
     setGrandTotal(grandTotal);
-    dispatch(updateCommissionTranscation({ orderId: id, transactions: commission })).then((res) => {
+    const commissionData = {
+      ...findCommission,
+      transactions: commission,
+    }
+    dispatch(updateCommission(commissionData)).then((res) => {
       if (res.payload) {
         setCommission(res.payload.transactions);
       }
@@ -708,7 +784,7 @@ const OrderDetailsPage = () => {
     return <ErroPage error={error} />;
   }
 
-  return isLoading?(<Loader/>):(
+  return isLoading ? (<Loader />) : (
     <>
       <section className="max-w-[1250px] mx-auto rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4 mb-10">
         <GoBack goback="/dashboard" />
@@ -900,8 +976,7 @@ const OrderDetailsPage = () => {
               <div>
                 <button
                   type="button"
-                  className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
-                >
+                  className="text-black dark:text-white w-full py-2 px-4 border-t border-b border-[#eee] mb-4 font-semibold flex items-center gap-4">
                   Orders List{" "}
                 </button>
                 <div className="max-w-full px-4">
@@ -937,7 +1012,7 @@ const OrderDetailsPage = () => {
                           Quantity
                         </th>
                         <th
-                          className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
+                          className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white"
                         >
                           Amount
                         </th>
@@ -952,7 +1027,7 @@ const OrderDetailsPage = () => {
                           Discount
                         </th>
                         <th
-                          className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
+                          className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white"
                         >
                           Total
                         </th>
@@ -1036,7 +1111,7 @@ const OrderDetailsPage = () => {
                                 id="width"
                                 onChange={(e) => handleInputChanges(index, e)}
                                 value={data.width}
-                                className="sm:text-sm border-0 block w-full p-2.5"
+                                className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 placeholder="0"
                                 required
                                 min={0}
@@ -1050,7 +1125,7 @@ const OrderDetailsPage = () => {
                                 id="height"
                                 onChange={(e) => handleInputChanges(index, e)}
                                 value={data.height}
-                                className="sm:text-sm border-0 block w-full p-2.5"
+                                className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 placeholder="0"
                                 required
                                 min={0}
@@ -1064,7 +1139,7 @@ const OrderDetailsPage = () => {
                                 id="quantity"
                                 onChange={(e) => handleInputChanges(index, e)}
                                 value={data.quantity}
-                                className="sm:text-sm border-0 block w-full p-2.5"
+                                className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 placeholder="0"
                                 required
                                 min={0}
@@ -1190,12 +1265,12 @@ const OrderDetailsPage = () => {
                                   className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                                 >
                                   <ul className="py-2 text-sm text-gray-700">
-                                    {orderStat?.orderItems[index].adminApproval === false && (
+                                    {data.adminApproval === false && (
                                       <li
                                         className={`${user?.email !== "admin@domino.com" &&
-                                            user?.roles !== "graphic-designer"
-                                            ? "hidden"
-                                            : ""
+                                          user?.roles !== "graphic-designer"
+                                          ? "hidden"
+                                          : ""
                                           }`}
                                       >
                                         <button
@@ -1210,9 +1285,9 @@ const OrderDetailsPage = () => {
                                     )}
                                     <li
                                       className={`${user?.email !== "admin@domino.com" &&
-                                          user?.roles !== "reception"
-                                          ? "hidden"
-                                          : ""
+                                        user?.roles !== "reception"
+                                        ? "hidden"
+                                        : ""
                                         }`}
                                     >
                                       <button
@@ -1231,23 +1306,24 @@ const OrderDetailsPage = () => {
                         ))}
                     </tbody>
                   </table>
+                  <div className="py-4 flex items-center justify-between">
+                    <button
+                      onClick={handleAddRow}
+                      type="button"
+                      className="flex items-center justify-center rounded border-[1.5px] border-stroke bg-transparent px-2 py-1 font-medium text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-primary dark:hover:text-primary transition-colors"
+                    >
+                      Add row
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center rounded border-[1.5px] border-stroke bg-transparent px-2 py-1 font-medium text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-primary dark:hover:text-primary transition-colors"
+                    >
+                      Download
+                    </button>
+                  </div>
                 </div>
 
-                <div className="py-4 flex items-center justify-between">
-                  <button
-                    onClick={handleAddRow}
-                    type="button"
-                    className="flex items-center justify-center rounded border-[1.5px] border-stroke bg-transparent px-2 py-1 font-medium text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-primary dark:hover:text-primary transition-colors"
-                  >
-                    Add row
-                  </button>
-                  <button
-                    type="button"
-                    className="flex items-center justify-center rounded border-[1.5px] border-stroke bg-transparent px-2 py-1 font-medium text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-primary dark:hover:text-primary transition-colors"
-                  >
-                    Download
-                  </button>
-                </div>
+
                 <div className="flex justify-between pt-4 px-4">
                   <strong className="text-graydark">
                     Totals
@@ -1293,7 +1369,7 @@ const OrderDetailsPage = () => {
                       <button
                         onClick={handleCollapseDiscount}
                         type="button"
-                        className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+                        className="text-black dark:text-white w-full py-2 px-4 border-t border-[#eee] border-b mb-4 font-semibold flex items-center gap-4"
                       >
                         Additional Discount{" "}
                         <span className="font-thin">
@@ -1306,11 +1382,11 @@ const OrderDetailsPage = () => {
                     >
                       <div
                         className={`${collapseDisount ? "hidden" : ""
-                          } px-4 flex md:w-1/2`}
+                          } px-4 md:w-1/2`}
                       >
                         <label
                           htmlFor="userInputDiscount"
-                          className="w-[15%] gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="mb-3 block text-black dark:text-white"
                         >
                           Discount
                         </label>
@@ -1319,9 +1395,7 @@ const OrderDetailsPage = () => {
                           name="userInputDiscount"
                           value={userInputDiscount}
                           id="userInputDiscount"
-                          className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="0"
-                          required
+                          className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           onChange={(e) => setUserInputDiscount(e.target.value)}
                         />
                       </div>
@@ -1329,11 +1403,11 @@ const OrderDetailsPage = () => {
                   </>
                 )}
               </div>
-              <div className="p-4 flex justify-between">
-                <div className="w-1/2">
+              <div className="p-4 flex justify-between gap-4">
+                <div className="w-full">
                   <label
                     htmlFor="message"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="mb-3 block text-black dark:text-white"
                   >
                     Your message
                   </label>
@@ -1343,11 +1417,11 @@ const OrderDetailsPage = () => {
                     name="description"
                     id="message"
                     rows={4}
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="text-black dark:text-white w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </div>
-                <div>
+                <div className="w-full">
                   <p className="block mb-2 text-sm font-medium text-graydark dark:text-white">
                     File Names
                   </p>
@@ -1368,7 +1442,7 @@ const OrderDetailsPage = () => {
                           <input
                             id={`npm-install-copy-button-${index}`}
                             type="text"
-                            className="col-span-6 bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="text-black dark:text-white w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             value={item}
                             disabled
                             readOnly
@@ -1434,60 +1508,65 @@ const OrderDetailsPage = () => {
                 : ""
                 }`}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-                <strong>Summary</strong>
-                <div className="w-full py-4">
-                  <div className="flex items-center">
-                    <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-graydark dark:text-white">
-                      Grand total :
-                    </p>
-                    <p className="flex-1">{grandTotal}</p>
-                  </div>
-                  <div className="flex items-center">
-                    <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-graydark dark:text-white">
+              <div className="flex justify-between pt-4 px-4">
+                <strong className="text-graydark">
+                  Totals
+                </strong>
+                <div className="text-graydark">
+                  <p className="flex gap-4 justify-between">
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      Grand total:
+                    </span>
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      {grandTotal}
+                    </span>
+                  </p>
+                  <p className="flex gap-4 justify-between">
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Total payment :
-                    </p>
-                    <p className="flex-1">{totaTransaction}</p>
-                  </div>
-                  <div className="flex items-center">
-                    <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-graydark dark:text-white">
+                    </span>
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      {totaTransaction}
+                    </span>
+                  </p>
+                  <p className="flex gap-4 justify-between">
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Remaining amount :
-                    </p>
-                    <p className="flex-1">{remainingAmount}</p>
-                  </div>
+                    </span>
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      {remainingAmount}
+                    </span>
+                  </p>
                 </div>
               </div>
 
               {/* transactions */}
-              <div className="px-4">
-                <table
-                  className="
-                         col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                >
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="p-4 w-4 border border-gray-300">
+              <div className="max-w-full overflow-x-auto px-4">
+                <table className="w-full table-auto">
+                  <thead>
+                    <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         No
                       </th>
-                      <th scope="col" className="px-4 py-2 border border-gray-300">
+                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                         Date
                       </th>
-                      <th scope="col" className="px-4 py-2 border border-gray-300">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Payment method
                       </th>
-                      <th scope="col" className="px-4 py-2 border border-gray-300">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Description
                       </th>
-                      <th scope="col" className="px-4 py-2 border border-gray-300">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Payment amount
                       </th>
-                      <th scope="col" className="px-4 py-2 border border-gray-300">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Reference
                       </th>
-                      <th scope="col" className="px-4 py-2 border border-gray-300">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         Status
                       </th>
-                      <th scope="col" className="px-4 py-2 border border-gray-300">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
                         {/* Action */}
                         <span className="font-semibold flex justify-center items-center">
                           <CiSettings className="text-xl font-bold" />
@@ -1505,20 +1584,16 @@ const OrderDetailsPage = () => {
                     )}
                     {payment &&
                       payment.map((data, index) => (
-                        <tr
-                          key={index}
-                          className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                        >
-                          <td className="px-4 w-4 font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
+                        <tr key={index}>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             {index + 1}
                           </td>
-                          <td className="px-4 font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
-                            {data.date}
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            {data?.date}
                           </td>
-
-                          <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <label
-                              htmlFor={`${data.paymentMethod}-${index}`}
+                              htmlFor={`${data?.paymentMethod}-${index}`}
                               className="sr-only peer"
                             >
                               Select an option
@@ -1527,9 +1602,9 @@ const OrderDetailsPage = () => {
                               title="paymentMethod"
                               onChange={(e) => handlePaymentMethod(index, e)}
                               name="paymentMethod"
-                              value={data.paymentMethod}
-                              id={`${data.paymentMethod}-${index}`}
-                              className="text-graydark text-sm border-0 focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              value={data?.paymentMethod}
+                              id={`${data?.paymentMethod}-${index}`}
+                              className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             >
                               <option value="cash">Cash</option>
                               <option value="bank-transfer">Bank Transfer</option>
@@ -1538,9 +1613,9 @@ const OrderDetailsPage = () => {
                             </select>
                           </td>
 
-                          <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <label
-                              htmlFor={`${data.description}-${index}`}
+                              htmlFor={`${data?.description}-${index}`}
                               className="sr-only peer"
                             >
                               Description
@@ -1548,15 +1623,15 @@ const OrderDetailsPage = () => {
                             <input
                               type="text"
                               name="description"
-                              value={data.description}
-                              id={`${data.description}-${index}`}
-                              className="text-gray-900 sm:text-sm block w-full border-0"
+                              value={data?.description}
+                              id={`${data?.description}-${index}`}
+                              className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                               onChange={(e) => handleFormChange(index, e)}
                             />
                           </td>
-                          <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <label
-                              htmlFor={`${data.amount}-${index}`}
+                              htmlFor={`${data?.amount}-${index}`}
                               className="sr-only peer"
                             >
                               Payment amount
@@ -1565,15 +1640,15 @@ const OrderDetailsPage = () => {
                               type="number"
                               name="amount"
                               required
-                              value={data.amount}
-                              id={`${data.amount}-${index}`}
-                              className="text-gray-900 sm:text-sm block w-full border-0"
+                              value={data?.amount}
+                              id={`${data?.amount}-${index}`}
+                              className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                               onChange={(e) => handleFormChange(index, e)}
                             />
                           </td>
-                          <td className="font-medium text-graydark whitespace-nowrap dark:text-white border border-gray-300">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <label
-                              htmlFor={`${data.reference}-${index}`}
+                              htmlFor={`${data?.reference}-${index}`}
                               className="sr-only peer"
                             >
                               Reference
@@ -1581,31 +1656,69 @@ const OrderDetailsPage = () => {
                             <input
                               type="text"
                               name="reference"
-                              value={data.reference}
-                              id={`${data.reference}-${index}`}
-                              className="text-gray-900 sm:text-sm block w-full border-0"
+                              value={data?.reference}
+                              id={`${data?.reference}-${index}`}
+                              className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                               onChange={(e) => handleFormChange(index, e)}
                             />
                           </td>
-                          <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <span
-                              className={`${data.status === "paid"
-                                ? "bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300"
-                                : "bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+                              className={`${data?.status === "paid"
+                                ? "bg-success/10 text-success/80 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-success/90 dark:text-success/30"
+                                : "bg-primary/10 text-primary/80 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-primary/90 dark:text-primary/30"
                                 }`}
                             >
-                              {data.status}
+                              {data?.status}
                             </span>
                           </td>
-                          <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
-                            <button
-                              onClick={() => handleCancelPayment(index)}
-                              title="action"
-                              type="button"
-                              className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                          <td className="px-6 py-4 relative">
+                            <Link
+                              to="#"
+                              onClick={(event) => {
+                                handleAction2(index);
+                                event.stopPropagation();
+                              }}
+                              ref={triggerRef}
+                              className="flex items-center gap-4"
                             >
-                              <IoMdClose />
-                            </button>
+                              <CiMenuKebab />
+                            </Link>
+
+                            {/* <!-- Dropdown Start --> */}
+                            {showPopover2 === index && (
+                              <div
+                                ref={dropdownRef}
+                                onFocus={() => setDropdownOpen(true)}
+                                onBlur={() => setDropdownOpen(false)}
+                                className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen ? "block" : "hidden"
+                                  }`}
+                              >
+                                <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
+                                  <li>
+                                    <NavLink
+                                      onClick={() => handlePayPayment(index)}
+                                      to="#"
+                                      className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                                    >
+                                      <MdOutlinePayment />
+                                      Pay
+                                    </NavLink>
+                                  </li>
+                                  <li>
+                                    <NavLink
+                                      onClick={() => handleCancelPayment(index)}
+                                      to="#"
+                                      className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-danger lg:text-base"
+                                    >
+                                      <MdDelete />
+                                      Delete
+                                    </NavLink>
+                                  </li>
+                                </ul>
+                              </div>
+                            )}
+                            {/* <!-- Dropdown End --> */}
                           </td>
                         </tr>
                       ))}
@@ -1631,155 +1744,184 @@ const OrderDetailsPage = () => {
           )}
 
           {active === "commission" && (
-            <div
-              className={`grid grid-cols-2 gap-4 px-4`}>
-              <div className="w-full relative">
-                <SalesPartnerSearchInput
-                  handleCommissionInfo={handleSalesPerson}
-                  value={salesPartners.find((partner) => partner.id === orderInfo.salesPartnerId)?.firstName}
-                />
-              </div>
-              <div className="">
-                <div className="px-4">
+            <>
+              <div
+                className={`grid grid-cols-2 gap-4 px-4 mb-4`}>
+                <div className="w-full relative">
+                  <SalesPartnerSearchInput
+                    handleCommissionInfo={handleSalesPerson}
+                    value={salesPartners.find((partner) => partner.id === orderInfo.salesPartnerId)?.firstName}
+                  />
+                </div>
+                <div className="">
                   <label
                     htmlFor="totalCommission"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="mb-3 block text-black dark:text-white"
                   >
                     Total Commission
                   </label>
                   <input
-                    value={totalCommission.toFixed(2) || ""}
+                    value={totalCommission?.toFixed(2) || ""}
                     readOnly
                     type="number"
                     name="totalCommission"
                     id="totalCommission"
-                    className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="text-black dark:text-white w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     placeholder="0"
                     required
                   />
                 </div>
               </div>
-
-              <table
-                className="
-               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-              >
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="p-4 w-4 border border-gray-300">
-                      No
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Date
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Product
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Services
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Description
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Commission %
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Amount
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-2 border border-gray-300"
-                    >
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {commission && commission.length === 0 && (
-                    <tr>
-                      <td colSpan={7} className="text-center">
-                        No data found
-                      </td>
+              <div className="max-w-full overflow-x-auto px-4">
+                <table className="w-full table-auto">
+                  <thead>
+                    <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        No
+                      </th>
+                      <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                        Date
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Product
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Services
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Description
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Commission %
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Amount
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        Status
+                      </th>
+                      <th className="py-4 px-4 font-medium text-black dark:text-white">
+                        {/* Action */}
+                        <span className="font-semibold flex justify-center items-center">
+                          <CiSettings className="text-xl font-bold" />
+                        </span>
+                      </th>
                     </tr>
-                  )}
-                  {
-                    formData.map((data, index) => (
-                      <tr
-                        key={index}
-                        className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                      >
-                        <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                          {index + 1}
-                        </td>
-                        <td
-                          scope="row"
-                          className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
-                        >
-                          {commission[index].date}
-                        </td>
-                        <td
-                          scope="row"
-                          className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
-                        >
-                          {products.find((product) => product.id === data.productId)?.name}
-                        </td>
-                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                          {services.find((service) => service.id === data.serviceId)?.name}
-                        </td>
-                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                          <input
-                            type="text"
-                            name="description"
-                            id="description"
-                            className="text-gray-900 text-sm block w-full border-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Description"
-                            value={commission[index].description}
-                            onChange={(e) => handleCommissionChange(index, e)}
-                          />
-                        </td>
-                        <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                          <input
-                            type="number"
-                            name="percent"
-                            id="percent"
-                            className="text-gray-900 text-sm block w-full border-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="0"
-                            required
-                            min="0"
-                            value={commission[index].percent}
-                            onChange={(e) => handleCommissionChange(index, e)}
-                          />
-                        </td>
-                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                          {commission[index].amount.toFixed(2)}
-                        </td>
-                        <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                          {commission[index].status}
+                  </thead>
+                  <tbody>
+                    {commission && commission.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="text-center">
+                          No data found
                         </td>
                       </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+                    )}
+                    {
+                      formData.map((data, index) => (
+                        <tr key={index}>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            {index + 1}
+                          </td>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            {commission[index]?.date}
+                          </td>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            {products?.find((product) => product.id === data.productId)?.name}
+                          </td>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            {services?.find((service) => service.id === data.serviceId)?.name}
+                          </td>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <input
+                              type="text"
+                              name="description"
+                              id="description"
+                              className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                              placeholder="Description"
+                              value={commission[index]?.description}
+                              onChange={(e) => handleCommissionChange(index, e)}
+                            />
+                          </td>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <input
+                              title="percentage"
+                              type="number"
+                              name="percent"
+                              id="percent"
+                              className="w-full rounded bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                              required
+                              min="0"
+                              value={commission[index]?.percent}
+                              onChange={(e) => handleCommissionChange(index, e)}
+                            />
+                          </td>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            {commission[index]?.amount.toFixed(2)}
+                          </td>
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <span
+                              className={`${commission[index]?.status === "paid"
+                                ? "bg-success/10 text-success/80 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-success/90 dark:text-success/30"
+                                : "bg-primary/10 text-primary/80 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-primary/90 dark:text-primary/30"
+                                }`}
+                            >
+                              {commission[index]?.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 relative">
+                            <Link
+                              to="#"
+                              onClick={(event) => {
+                                handleAction2(index);
+                                event.stopPropagation();
+                              }}
+                              ref={triggerRef}
+                              className="flex items-center gap-4"
+                            >
+                              <CiMenuKebab />
+                            </Link>
+
+                            {/* <!-- Dropdown Start --> */}
+                            {showPopover2 === index && (
+                              <div
+                                ref={dropdownRef}
+                                onFocus={() => setDropdownOpen(true)}
+                                onBlur={() => setDropdownOpen(false)}
+                                className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen ? "block" : "hidden"
+                                  }`}
+                              >
+                                <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
+                                  <li>
+                                    <NavLink
+                                      onClick={() => handlePayCommission(index)}
+                                      to="#"
+                                      className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                                    >
+                                      <MdOutlinePayment />
+                                      Pay
+                                    </NavLink>
+                                  </li>
+                                  {/* <li>
+                                    <NavLink
+                                      onClick={() => handleCancelCommission(index)}
+                                      to="#"
+                                      className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-danger lg:text-base"
+                                    >
+                                      <MdDelete />
+                                      Delete
+                                    </NavLink>
+                                  </li> */}
+                                </ul>
+                              </div>
+                            )}
+                            {/* <!-- Dropdown End --> */}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
 
         </form>
@@ -1790,8 +1932,8 @@ const OrderDetailsPage = () => {
         <StatusEditModal
           handleModalOpen={handleModalOpen}
           dataIndex={dataIndex}
-          orderStat={orderStat}
-          setOrderStatus={setOrderStatus}
+          formData={formData}
+          setFormData={setFormData}
         />
       )}
     </>
