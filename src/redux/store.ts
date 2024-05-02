@@ -7,8 +7,6 @@ import printingReducer from "./features/print/printingSlice";
 import customerReducer  from "./features/customer/customerSlice";
 import commissionReducer  from "./features/commission/commissionSlice";
 import serviceReducer from "./features/service/servicesSlice";
-import machineReducer from "./features/machine/machineSlice";
-import materialReducer from "./features/material/materialSlice";
 import unitReducer from "./features/unit/unitSlice";
 import priceReducer from "./features/price/pricingSlice";
 import roleReducer from "./features/role/roleSlice";
@@ -32,8 +30,6 @@ const store = configureStore({
         customer: customerReducer,
         commission: commissionReducer,
         service: serviceReducer,
-        machine: machineReducer,
-        material: materialReducer,
         unit: unitReducer,
         price: priceReducer,
         role: roleReducer,

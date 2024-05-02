@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@/common/Loader/index.tsx';
 import ErroPage from '@/components/common/ErroPage.tsx';
 import { useEffect } from 'react';
-import { getOrderStatus, getOrders } from '@/redux/features/order/orderSlice.ts';
+import { getOrders } from '@/redux/features/order/orderSlice.ts';
 import { CiDeliveryTruck } from 'react-icons/ci';
 import { getCustomers } from '@/redux/features/customer/customerSlice.ts';
 import { LiaUsersCogSolid } from 'react-icons/lia';
@@ -23,20 +23,19 @@ import { RiProductHuntLine } from 'react-icons/ri';
 import { MdPeopleOutline } from 'react-icons/md';
 
 const ECommerce = () => {
-  const { orders, orderStatus, isLoading, error } = useSelector((state: RootState) => state.order);
+  const { orders, isLoading, error } = useSelector((state: RootState) => state.order);
   const {customers} = useSelector((state: RootState) => state.customer);
   const {products} = useSelector((state: RootState) => state.product);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getOrderStatus());
     dispatch(getOrders());
     dispatch(getCustomers());
     dispatch(getProducts())
   }, [dispatch]);
 
-const orderStatusData = orderStatus.filter((s) => (
+const orderStatusData = orders.filter((s) => (
   s.status === "delivered"
 ));
   

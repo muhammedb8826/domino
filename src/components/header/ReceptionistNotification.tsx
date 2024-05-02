@@ -1,4 +1,4 @@
-import { getOrderStatus, getOrders, updateOrderStatus } from "@/redux/features/order/orderSlice";
+import { getOrders} from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,27 +8,26 @@ import ErroPage from "../common/ErroPage";
 import { toast } from "react-toastify";
 
 export const ReceptionistNotification = () => {
-    const {orders, orderStatus} = useSelector((state: RootState) => state.order);
+    const {orders} = useSelector((state: RootState) => state.order);
     const {user, isLoading, error} = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getOrderStatus());
         dispatch(getOrders());
     }, [dispatch]);
 
     const [receptionistNotification, setReceptionistNotification] = useState(0);
 
-    useEffect(() => {
-        const editedOrder = orderStatus.filter(
-          (order) => order.status === "received"
-        );
-        const receptionistNotification = editedOrder.map((item) =>
-        item.orderItems.filter((item) => item.status === "paid")
-      );
-      setReceptionistNotification(
-        receptionistNotification.reduce((a, b) => a + b.length, 0)
-      );
-    }, [orderStatus]);
+    // useEffect(() => {
+    //     const editedOrder = orderStatus.filter(
+    //       (order) => order.status === "received"
+    //     );
+    //     const receptionistNotification = editedOrder.map((item) =>
+    //     item.orderItems.filter((item) => item.status === "paid")
+    //   );
+    //   setReceptionistNotification(
+    //     receptionistNotification.reduce((a, b) => a + b.length, 0)
+    //   );
+    // }, [orderStatus]);
 
     const handleClick = (id, index) => {
         const findOrderStatusId = orderStatus.find((item) => item.id === id);

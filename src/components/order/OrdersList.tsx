@@ -5,46 +5,22 @@ import { IoBagAdd } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import {
-  deleteOrder,
-  deleteOrderStatus,
-  getOrders,
-} from "@/redux/features/order/orderSlice";
+import {deleteOrder,getOrders} from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
 import ErroPage from "../common/ErroPage";
-import Loading from "../common/Loading";
 import { FaFirstOrderAlt, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Swal from "sweetalert2";
-import CardOne from "../CardOne";
-import CardTwo from "../CardTwo";
-import CardThree from "../CardThree";
-import CardFour from "../CardFour";
 import Loader from "@/common/Loader";
 import Breadcrumb from "../Breadcrumb";
 import { getCustomers } from "@/redux/features/customer/customerSlice";
 import { getPayments } from "@/redux/features/paymentSlice";
-// import { getCommissions, updateCommission } from "@/redux/features/commission/commissionSlice";
 
 interface User {
   email: string;
   roles: string;
 }
 
-// const getCurrentDateFormatted = () => {
-//   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-//   const currentDate = new Date();
-//   const monthIndex = currentDate.getMonth();
-//   const day = currentDate.getDate();
-//   const year = currentDate.getFullYear();
-
-//   const formattedDate = `${months[monthIndex]} ${day}, ${year}`;
-//   return formattedDate;
-// };
-
-// const date = new Date();
-// const options = { month: "short", day: "numeric", year: "numeric" };
-// const formattedDate = date.toLocaleDateString("en-US", options);
 
 const OrdersList = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -204,7 +180,11 @@ const OrdersList = () => {
 
   const orderListContent =
     filterDate.length > 0
-      ? filterDate.map((order, index: number) => (
+      ? filterDate.map((order, index: number) => {
+        const payment = payments.find((payment)=> payment.orderId === order.id);
+        console.log(payment);
+        
+      return(
         <tr key={order.id}>
           <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
             <h5 className="font-medium text-black dark:text-white">
@@ -232,19 +212,19 @@ const OrdersList = () => {
             {order.grandTotal?.toLocaleString()}
           </td>
           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            {order.payment?.status === "not paid" && (
+            {payment?.status === "pending" && (
               <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger">
-                {order.payment?.status}
+                {payment?.status}
               </span>
             )}
-            {order.payment?.status === "partial" && (
+            {payment?.status === "partial" && (
               <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-sm font-medium text-warning">
-                {order.payment?.status}
+                {payment?.status}
               </span>
             )}
-            {order.payment?.status === "paid" && (
+            {payment?.status === "paid" && (
               <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                {order.payment?.status}
+                {payment?.status}
               </span>
             )}
           </td>
@@ -294,7 +274,8 @@ const OrdersList = () => {
             )}
           </td>
         </tr>
-      ))
+      )}
+      )
       : null;
 
   return isLoading ? (

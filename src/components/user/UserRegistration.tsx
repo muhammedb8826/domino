@@ -6,8 +6,6 @@ import { clearSuccessMessage } from "../../redux/features/user/userSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CgClose } from "react-icons/cg";
-import { getMachines } from "@/redux/features/machine/machineSlice";
-import Loading from "../common/Loading";
 import Loader from "@/common/Loader";
 
 interface UserRegistrationProps {
@@ -22,7 +20,6 @@ const UserRegistration = ({
   const { isLoading, registrationErrors, message } = useSelector(
     (state: RootState) => state.user
   );
-  const { machines } = useSelector((state: RootState) => state.machine);
 
   const dispatch = useDispatch();
   useEffect(() => {

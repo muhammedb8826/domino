@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import TopBar from './dashboard/TopBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { getOrderStatus, getOrders } from '@/redux/features/order/orderSlice';
+import { getOrders } from '@/redux/features/order/orderSlice';
 import { Sale } from '@/pages/inventory/Sale';
 import { getSales } from '@/redux/features/saleSlice';
 import Loader from '@/common/Loader';
 
 const DropdownNotification = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { orderStatus, orders } = useSelector((state: RootState) => state.order);
+  const { orders } = useSelector((state: RootState) => state.order);
   const {sales, isLoading} = useSelector((state: RootState) => state.sale);
   const { purchases } = useSelector((state: RootState) => state.purchase);
 
@@ -53,7 +52,6 @@ const DropdownNotification = () => {
     }
   }, [user, navigate]);
   useEffect(() => {
-    dispatch(getOrderStatus());
     dispatch(getOrders());
     dispatch(getSales());
   }, [dispatch]);
@@ -69,7 +67,7 @@ const DropdownNotification = () => {
   const [storeRepNotification, setStoreRepNotification] = useState(0);
 
   useEffect(() => {
-    const editedOrder = orderStatus.filter(
+    const editedOrder = orders?.filter(
       (order) => order.status === "received"
     );
     const notification = editedOrder.map((item) =>
@@ -77,7 +75,7 @@ const DropdownNotification = () => {
     );
     const filteredSalesStatus = sales?.filter((sale) => sale.status === "requested");
     setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
-     setAdminNotification((prev)=>prev+filteredSalesStatus.length);
+     setAdminNotification((prev)=>prev + filteredSalesStatus.length);
     const operatorNotification = editedOrder.map((item) =>
       item.orderItems.filter((item) => item.status === "approved")
     );
@@ -94,7 +92,7 @@ const DropdownNotification = () => {
 
     let count = 0;
 
-    const matchedOrderStatus = orderStatus.filter(status => 
+    const matchedOrderStatus = orders.filter(status => 
         orders.some(order => order.id === status.orderId)
     );
     matchedOrderStatus.forEach(status => {
@@ -111,7 +109,7 @@ const DropdownNotification = () => {
     setStoreRepNotification(matchedSalesStatus.length+matchedPurchases.length);
 
     setFinanceNotification(count);
-  }, [orderStatus, orders, sales, purchases]);
+  }, [orders, sales, purchases]);
 
   return isLoading?(<Loader/>):(
     

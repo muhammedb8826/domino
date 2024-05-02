@@ -45,44 +45,25 @@
   "orders": [
     {
       "series": "IAN-O-0000-2024",
-      "date": "May 2, 2024",
-      "deliveryDate": "May 2, 2024",
-      "orderSource": "telegram",
+      "date": "May 3, 2024",
+      "deliveryDate": "May 3, 2024",
+      "orderSource": "phone",
       "description": "",
-      "customerId": "1710809287639",
+      "customerId": "1710821022900",
       "salesPartnerId": "1714343286476",
       "orderItems": [
         {
           "productId": "1713727389192",
           "serviceId": "e4b1",
           "priceId": "0189",
-          "unitPrice": 20000,
-          "width": "2",
-          "height": "8",
-          "quantity": "10",
-          "unit": 160,
-          "discount": 4000,
-          "level": "2",
-          "total": 16000,
-          "isDiscounted": true,
-          "status": "edited",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false
-        },
-        {
-          "productId": "1713703632140",
-          "serviceId": "e4b1",
-          "priceId": "8d73",
-          "unitPrice": 200000,
+          "unitPrice": 171875,
           "width": "5",
-          "height": "4",
+          "height": "5",
           "quantity": "5",
-          "unit": 100,
-          "discount": 30000,
-          "level": "1",
-          "total": 170000,
+          "unit": 1375,
+          "discount": 85937.5,
+          "level": "4",
+          "total": 85937.5,
           "isDiscounted": true,
           "status": "received",
           "note": "",
@@ -91,15 +72,56 @@
           "completed": false
         }
       ],
-      "totalBirr": 186000,
-      "tax": 27900,
+      "totalBirr": 85937.5,
+      "tax": 12890.625,
       "fileNames": [
-        "Coca Cola-T-shirt-2x8",
-        "Coca Cola-Banner-5x4"
+        "Pepsi-T-shirt-5x5"
       ],
-      "totalQuantity": 15,
-      "grandTotal": 213900,
-      "id": "6f718d82-04bb-433f-8427-fb2843bcbc42"
+      "totalQuantity": 5,
+      "grandTotal": 98828.125,
+      "id": "19055886-b03c-428c-81fb-4f0468589aae"
+    }
+  ],
+  "commissions": [
+    {
+      "id": "fd07",
+      "orderId": "19055886-b03c-428c-81fb-4f0468589aae",
+      "totalCommission": 3437.5,
+      "transactions": [
+        {
+          "date": "May 3, 2024",
+          "amount": 3437.5,
+          "percent": 2,
+          "description": "payment",
+          "status": "paid"
+        }
+      ]
+    }
+  ],
+  "payments": [
+    {
+      "id": "fb26",
+      "totaTransaction": 2000,
+      "remainingAmount": 96828.125,
+      "orderId": "19055886-b03c-428c-81fb-4f0468589aae",
+      "transactions": [
+        {
+          "date": "May 3, 2024",
+          "paymentMethod": "mobile-banking",
+          "reference": "958djdd98CBE",
+          "amount": "2000",
+          "status": "pending",
+          "description": "payment"
+        },
+        {
+          "date": "May 3, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": "30000",
+          "status": "paid",
+          "description": "payment"
+        }
+      ]
     }
   ],
   "customers": [
@@ -152,121 +174,14 @@
       "firstName": "Teshager",
       "lastName": "A",
       "email": "mrol3943@gmail.com"
-    }
-  ],
-  "commissions": [
-    {
-      "id": "d9e3",
-      "orderId": "6f718d82-04bb-433f-8427-fb2843bcbc42",
-      "transactions": [
-        {
-          "date": "May 2, 2024",
-          "amount": 800,
-          "percent": 4,
-          "description": "payment",
-          "status": "paid"
-        },
-        {
-          "date": "May 2, 2024",
-          "amount": 6000,
-          "percent": 3,
-          "description": "payment",
-          "status": "pending"
-        }
-      ]
-    }
-  ],
-  "payments": [
-    {
-      "id": "fcd1",
-      "orderId": "6f718d82-04bb-433f-8427-fb2843bcbc42",
-      "transactions": [
-        {
-          "date": "May 2, 2024",
-          "paymentMethod": "bank-transfer",
-          "reference": "958djdd98CBE",
-          "amount": "10000",
-          "status": "paid",
-          "description": "payment"
-        },
-        {
-          "date": "May 2, 2024",
-          "paymentMethod": "cash",
-          "reference": "2525cc",
-          "amount": "11111",
-          "status": "pending",
-          "description": "kg"
-        },
-        {
-          "date": "May 2, 2024",
-          "paymentMethod": "check",
-          "reference": "111111",
-          "amount": "2000",
-          "status": "paid",
-          "description": "gf"
-        }
-      ]
-    }
-  ],
-  "orderStatus": [],
-  "machines": [
-    {
-      "id": "54dd",
-      "name": "DTF"
     },
     {
-      "id": "a78b",
-      "name": "Canvas printer"
-    },
-    {
-      "id": "a20c",
-      "name": "Crystal UV printer"
-    },
-    {
-      "id": "958e",
-      "name": "Sublimation Printer"
-    }
-  ],
-  "materials": [
-    {
-      "id": "9944",
-      "name": "T-shirt"
-    },
-    {
-      "id": "e4b1",
-      "name": "Film"
-    },
-    {
-      "id": "1f8f",
-      "name": "Screen"
-    },
-    {
-      "id": "5609",
-      "name": "sticker"
-    },
-    {
-      "id": "02f9",
-      "name": "Banner 3M wide"
-    },
-    {
-      "id": "8071",
-      "name": "Banner 5M wide"
-    },
-    {
-      "id": "62c5",
-      "name": "Mica Glass 8mm"
-    },
-    {
-      "id": "4ef3",
-      "name": "Cap"
-    },
-    {
-      "id": "7488",
-      "name": "Scarf"
-    },
-    {
-      "id": "565d",
-      "name": "Gawon"
+      "id": "1714610416146",
+      "phone": "09-0507-8826",
+      "companyType": "",
+      "firstName": "Ahadu",
+      "lastName": "Teshager",
+      "email": ""
     }
   ],
   "units": [

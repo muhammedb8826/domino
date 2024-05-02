@@ -535,6 +535,8 @@ export const OrderRegistration = () => {
     dispatch(createOrder(orderData));
 
     const paymentData = {
+      totaTransaction,
+      remainingAmount,
       orderId: orderData.id,
       transactions: payment,
     };
@@ -542,6 +544,7 @@ export const OrderRegistration = () => {
 
     const commissionData = {
       orderId: orderData.id,
+      totalCommission,
       transactions: commission,
     };
 
@@ -567,14 +570,14 @@ export const OrderRegistration = () => {
         New order
       </h2>
       <form onSubmit={handleSubmit}>
-        <nav className="flex justify-between items-center px-4">
+        <nav className="flex justify-between gap-4 items-center px-4">
           <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
             <li className="text-gray-500 text-sm dark:text-gray-400">
               <button
                 type="button"
                 onClick={() => handleButtonClick("order")}
                 className={`${active === "order" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
+                  } px-5 py-1.5 font-medium text-graydark`}
               >
                 Order
               </button>
@@ -584,7 +587,7 @@ export const OrderRegistration = () => {
                 type="button"
                 onClick={() => handleButtonClick("payment")}
                 className={`${active === "payment" ? "text-white bg-black" : ""
-                  } px-5 py-1.5  font-medium text-gray-900 rounded-lg`}
+                  } px-5 py-1.5 font-medium text-graydark`}
               >
                 Payment
               </button>
@@ -594,7 +597,7 @@ export const OrderRegistration = () => {
                 type="button"
                 onClick={() => handleButtonClick("commission")}
                 className={`${active === "commission" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
+                  } px-5 py-1.5 font-medium text-graydark`}
               >
                 Commission
               </button>
@@ -602,7 +605,7 @@ export const OrderRegistration = () => {
           </ul>
           <button
             type="submit"
-            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Submit
           </button>
@@ -874,7 +877,7 @@ export const OrderRegistration = () => {
                               required
                             />
                           </td>
-                          <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <input
                               title="width"
                               type="number"
@@ -887,7 +890,7 @@ export const OrderRegistration = () => {
                               min={0}
                             />
                           </td>
-                          <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <input
                               title="height"
                               type="number"
@@ -900,7 +903,7 @@ export const OrderRegistration = () => {
                               min={0}
                             />
                           </td>
-                          <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <input
                               title="quantity"
                               type="number"
@@ -913,13 +916,13 @@ export const OrderRegistration = () => {
                               min={0}
                             />
                           </td>
-                          <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             {data.unitPrice}
                           </td>
-                          <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             {data.unit}
                           </td>
-                          <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                          <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                             <div className="flex items-center gap-2 relative">
                               <span className="flex-1 px-2">
                                 {data.discount}
@@ -942,7 +945,7 @@ export const OrderRegistration = () => {
                                   checked={data.isDiscounted}
                                   className="sr-only peer"
                                 />
-                                <div className="relative w-10 h-4 bg-bodydark1 peer-focus:outline-none rounded-full peer dark:bg-graydark peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[1px] after:bg-white after:border-gray-3 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-graydark peer-checked:bg-primary"></div>
+                                <div className="relative w-8 h-4 bg-bodydark1 peer-focus:outline-none rounded-full peer dark:bg-graydark peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-3 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-graydark peer-checked:bg-primary"></div>
                               </label>
                             </div>
                           </td>

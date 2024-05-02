@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import ErroPage from "../common/ErroPage";
 import { GoBack } from "../common/GoBack";
 import Loading from "../common/Loading";
-import { getOrderStatus, getOrders, updateOrderStatus } from "@/redux/features/order/orderSlice";
+import {  getOrders } from "@/redux/features/order/orderSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -13,19 +13,18 @@ export const OperatorNotification = () => {
     const { user, isLoading, error } = useSelector(
         (state: RootState) => state.auth
       );
-      const { orders, orderStatus } = useSelector(
+      const { orders} = useSelector(
         (state: RootState) => state.order
       );
       const dispatch = useDispatch();
       useEffect(() => {
-        dispatch(getOrderStatus());
         dispatch(getOrders());
       }, [dispatch]);
 
       const [operatorNotification, setOperatorNotification] = useState(0);
 
       useEffect(() => {
-        const editedOrder = orderStatus.filter(
+        const editedOrder = orders.filter(
           (order) => order.status === "received"
         );
         const operatorNotification = editedOrder.map((item) =>
@@ -34,7 +33,7 @@ export const OperatorNotification = () => {
       setOperatorNotification(
         operatorNotification.reduce((a, b) => a + b.length, 0)
       );
-      }, [orderStatus]);
+      }, [orders]);
     
       const handleClick = (id, index) => {
         const findOrderStatusId = orderStatus.find((item) => item.id === id);

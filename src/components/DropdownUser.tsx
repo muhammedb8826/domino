@@ -8,7 +8,7 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import { loginUser, logout, setToken, setUser } from '@/redux/features/user/authentication';
 import Loading from './common/Loading';
 import ErroPage from './common/ErroPage';
-import { getOrderStatus, getOrders } from '@/redux/features/order/orderSlice';
+import { getOrders } from '@/redux/features/order/orderSlice';
 import Logout from '@/auth/Logout';
 interface ILogin {
   email: string | undefined;
@@ -35,7 +35,6 @@ const DropdownUser = () => {
     }
   }, [user, navigate]);
   useEffect(() => {
-    dispatch(getOrderStatus());
     dispatch(getOrders());
   }, [dispatch]);
 

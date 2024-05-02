@@ -2,41 +2,40 @@ import { RootState } from "@/redux/store";
 import { GoBack } from "../common/GoBack"
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getOrderStatus, getOrders, updateOrderStatus } from "@/redux/features/order/orderSlice";
+import { getOrders} from "@/redux/features/order/orderSlice";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { toast } from "react-toastify";
 
 export const FinanceNotification = () => {
-    const {orders, orderStatus} = useSelector((state: RootState) => state.order);
+    const {orders } = useSelector((state: RootState) => state.order);
     const {user, isLoading, error} = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getOrderStatus());
         dispatch(getOrders());
     }, [dispatch]);
 
     const [financeNotification, setFinanceNotification] = useState(0);
   
-    useEffect(() => {
-        let count = 0;
+    // useEffect(() => {
+    //     let count = 0;
 
-        const matchedOrderStatus = orderStatus.filter(status => 
-            orders.some(order => order.id === status.orderId)
-        );
-        matchedOrderStatus.forEach(status => {
-            const correspondingOrder = orders.find(order => order.id === status.orderId);
-            if (correspondingOrder.paymentInfo.paymentStatus === "paid") {
-                status.orderItems.forEach(item => {
-                    if (item.status !== "paid" && item.status !== "delivered") {
-                        count++;            }
-                });
-            }
-        });
+    //     const matchedOrderStatus = orderStatus.filter(status => 
+    //         orders.some(order => order.id === status.orderId)
+    //     );
+    //     matchedOrderStatus.forEach(status => {
+    //         const correspondingOrder = orders.find(order => order.id === status.orderId);
+    //         if (correspondingOrder.paymentInfo.paymentStatus === "paid") {
+    //             status.orderItems.forEach(item => {
+    //                 if (item.status !== "paid" && item.status !== "delivered") {
+    //                     count++;            }
+    //             });
+    //         }
+    //     });
         
-        setFinanceNotification(count);
+    //     setFinanceNotification(count);
     
-      }, [orderStatus, orders]);  
+    //   }, [orderStatus, orders]);  
     
       const handleClick = (id, index) => {
         const findOrderStatusId = orderStatus.find((item) => item.id === id);

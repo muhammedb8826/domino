@@ -1,12 +1,7 @@
 import { GoBack } from "../common/GoBack";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import {
-  getOrderStatus,
-  getOrdersById,
-  updateOrder,
-  updateOrderStatus,
-} from "../../redux/features/order/orderSlice";
+import {getOrdersById,updateOrder} from "../../redux/features/order/orderSlice";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -27,11 +22,7 @@ import {
   updateCommission,
 } from "@/redux/features/commission/commissionSlice";
 import Swal from "sweetalert2";
-import {
-  getCustomers,
-  getPaymentTransactions,
-  updateCustomer,
-} from "@/redux/features/customer/customerSlice";
+import {getCustomers} from "@/redux/features/customer/customerSlice";
 import { RootState } from "@/redux/store";
 import { getProducts } from "@/redux/features/product/productSlice";
 import { getJobOrdersProducts } from "@/redux/features/jobOrderProductsSlice";
@@ -66,10 +57,6 @@ const OrderDetailsPage = () => {
   const { salesPartners } = useSelector((state) => state.salesPartner);
   const { commissions } = useSelector((state) => state.commission);
 
-
-  const findPayment = payments.find((payment) => payment.orderId === id);
-  const findCommission = commissions.find((commission) => commission.orderId === id);
-
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrdersById(id))
@@ -103,17 +90,19 @@ const OrderDetailsPage = () => {
       if(res.payload){
         const findCommission = res.payload.find((commission) => commission.orderId === id)
         setCommission(findCommission.transactions)
+        setTotalCommission(findCommission.totalCommission)
       }
     })
     dispatch(getCustomers());
     dispatch(getProducts());
     dispatch(getJobOrdersProducts());
     dispatch(getSalesPartners());
-    dispatch(getOrderStatus());
     dispatch(getPayments()).then((res)=>{
       if(res.payload){
         const findPayment = res.payload.find((payment) => payment.orderId === id)
         setPayment(findPayment.transactions)
+        setTotalTransaction(findPayment.totaTransaction),
+        setRemainingAmount(findPayment.remainingAmount)
       }
     })
   }, [dispatch, id]);
@@ -773,6 +762,9 @@ const OrderDetailsPage = () => {
       }
     });
 
+    const findPayment = payments?.find((payment) => payment.orderId === id);
+    const findCommission = commissions?.find((commission) => commission.orderId === id);
+
     const paymentData = {
       ...findPayment,
       transactions: payment
@@ -812,47 +804,46 @@ const OrderDetailsPage = () => {
           Order Details
         </h2>
         <form onSubmit={handleSubmit}>
-          <nav className="flex justify-between items-center px-4">
-            <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
-              <li className="text-gray-500 text-sm dark:text-gray-400">
-                <button
-                  type="button"
-                  onClick={() => handleButtonClick("order")}
-                  className={`${active === "order" ? "text-white bg-black" : ""
-                    } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
-                >
-                  Order
-                </button>
-              </li>
-              <li className="text-gray-500 text-sm dark:text-gray-400">
-                <button
-                  type="button"
-                  onClick={() => handleButtonClick("payment")}
-                  className={`${active === "payment" ? "text-white bg-black" : ""
-                    } px-5 py-1.5  font-medium text-gray-900 rounded-lg`}
-                >
-                  Payment
-                </button>
-              </li>
-              <li className="text-gray-500 text-sm dark:text-gray-400">
-                <button
-                  type="button"
-                  onClick={() => handleButtonClick("commission")}
-                  className={`${active === "commission" ? "text-white bg-black" : ""
-                    } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
-                >
-                  Commission
-                </button>
-              </li>
-            </ul>
-            <button
-              type="submit"
-              className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Update
-            </button>
-          </nav>
-
+        <nav className="flex justify-between gap-4 items-center px-4">
+          <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              <button
+                type="button"
+                onClick={() => handleButtonClick("order")}
+                className={`${active === "order" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Order
+              </button>
+            </li>
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              <button
+                type="button"
+                onClick={() => handleButtonClick("payment")}
+                className={`${active === "payment" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Payment
+              </button>
+            </li>
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              <button
+                type="button"
+                onClick={() => handleButtonClick("commission")}
+                className={`${active === "commission" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Commission
+              </button>
+            </li>
+          </ul>
+          <button
+            type="submit"
+            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+           Update
+          </button>
+        </nav>
           {active === "order" && (
             <>
               <div className="grid sm:grid-cols-3 sm:gap-6 mb-4 p-4">
@@ -866,7 +857,7 @@ const OrderDetailsPage = () => {
                   <input
                     type="text"
                     name="series"
-                    value="IAN-O-YYYY"
+                    value={singleOrder?.series}
                     readOnly
                     id="series"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -1123,7 +1114,7 @@ const OrderDetailsPage = () => {
                                 required
                               />
                             </td>
-                            <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                               <input
                                 title="width"
                                 type="number"
@@ -1137,7 +1128,7 @@ const OrderDetailsPage = () => {
                                 min={0}
                               />
                             </td>
-                            <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                               <input
                                 title="height"
                                 type="number"
@@ -1151,7 +1142,7 @@ const OrderDetailsPage = () => {
                                 min={0}
                               />
                             </td>
-                            <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                               <input
                                 title="quantity"
                                 type="number"
@@ -1165,13 +1156,13 @@ const OrderDetailsPage = () => {
                                 min={0}
                               />
                             </td>
-                            <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                               {data.unitPrice}
                             </td>
-                            <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                               {data.unit}
                             </td>
-                            <td className="px-4 py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                            <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
                               <div className="flex items-center gap-2 relative">
                                 <span className="flex-1 px-2">
                                   {data.discount}
@@ -1194,7 +1185,7 @@ const OrderDetailsPage = () => {
                                     checked={data.isDiscounted}
                                     className="sr-only peer"
                                   />
-                                  <div className="relative w-10 h-4 bg-bodydark1 peer-focus:outline-none rounded-full peer dark:bg-graydark peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[1px] after:bg-white after:border-gray-3 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-graydark peer-checked:bg-primary"></div>
+                                  <div className="relative w-8 h-4 bg-bodydark1 peer-focus:outline-none rounded-full peer dark:bg-graydark peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[2px] after:bg-white after:border-gray-3 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-graydark peer-checked:bg-primary"></div>
                                 </label>
                               </div>
                             </td>

@@ -1,12 +1,7 @@
-import {
-  getOrderStatus,
-  getOrders,
-  updateOrderStatus,
-} from "@/redux/features/order/orderSlice";
+import {getOrders, updateOrder} from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
 import { GoBack } from "../common/GoBack";
 import { toast } from "react-toastify";
@@ -22,13 +17,12 @@ export const Notifications = () => {
   const { user, error } = useSelector(
     (state: RootState) => state.auth
   );
-  const { orders, orderStatus } = useSelector(
+  const { orders } = useSelector(
     (state: RootState) => state.order
   );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getSales());
-    dispatch(getOrderStatus());
     dispatch(getOrders());
   }, [dispatch]);
 
@@ -96,7 +90,7 @@ export const Notifications = () => {
   const [adminNotification, setAdminNotification] = useState(0);
 
   useEffect(() => {
-    const editedOrder = orderStatus.filter(
+    const editedOrder = orders?.filter(
       (order) => order.status === "received"
     );
     const notification = editedOrder.map((item) =>
@@ -109,10 +103,10 @@ export const Notifications = () => {
     );
     setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
     setAdminNotification((prev) => prev + filteredSalesStatus.length);
-  }, [orderStatus, sales]);
+  }, [orders, sales]);
 
   const handleClick = (id, index) => {
-    const findOrderStatusId = orderStatus.find((item) => item.id === id);
+    const findOrderStatusId = orders.find((item) => item.id === id);
     const updatedStatus = findOrderStatusId.orderItems.map((item, i) => {
       if (index === i) {
         return {
@@ -128,13 +122,13 @@ export const Notifications = () => {
       ...findOrderStatusId,
       orderItems: updatedStatus,
     };
-    dispatch(updateOrderStatus(data));
+    dispatch(updateOrder(data));
     const message = "Order status updated successfully";
     toast.success(message);
   };
 
   const handleReject = (id, index) => {
-    const findOrderStatusId = orderStatus.find((item) => item.id === id);
+    const findOrderStatusId = orders.find((item) => item.id === id);
     const updatedStatus = findOrderStatusId.orderItems.map((item, i) => {
       if (index === i) {
         return {
@@ -150,7 +144,7 @@ export const Notifications = () => {
       ...findOrderStatusId,
       orderItems: updatedStatus,
     };
-    dispatch(updateOrderStatus(data));
+    dispatch(updateOrder(data));
     const message = "Order status updated successfully";
     toast.success(message);
   };
@@ -187,53 +181,6 @@ export const Notifications = () => {
         >
           reject
         </button>
-        {/* <Link
-          to="#"
-          onClick={(event) => {
-            handleAction(index);
-            event.stopPropagation();
-          }}
-          ref={triggerRef}
-          className="flex items-center gap-4"
-        >
-          <CiMenuKebab />
-        </Link> */}
-
-        {/* <!-- Dropdown Start --> */}
-        {/* {showPopover === index && (
-          <div
-            ref={dropdownRef}
-            onFocus={() => setDropdownOpen(true)}
-            onBlur={() => setDropdownOpen(false)}
-            className={`absolute right-14 mt-0 flex w-47.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
-              dropdownOpen ? "block" : "hidden"
-            }`}
-          >
-            <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
-              <li>
-                <button
-                  onClick={() => handleApproveSale(sale.id)}
-                  type="button"
-                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-                >
-                  <BsTicketDetailed />
-                  Approve
-                </button>
-              </li>
-              <li>
-                <NavLink
-                  onClick={() => handleRejectSale(sale.id)}
-                  to="#"
-                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-                >
-                  <MdDelete />
-                  Reject
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        )} */}
-        {/* <!-- Dropdown End --> */}
       </td>
     </tr>
   ));
@@ -362,7 +309,7 @@ export const Notifications = () => {
                   </th>
                 </tr>
               </thead>
-              {orderStatus.map((status, index) => (
+              {orders.map((status, index) => (
                 <tbody key={status.id}>
                   {status.orderItems.map((item, itemIndex) => {
                     const filteredOrder = orders.find(
