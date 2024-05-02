@@ -99,13 +99,23 @@ const OrderDetailsPage = () => {
     dispatch(getprice());
     dispatch(getServices());
     dispatch(getDiscounts());
-    dispatch(getCommissions());
+    dispatch(getCommissions()).then((res)=>{
+      if(res.payload){
+        const findCommission = res.payload.find((commission) => commission.orderId === id)
+        setCommission(findCommission.transactions)
+      }
+    })
     dispatch(getCustomers());
     dispatch(getProducts());
     dispatch(getJobOrdersProducts());
     dispatch(getSalesPartners());
     dispatch(getOrderStatus());
-    dispatch(getPayments());
+    dispatch(getPayments()).then((res)=>{
+      if(res.payload){
+        const findPayment = res.payload.find((payment) => payment.orderId === id)
+        setPayment(findPayment.transactions)
+      }
+    })
   }, [dispatch, id]);
 
   const [fileName, setFileName] = useState([]);
@@ -214,9 +224,6 @@ const OrderDetailsPage = () => {
     if (showPopover !== null) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    // if (showPopover2 !== null) {
-    //   document.addEventListener("mousedown", handleClickOutside);
-    // }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -231,8 +238,6 @@ const OrderDetailsPage = () => {
     setDropdownOpen(!dropdownOpen);
     setShowPopover2(index);
   };
-
-  const [payment, setPayment] = useState(findPayment?.transactions || []);
 
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
@@ -266,7 +271,26 @@ const OrderDetailsPage = () => {
     }
   ]);
 
-  const [commission, setCommission] = useState(findCommission?.transactions || []);
+  const [payment, setPayment] = useState([
+    {
+      date: formattedDate,
+      paymentMethod: "cash",
+      reference: "",
+      amount: 0,
+      status: "pending",
+      description: "",
+    }
+  ]);
+  const [commission, setCommission] = useState([
+    {
+
+      date: formattedDate,
+      amount: 0,
+      percent: 0,
+      description: "",
+      status: "pending",
+    }
+  ]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -278,10 +302,6 @@ const OrderDetailsPage = () => {
   const [collapseDisount, setCollapseDiscount] = useState(false);
   const [totaTransaction, setTotalTransaction] = useState(0);
   const [remainingAmount, setRemainingAmount] = useState(0);
-
-
-  console.log(formData);
-
 
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
