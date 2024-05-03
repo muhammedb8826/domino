@@ -67,6 +67,7 @@ export const OrderRegistration = () => {
     description: "",
     customerId: "",
     salesPartnerId: "",
+    status: "received",
   });
 
   const [formData, setFormData] = useState([
@@ -473,6 +474,7 @@ export const OrderRegistration = () => {
       description: "",
       customerId: "",
       salesPartnerId: "",
+      status: "received",
     });
 
     setFormData([
@@ -529,7 +531,6 @@ export const OrderRegistration = () => {
       grandTotal,
       fileNames: fileName,
       totalQuantity,
-      status: "received",
       adminApproval: false,
     };
     dispatch(createOrder(orderData));

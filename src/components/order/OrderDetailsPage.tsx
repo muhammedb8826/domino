@@ -71,6 +71,7 @@ const OrderDetailsPage = () => {
           description: order.description,
           customerId: order.customerId,
           salesPartnerId: order.salesPartnerId,
+          status: order.status,
         });
         setFormData(order.orderItems);
         setTotalBirr(order.totalBirr);
@@ -236,6 +237,7 @@ const OrderDetailsPage = () => {
     description: "",
     customerId: "",
     salesPartnerId: "",
+    status: "received",
   });
 
   const [formData, setFormData] = useState([

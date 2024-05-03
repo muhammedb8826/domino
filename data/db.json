@@ -30,16 +30,22 @@
   ],
   "services": [
     {
+      "name": "Print and Material",
+      "description": "prntfd",
       "id": "e4b1",
-      "name": "Print and Material"
+      "status": "active"
     },
     {
+      "name": "Print and Heat press",
+      "description": "fdfd",
       "id": "1324",
-      "name": "Print and Heat press"
+      "status": "active"
     },
     {
+      "name": "Print only",
+      "description": "fdfdfdf",
       "id": "b664",
-      "name": "Print only"
+      "status": "active"
     }
   ],
   "orders": [
@@ -47,78 +53,106 @@
       "series": "IAN-O-0000-2024",
       "date": "May 3, 2024",
       "deliveryDate": "May 3, 2024",
-      "orderSource": "phone",
+      "orderSource": "telegram",
       "description": "",
-      "customerId": "1710821022900",
+      "customerId": "1710809287639",
       "salesPartnerId": "1714343286476",
+      "status": "received",
       "orderItems": [
         {
           "productId": "1713727389192",
           "serviceId": "e4b1",
           "priceId": "0189",
-          "unitPrice": 171875,
-          "width": "5",
+          "unitPrice": 7500,
+          "width": "3",
           "height": "5",
-          "quantity": "5",
-          "unit": 1375,
-          "discount": 85937.5,
-          "level": "4",
-          "total": 85937.5,
-          "isDiscounted": true,
-          "status": "received",
+          "quantity": "4",
+          "unit": 60,
+          "discount": 0,
+          "level": 0,
+          "total": 7500,
+          "isDiscounted": false,
+          "status": "edited",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "productId": "1713703632140",
+          "serviceId": "e4b1",
+          "priceId": "8d73",
+          "unitPrice": 8000,
+          "width": "2",
+          "height": "1",
+          "quantity": "3",
+          "unit": 4,
+          "discount": 0,
+          "level": 0,
+          "total": 8000,
+          "isDiscounted": false,
+          "status": "edited",
           "note": "",
           "printed": false,
           "adminApproval": false,
           "completed": false
         }
       ],
-      "totalBirr": 85937.5,
-      "tax": 12890.625,
+      "totalBirr": 15500,
+      "tax": 2325,
       "fileNames": [
-        "Pepsi-T-shirt-5x5"
+        "Coca Cola-T-shirt-3x5",
+        "Coca Cola-Banner-2x1"
       ],
-      "totalQuantity": 5,
-      "grandTotal": 98828.125,
-      "id": "19055886-b03c-428c-81fb-4f0468589aae"
+      "totalQuantity": 7,
+      "grandTotal": 17825,
+      "id": "d7225109-58ed-4068-a1e0-0c44a14d77ab"
     }
   ],
   "commissions": [
     {
-      "id": "fd07",
-      "orderId": "19055886-b03c-428c-81fb-4f0468589aae",
-      "totalCommission": 3437.5,
+      "id": "f218",
+      "orderId": "d7225109-58ed-4068-a1e0-0c44a14d77ab",
+      "totalCommission": 0,
       "transactions": [
         {
           "date": "May 3, 2024",
-          "amount": 3437.5,
+          "amount": 150,
           "percent": 2,
-          "description": "payment",
+          "description": "",
           "status": "paid"
+        },
+        {
+          "date": "May 3, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
         }
       ]
     }
   ],
   "payments": [
     {
-      "id": "fb26",
+      "id": "1b9d",
       "totaTransaction": 2000,
-      "remainingAmount": 96828.125,
-      "orderId": "19055886-b03c-428c-81fb-4f0468589aae",
+      "remainingAmount": 6625,
+      "orderId": "d7225109-58ed-4068-a1e0-0c44a14d77ab",
       "transactions": [
-        {
-          "date": "May 3, 2024",
-          "paymentMethod": "mobile-banking",
-          "reference": "958djdd98CBE",
-          "amount": "2000",
-          "status": "pending",
-          "description": "payment"
-        },
         {
           "date": "May 3, 2024",
           "paymentMethod": "cash",
           "reference": "",
-          "amount": "30000",
+          "amount": "2000",
           "status": "paid",
+          "description": ""
+        },
+        {
+          "date": "May 3, 2024",
+          "paymentMethod": "bank-transfer",
+          "reference": "958djdd98CBE",
+          "amount": "4000",
+          "status": "pending",
           "description": "payment"
         }
       ]

@@ -15,24 +15,16 @@ import Loader from "./common/Loader";
 import DefaultLayout from "./layout/DefaultLayout";
 import ECommerce from "./pages/Dashboard/ECommerce";
 import SignIn from "./pages/Authentication/SignIn";
-import Profile from "./pages/Profile";
-import FormElements from "./pages/Form/FormElements";
-import Tables from "./pages/Tables";
 import OrdersList from "./components/order/OrdersList";
-import FormLayout from "./pages/Form/FormLayout";
-import Buttons from "./pages/UiElements/Buttons";
 import User from "./components/user/User";
-import Alerts from "./pages/UiElements/Alerts";
-import Chart from "./pages/Chart";
 import { Products } from "./pages/inventory/Products";
 import { Suppliers } from "./pages/inventory/Suppliers";
-import Settings from "./pages/Settings";
 import { Categories } from "./pages/inventory/Categories";
 import { Purschase } from "./pages/inventory/Purschase";
 import { OrderRegistration } from "./components/order/OrderRegistration";
 import OrderDetailsPage from "./components/order/OrderDetailsPage";
 import { PurchaseRegistration } from "./pages/inventory/PurchaseRegistration";
-import { Stock, Store } from "./pages/inventory/Stock";
+import { Stock } from "./pages/inventory/Stock";
 import {Sale} from "./pages/inventory/Sale";
 import { SaleRegistration } from "./pages/inventory/SaleRegistration";
 import Setting from "./components/setting/Setting";
@@ -47,8 +39,9 @@ import { StoreNotifications } from "./components/header/StoreNotifications";
 import { OperatorStore } from "./pages/inventory/OperatorStore";
 import { SaleDetails } from "./pages/inventory/SaleDetails";
 import { PurchaseDetails } from "./pages/inventory/PurchaseDetails";
-import { OperatorStoreDetailsModal, OperatorStoreSaleDetails } from "./pages/inventory/OperatorStoreSaleDetails";
+import { OperatorStoreSaleDetails } from "./pages/inventory/OperatorStoreSaleDetails";
 import CommissionDetailsPage from "./components/commission/CommissionDetailsPage";
+import { ServicesList } from "./pages/inventory/ServicesList";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -100,6 +93,7 @@ const App = () => {
             <Route path="/dashboard/inventory/products" element={<Products/>}/>
             <Route path="/dashboard/inventory/operator-store" element={<OperatorStore/>}/>
             <Route path="/dashboard/inventory/category" element={<Categories/>}/>
+            <Route path="/dashboard/inventory/service" element={<ServicesList/>}/>
             <Route path="/dashboard/inventory/suppliers" element={<Suppliers/>}/>
             <Route path="/dashboard/inventory/purchases" element={<Purschase/>}/>
             <Route path="/dashboard/inventory/purchases/:id" element={<PurchaseDetails />}/>

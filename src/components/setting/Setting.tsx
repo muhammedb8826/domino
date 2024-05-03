@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Unit from "./Unit";
-import { Services } from "./Services";
 import '../../assets/styles/scroll.css';
 import Discount from "./Discount";
 import { useSelector } from "react-redux";
@@ -50,28 +49,6 @@ const Setting = () => {
           <li className="text-gray-500 text-sm dark:text-gray-400">
             <button
               type="button"
-              onClick={() => handleButtonClick("services")}
-              className={`${
-                active === "services" ? "text-white bg-black" : ""
-              } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
-            >
-              Services
-            </button>
-          </li>
-          {/* <li className="text-gray-500 text-sm dark:text-gray-400">
-            <button
-              type="button"
-              onClick={() => handleButtonClick("roles")}
-              className={`${
-                active === "roles" ? "text-white bg-black" : ""
-              } px-5 py-1.5 font-medium text-gray-900 rounded-lg`}
-            >
-              Roles
-            </button>
-          </li> */}
-          <li className="text-gray-500 text-sm dark:text-gray-400">
-            <button
-              type="button"
               onClick={() => handleButtonClick("discounts")}
               className={`${
                 active === "discounts" ? "text-white bg-black" : ""
@@ -84,11 +61,7 @@ const Setting = () => {
       </nav>
 
       <div className="rounded-lg h-[80%] overflow-hidden">
-        {active === "machines" && <Machine />}
-        {active === "materials" && <JobOrderProducts />}
         {active === "units" && <Unit />}
-        {active === "services" && <Services />}
-        {active === "roles" && <Role />}
         {active === "discounts" && <Discount />}
       </div>
     </div>
