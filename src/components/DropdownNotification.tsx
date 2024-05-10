@@ -9,8 +9,8 @@ import Loader from '@/common/Loader';
 
 const DropdownNotification = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { orders } = useSelector((state: RootState) => state.order);
-  const {sales, isLoading} = useSelector((state: RootState) => state.sale);
+  const { orders, isLoading } = useSelector((state: RootState) => state.order);
+  const {sales} = useSelector((state: RootState) => state.sale);
   const { purchases } = useSelector((state: RootState) => state.purchase);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -51,8 +51,53 @@ const DropdownNotification = () => {
       navigate("/sign-in");
     }
   }, [user, navigate]);
+
+
   useEffect(() => {
-    dispatch(getOrders());
+    dispatch(getOrders()).then((res) => {
+      if(res.payload) {
+        const editedOrder = res.payload.filter(
+          (order) => order.status === "received"
+        );
+
+        setAdminNotifications(editedOrder);
+        const notification = editedOrder.map((item) =>
+          item.orderItems.filter((item) => item.status === "edited")
+        );
+        setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
+        const operatorNotification = editedOrder.map((item) =>
+          item.orderItems.filter((item) => item.status === "approved")
+        );
+        setOperatorNotification(
+          operatorNotification.reduce((a, b) => a + b.length, 0)
+        );
+
+        const receptionistNotification = editedOrder.map((item) =>
+          item.orderItems.filter((item) => item.status === "paid")
+        );
+        setReceptionistNotification(
+          receptionistNotification.reduce((a, b) => a + b.length, 0)
+        );
+
+        let count = 0;
+
+        const matchedOrderStatus = res.payload.filter(status => 
+            res.payload.some(order => order.id === status.orderId)
+        );
+        matchedOrderStatus.forEach(status => {
+            const correspondingOrder = res.payload.find(order => order.id === status.orderId);
+            if (correspondingOrder.payment?.status === "paid") {
+                status.orderItems.forEach(item => {
+                    if (item.status !== "paid" && item.status !== "delivered") {
+                        count++;            }
+                });
+            }
+        });
+
+        setFinanceNotification(count);
+      }
+    });
+
     dispatch(getSales());
   }, [dispatch]);
 
@@ -65,51 +110,56 @@ const DropdownNotification = () => {
   const [receptionistNotification, setReceptionistNotification] = useState(0);
   const [financeNotification, setFinanceNotification] = useState(0);
   const [storeRepNotification, setStoreRepNotification] = useState(0);
+  const [adminNotifications, setAdminNotifications] = useState([]);
 
-  useEffect(() => {
-    const editedOrder = orders?.filter(
-      (order) => order.status === "received"
-    );
-    const notification = editedOrder.map((item) =>
-      item.orderItems.filter((item) => item.status === "edited" || item.status === "rejected")
-    );
-    const filteredSalesStatus = sales?.filter((sale) => sale.status === "requested");
-    setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
-     setAdminNotification((prev)=>prev + filteredSalesStatus.length);
-    const operatorNotification = editedOrder.map((item) =>
-      item.orderItems.filter((item) => item.status === "approved")
-    );
-    setOperatorNotification(
-      operatorNotification.reduce((a, b) => a + b.length, 0)
-    );
+  // const filteredOrders = orders?.filter((order) => order.status === "received");
+  
 
-    const receptionistNotification = editedOrder.map((item) =>
-      item.orderItems.filter((item) => item.status === "paid")
-    );
-    setReceptionistNotification(
-      receptionistNotification.reduce((a, b) => a + b.length, 0)
-    );
+  // useEffect(() => {
+  //   const editedOrder = orders?.filter(
+  //     (order) => order.status === "received"
+  //   );
+  //   setAdminNotifications(editedOrder);
+  //   const notification = editedOrder.map((item) =>
+  //     item.orderItems.filter((item) => item.status === "edited" || item.status === "rejected")
+  //   );
+  //   const filteredSalesStatus = sales?.filter((sale) => sale.status === "requested");
+  //   setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
+  //    setAdminNotification((prev)=>prev + filteredSalesStatus.length);
+  //   const operatorNotification = editedOrder.map((item) =>
+  //     item.orderItems.filter((item) => item.status === "approved")
+  //   );
+  //   setOperatorNotification(
+  //     operatorNotification.reduce((a, b) => a + b.length, 0)
+  //   );
 
-    let count = 0;
+  //   const receptionistNotification = editedOrder.map((item) =>
+  //     item.orderItems.filter((item) => item.status === "paid")
+  //   );
+  //   setReceptionistNotification(
+  //     receptionistNotification.reduce((a, b) => a + b.length, 0)
+  //   );
 
-    const matchedOrderStatus = orders.filter(status => 
-        orders.some(order => order.id === status.orderId)
-    );
-    matchedOrderStatus.forEach(status => {
-        const correspondingOrder = orders.find(order => order.id === status.orderId);
-        if (correspondingOrder.payment?.status === "paid") {
-            status.orderItems.forEach(item => {
-                if (item.status !== "paid" && item.status !== "delivered") {
-                    count++;            }
-            });
-        }
-    });
-    const matchedSalesStatus = sales.filter(sale => sale.status === "approved");
-    const matchedPurchases = purchases.filter(purchase => purchase.status === "purchased");
-    setStoreRepNotification(matchedSalesStatus.length+matchedPurchases.length);
+  //   let count = 0;
 
-    setFinanceNotification(count);
-  }, [orders, sales, purchases]);
+  //   const matchedOrderStatus = orders.filter(status => 
+  //       orders.some(order => order.id === status.orderId)
+  //   );
+  //   matchedOrderStatus.forEach(status => {
+  //       const correspondingOrder = orders.find(order => order.id === status.orderId);
+  //       if (correspondingOrder.payment?.status === "paid") {
+  //           status.orderItems.forEach(item => {
+  //               if (item.status !== "paid" && item.status !== "delivered") {
+  //                   count++;            }
+  //           });
+  //       }
+  //   });
+  //   const matchedSalesStatus = sales.filter(sale => sale.status === "approved");
+  //   const matchedPurchases = purchases.filter(purchase => purchase.status === "purchased");
+  //   setStoreRepNotification(matchedSalesStatus.length+matchedPurchases.length);
+
+  //   setFinanceNotification(count);
+  // }, [orders, sales, purchases]);
 
   return isLoading?(<Loader/>):(
     
@@ -153,23 +203,29 @@ const DropdownNotification = () => {
         
         <ul className="flex h-auto flex-col overflow-y-auto">
         {user?.email === "admin@domino.com" && (
+          <>
+          {adminNotifications.length > 0 && (
+            adminNotifications.map((notification, index) => (
           <li>
             <Link
-            onClick={() => setDropdownOpen(false)}
+              onClick={() => setDropdownOpen(false)}
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/dashboard/notifications"
+              to={`/dashboard/notifications/${notification.id}`}
             >
               <p className="text-sm">
                 <span className="text-black dark:text-white">
-                  you have {`${user?.email === "admin@domino.com" ? adminNotification : 0}`} new notifications
+                  you have new pending {notification.series} order
                 </span>{' '}
                 {/* Sint occaecat cupidatat non proident, sunt in culpa qui officia
                 deserunt mollit anim. */}
               </p>
 
-              <p className="text-xs">12 May, 2025</p>
+              <p className="text-xs">{notification.date}</p>
             </Link>
           </li>
+          ))
+          )}
+          </>
           )}
           {user?.roles === "operator" && (
           <li>

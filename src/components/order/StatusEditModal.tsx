@@ -1,13 +1,19 @@
+import { updateOrder } from "@/redux/features/order/orderSlice";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 export const StatusEditModal = ({
   handleModalOpen,
   dataIndex,
-  formData,
-  setFormData
+  data,
+  handleChaneStatus,
+  statusValue1,
+  statusValue2,
 }) => {
+
+const dispatch = useDispatch();
 
   const [status, setStatus] = useState("");
   const [note, setNote] = useState("");
@@ -21,7 +27,7 @@ export const StatusEditModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedOrderItems = formData.map((item, index) => {
+    const updatedOrderItems = data.orderItems.map((item, index) => {
       if (index === dataIndex) {
         // Create a new object to maintain immutability
         return {
@@ -32,13 +38,25 @@ export const StatusEditModal = ({
       }
       return item;
     });
-    setFormData(updatedOrderItems)
-
-    // console.log("data", data);
-    const message = "Order status updated successfully";
-    toast.success(message);
-    setStatus("");
-    handleModalOpen(false);
+    
+   handleChaneStatus(dataIndex, status);
+    const formData = {
+      id: data.id,
+      ...data,
+      orderItems: updatedOrderItems,
+    };
+    
+   dispatch(updateOrder(formData)).then((res) => {
+    if (res.payload) {
+      const message = "Order status updated successfully";
+      toast.success(message);
+      setStatus("");
+      handleModalOpen(false);
+    } else {
+      const message = "Something went wrong!";
+      toast.error(message);
+    }
+  });
   };
 
   return (
@@ -71,7 +89,7 @@ export const StatusEditModal = ({
                     }}
                     id="bordered-radio-1"
                     type="radio"
-                    value="edited"
+                    value={statusValue1}
                     name="bordered-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
@@ -79,7 +97,7 @@ export const StatusEditModal = ({
                     htmlFor="bordered-radio-1"
                     className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Edited
+                    {statusValue1}
                   </label>
                 </div>
                 <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
@@ -89,7 +107,7 @@ export const StatusEditModal = ({
                     }}
                     id="bordered-radio-2"
                     type="radio"
-                    value="rejected"
+                    value={statusValue2}
                     name="bordered-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
@@ -97,7 +115,7 @@ export const StatusEditModal = ({
                     htmlFor="bordered-radio-2"
                     className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Rejected
+                   {statusValue2}
                   </label>
                 </div>
                 <div>

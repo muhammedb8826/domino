@@ -42,6 +42,9 @@ import { PurchaseDetails } from "./pages/inventory/PurchaseDetails";
 import { OperatorStoreSaleDetails } from "./pages/inventory/OperatorStoreSaleDetails";
 import CommissionDetailsPage from "./components/commission/CommissionDetailsPage";
 import { ServicesList } from "./pages/inventory/ServicesList";
+import Profile from "./pages/Profile";
+import Settings from "./pages/AccountSettings";
+import AccountSettings from "./pages/AccountSettings";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -75,11 +78,13 @@ const App = () => {
           <Route path="/dashboard" element={<DefaultLayout />}>
             <Route path="/dashboard/ecommerce" element={<ECommerce />} />
             <Route index element={<OrdersList />} />
-            <Route path="/dashboard/notifications" element={<Notifications/>}/>
+            <Route path="/dashboard/notifications/:id" element={<Notifications/>}/>
             <Route path="/dashboard/operator-notifications" element={<OperatorNotification />}/>
             <Route path="/dashboard/receptionist-notifications" element={<ReceptionistNotification/>}/>
             <Route path="/dashboard/finance-notifications" element={<FinanceNotification/>}/>
             <Route path="/dashboard/store-notifications" element={<StoreNotifications/>}/>
+            <Route path="/dashboard/profile" element={<Profile/>}/>
+            <Route path="/dashboard/account-settings" element={<AccountSettings/>}/>
             {/* <Route path="/dashboard/forms/form-elements" element={<FormElements/>}/> */}
             {/* <Route path="/dashboard/forms/form-layout" element={<FormLayout />} /> */}
             {/* <Route path="/dashboard/ui/alerts" element={<Alerts />} /> */}

@@ -4,7 +4,7 @@ import fireToast from '../hooks/fireToast';
 import { Table } from "../components/TableSettings";
 import { Modal } from "../components/ModalSettings";
 import { useState,useEffect } from "react";
-const Settings = () => {
+const AccountSettings = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [rows, setRows] = useState(localStorage.getItem("alertSettings")?JSON.parse(localStorage.getItem("alertSettings")):[]);
   useEffect(() => {
@@ -342,4 +342,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default AccountSettings;

@@ -1,35 +1,67 @@
-import {getOrders, updateOrder} from "@/redux/features/order/orderSlice";
+import { getOrdersById } from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ErroPage from "../common/ErroPage";
-import { GoBack } from "../common/GoBack";
-import { toast } from "react-toastify";
-import { getSales, updateSale } from "@/redux/features/saleSlice";
+import { getSales} from "@/redux/features/saleSlice";
 import Loader from "@/common/Loader";
-import { MdDelete } from "react-icons/md";
-import { Link, NavLink } from "react-router-dom";
-import { BsTicketDetailed } from "react-icons/bs";
+import { useParams } from "react-router-dom";
 import { CiMenuKebab } from "react-icons/ci";
-
+import { FaRegEdit } from "react-icons/fa";
+import { StatusEditModal } from "../order/StatusEditModal";
+import Breadcrumb from "../Breadcrumb";
+import { getProducts } from "@/redux/features/product/productSlice";
+import { getServices } from "@/redux/features/service/servicesSlice";
 export const Notifications = () => {
-  const { sales, isLoading } = useSelector((state: RootState) => state.sale);
+  const { id } = useParams<{ id: string }>()
   const { user, error } = useSelector(
     (state: RootState) => state.auth
   );
-  const { orders } = useSelector(
+  const { singleOrder, isLoading } = useSelector(
     (state: RootState) => state.order
   );
+  const { products } = useSelector((state: RootState) => state.product);
+  const { services } = useSelector((state: RootState) => state.service);
+  const [formData, setFormData] = useState(singleOrder?.orderItems);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getSales());
-    dispatch(getOrders());
-  }, [dispatch]);
+    dispatch(getOrdersById(id)).then((res) => {
+      if(res.payload) {
+        setFormData(res.payload.orderItems);
+      }
+    });   
+    dispatch(getProducts());
+    dispatch(getServices());
+  }, [dispatch, id]);
+
 
   const [showPopover, setShowPopover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [dataIndex, setDataIndex] = useState(0);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(null);
+      }
+    };
+
+    if (showPopover !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPopover]);
 
   // close on click outside
   useEffect(() => {
@@ -62,319 +94,184 @@ export const Notifications = () => {
     setShowPopover(index);
   };
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [data, setData] = useState({});
 
-  const handleApproveSale = (id: string) => {
-    const findSale = sales.find((sale) => sale.id === id);
-    const updatedFindSale = { ...findSale, status: "approved" };
-    dispatch(updateSale(updatedFindSale)).then(() => {
-      const message = "Sale approved successfully";
-      toast.success(message);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  const handleModalOpen = (index) => {
+    setModalOpen((prev) => !prev);
+    setDataIndex(index);
+  };
+
+  const handleChaneStatus = (index, status) => {
+   setFormData((prev) => {
+      const updatedOrderItems = prev.map((item, i) => {
+        if (i === index) {
+          return {
+            ...item,
+            status: status,
+          };
+        }
+        return item;
+      });
+      return updatedOrderItems;
     });
   };
 
-  const handleRejectSale = (id: string) => {
-    const findSale = sales.find((sale) => sale.id === id);
-    const updatedFindSale = { ...findSale, status: "rejected" };
-    dispatch(updateSale(updatedFindSale)).then(() => {
-      const message = "Sale rejected successfully";
-      toast.success(message);
-    });
-  };
-
-  const filteredSalesStatus = sales?.filter(
-    (sale) => sale.status === "requested"
-  );
-
-  const [adminNotification, setAdminNotification] = useState(0);
-
-  useEffect(() => {
-    const editedOrder = orders?.filter(
-      (order) => order.status === "received"
-    );
-    const notification = editedOrder.map((item) =>
-      item.orderItems.filter(
-        (item) => item.status === "edited" || item.status === "rejected"
-      )
-    );
-    const filteredSalesStatus = sales?.filter(
-      (sale) => sale.status === "requested"
-    );
-    setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
-    setAdminNotification((prev) => prev + filteredSalesStatus.length);
-  }, [orders, sales]);
-
-  const handleClick = (id, index) => {
-    const findOrderStatusId = orders.find((item) => item.id === id);
-    const updatedStatus = findOrderStatusId.orderItems.map((item, i) => {
-      if (index === i) {
-        return {
-          ...item,
-          status: "approved",
-          adminApproval: true,
-        };
-      }
-      return item;
-    });
-
-    const data = {
-      ...findOrderStatusId,
-      orderItems: updatedStatus,
-    };
-    dispatch(updateOrder(data));
-    const message = "Order status updated successfully";
-    toast.success(message);
-  };
-
-  const handleReject = (id, index) => {
-    const findOrderStatusId = orders.find((item) => item.id === id);
-    const updatedStatus = findOrderStatusId.orderItems.map((item, i) => {
-      if (index === i) {
-        return {
-          ...item,
-          status: "rejected",
-          adminApproval: false,
-        };
-      }
-      return item;
-    });
-
-    const data = {
-      ...findOrderStatusId,
-      orderItems: updatedStatus,
-    };
-    dispatch(updateOrder(data));
-    const message = "Order status updated successfully";
-    toast.success(message);
-  };
-
-  const productListContent = filteredSalesStatus.length > 0 && filteredSalesStatus?.map((sale, index) => (
-    <tr key={sale.id}>
-      <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
-        {sale.id}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {sale.orderDate}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {sale.operatorFirstName}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {sale.products.map((product) => product.quantity).reduce((a, b) => a + Number(b), 0)}
-      </td>
-      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-        {sale.status}
-      </td>
-      <td className="px-4 py-5 flex">
-        <button
-          className="bg-success text-white active:bg-success font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none me-5 mb-1 ease-linear transition-all duration-150"
-          onClick={() => handleApproveSale(sale.id)}
-          type="button"
-        >
-          approve
-        </button>
-        <button
-          className="bg-danger text-white active:bg-danger font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-          onClick={() => handleRejectSale(sale.id)}
-          type="button"
-        >
-          reject
-        </button>
-      </td>
-    </tr>
-  ));
 
   if (error) {
     return <ErroPage error={error} />;
   }
+
   return isLoading ? (
     <Loader />
   ) : (
-    <section className="bg-white dark:bg-gray-900 wrapper py-4  p-0 min-h-screen">
-      {/* <GoBack goback="/dashboard" /> */}
-      <h2 className="m-4 relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Notifications
-        <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-danger border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-          {adminNotification}
-        </div>
-      </h2>
-      <hr />
-      {adminNotification === 0 && (
-        <p className="text-center text-2xl font-bold text-black dark:text-white">
-          No notifications
-        </p>
-      )}
-      <p className="text-black dark:text-white font-medium p-4">
-        {" "}
-        Sales notifications
-      </p>
-      {user?.email === "admin@domino.com" && (
-        <>
-          <div className="max-w-full overflow-x-auto mb-10">
-            {filteredSalesStatus.length === 0 ? (
-              <p className="text-center text-2xl font-bold text-black dark:text-white">
-                No sales notifications
-              </p>
-            ) : (
+    <>
+      <Breadcrumb pageName="Notifications" />
+      <div className="rounded-sm border border-stroke border-t-0 bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          <div>
+            <button
+              type="button"
+              className="text-black dark:text-white w-full py-2 px-4 border-t border-b border-[#eee] mb-4 font-semibold flex items-center gap-4"
+            >
+              Orders Series | {singleOrder?.series}
+            </button>
+            <div className="max-w-full px-4">
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-2 text-left dark:bg-meta-4">
                     <th className="py-4 px-4 font-medium text-black dark:text-white">
-                      Reference
+                      No
                     </th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">
-                      Order Date
+                    <th
+                      className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
+                    >
+                      Product
                     </th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">
-                      Operator
+                    <th
+                      className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
+                    >
+                      Services
                     </th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                    <th
+                      className="py-4 px-4 font-medium text-black dark:text-white"
+                    >
+                      Width
+                    </th>
+                    <th
+                      className="py-4 px-4 font-medium text-black dark:text-white"
+                    >
+                      Height
+                    </th>
+                    <th
+                      className="py-4 px-4 font-medium text-black dark:text-white"
+                    >
                       Quantity
                     </th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                    <th
+                      className="py-4 px-4 font-medium text-black dark:text-white"
+                    >
                       Status
                     </th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                    <th
+                      className="py-4 px-4 font-medium text-black dark:text-white"
+                    >
                       Action
                     </th>
                   </tr>
                 </thead>
-                <tbody>{productListContent}</tbody>
-              </table>
-            )}
-          </div>
-        </>
-      )}
-
-      <p className="text-black dark:text-white font-medium p-4 border-t">
-        {" "}
-        Orders notifications
-      </p>
-
-      {user?.email === "admin@domino.com" && (
-        <>
-
-          <div className="grid grid-cols-1 p-4">
-            <table
-              className="
-               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-            >
-              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="p-4 w-4 border border-gray-300">
-                    No
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-2 border border-gray-300"
-                  >
-                    Order
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-2 border border-gray-300"
-                  >
-                    Customer Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-2 border border-gray-300"
-                  >
-                    Date
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-2 border border-gray-300"
-                  >
-                    Delivery date
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-2 border border-gray-300"
-                  >
-                    payment status
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-2 border border-gray-300"
-                  >
-                    Order status
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-2 border border-gray-300"
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              {orders.map((status, index) => (
-                <tbody key={status.id}>
-                  {status.orderItems.map((item, itemIndex) => {
-                    const filteredOrder = orders.find(
-                      (order) =>
-                        (order.id === status.orderId &&
-                          item.status === "edited") ||
-                        item.status === "rejected"
-                    );
-                    return (
-                      filteredOrder && (
+                <tbody>
+                  {formData?.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center">
+                        No data found
+                      </td>
+                    </tr>
+                  )}
+                  {formData && formData.length > 0 && formData.map((data, index) => {
+                      const product = data.productId && products?.find((product) => product.id === data.productId);
+                      const service = data.serviceId && services?.find((service) => service.id === data.serviceId);
+                      return (
                         <tr
-                          key={itemIndex}
-                          className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          key={index}
                         >
-                          <td className="px-2 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                            {itemIndex + 1}
+                          <td className="border-b text-graydark border-[#eee] py-2 px-4 dark:border-strokedark">
+                            {index + 1}
                           </td>
-                          <td
-                            scope="row"
-                            className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
-                          >
-                            {filteredOrder && filteredOrder.id}
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            {product?.name}
                           </td>
-                          <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                            {filteredOrder && filteredOrder.customerFirstName}
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            {service?.name}
                           </td>
-                          <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                            {filteredOrder && filteredOrder.date}
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            {data.width}
                           </td>
-                          <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                            {filteredOrder && filteredOrder.deliveryDate}
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            {data.height}
                           </td>
-                          <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                            {filteredOrder &&
-                              filteredOrder.paymentInfo?.paymentStatus}
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            {data.quantity}
                           </td>
-                          <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                            {item.status}
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            {data.status}
                           </td>
-                          <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                             <button
-                              className="bg-success text-white active:bg-success font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none me-5 mb-1 ease-linear transition-all duration-150"
-                              onClick={() => handleClick(status.id, itemIndex)}
+                              onClick={() => handleAction(index)}
+                              title="action"
                               type="button"
+                              className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                             >
-                              approve
+                              <CiMenuKebab />
                             </button>
-                            <button
-                              className="bg-danger text-white active:bg-danger font-bold uppercase text-sm px-6 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                              onClick={() => handleReject(status.id, itemIndex)}
-                              type="button"
-                            >
-                              reject
-                            </button>
+                            {showPopover === index && (
+                              <div
+                                ref={popoverRef}
+                                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                              >
+                                <ul className="py-2 text-sm text-gray-700">
+                                  {data.adminApproval === false && (
+                                    <li
+                                      className={`${user?.email !== "admin@domino.com" &&
+                                        user?.roles !== "graphic-designer"
+                                        ? "hidden"
+                                        : ""
+                                        }`}
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={() => handleModalOpen(index)}
+                                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
+                                      >
+                                        <FaRegEdit />
+                                        Edit
+                                      </button>
+                                    </li>
+                                  )}
+                                </ul>
+                              </div>
+                            )}
                           </td>
                         </tr>
                       )
-                    );
-                  })}
+                    })}
                 </tbody>
-              ))}
-            </table>
+              </table>
+            </div>
           </div>
-        </>
+        </div>
+      </div>
+      {modalOpen && (
+        <StatusEditModal
+          handleModalOpen={handleModalOpen}
+          dataIndex={dataIndex}
+          data={singleOrder}
+          handleChaneStatus={handleChaneStatus}
+          statusValue1="Edited"
+          statusValue2="Rejected"
+        />
       )}
-    </section>
+    </>
   );
 };

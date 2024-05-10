@@ -50,6 +50,7 @@
   ],
   "orders": [
     {
+      "id": "d7225109-58ed-4068-a1e0-0c44a14d77ab",
       "series": "IAN-O-0000-2024",
       "date": "May 3, 2024",
       "deliveryDate": "May 3, 2024",
@@ -72,7 +73,7 @@
           "level": 0,
           "total": 7500,
           "isDiscounted": false,
-          "status": "edited",
+          "status": "Edited",
           "note": "",
           "printed": false,
           "adminApproval": false,
@@ -91,7 +92,7 @@
           "level": 0,
           "total": 8000,
           "isDiscounted": false,
-          "status": "edited",
+          "status": "Edited",
           "note": "",
           "printed": false,
           "adminApproval": false,
@@ -106,7 +107,107 @@
       ],
       "totalQuantity": 7,
       "grandTotal": 17825,
-      "id": "d7225109-58ed-4068-a1e0-0c44a14d77ab"
+      "adminApproval": false
+    },
+    {
+      "id": "176bae38-a944-4049-949b-72e5178e0f9c",
+      "series": "IAN-O-0001-2024",
+      "date": "May 9, 2024",
+      "deliveryDate": "May 9, 2024",
+      "orderSource": "telegram",
+      "description": "",
+      "customerId": "1710814124476",
+      "salesPartnerId": "",
+      "status": "received",
+      "orderItems": [
+        {
+          "productId": "1713727389192",
+          "serviceId": "e4b1",
+          "priceId": "0189",
+          "unitPrice": 8000,
+          "width": "4",
+          "height": "4",
+          "quantity": "4",
+          "unit": 64,
+          "discount": 0,
+          "level": 0,
+          "total": 8000,
+          "isDiscounted": false,
+          "status": "Rejected",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        }
+      ],
+      "totalBirr": 8000,
+      "tax": 1200,
+      "grandTotal": 9200,
+      "fileNames": [
+        "Biniyam-T-shirt-4x4"
+      ],
+      "totalQuantity": 4,
+      "adminApproval": false
+    },
+    {
+      "id": "8e33ced6-2853-4377-997e-11b4389688fb",
+      "series": "IAN-O-0002-2024",
+      "date": "May 9, 2024",
+      "deliveryDate": "May 9, 2024",
+      "orderSource": "In person",
+      "description": "",
+      "customerId": "1714343248651",
+      "salesPartnerId": "",
+      "status": "received",
+      "orderItems": [
+        {
+          "productId": "1713727389192",
+          "serviceId": "b664",
+          "priceId": "1a51",
+          "unitPrice": 6400,
+          "width": "4",
+          "height": "4",
+          "quantity": "4",
+          "unit": 64,
+          "discount": 0,
+          "level": 0,
+          "total": 6400,
+          "isDiscounted": false,
+          "status": "received",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        },
+        {
+          "productId": "1713703632140",
+          "serviceId": "e4b1",
+          "priceId": "8d73",
+          "unitPrice": 432000,
+          "width": "6",
+          "height": "6",
+          "quantity": "6",
+          "unit": 216,
+          "discount": 0,
+          "level": 0,
+          "total": 432000,
+          "isDiscounted": false,
+          "status": "Edited",
+          "note": "",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false
+        }
+      ],
+      "totalBirr": 438400,
+      "tax": 65760,
+      "grandTotal": 504160,
+      "fileNames": [
+        "Muhammed-T-shirt-4x4",
+        "Muhammed-Banner-6x6"
+      ],
+      "totalQuantity": 10,
+      "adminApproval": false
     }
   ],
   "commissions": [
@@ -124,6 +225,55 @@
         },
         {
           "date": "May 3, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "d9ff",
+      "orderId": null,
+      "totalCommission": 0,
+      "transactions": [
+        {
+          "date": "May 9, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "b4a9",
+      "orderId": "176bae38-a944-4049-949b-72e5178e0f9c",
+      "totalCommission": 0,
+      "transactions": [
+        {
+          "date": "May 9, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "8e5c",
+      "orderId": "8e33ced6-2853-4377-997e-11b4389688fb",
+      "totalCommission": 0,
+      "transactions": [
+        {
+          "date": "May 9, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        },
+        {
+          "date": "May 9, 2024",
           "amount": 0,
           "percent": 0,
           "description": "",
@@ -154,6 +304,54 @@
           "amount": "4000",
           "status": "pending",
           "description": "payment"
+        }
+      ]
+    },
+    {
+      "id": "3c3e",
+      "totaTransaction": 0,
+      "remainingAmount": 9200,
+      "orderId": null,
+      "transactions": [
+        {
+          "date": "May 9, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": 0,
+          "status": "pending",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "2689",
+      "totaTransaction": 0,
+      "remainingAmount": 9200,
+      "orderId": "176bae38-a944-4049-949b-72e5178e0f9c",
+      "transactions": [
+        {
+          "date": "May 9, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": 0,
+          "status": "pending",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "9dbe",
+      "totaTransaction": 0,
+      "remainingAmount": 504160,
+      "orderId": "8e33ced6-2853-4377-997e-11b4389688fb",
+      "transactions": [
+        {
+          "date": "May 9, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": 0,
+          "status": "pending",
+          "description": ""
         }
       ]
     }

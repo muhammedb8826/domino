@@ -240,6 +240,9 @@ const OrderDetailsPage = () => {
     status: "received",
   });
 
+console.log(singleOrder);
+
+
   const [formData, setFormData] = useState([
     {
       productId: "",
@@ -1208,37 +1211,37 @@ const OrderDetailsPage = () => {
                                       </span>
                                     )}
                                   {data.status ===
-                                    "edited" && (
+                                    "Edited" && (
                                       <span className="bg-warning text-white text-xs font-medium px-2.5 py-0.5 rounded">
                                         {data.status}
                                       </span>
                                     )}
                                   {data.status ===
-                                    "rejected" && (
+                                    "Rejected" && (
                                       <span className="bg-danger text-white text-xs font-medium px-2.5 py-0.5 rounded dark:danger dark:text-white">
                                         {data.status}
                                       </span>
                                     )}
                                   {data.status ===
-                                    "approved" && (
+                                    "Approved" && (
                                       <span className="bg-success text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-success dark:text-white">
                                         {data.status}
                                       </span>
                                     )}
                                   {data.status ===
-                                    "printed" && (
+                                    "Printed" && (
                                       <span className="text-white bg-gradient-to-br from-danger to-warning hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 text-xs font-medium px-2.5 py-0.5 rounded">
                                         {data.status}
                                       </span>
                                     )}
                                   {data.status ===
-                                    "paid" && (
+                                    "Paid" && (
                                       <span className="text-white bg-blend-hue hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-100 dark:bg-sky-400 dark:hover:bg-sky-500 dark:focus:ring-sky-600 text-xs font-medium px-2.5 py-0.5 rounded">
                                         {data.status}
                                       </span>
                                     )}
                                   {data.status ===
-                                    "delivered" && (
+                                    "Delivered" && (
                                       <span className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
                                         {data.status}
                                       </span>

@@ -291,7 +291,7 @@ const OrdersList = () => {
       </div> */}
 
       <div
-        className={`rounded-sm border border-stroke border-b-0 bg-white px-4 flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 py-4`}
+        className={`rounded-sm border border-stroke border-b-0 bg-white dark:bg-boxdark dark:border-strokedark px-4 flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 py-4`}
       >
         <div
           className={`${user?.email !== "admin@domino.com" && user?.roles !== "reception"
@@ -310,7 +310,7 @@ const OrdersList = () => {
 
         <div className="mb-4.5">
           <label className="sr-only mb-2.5 block text-black dark:text-white">
-            Subject
+            Search options
           </label>
           <div className="relative z-20 bg-transparent dark:bg-form-input">
             <select
@@ -318,7 +318,7 @@ const OrdersList = () => {
               title="filter-order"
               defaultValue="all"
               value={selectedOption}
-              onChange={(e) => handleSelectChange(e)}
+              // onChange={(e) => handleSelectChange(e)}
               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-2 px-4 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             >
               <option value="all">All</option>
@@ -355,7 +355,7 @@ const OrdersList = () => {
             <input
               name="start"
               type="date"
-              onChange={(e) => handleDateSearch(e)}
+              // onChange={(e) => handleDateSearch(e)}
               value={start}
               className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               placeholder="Select date start"
@@ -366,7 +366,7 @@ const OrdersList = () => {
           <div className="relative">
             <input
               name="end"
-              onChange={(e) => handleDateSearch(e)}
+              // onChange={(e) => handleDateSearch(e)}
               value={end}
               type="date"
               className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -397,7 +397,7 @@ const OrdersList = () => {
             </svg>
           </div>
           <input
-            onChange={(e) => handleSearch(e)}
+            // onChange={(e) => handleSearch(e)}
             value={search}
             type="text"
             id="table-search-users"
