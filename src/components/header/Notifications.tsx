@@ -1,9 +1,9 @@
-import { getOrdersById } from "@/redux/features/order/orderSlice";
+import { getOrdersById, updateOrder } from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ErroPage from "../common/ErroPage";
-import { getSales} from "@/redux/features/saleSlice";
+import { getSales } from "@/redux/features/saleSlice";
 import Loader from "@/common/Loader";
 import { useParams } from "react-router-dom";
 import { CiMenuKebab } from "react-icons/ci";
@@ -12,6 +12,8 @@ import { StatusEditModal } from "../order/StatusEditModal";
 import Breadcrumb from "../Breadcrumb";
 import { getProducts } from "@/redux/features/product/productSlice";
 import { getServices } from "@/redux/features/service/servicesSlice";
+import { NotificationTable } from "./NotificationTable";
+import toast from "react-hot-toast";
 export const Notifications = () => {
   const { id } = useParams<{ id: string }>()
   const { user, error } = useSelector(
@@ -21,99 +23,121 @@ export const Notifications = () => {
     (state: RootState) => state.order
   );
   const { products } = useSelector((state: RootState) => state.product);
+  const [active , setActive] = useState("proofReady");
   const { services } = useSelector((state: RootState) => state.service);
-  const [formData, setFormData] = useState(singleOrder?.orderItems);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getSales());
-    dispatch(getOrdersById(id)).then((res) => {
-      if(res.payload) {
-        setFormData(res.payload.orderItems);
-      }
-    });   
-    dispatch(getProducts());
-    dispatch(getServices());
-  }, [dispatch, id]);
-
-
-  const [showPopover, setShowPopover] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [formData, setFormData] = useState([]);
+  const [proofReadyOrders, setProofReadyOrders] = useState([]);
+  const [pendingApprovalOrders, setPendingApprovalOrders] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [dataIndex, setDataIndex] = useState(0);
+  const [dataId, setDataId] = useState("");
+  const [statusValues, setStatusValues] = useState({ statusValue1: "", statusValue2: "" });
+  const [showPopover, setShowPopover] = useState<number | null>(null);
+  const [showPopover2, setShowPopover2] = useState<number | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const popoverRef2 = useRef<HTMLDivElement>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
+  const dispatch = useDispatch();
+
+
+    const handleClickOutside = (event: MouseEvent) => {
+    if (showPopover !== null && popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+      setShowPopover(null);
+    }
+    if (showPopover2 !== null && popoverRef2.current && !popoverRef2.current.contains(event.target as Node)) {
+      setShowPopover2(null);
+    }
+  };
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node)
-      ) {
-        setShowPopover(null);
-      }
-    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showPopover, showPopover2]);
 
-    if (showPopover !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showPopover]);
-
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdownRef.current) return;
-      if (
-        !dropdownOpen ||
-        dropdownRef.current.contains(target) ||
-        triggerRef.current.contains(target)
-      )
-        return;
+      if (!dropdownRef.current || !dropdownOpen || dropdownRef.current.contains(target) || triggerRef.current.contains(target)) return;
       setDropdownOpen(false);
     };
     document.addEventListener("click", clickHandler);
     return () => document.removeEventListener("click", clickHandler);
-  });
+  }, [dropdownOpen]);
 
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
-      if (!dropdownOpen || keyCode !== 27) return;
-      setDropdownOpen(false);
+      if (dropdownOpen && keyCode === 27) setDropdownOpen(false);
     };
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
-  });
+  }, [dropdownOpen]);
 
-  const handleAction = (index) => {
+  useEffect(() => {
+    dispatch(getSales());
+    dispatch(getOrdersById(id)).then((res) => {
+      if (res.payload) {
+        const { orderItems } = res.payload;
+        setProofReadyOrders(orderItems?.filter(item => item.status === "Rejected" || item.status === "Received"));
+        setPendingApprovalOrders(orderItems?.filter(item => item.status === "Edited"));
+      }
+    });
+    dispatch(getProducts());
+    dispatch(getServices());
+  }, [dispatch, id]);
+
+  const handleAction = (index: number) => setShowPopover(prevIndex => (prevIndex === index ? null : index));
+
+  const handlePendingApprovalAction = (index: number) => {
     setDropdownOpen(!dropdownOpen);
-    setShowPopover(index);
+    setShowPopover2(index);
   };
 
-
-  const popoverRef = useRef<HTMLDivElement>(null);
-
-  const handleModalOpen = (index) => {
-    setModalOpen((prev) => !prev);
-    setDataIndex(index);
+  const handleUpdateProofReady = (id, status) => {
+    const updatedOrderItems = proofReadyOrders.map((item) =>
+      item.id === id ? { ...item, status: status } : item
+    );
+    setProofReadyOrders(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...pendingApprovalOrders]);
   };
-
-  const handleChaneStatus = (index, status) => {
-   setFormData((prev) => {
-      const updatedOrderItems = prev.map((item, i) => {
-        if (i === index) {
-          return {
-            ...item,
-            status: status,
-          };
-        }
-        return item;
-      });
-      return updatedOrderItems;
+  
+  const handleUpdateStatus = (id, status) => {
+    const updatedOrderItems = pendingApprovalOrders.map((item) =>
+      item.id === id ? { ...item, status: status } : item
+    );
+    setPendingApprovalOrders(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...proofReadyOrders]);
+  };
+  
+  const handleButtonClick = (newActiveState) => {
+    setActive(newActiveState);
+    dispatch(getOrdersById(id)).then((res) => {
+      if (res.payload) {
+        const { orderItems } = res.payload;
+        setProofReadyOrders(orderItems?.filter((item) => item.status === "Rejected" || item.status === "Received"));
+        setPendingApprovalOrders(orderItems?.filter((item) => item.status === "Edited"));
+      }
+    });
+  };
+  
+  const handleSubmit = () => {
+    const data = {
+      id: singleOrder?.id,
+      ...singleOrder,
+      orderItems: formData,
+    };
+  
+    dispatch(updateOrder(data)).then((res) => {
+      if (res.payload) {
+        console.log("res", res.payload);
+        const { orderItems } = res.payload;
+        setProofReadyOrders(orderItems?.filter((item) => item.status === "Rejected" || item.status === "Received"));
+        setPendingApprovalOrders(orderItems?.filter((item) => item.status === "Edited"));
+        const message = "Order status updated successfully";
+        toast.success(message);
+      } else {
+        const message = "Something went wrong!";
+        toast.error(message);
+      }
     });
   };
 
@@ -127,151 +151,74 @@ export const Notifications = () => {
   ) : (
     <>
       <Breadcrumb pageName="Notifications" />
-      <div className="rounded-sm border border-stroke border-t-0 bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
-          <div>
-            <button
-              type="button"
-              className="text-black dark:text-white w-full py-2 px-4 border-t border-b border-[#eee] mb-4 font-semibold flex items-center gap-4"
-            >
-              Orders Series | {singleOrder?.series}
-            </button>
-            <div className="max-w-full px-4">
-              <table className="w-full table-auto">
-                <thead>
-                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">
-                      No
-                    </th>
-                    <th
-                      className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
-                    >
-                      Product
-                    </th>
-                    <th
-                      className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"
-                    >
-                      Services
-                    </th>
-                    <th
-                      className="py-4 px-4 font-medium text-black dark:text-white"
-                    >
-                      Width
-                    </th>
-                    <th
-                      className="py-4 px-4 font-medium text-black dark:text-white"
-                    >
-                      Height
-                    </th>
-                    <th
-                      className="py-4 px-4 font-medium text-black dark:text-white"
-                    >
-                      Quantity
-                    </th>
-                    <th
-                      className="py-4 px-4 font-medium text-black dark:text-white"
-                    >
-                      Status
-                    </th>
-                    <th
-                      className="py-4 px-4 font-medium text-black dark:text-white"
-                    >
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {formData?.length === 0 && (
-                    <tr>
-                      <td colSpan={7} className="text-center">
-                        No data found
-                      </td>
-                    </tr>
-                  )}
-                  {formData && formData.length > 0 && formData.map((data, index) => {
-                      const product = data.productId && products?.find((product) => product.id === data.productId);
-                      const service = data.serviceId && services?.find((service) => service.id === data.serviceId);
-                      return (
-                        <tr
-                          key={index}
-                        >
-                          <td className="border-b text-graydark border-[#eee] py-2 px-4 dark:border-strokedark">
-                            {index + 1}
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            {product?.name}
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            {service?.name}
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            {data.width}
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            {data.height}
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            {data.quantity}
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            {data.status}
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            <button
-                              onClick={() => handleAction(index)}
-                              title="action"
-                              type="button"
-                              className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                            >
-                              <CiMenuKebab />
-                            </button>
-                            {showPopover === index && (
-                              <div
-                                ref={popoverRef}
-                                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-                              >
-                                <ul className="py-2 text-sm text-gray-700">
-                                  {data.adminApproval === false && (
-                                    <li
-                                      className={`${user?.email !== "admin@domino.com" &&
-                                        user?.roles !== "graphic-designer"
-                                        ? "hidden"
-                                        : ""
-                                        }`}
-                                    >
-                                      <button
-                                        type="button"
-                                        onClick={() => handleModalOpen(index)}
-                                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
-                                      >
-                                        <FaRegEdit />
-                                        Edit
-                                      </button>
-                                    </li>
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      )
-                    })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-      {modalOpen && (
-        <StatusEditModal
-          handleModalOpen={handleModalOpen}
-          dataIndex={dataIndex}
-          data={singleOrder}
-          handleChaneStatus={handleChaneStatus}
-          statusValue1="Edited"
-          statusValue2="Rejected"
+      <div className="rounded-sm border border-stroke border-t-0 bg-white px-4 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
+      <nav className="flex justify-between gap-4 items-center px-4">
+          <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              {isLoading ? <Loader /> : (
+              <button
+                type="button"
+                onClick={() => handleButtonClick("proofReady")}
+                className={`${active === "proofReady" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Proof Ready
+              </button>
+              )}
+            </li>
+            {isLoading ? <Loader /> : (
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              <button
+                type="button"
+                onClick={() => handleButtonClick("pending")}
+                className={`${active === "pending" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Pending
+              </button>
+            </li>
+            )}
+          </ul>
+          < button
+            type="submit"
+            onClick={handleSubmit}
+            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Save changes
+          </button>
+        </nav>
+        {active === "proofReady" && (
+        <NotificationTable
+          title="Proof ready orders"
+          orders={proofReadyOrders}
+          handleAction={handleAction}
+          showPopover={showPopover}
+          handleModalOpen={handleUpdateProofReady}
+          popoverRef={popoverRef}
+          user={user}
+          products={products}
+          services={services}
+          status1="Edited"
+          status2="Rejected"
         />
       )}
+      {active === "pending" && (
+        <NotificationTable
+          title="Pending approval orders"
+          orders={pendingApprovalOrders}
+          handleAction={handlePendingApprovalAction}
+          showPopover={showPopover2}
+          handleModalOpen={handleUpdateStatus}
+          popoverRef={popoverRef2}
+          user={user}
+          products={products}
+          services={services}
+          status1={"Approved"}
+          status2={"Rejected"}
+        />
+      )}
+      </div>
     </>
   );
+  
 };

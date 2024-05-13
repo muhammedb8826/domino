@@ -57,7 +57,7 @@ const DropdownNotification = () => {
     dispatch(getOrders()).then((res) => {
       if(res.payload) {
         const editedOrder = res.payload.filter(
-          (order) => order.status === "received"
+          (order) => order.status === "Pending Approval"
         );
 
         setAdminNotifications(editedOrder);

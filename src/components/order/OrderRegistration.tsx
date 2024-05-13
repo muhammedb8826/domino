@@ -67,7 +67,7 @@ export const OrderRegistration = () => {
     description: "",
     customerId: "",
     salesPartnerId: "",
-    status: "received",
+    status: "Pending Approval",
   });
 
   const [formData, setFormData] = useState([
@@ -84,11 +84,12 @@ export const OrderRegistration = () => {
       level: 0,
       total: 0,
       isDiscounted: false,
-      status: "received",
+      status: "Received",
       note: "",
       printed: false,
       adminApproval: false,
-      completed: false
+      completed: false,
+      id: uuidv4(),
     }
   ]);
 
@@ -199,11 +200,12 @@ export const OrderRegistration = () => {
         level: 0,
         total: 0,
         isDiscounted: false,
-        status: "received",
+        status: "Received",
         note: "",
         printed: false,
         adminApproval: false,
-        completed: false
+        completed: false,
+        id: uuidv4(),
       },
     ]);
     setCommission((prev) => [
@@ -474,7 +476,7 @@ export const OrderRegistration = () => {
       description: "",
       customerId: "",
       salesPartnerId: "",
-      status: "received",
+      status: "Pending Approval",
     });
 
     setFormData([
@@ -491,11 +493,12 @@ export const OrderRegistration = () => {
         level: 0,
         total: 0,
         isDiscounted: false,
-        status: "received",
+        status: "Received",
         note: "",
         printed: false,
         adminApproval: false,
-        completed: false
+        completed: false,
+        id: ""
       },
     ]);
     setTotalQuantity(0);

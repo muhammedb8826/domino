@@ -6,17 +6,17 @@ import { toast } from "react-toastify";
 
 export const StatusEditModal = ({
   handleModalOpen,
-  dataIndex,
+  dataId,
   data,
-  handleChaneStatus,
-  statusValue1,
-  statusValue2,
+  statusValues,
+  onUpdateStatus
 }) => {
 
-const dispatch = useDispatch();
+
+  const dispatch = useDispatch();
 
   const [status, setStatus] = useState("");
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState(data.orderItems.find((item) => item.id === dataId)?.note);
 
   const handleChange = (e) => {
     setStatus(e.target.value);
@@ -27,36 +27,39 @@ const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedOrderItems = data.orderItems.map((item, index) => {
-      if (index === dataIndex) {
-        // Create a new object to maintain immutability
+    // Find the index of the matching order item
+    const updatedOrderItems = data.orderItems.map((item) => {
+      if (item.id === dataId) {        
+        // Create a new object with updated status and note for the matching item
         return {
           ...item,
           status: status,
           note: note,
         };
       }
+      // Return the original item if the id doesn't match
       return item;
     });
-    
-   handleChaneStatus(dataIndex, status);
+
     const formData = {
       id: data.id,
       ...data,
       orderItems: updatedOrderItems,
     };
-    
-   dispatch(updateOrder(formData)).then((res) => {
-    if (res.payload) {
-      const message = "Order status updated successfully";
-      toast.success(message);
-      setStatus("");
-      handleModalOpen(false);
-    } else {
-      const message = "Something went wrong!";
-      toast.error(message);
-    }
-  });
+
+
+    dispatch(updateOrder(formData)).then((res) => {
+      if (res.payload) {
+        const message = "Order status updated successfully";
+        toast.success(message);
+        onUpdateStatus(updatedOrderItems);
+        handleModalOpen(false);
+      } else {
+        // If the update fails, show error message
+        const message = "Something went wrong!";
+        toast.error(message);
+      }
+    });
   };
 
   return (
@@ -89,7 +92,7 @@ const dispatch = useDispatch();
                     }}
                     id="bordered-radio-1"
                     type="radio"
-                    value={statusValue1}
+                    value={statusValues.statusValue1}
                     name="bordered-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
@@ -97,7 +100,7 @@ const dispatch = useDispatch();
                     htmlFor="bordered-radio-1"
                     className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    {statusValue1}
+                    {statusValues.statusValue1}
                   </label>
                 </div>
                 <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
@@ -107,7 +110,7 @@ const dispatch = useDispatch();
                     }}
                     id="bordered-radio-2"
                     type="radio"
-                    value={statusValue2}
+                    value={statusValues.statusValue2}
                     name="bordered-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
@@ -115,7 +118,7 @@ const dispatch = useDispatch();
                     htmlFor="bordered-radio-2"
                     className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                   {statusValue2}
+                    {statusValues.statusValue2}
                   </label>
                 </div>
                 <div>
@@ -126,7 +129,7 @@ const dispatch = useDispatch();
                     Note
                   </label>
                   <textarea
-                   onChange={handleChangeNote}
+                    onChange={handleChangeNote}
                     value={note}
                     id="note"
                     rows={4}

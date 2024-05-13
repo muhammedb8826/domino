@@ -45,6 +45,7 @@ import { ServicesList } from "./pages/inventory/ServicesList";
 import Profile from "./pages/Profile";
 import Settings from "./pages/AccountSettings";
 import AccountSettings from "./pages/AccountSettings";
+import { StatusUpdate } from "./components/header/StatusUpdate";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -94,6 +95,7 @@ const App = () => {
             <Route path="/dashboard/settings" element={<Setting />} />
             <Route path="/dashboard/pricing" element={<Pricing/>}/>
             <Route path="/dashboard/commission" element={<CommissionList/>}/>
+            <Route path="/dashboard/status-update:id" element={<StatusUpdate/>}/>
             <Route path="/dashboard/commission/:id" element={<CommissionDetailsPage/>}/>
             <Route path="/dashboard/inventory/products" element={<Products/>}/>
             <Route path="/dashboard/inventory/operator-store" element={<OperatorStore/>}/>

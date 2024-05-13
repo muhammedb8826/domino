@@ -30,6 +30,7 @@ import { getPayments, updatePayment } from "@/redux/features/paymentSlice";
 import { getSalesPartners } from "@/redux/features/salesPartnersSlice";
 import { IoMdClose } from "react-icons/io";
 import Loader from "@/common/Loader";
+import { v4 as uuidv4 } from 'uuid';
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -167,6 +168,8 @@ const OrderDetailsPage = () => {
 
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const [showPopover2, setShowPopover2] = useState<number | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
@@ -198,8 +201,6 @@ const OrderDetailsPage = () => {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
-
-  const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -240,9 +241,6 @@ const OrderDetailsPage = () => {
     status: "received",
   });
 
-console.log(singleOrder);
-
-
   const [formData, setFormData] = useState([
     {
       productId: "",
@@ -261,7 +259,8 @@ console.log(singleOrder);
       note: "",
       printed: false,
       adminApproval: false,
-      completed: false
+      completed: false,
+      id: uuidv4(),
     }
   ]);
 
@@ -447,7 +446,8 @@ console.log(singleOrder);
         note: "",
         printed: false,
         adminApproval: false,
-        completed: false
+        completed: false,
+        id: uuidv4(),
       },
     ]);
     setCommission((prev) => [
@@ -1205,7 +1205,7 @@ console.log(singleOrder);
                                   className="flex items-center justify-center w-full relative"
                                 >
                                   {data.status ===
-                                    "received" && (
+                                    "Received" && (
                                       <span className="bg-primary text-white text-xs font-medium  px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                         {data.status}
                                       </span>
