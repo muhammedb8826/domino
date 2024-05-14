@@ -102,6 +102,7 @@ const OrderDetailsPage = () => {
     dispatch(getPayments()).then((res)=>{
       if(res.payload){
         const findPayment = res.payload.find((payment) => payment.orderId === id)
+        setForcePayment(findPayment.forcePayment)
         setPayment(findPayment.transactions)
         setTotalTransaction(findPayment.totaTransaction),
         setRemainingAmount(findPayment.remainingAmount)
@@ -230,6 +231,14 @@ const OrderDetailsPage = () => {
     setShowPopover2(index);
   };
 
+  const notes = [{
+    id: uuidv4(),
+    note: "",
+    date: "",
+    userId: user.id,
+  }];
+
+
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
@@ -256,7 +265,7 @@ const OrderDetailsPage = () => {
       total: 0,
       isDiscounted: false,
       status: "received",
-      note: "",
+      notes: notes,
       printed: false,
       adminApproval: false,
       completed: false,
@@ -295,6 +304,7 @@ const OrderDetailsPage = () => {
   const [collapseDisount, setCollapseDiscount] = useState(false);
   const [totaTransaction, setTotalTransaction] = useState(0);
   const [remainingAmount, setRemainingAmount] = useState(0);
+  const [forcePayment, setForcePayment] = useState(true);
 
   const handleCustomerInfo = (customer: CustomerType) => {
     setOrderInfo((prevOrderInfo) => ({
@@ -344,6 +354,16 @@ const OrderDetailsPage = () => {
       };
       return updatedData;
     });
+  };
+
+  const handleChangeForcePayment = (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      setForcePayment(true);
+    }
+    else {
+      setForcePayment(false);
+    }
   };
 
   const handlePayPayment = (index) => {
@@ -443,7 +463,7 @@ const OrderDetailsPage = () => {
         total: 0,
         isDiscounted: false,
         status: "received",
-        note: "",
+        notes: notes,
         printed: false,
         adminApproval: false,
         completed: false,
@@ -769,10 +789,13 @@ const OrderDetailsPage = () => {
 
     const findPayment = payments?.find((payment) => payment.orderId === id);
     const findCommission = commissions?.find((commission) => commission.orderId === id);
-
+    
     const paymentData = {
       ...findPayment,
-      transactions: payment
+      transactions: payment,
+      forcePayment,
+      totaTransaction,
+      remainingAmount,
     };
 
     dispatch(updatePayment(paymentData)).then((res) => {
@@ -784,6 +807,7 @@ const OrderDetailsPage = () => {
     const commissionData = {
       ...findCommission,
       transactions: commission,
+      totalCommission,
     }
     dispatch(updateCommission(commissionData)).then((res) => {
       if (res.payload) {
@@ -1289,14 +1313,13 @@ const OrderDetailsPage = () => {
                                           : ""
                                           }`}
                                       >
-                                        <button
-                                          type="button"
-                                          onClick={() => handleModalOpen(index)}
+                                        <Link
+                                          to={`/dashboard/notifications/${id}`}
                                           className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
                                         >
                                           <FaRegEdit />
                                           Edit
-                                        </button>
+                                        </Link>
                                       </li>
                                     )}
                                     <li
@@ -1524,40 +1547,37 @@ const OrderDetailsPage = () => {
                 : ""
                 }`}
             >
-              <div className="flex justify-between pt-4 px-4">
-                <strong className="text-graydark">
-                  Totals
-                </strong>
-                <div className="text-graydark">
-                  <p className="flex gap-4 justify-between">
-                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Grand total:
-                    </span>
-                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      {grandTotal}
-                    </span>
-                  </p>
-                  <p className="flex gap-4 justify-between">
-                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Total payment :
-                    </span>
-                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      {totaTransaction}
-                    </span>
-                  </p>
-                  <p className="flex gap-4 justify-between">
-                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Remaining amount :
-                    </span>
-                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      {remainingAmount}
-                    </span>
-                  </p>
-                </div>
-              </div>
-
               {/* transactions */}
-              <div className="max-w-full overflow-x-auto px-4">
+              <div className="max-w-full overflow-x-auto p-4">
+              <div className="w-full flex items-center mb-4">
+              <div className="relative items-center text-black dark:text-white w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+                <label
+                  htmlFor="forcePayment"
+                  className="flex cursor-pointer select-none items-center"
+                >
+                  <div className="relative">
+                    <input
+                      title="Force Payment"
+                      type="checkbox"
+                      id="forcePayment"
+                      className="sr-only"
+                      checked={forcePayment}
+                      onChange={handleChangeForcePayment}
+                    />
+                    <div
+                      className={`mr-4 flex h-5 w-5 items-center justify-center rounded border border-graydark ${forcePayment === true ? 'border-primary bg-gray dark:bg-transparent' : 'border-gray dark:border-strokedark bg-transparent'
+                        }`}
+                    >
+                      <span
+                        className={`h-2.5 w-2.5 rounded-sm ${forcePayment === true ? 'bg-primary' : 'bg-transparent'}`}
+                      >
+                      </span>
+                    </div>
+                  </div>
+                </label>
+                <span className="absolute left-12 top-1.5">Force payment</span>
+              </div>
+            </div>
                 <table className="w-full table-auto">
                   <thead>
                     <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -1755,6 +1775,37 @@ const OrderDetailsPage = () => {
                 >
                   Download
                 </button>
+              </div>
+              <div className="flex justify-between pt-4 px-4">
+                <strong className="text-graydark">
+                  Totals
+                </strong>
+                <div className="text-graydark">
+                  <p className="flex gap-4 justify-between">
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      Grand total:
+                    </span>
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      {grandTotal}
+                    </span>
+                  </p>
+                  <p className="flex gap-4 justify-between">
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      Total payment :
+                    </span>
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      {totaTransaction}
+                    </span>
+                  </p>
+                  <p className="flex gap-4 justify-between">
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      Remaining amount :
+                    </span>
+                    <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      {remainingAmount}
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
           )}

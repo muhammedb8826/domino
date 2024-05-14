@@ -70,6 +70,13 @@ export const OrderRegistration = () => {
     status: "Pending Approval",
   });
 
+  const notes = [{
+    id: uuidv4(),
+    note: "",
+    date: "",
+    userId: user.id,
+  }];
+
   const [formData, setFormData] = useState([
     {
       productId: "",
@@ -85,10 +92,10 @@ export const OrderRegistration = () => {
       total: 0,
       isDiscounted: false,
       status: "Received",
-      note: "",
       printed: false,
       adminApproval: false,
       completed: false,
+      notes: notes,
       id: uuidv4(),
     }
   ]);
@@ -126,6 +133,7 @@ export const OrderRegistration = () => {
   const [totaTransaction, setTotalTransaction] = useState(0);
   const [remainingAmount, setRemainingAmount] = useState(0);
   const [totalCommission, setTotalCommission] = useState(0);
+  const [forcePayment, setForcePayment] = useState(true);
 
   const handlePaymentMethod = (index, e) => {
     setPayment((prev) => {
@@ -201,10 +209,10 @@ export const OrderRegistration = () => {
         total: 0,
         isDiscounted: false,
         status: "Received",
-        note: "",
         printed: false,
         adminApproval: false,
         completed: false,
+        notes: notes,
         id: uuidv4(),
       },
     ]);
@@ -227,6 +235,16 @@ export const OrderRegistration = () => {
       ...prevOrderInfo,
       [name]: value,
     }));
+  };
+
+  const handleChangeForcePayment = (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      setForcePayment(true);
+    }
+    else {
+      setForcePayment(false);
+    }
   };
 
   const handleCustomerInfo = (customer: CustomerType) => {
@@ -494,10 +512,10 @@ export const OrderRegistration = () => {
         total: 0,
         isDiscounted: false,
         status: "Received",
-        note: "",
         printed: false,
         adminApproval: false,
         completed: false,
+        notes: notes,
         id: ""
       },
     ]);
@@ -543,6 +561,7 @@ export const OrderRegistration = () => {
       remainingAmount,
       orderId: orderData.id,
       transactions: payment,
+      forcePayment: forcePayment,
     };
     dispatch(createPayment(paymentData));
 
@@ -1127,47 +1146,47 @@ export const OrderRegistration = () => {
               : ""
               }`}
           >
-            <div className="flex justify-between pt-4 px-4">
-              <strong className="text-graydark">
-                Totals
-              </strong>
-              <div className="text-graydark">
-                <p className="flex gap-4 justify-between">
-                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Grand total:
-                  </span>
-                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    {grandTotal}
-                  </span>
-                </p>
-                <p className="flex gap-4 justify-between">
-                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Total payment :
-                  </span>
-                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    {totaTransaction}
-                  </span>
-                </p>
-                <p className="flex gap-4 justify-between">
-                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Remaining amount :
-                  </span>
-                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    {remainingAmount}
-                  </span>
-                </p>
-              </div>
-            </div>
+           
 
             {/* transactions */}
-            <div className="max-w-full overflow-x-auto px-4">
+           
+            <div className="max-w-full overflow-x-auto p-4">
+            <div className="w-full flex items-center mb-4">
+              <div className="relative items-center text-black dark:text-white w-full rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+                <label
+                  htmlFor="forcePayment"
+                  className="flex cursor-pointer select-none items-center"
+                >
+                  <div className="relative">
+                    <input
+                      title="Force Payment"
+                      type="checkbox"
+                      id="forcePayment"
+                      className="sr-only"
+                      checked={forcePayment}
+                      onChange={handleChangeForcePayment}
+                    />
+                    <div
+                      className={`mr-4 flex h-5 w-5 items-center justify-center rounded border border-graydark ${forcePayment === true ? 'border-primary bg-gray dark:bg-transparent' : 'border-gray dark:border-strokedark bg-transparent'
+                        }`}
+                    >
+                      <span
+                        className={`h-2.5 w-2.5 rounded-sm ${forcePayment === true ? 'bg-primary' : 'bg-transparent'}`}
+                      >
+                      </span>
+                    </div>
+                  </div>
+                </label>
+                <span className="absolute left-12 top-1.5">Force payment</span>
+              </div>
+            </div>
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                    <th className="py-2 px-4 font-medium text-black dark:text-white">
                       No
                     </th>
-                    <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                    <th className="min-w-[150px] p-4 font-medium text-black dark:text-white">
                       Date
                     </th>
                     <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -1204,10 +1223,10 @@ export const OrderRegistration = () => {
                   {payment &&
                     payment.map((data, index) => (
                       <tr key={index}>
-                        <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                        <td className="py-2 px-4 border-b text-graydark border-[#eee] dark:border-strokedark">
                           {index + 1}
                         </td>
-                        <td className="py-2 border-b text-graydark border-[#eee] dark:border-strokedark">
+                        <td className="py-2 px-4 border-b text-graydark border-[#eee] dark:border-strokedark">
                           {data.date}
                         </td>
 
@@ -1321,6 +1340,37 @@ export const OrderRegistration = () => {
               >
                 Download
               </button>
+            </div>
+            <div className="flex justify-between p-4">
+              <strong className="text-graydark">
+                Totals
+              </strong>
+              <div className="text-graydark">
+                <p className="flex gap-4 justify-between">
+                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Grand total:
+                  </span>
+                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {grandTotal}
+                  </span>
+                </p>
+                <p className="flex gap-4 justify-between">
+                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Total payment :
+                  </span>
+                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {totaTransaction}
+                  </span>
+                </p>
+                <p className="flex gap-4 justify-between">
+                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Remaining amount :
+                  </span>
+                  <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {remainingAmount}
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
         )}

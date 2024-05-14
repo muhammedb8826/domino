@@ -77,21 +77,21 @@ export const NotificationTable = ({
                           <li className={`${user?.email !== "admin@domino.com" && user?.roles !== "graphic-designer" ? "hidden" : ""}`}>
                             <button
                               type="button"
-                              onClick={() => handleModalOpen(data.id, status1)}
+                              onClick={() => handleModalOpen(data.id, status1.value, index)}
                               className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
                             >
                               <FaRegEdit />
-                              {status1}
+                              {status1.label}
                             </button>
                           </li>
                           <li className={`${user?.email !== "admin@domino.com" && user?.roles !== "graphic-designer" ? "hidden" : ""}`}>
                             <button
                               type="button"
-                              onClick={() => handleModalOpen(data.id, status2)}
+                              onClick={() => handleModalOpen(data.id, status2.value, index)}
                               className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
                             >
                               <FaRegEdit />
-                              {status2}
+                              {status2.label}
                             </button>
                           </li>
                         </ul>

@@ -1,19 +1,17 @@
 import { getOrdersById, updateOrder } from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ErroPage from "../common/ErroPage";
 import { getSales } from "@/redux/features/saleSlice";
 import Loader from "@/common/Loader";
 import { useParams } from "react-router-dom";
-import { CiMenuKebab } from "react-icons/ci";
-import { FaRegEdit } from "react-icons/fa";
-import { StatusEditModal } from "../order/StatusEditModal";
 import Breadcrumb from "../Breadcrumb";
 import { getProducts } from "@/redux/features/product/productSlice";
 import { getServices } from "@/redux/features/service/servicesSlice";
 import { NotificationTable } from "./NotificationTable";
 import toast from "react-hot-toast";
+import { getPayments } from "@/redux/features/paymentSlice";
 export const Notifications = () => {
   const { id } = useParams<{ id: string }>()
   const { user, error } = useSelector(
@@ -22,38 +20,45 @@ export const Notifications = () => {
   const { singleOrder, isLoading } = useSelector(
     (state: RootState) => state.order
   );
+  const { payments } = useSelector((state) => state.payment);
+
   const { products } = useSelector((state: RootState) => state.product);
   const [active , setActive] = useState("proofReady");
   const { services } = useSelector((state: RootState) => state.service);
   const [formData, setFormData] = useState([]);
   const [proofReadyOrders, setProofReadyOrders] = useState([]);
   const [pendingApprovalOrders, setPendingApprovalOrders] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [dataId, setDataId] = useState("");
-  const [statusValues, setStatusValues] = useState({ statusValue1: "", statusValue2: "" });
+  const [printReadyOrders, setPrintReadyOrders] = useState([]);
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const [showPopover2, setShowPopover2] = useState<number | null>(null);
+  const [showPopover3, setShowPopover3] = useState<number | null>(null);
+  const [forcePayment, setForcePayment] = useState(true);
+  const [totaTransaction, setTotalTransaction] = useState(0);
   const popoverRef = useRef<HTMLDivElement>(null);
   const popoverRef2 = useRef<HTMLDivElement>(null);
+  const popoverRef3 = useRef<HTMLDivElement>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
   const dispatch = useDispatch();
 
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = useCallback((event: MouseEvent) => {
     if (showPopover !== null && popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
       setShowPopover(null);
     }
     if (showPopover2 !== null && popoverRef2.current && !popoverRef2.current.contains(event.target as Node)) {
       setShowPopover2(null);
     }
-  };
+    if (showPopover3 !== null && popoverRef3.current && !popoverRef3.current.contains(event.target as Node)) {
+      setShowPopover3(null);
+    }
+  }, [showPopover, showPopover2, showPopover3]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showPopover, showPopover2]);
+  }, [showPopover, showPopover2, handleClickOutside]);
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -65,8 +70,8 @@ export const Notifications = () => {
   }, [dropdownOpen]);
 
   useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
-      if (dropdownOpen && keyCode === 27) setDropdownOpen(false);
+    const keyHandler = ({ key }: KeyboardEvent) => {
+      if (dropdownOpen && key === 'Escape') setDropdownOpen(false);
     };
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
@@ -79,8 +84,16 @@ export const Notifications = () => {
         const { orderItems } = res.payload;
         setProofReadyOrders(orderItems?.filter(item => item.status === "Rejected" || item.status === "Received"));
         setPendingApprovalOrders(orderItems?.filter(item => item.status === "Edited"));
+        setPrintReadyOrders(orderItems?.filter(item => item.status === "Approved"));
       }
     });
+    dispatch(getPayments()).then((res)=>{
+      if(res.payload){
+        const findPayment = res.payload.find((payment) => payment.orderId === id)
+        setForcePayment(findPayment.forcePayment)
+        setTotalTransaction(findPayment.totaTransaction)
+      }
+    })
     dispatch(getProducts());
     dispatch(getServices());
   }, [dispatch, id]);
@@ -89,34 +102,57 @@ export const Notifications = () => {
 
   const handlePendingApprovalAction = (index: number) => {
     setDropdownOpen(!dropdownOpen);
-    setShowPopover2(index);
+    setShowPopover2(prevIndex => (prevIndex === index ? null : index));
   };
 
-  const handleUpdateProofReady = (id, status) => {
+  const handlePrintReadyAction = (index: number) => {
+    setDropdownOpen(!dropdownOpen);
+    setShowPopover3(prevIndex => (prevIndex === index ? null : index));
+  };
+  const handleUpdateProofReady = (id, status, index) => {
     const updatedOrderItems = proofReadyOrders.map((item) =>
       item.id === id ? { ...item, status: status } : item
     );
     setProofReadyOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...pendingApprovalOrders]);
+    setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders]);
+    handleAction(index)
   };
   
-  const handleUpdateStatus = (id, status) => {
+  const handleUpdatePendingApproval = (id, status, index) => {
+    if(!forcePayment){
     const updatedOrderItems = pendingApprovalOrders.map((item) =>
       item.id === id ? { ...item, status: status } : item
     );
     setPendingApprovalOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders]);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders]);
+    handlePendingApprovalAction(index)
+    } else {
+       if(status === "Approved" && totaTransaction < singleOrder?.grandTotal){
+        const message = "Please complete payment first before approving the order";
+        toast.error(message);
+    }
+    else {
+      const updatedOrderItems = pendingApprovalOrders.map((item) =>
+      item.id === id ? { ...item, status: status } : item
+    );
+    setPendingApprovalOrders(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders]);
+    handlePendingApprovalAction(index)
+    }
+  }
   };
+
+  const handleUpdatePrintReady = (id, status, index) =>{
+    const updatedOrderItems = printReadyOrders.map((item) =>
+      item.id === id ? { ...item, status: status } : item
+    );
+    setPrintReadyOrders(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders]);
+    handlePrintReadyAction(index)
+  }
   
-  const handleButtonClick = (newActiveState) => {
+  const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
-    dispatch(getOrdersById(id)).then((res) => {
-      if (res.payload) {
-        const { orderItems } = res.payload;
-        setProofReadyOrders(orderItems?.filter((item) => item.status === "Rejected" || item.status === "Received"));
-        setPendingApprovalOrders(orderItems?.filter((item) => item.status === "Edited"));
-      }
-    });
   };
   
   const handleSubmit = () => {
@@ -132,6 +168,7 @@ export const Notifications = () => {
         const { orderItems } = res.payload;
         setProofReadyOrders(orderItems?.filter((item) => item.status === "Rejected" || item.status === "Received"));
         setPendingApprovalOrders(orderItems?.filter((item) => item.status === "Edited"));
+        setPrintReadyOrders(orderItems?.filter((item) => item.status === "Approved"));
         const message = "Order status updated successfully";
         toast.success(message);
       } else {
@@ -140,7 +177,6 @@ export const Notifications = () => {
       }
     });
   };
-
 
   if (error) {
     return <ErroPage error={error} />;
@@ -155,7 +191,6 @@ export const Notifications = () => {
       <nav className="flex justify-between gap-4 items-center px-4">
           <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
             <li className="text-gray-500 text-sm dark:text-gray-400">
-              {isLoading ? <Loader /> : (
               <button
                 type="button"
                 onClick={() => handleButtonClick("proofReady")}
@@ -164,9 +199,7 @@ export const Notifications = () => {
               >
                 Proof Ready
               </button>
-              )}
             </li>
-            {isLoading ? <Loader /> : (
             <li className="text-gray-500 text-sm dark:text-gray-400">
               <button
                 type="button"
@@ -177,7 +210,16 @@ export const Notifications = () => {
                 Pending
               </button>
             </li>
-            )}
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              <button
+                type="button"
+                onClick={() => handleButtonClick("printReady")}
+                className={`${active === "printReady" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Print Ready
+              </button>
+            </li>
           </ul>
           < button
             type="submit"
@@ -198,8 +240,8 @@ export const Notifications = () => {
           user={user}
           products={products}
           services={services}
-          status1="Edited"
-          status2="Rejected"
+          status1={{label: "Edit", value: "Edited"}}
+          status2={{label: "Reject", value: "Rejected"}}
         />
       )}
       {active === "pending" && (
@@ -208,13 +250,28 @@ export const Notifications = () => {
           orders={pendingApprovalOrders}
           handleAction={handlePendingApprovalAction}
           showPopover={showPopover2}
-          handleModalOpen={handleUpdateStatus}
+          handleModalOpen={handleUpdatePendingApproval}
           popoverRef={popoverRef2}
           user={user}
           products={products}
           services={services}
-          status1={"Approved"}
-          status2={"Rejected"}
+          status1={{label: "Approve", value: "Approved"}}
+          status2={{label: "Reject", value: "Rejected"}}
+        />
+      )}
+      {active === "printReady" && (
+        <NotificationTable
+          title="Print ready orders"
+          orders={printReadyOrders}
+          handleAction={handlePrintReadyAction}
+          showPopover={showPopover3}
+          handleModalOpen={handleUpdatePrintReady}
+          popoverRef={popoverRef3}
+          user={user}
+          products={products}
+          services={services}
+          status1={{label: "print", value: "Printed"}}
+          status2={{label: "Reject", value: "Edited"}}
         />
       )}
       </div>

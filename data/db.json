@@ -50,286 +50,105 @@
   ],
   "orders": [
     {
-      "id": "8fc2cad6-8900-4041-b4c5-622129eb1d60",
       "series": "IAN-O-0000-2024",
-      "date": "May 12, 2024",
-      "deliveryDate": "May 12, 2024",
+      "date": "May 14, 2024",
+      "deliveryDate": "May 14, 2024",
       "orderSource": "telegram",
       "description": "",
       "customerId": "1710809287639",
-      "salesPartnerId": "",
+      "salesPartnerId": "1714343286476",
       "status": "Pending Approval",
       "orderItems": [
-        {
-          "productId": "1713703632140",
-          "serviceId": "e4b1",
-          "priceId": "8d73",
-          "unitPrice": 54000,
-          "width": "3",
-          "height": "3",
-          "quantity": "3",
-          "unit": 27,
-          "discount": 0,
-          "level": 0,
-          "total": 54000,
-          "isDiscounted": false,
-          "status": "Rejected",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "id": "039c4d43-38ad-482a-a69a-4ff6b956f14f"
-        }
-      ],
-      "totalBirr": 62000,
-      "tax": 9300,
-      "grandTotal": 71300,
-      "fileNames": [
-        "Coca Cola-Sticker-5x4",
-        "Coca Cola-Banner-3x3"
-      ],
-      "totalQuantity": 5,
-      "adminApproval": false
-    },
-    {
-      "id": "4befa4bc-7469-4462-839d-466227e7842a",
-      "series": "IAN-O-0001-2024",
-      "date": "May 12, 2024",
-      "deliveryDate": "May 12, 2024",
-      "orderSource": "telegram",
-      "description": "",
-      "customerId": "1710822546278",
-      "salesPartnerId": "",
-      "status": "Pending Approval",
-      "orderItems": [
-        {
-          "productId": "1713703632140",
-          "serviceId": "1324",
-          "priceId": "1371",
-          "unitPrice": 250000,
-          "width": "5",
-          "height": "5",
-          "quantity": "5",
-          "unit": 125,
-          "discount": 0,
-          "level": 0,
-          "total": 250000,
-          "isDiscounted": false,
-          "status": "Rejected",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "id": "3674f8e4-c59f-4825-af65-0e7c9221e527"
-        },
         {
           "productId": "1713727389192",
-          "serviceId": "e4b1",
-          "priceId": "0189",
-          "unitPrice": 15625,
-          "width": "5",
-          "height": "5",
-          "quantity": "5",
-          "unit": 125,
+          "serviceId": "b664",
+          "priceId": "1a51",
+          "unitPrice": 21600,
+          "width": "6",
+          "height": "6",
+          "quantity": "6",
+          "unit": 216,
           "discount": 0,
           "level": 0,
-          "total": 15625,
+          "total": 21600,
           "isDiscounted": false,
-          "status": "Rejected",
-          "note": "",
+          "status": "Edited",
           "printed": false,
           "adminApproval": false,
           "completed": false,
-          "id": "9efd4368-6865-460b-840e-2aee5f7c8eb0"
+          "notes": [
+            {
+              "id": "1d4adfd2-aefe-4bc9-bb2f-6a4ad2449eff",
+              "note": "",
+              "date": "",
+              "userId": 1
+            }
+          ],
+          "id": "a5565be7-6eac-42f3-ac43-7ece5da2d8e4"
         },
         {
           "productId": "1714005604020",
-          "serviceId": "b664",
-          "priceId": "5e27",
-          "unitPrice": 4000,
-          "width": "2",
-          "height": "5",
-          "quantity": "2",
-          "unit": 20,
+          "serviceId": "1324",
+          "priceId": "e2e9",
+          "unitPrice": 32400,
+          "width": "6",
+          "height": "6",
+          "quantity": "6",
+          "unit": 216,
           "discount": 0,
           "level": 0,
-          "total": 4000,
+          "total": 32400,
           "isDiscounted": false,
-          "status": "Rejected",
-          "note": "",
+          "status": "Edited",
           "printed": false,
           "adminApproval": false,
           "completed": false,
-          "id": "2298b512-1d38-47a8-8e4a-1943e5c908e8"
+          "notes": [
+            {
+              "id": "b429c740-bdee-4671-877d-9016a1272a3c",
+              "note": "",
+              "date": "",
+              "userId": 1
+            }
+          ],
+          "id": "88e80d54-dfb6-40cb-bfb2-decad07d14ba"
         }
       ],
-      "totalBirr": 269625,
-      "tax": 40443.75,
-      "grandTotal": 310068.75,
+      "totalBirr": 54000,
+      "tax": 8100,
       "fileNames": [
-        "Teshager-Banner-5x5",
-        "Teshager-T-shirt-5x5",
-        "Teshager-Sticker-2x5"
+        "Coca Cola-T-shirt-6x6",
+        "Coca Cola-Sticker-6x6"
       ],
       "totalQuantity": 12,
-      "adminApproval": false
-    },
-    {
-      "id": "a9e19c15-f4b8-4f0c-a9b6-142a1604591a",
-      "series": "IAN-O-0002-2024",
-      "date": "May 12, 2024",
-      "deliveryDate": "May 12, 2024",
-      "orderSource": "whatsapp",
-      "description": "",
-      "customerId": "1710821022900",
-      "salesPartnerId": "",
-      "status": "Pending Approval",
-      "orderItems": [
-        {
-          "productId": "1713703632140",
-          "serviceId": "1324",
-          "priceId": "1371",
-          "unitPrice": 1800000,
-          "width": "5",
-          "height": "4",
-          "quantity": "45",
-          "unit": 900,
-          "discount": 0,
-          "level": 0,
-          "total": 1800000,
-          "isDiscounted": false,
-          "status": "Received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "id": "9fc58072-4ce2-4431-99f8-ff8ee7bbc548"
-        }
-      ],
-      "totalBirr": 1800000,
-      "tax": 270000,
-      "grandTotal": 2070000,
-      "fileNames": [
-        "Pepsi-Banner-5x4"
-      ],
-      "totalQuantity": 45,
-      "adminApproval": false
-    },
-    {
-      "id": "10ad9aa2-c50e-4e5a-ab4a-11132a204e36",
-      "series": "IAN-O-0003-2024",
-      "date": "May 12, 2024",
-      "deliveryDate": "May 12, 2024",
-      "orderSource": "telegram",
-      "description": "",
-      "customerId": "1710814124476",
-      "salesPartnerId": "",
-      "status": "Pending Approval",
-      "orderItems": [
-        {
-          "productId": "1713727389192",
-          "serviceId": "e4b1",
-          "priceId": "0189",
-          "unitPrice": 4000,
-          "width": "4",
-          "height": "4",
-          "quantity": "2",
-          "unit": 32,
-          "discount": 0,
-          "level": 0,
-          "total": 4000,
-          "isDiscounted": false,
-          "status": "Received",
-          "note": "",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "id": "309bd084-b6e9-48bd-929f-701445424288"
-        }
-      ],
-      "totalBirr": 4000,
-      "tax": 600,
-      "grandTotal": 4600,
-      "fileNames": [
-        "Biniyam-T-shirt-4x4"
-      ],
-      "totalQuantity": 2,
-      "adminApproval": false
+      "grandTotal": 62100,
+      "id": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8"
     }
   ],
   "commissions": [
     {
-      "id": "5871",
-      "orderId": "8fc2cad6-8900-4041-b4c5-622129eb1d60",
-      "totalCommission": 0,
+      "id": "27a2",
+      "orderId": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8",
+      "totalCommission": 3640,
       "transactions": [
         {
-          "date": "May 12, 2024",
-          "amount": 0,
-          "percent": 0,
+          "date": "May 14, 2024",
+          "amount": 2560,
+          "percent": 2,
           "description": "",
           "status": "pending"
         },
         {
-          "date": "May 12, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "6a79",
-      "orderId": "4befa4bc-7469-4462-839d-466227e7842a",
-      "totalCommission": 0,
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "amount": 0,
-          "percent": 0,
+          "date": "May 14, 2024",
+          "amount": 432,
+          "percent": 2,
           "description": "",
           "status": "pending"
         },
         {
-          "date": "May 12, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        },
-        {
-          "date": "May 12, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "716c",
-      "orderId": "a9e19c15-f4b8-4f0c-a9b6-142a1604591a",
-      "totalCommission": 0,
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "2451",
-      "orderId": "10ad9aa2-c50e-4e5a-ab4a-11132a204e36",
-      "totalCommission": 0,
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "amount": 0,
-          "percent": 0,
+          "date": "May 14, 2024",
+          "amount": 648,
+          "percent": 2,
           "description": "",
           "status": "pending"
         }
@@ -338,188 +157,45 @@
   ],
   "payments": [
     {
-      "id": "1b9d",
-      "totaTransaction": 2000,
-      "remainingAmount": 6625,
-      "orderId": null,
+      "id": "938f",
+      "totaTransaction": 62000,
+      "remainingAmount": 100,
+      "orderId": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8",
       "transactions": [
         {
-          "date": "May 3, 2024",
+          "date": "May 14, 2024",
           "paymentMethod": "cash",
           "reference": "",
-          "amount": "2000",
+          "amount": "30000",
           "status": "paid",
           "description": ""
         },
         {
-          "date": "May 3, 2024",
-          "paymentMethod": "bank-transfer",
-          "reference": "958djdd98CBE",
-          "amount": "4000",
-          "status": "pending",
-          "description": "payment"
-        }
-      ]
-    },
-    {
-      "id": "3c3e",
-      "totaTransaction": 0,
-      "remainingAmount": 9200,
-      "orderId": null,
-      "transactions": [
-        {
-          "date": "May 9, 2024",
+          "date": "May 14, 2024",
           "paymentMethod": "cash",
           "reference": "",
-          "amount": 0,
+          "amount": "15000",
+          "status": "paid",
+          "description": ""
+        },
+        {
+          "date": "May 14, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": "10000",
+          "status": "paid",
+          "description": ""
+        },
+        {
+          "date": "May 14, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": "7000",
           "status": "pending",
           "description": ""
         }
-      ]
-    },
-    {
-      "id": "2689",
-      "totaTransaction": 0,
-      "remainingAmount": 9200,
-      "orderId": null,
-      "transactions": [
-        {
-          "date": "May 9, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "9dbe",
-      "totaTransaction": 0,
-      "remainingAmount": 504160,
-      "orderId": null,
-      "transactions": [
-        {
-          "date": "May 9, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "e0a4",
-      "totaTransaction": 0,
-      "remainingAmount": 60662.5,
-      "orderId": null,
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "b2e1",
-      "totaTransaction": 0,
-      "remainingAmount": 150650,
-      "orderId": null,
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "9364",
-      "totaTransaction": 0,
-      "remainingAmount": 21275,
-      "orderId": null,
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "d9b6",
-      "totaTransaction": 0,
-      "remainingAmount": 71300,
-      "orderId": "8fc2cad6-8900-4041-b4c5-622129eb1d60",
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "38ae",
-      "totaTransaction": 0,
-      "remainingAmount": 310068.75,
-      "orderId": "4befa4bc-7469-4462-839d-466227e7842a",
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "c244",
-      "totaTransaction": 0,
-      "remainingAmount": 2070000,
-      "orderId": "a9e19c15-f4b8-4f0c-a9b6-142a1604591a",
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "3f82",
-      "totaTransaction": 0,
-      "remainingAmount": 4600,
-      "orderId": "10ad9aa2-c50e-4e5a-ab4a-11132a204e36",
-      "transactions": [
-        {
-          "date": "May 12, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ]
+      ],
+      "forcePayment": true
     }
   ],
   "customers": [
