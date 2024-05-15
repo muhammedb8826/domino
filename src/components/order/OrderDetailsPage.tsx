@@ -247,7 +247,7 @@ const OrderDetailsPage = () => {
     description: "",
     customerId: "",
     salesPartnerId: "",
-    status: "received",
+    status: "Received",
   });
 
   const [formData, setFormData] = useState([
@@ -264,7 +264,7 @@ const OrderDetailsPage = () => {
       level: 0,
       total: 0,
       isDiscounted: false,
-      status: "received",
+      status: "Received",
       notes: notes,
       printed: false,
       adminApproval: false,
@@ -462,7 +462,7 @@ const OrderDetailsPage = () => {
         level: 0,
         total: 0,
         isDiscounted: false,
-        status: "received",
+        status: "Received",
         notes: notes,
         printed: false,
         adminApproval: false,

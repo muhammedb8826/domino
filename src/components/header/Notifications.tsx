@@ -29,14 +29,20 @@ export const Notifications = () => {
   const [proofReadyOrders, setProofReadyOrders] = useState([]);
   const [pendingApprovalOrders, setPendingApprovalOrders] = useState([]);
   const [printReadyOrders, setPrintReadyOrders] = useState([]);
+  const [qualityControl, setQualityControl] = useState([]);
+  const [delivery, setDelivery] = useState([]);
   const [showPopover, setShowPopover] = useState<number | null>(null);
   const [showPopover2, setShowPopover2] = useState<number | null>(null);
   const [showPopover3, setShowPopover3] = useState<number | null>(null);
+  const [showPopover4, setShowPopover4] = useState<number | null>(null);
+  const [showPopover5, setShowPopover5] = useState<number | null>(null);
   const [forcePayment, setForcePayment] = useState(true);
   const [totaTransaction, setTotalTransaction] = useState(0);
   const popoverRef = useRef<HTMLDivElement>(null);
   const popoverRef2 = useRef<HTMLDivElement>(null);
   const popoverRef3 = useRef<HTMLDivElement>(null);
+  const popoverRef4 = useRef<HTMLDivElement>(null);
+  const popoverRef5 = useRef<HTMLDivElement>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
@@ -53,7 +59,13 @@ export const Notifications = () => {
     if (showPopover3 !== null && popoverRef3.current && !popoverRef3.current.contains(event.target as Node)) {
       setShowPopover3(null);
     }
-  }, [showPopover, showPopover2, showPopover3]);
+    if (showPopover4 !== null && popoverRef4.current && !popoverRef4.current.contains(event.target as Node)) {
+      setShowPopover4(null);
+    }
+    if (showPopover5 !== null && popoverRef5.current && !popoverRef5.current.contains(event.target as Node)) {
+      setShowPopover5(null);
+    }
+  }, [showPopover, showPopover2, showPopover3, showPopover4, showPopover5]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -85,6 +97,8 @@ export const Notifications = () => {
         setProofReadyOrders(orderItems?.filter(item => item.status === "Rejected" || item.status === "Received"));
         setPendingApprovalOrders(orderItems?.filter(item => item.status === "Edited"));
         setPrintReadyOrders(orderItems?.filter(item => item.status === "Approved"));
+        setQualityControl(orderItems?.filter(item => item.status === "Printed"));
+        setDelivery(orderItems?.filter(item => item.status === "Completed" || item.printed === true || item.adminApproval === true));
       }
     });
     dispatch(getPayments()).then((res)=>{
@@ -109,12 +123,23 @@ export const Notifications = () => {
     setDropdownOpen(!dropdownOpen);
     setShowPopover3(prevIndex => (prevIndex === index ? null : index));
   };
+
+  const handleQualityControlAction = (index: number) => {
+    setDropdownOpen(!dropdownOpen);
+    setShowPopover4(prevIndex => (prevIndex === index ? null : index));
+  };
+
+  const handleDeliveryAction = (index: number) => {
+    setDropdownOpen(!dropdownOpen);
+    setShowPopover5(prevIndex => (prevIndex === index ? null : index));
+  };
+
   const handleUpdateProofReady = (id, status, index) => {
     const updatedOrderItems = proofReadyOrders.map((item) =>
       item.id === id ? { ...item, status: status } : item
     );
     setProofReadyOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders]);
+    setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
     handleAction(index)
   };
   
@@ -124,7 +149,7 @@ export const Notifications = () => {
       item.id === id ? { ...item, status: status } : item
     );
     setPendingApprovalOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders]);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
     handlePendingApprovalAction(index)
     } else {
        if(status === "Approved" && totaTransaction < singleOrder?.grandTotal){
@@ -136,7 +161,7 @@ export const Notifications = () => {
       item.id === id ? { ...item, status: status } : item
     );
     setPendingApprovalOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders]);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
     handlePendingApprovalAction(index)
     }
   }
@@ -147,10 +172,39 @@ export const Notifications = () => {
       item.id === id ? { ...item, status: status } : item
     );
     setPrintReadyOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders]);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...qualityControl, ...delivery]);
     handlePrintReadyAction(index)
   }
+
+const handleUpdateQualityControl = (id, status, index) => {
+  if(status === "Completed"){
+ const updatedOrderItems = qualityControl.map((item) =>
+      item.id === id ? { ...item, status: status, printed: true, adminApproval: true  } : item
+    );
+    setQualityControl(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
+    handleQualityControlAction(index)
+  }
+  else {
+    const updatedOrderItems = qualityControl.map((item) =>
+      item.id === id ? { ...item, status: status, printed: false, adminApproval: false } : item
+    );
+    setQualityControl(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
+    handleQualityControlAction(index)
+  }
+  };
   
+
+  const handleUpdateDelivery = (id, status, index) => {
+  const updatedOrderItems = delivery.map((item) =>
+      item.id === id ? { ...item, status: status, completed: true } : item
+    );
+    setDelivery(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl]);
+    handleDeliveryAction(index)
+  };
+
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
@@ -169,6 +223,8 @@ export const Notifications = () => {
         setProofReadyOrders(orderItems?.filter((item) => item.status === "Rejected" || item.status === "Received"));
         setPendingApprovalOrders(orderItems?.filter((item) => item.status === "Edited"));
         setPrintReadyOrders(orderItems?.filter((item) => item.status === "Approved"));
+        setQualityControl(orderItems?.filter((item) => item.status === "Printed"));
+        setDelivery(orderItems?.filter((item) => item.status === "Completed" || item.printed === true || item.adminApproval === true));
         const message = "Order status updated successfully";
         toast.success(message);
       } else {
@@ -218,6 +274,26 @@ export const Notifications = () => {
                   } px-5 py-1.5 font-medium text-graydark`}
               >
                 Print Ready
+              </button>
+            </li>
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              <button
+                type="button"
+                onClick={() => handleButtonClick("qualityControl")}
+                className={`${active === "qualityControl" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Quality Control
+              </button>
+            </li>
+            <li className="text-gray-500 text-sm dark:text-gray-400">
+              <button
+                type="button"
+                onClick={() => handleButtonClick("delivery")}
+                className={`${active === "delivery" ? "text-white bg-black" : ""
+                  } px-5 py-1.5 font-medium text-graydark`}
+              >
+                Delivery
               </button>
             </li>
           </ul>
@@ -272,6 +348,36 @@ export const Notifications = () => {
           services={services}
           status1={{label: "print", value: "Printed"}}
           status2={{label: "Reject", value: "Edited"}}
+        />
+      )}
+      {active === "qualityControl" && (
+        <NotificationTable
+          title="Quality control and approval"
+          orders={qualityControl}
+          handleAction={handleQualityControlAction}
+          showPopover={showPopover4}
+          handleModalOpen={handleUpdateQualityControl}
+          popoverRef={popoverRef4}
+          user={user}
+          products={products}
+          services={services}
+          status1={{label: "Approve", value: "Completed"}}
+          status2={{label: "Reject", value: "Approved"}}
+        />
+      )}
+      {active === "delivery" && (
+        <NotificationTable
+          title="Delivery and shipping"
+          orders={delivery}
+          handleAction={handleDeliveryAction}
+          showPopover={showPopover5}
+          handleModalOpen={handleUpdateDelivery}
+          popoverRef={popoverRef5}
+          user={user}
+          products={products}
+          services={services}
+          status1={{label: "Deliver", value: "Delivered"}}
+          status2={{label: "", value: ""}}
         />
       )}
       </div>

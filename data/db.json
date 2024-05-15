@@ -50,6 +50,7 @@
   ],
   "orders": [
     {
+      "id": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8",
       "series": "IAN-O-0000-2024",
       "date": "May 14, 2024",
       "deliveryDate": "May 14, 2024",
@@ -59,33 +60,6 @@
       "salesPartnerId": "1714343286476",
       "status": "Pending Approval",
       "orderItems": [
-        {
-          "productId": "1713727389192",
-          "serviceId": "b664",
-          "priceId": "1a51",
-          "unitPrice": 21600,
-          "width": "6",
-          "height": "6",
-          "quantity": "6",
-          "unit": 216,
-          "discount": 0,
-          "level": 0,
-          "total": 21600,
-          "isDiscounted": false,
-          "status": "Edited",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "notes": [
-            {
-              "id": "1d4adfd2-aefe-4bc9-bb2f-6a4ad2449eff",
-              "note": "",
-              "date": "",
-              "userId": 1
-            }
-          ],
-          "id": "a5565be7-6eac-42f3-ac43-7ece5da2d8e4"
-        },
         {
           "productId": "1714005604020",
           "serviceId": "1324",
@@ -99,10 +73,10 @@
           "level": 0,
           "total": 32400,
           "isDiscounted": false,
-          "status": "Edited",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
+          "status": "Delivered",
+          "printed": true,
+          "adminApproval": true,
+          "completed": true,
           "notes": [
             {
               "id": "b429c740-bdee-4671-877d-9016a1272a3c",
@@ -112,6 +86,33 @@
             }
           ],
           "id": "88e80d54-dfb6-40cb-bfb2-decad07d14ba"
+        },
+        {
+          "productId": "1713727389192",
+          "serviceId": "b664",
+          "priceId": "1a51",
+          "unitPrice": 21600,
+          "width": "6",
+          "height": "6",
+          "quantity": "6",
+          "unit": 216,
+          "discount": 0,
+          "level": 0,
+          "total": 21600,
+          "isDiscounted": false,
+          "status": "Delivered",
+          "printed": true,
+          "adminApproval": true,
+          "completed": true,
+          "notes": [
+            {
+              "id": "1d4adfd2-aefe-4bc9-bb2f-6a4ad2449eff",
+              "note": "",
+              "date": "",
+              "userId": 1
+            }
+          ],
+          "id": "a5565be7-6eac-42f3-ac43-7ece5da2d8e4"
         }
       ],
       "totalBirr": 54000,
@@ -121,8 +122,7 @@
         "Coca Cola-Sticker-6x6"
       ],
       "totalQuantity": 12,
-      "grandTotal": 62100,
-      "id": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8"
+      "grandTotal": 62100
     }
   ],
   "commissions": [
@@ -195,7 +195,7 @@
           "description": ""
         }
       ],
-      "forcePayment": true
+      "forcePayment": false
     }
   ],
   "customers": [

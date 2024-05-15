@@ -74,6 +74,7 @@ export const NotificationTable = ({
                         className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                       >
                         <ul className="py-2 text-sm text-gray-700">
+                          
                           <li className={`${user?.email !== "admin@domino.com" && user?.roles !== "graphic-designer" ? "hidden" : ""}`}>
                             <button
                               type="button"
@@ -84,6 +85,8 @@ export const NotificationTable = ({
                               {status1.label}
                             </button>
                           </li>
+                          
+                          {status2.value !== "" && (
                           <li className={`${user?.email !== "admin@domino.com" && user?.roles !== "graphic-designer" ? "hidden" : ""}`}>
                             <button
                               type="button"
@@ -94,6 +97,7 @@ export const NotificationTable = ({
                               {status2.label}
                             </button>
                           </li>
+                          )}
                         </ul>
                       </div>
                     )}
