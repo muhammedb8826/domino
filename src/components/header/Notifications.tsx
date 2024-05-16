@@ -94,6 +94,7 @@ export const Notifications = () => {
     dispatch(getOrdersById(id)).then((res) => {
       if (res.payload) {
         const { orderItems } = res.payload;
+        setFormData(orderItems);
         setProofReadyOrders(orderItems?.filter(item => item.status === "Rejected" || item.status === "Received"));
         setPendingApprovalOrders(orderItems?.filter(item => item.status === "Edited"));
         setPrintReadyOrders(orderItems?.filter(item => item.status === "Approved"));
@@ -134,13 +135,23 @@ export const Notifications = () => {
     setShowPopover5(prevIndex => (prevIndex === index ? null : index));
   };
 
-  const handleUpdateProofReady = (id, status, index) => {
+  const handleUpdateProofReady = (id, status, index, width, height) => {
+    if(status === "Edited"){
+    const updatedOrderItems = proofReadyOrders.map((item) =>
+      item.id === id ? { ...item, status: status, width: width, height: height } : item
+    );
+    setProofReadyOrders(updatedOrderItems);
+    setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
+    handleAction(index)
+  }
+  else {
     const updatedOrderItems = proofReadyOrders.map((item) =>
       item.id === id ? { ...item, status: status } : item
     );
     setProofReadyOrders(updatedOrderItems);
     setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
     handleAction(index)
+  }
   };
   
   const handleUpdatePendingApproval = (id, status, index) => {
@@ -220,6 +231,7 @@ const handleUpdateQualityControl = (id, status, index) => {
       if (res.payload) {
         console.log("res", res.payload);
         const { orderItems } = res.payload;
+        setFormData(orderItems);
         setProofReadyOrders(orderItems?.filter((item) => item.status === "Rejected" || item.status === "Received"));
         setPendingApprovalOrders(orderItems?.filter((item) => item.status === "Edited"));
         setPrintReadyOrders(orderItems?.filter((item) => item.status === "Approved"));

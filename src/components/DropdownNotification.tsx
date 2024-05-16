@@ -103,7 +103,7 @@ const DropdownNotification = () => {
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
-  };
+  }; 
 
   const [adminNotification, setAdminNotification] = useState(0);
   const [operatorNotification, setOperatorNotification] = useState(0);

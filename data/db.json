@@ -123,6 +123,82 @@
       ],
       "totalQuantity": 12,
       "grandTotal": 62100
+    },
+    {
+      "id": "b901e479-54ca-4592-a815-d17a346b1f2d",
+      "series": "IAN-O-0001-2024",
+      "date": "May 16, 2024",
+      "deliveryDate": "May 16, 2024",
+      "orderSource": "phone",
+      "description": "",
+      "customerId": "1710821022900",
+      "salesPartnerId": "",
+      "status": "Pending Approval",
+      "orderItems": [
+        {
+          "productId": "1713703632140",
+          "serviceId": "e4b1",
+          "priceId": "8d73",
+          "unitPrice": 250000,
+          "width": "6",
+          "height": "4",
+          "quantity": "5",
+          "unit": 125,
+          "discount": 0,
+          "level": 0,
+          "total": 250000,
+          "isDiscounted": false,
+          "status": "Edited",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false,
+          "notes": [
+            {
+              "id": "2b93e9ff-ea35-40f1-b3f6-b6db464582b9",
+              "note": "",
+              "date": "",
+              "userId": 1
+            }
+          ],
+          "id": "8ed1e9f5-843d-45ff-bdc5-2d69f4952b8c"
+        },
+        {
+          "productId": "1713727389192",
+          "serviceId": "1324",
+          "priceId": "7c45",
+          "unitPrice": 43200,
+          "width": "6",
+          "height": "6",
+          "quantity": "6",
+          "unit": 216,
+          "discount": 0,
+          "level": 0,
+          "total": 43200,
+          "isDiscounted": false,
+          "status": "Received",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false,
+          "notes": [
+            {
+              "id": "18462d85-e0b1-4302-a238-2abf13faad05",
+              "note": "",
+              "date": "",
+              "userId": 1
+            }
+          ],
+          "id": "23be5d6e-0414-408d-a80f-e7d0fb9e4845"
+        }
+      ],
+      "totalBirr": 293200,
+      "tax": 43980,
+      "grandTotal": 337180,
+      "fileNames": [
+        "Pepsi-Banner-5x5",
+        "Pepsi-T-shirt-6x6"
+      ],
+      "totalQuantity": 11,
+      "adminApproval": false
     }
   ],
   "commissions": [
@@ -149,6 +225,27 @@
           "date": "May 14, 2024",
           "amount": 648,
           "percent": 2,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "22bb",
+      "orderId": "b901e479-54ca-4592-a815-d17a346b1f2d",
+      "totalCommission": 0,
+      "transactions": [
+        {
+          "date": "May 16, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        },
+        {
+          "date": "May 16, 2024",
+          "amount": 0,
+          "percent": 0,
           "description": "",
           "status": "pending"
         }
@@ -196,6 +293,23 @@
         }
       ],
       "forcePayment": false
+    },
+    {
+      "id": "c1f8",
+      "totaTransaction": 0,
+      "remainingAmount": 337180,
+      "orderId": "b901e479-54ca-4592-a815-d17a346b1f2d",
+      "transactions": [
+        {
+          "date": "May 16, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": 0,
+          "status": "pending",
+          "description": ""
+        }
+      ],
+      "forcePayment": true
     }
   ],
   "customers": [
