@@ -50,200 +50,81 @@
   ],
   "orders": [
     {
-      "id": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8",
+      "id": "6cfb89ee-3693-432d-ba9b-d7b1157c61f0",
       "series": "IAN-O-0000-2024",
-      "date": "May 14, 2024",
-      "deliveryDate": "May 14, 2024",
+      "date": "May 17, 2024",
+      "deliveryDate": "May 17, 2024",
       "orderSource": "telegram",
       "description": "",
       "customerId": "1710809287639",
-      "salesPartnerId": "1714343286476",
-      "status": "Pending Approval",
-      "orderItems": [
-        {
-          "productId": "1714005604020",
-          "serviceId": "1324",
-          "priceId": "e2e9",
-          "unitPrice": 32400,
-          "width": "6",
-          "height": "6",
-          "quantity": "6",
-          "unit": 216,
-          "discount": 0,
-          "level": 0,
-          "total": 32400,
-          "isDiscounted": false,
-          "status": "Delivered",
-          "printed": true,
-          "adminApproval": true,
-          "completed": true,
-          "notes": [
-            {
-              "id": "b429c740-bdee-4671-877d-9016a1272a3c",
-              "note": "",
-              "date": "",
-              "userId": 1
-            }
-          ],
-          "id": "88e80d54-dfb6-40cb-bfb2-decad07d14ba"
-        },
-        {
-          "productId": "1713727389192",
-          "serviceId": "b664",
-          "priceId": "1a51",
-          "unitPrice": 21600,
-          "width": "6",
-          "height": "6",
-          "quantity": "6",
-          "unit": 216,
-          "discount": 0,
-          "level": 0,
-          "total": 21600,
-          "isDiscounted": false,
-          "status": "Delivered",
-          "printed": true,
-          "adminApproval": true,
-          "completed": true,
-          "notes": [
-            {
-              "id": "1d4adfd2-aefe-4bc9-bb2f-6a4ad2449eff",
-              "note": "",
-              "date": "",
-              "userId": 1
-            }
-          ],
-          "id": "a5565be7-6eac-42f3-ac43-7ece5da2d8e4"
-        }
-      ],
-      "totalBirr": 54000,
-      "tax": 8100,
-      "fileNames": [
-        "Coca Cola-T-shirt-6x6",
-        "Coca Cola-Sticker-6x6"
-      ],
-      "totalQuantity": 12,
-      "grandTotal": 62100
-    },
-    {
-      "id": "b901e479-54ca-4592-a815-d17a346b1f2d",
-      "series": "IAN-O-0001-2024",
-      "date": "May 16, 2024",
-      "deliveryDate": "May 16, 2024",
-      "orderSource": "phone",
-      "description": "",
-      "customerId": "1710821022900",
       "salesPartnerId": "",
       "status": "Pending Approval",
       "orderItems": [
         {
-          "productId": "1713703632140",
-          "serviceId": "e4b1",
-          "priceId": "8d73",
-          "unitPrice": 250000,
-          "width": "6",
-          "height": "4",
+          "productId": "1713727389192",
+          "serviceId": "1324",
+          "priceId": "7c45",
+          "unitPrice": 25000,
+          "width": "5",
+          "height": "5",
           "quantity": "5",
           "unit": 125,
           "discount": 0,
           "level": 0,
-          "total": 250000,
-          "isDiscounted": false,
-          "status": "Edited",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "notes": [
-            {
-              "id": "2b93e9ff-ea35-40f1-b3f6-b6db464582b9",
-              "note": "",
-              "date": "",
-              "userId": 1
-            }
-          ],
-          "id": "8ed1e9f5-843d-45ff-bdc5-2d69f4952b8c"
-        },
-        {
-          "productId": "1713727389192",
-          "serviceId": "1324",
-          "priceId": "7c45",
-          "unitPrice": 43200,
-          "width": "6",
-          "height": "6",
-          "quantity": "6",
-          "unit": 216,
-          "discount": 0,
-          "level": 0,
-          "total": 43200,
+          "total": 25000,
           "isDiscounted": false,
           "status": "Received",
           "printed": false,
           "adminApproval": false,
           "completed": false,
-          "notes": [
-            {
-              "id": "18462d85-e0b1-4302-a238-2abf13faad05",
-              "note": "",
-              "date": "",
-              "userId": 1
-            }
-          ],
-          "id": "23be5d6e-0414-408d-a80f-e7d0fb9e4845"
+          "id": "ee32dc90-a5ce-4ce1-97fd-9b6aa8201911"
+        },
+        {
+          "productId": "1713703632140",
+          "serviceId": "1324",
+          "priceId": "1371",
+          "unitPrice": 360000,
+          "width": "6",
+          "height": "6",
+          "quantity": "5",
+          "unit": 180,
+          "discount": 0,
+          "level": 0,
+          "total": 360000,
+          "isDiscounted": false,
+          "status": "Received",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false,
+          "id": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3"
         }
       ],
-      "totalBirr": 293200,
-      "tax": 43980,
-      "grandTotal": 337180,
+      "totalBirr": 385000,
+      "tax": 57750,
+      "grandTotal": 442750,
       "fileNames": [
-        "Pepsi-Banner-5x5",
-        "Pepsi-T-shirt-6x6"
+        "Coca Cola-T-shirt-5x5",
+        "Coca Cola-Banner-6x6"
       ],
-      "totalQuantity": 11,
+      "totalQuantity": 10,
       "adminApproval": false
     }
   ],
   "commissions": [
     {
-      "id": "27a2",
-      "orderId": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8",
-      "totalCommission": 3640,
-      "transactions": [
-        {
-          "date": "May 14, 2024",
-          "amount": 2560,
-          "percent": 2,
-          "description": "",
-          "status": "pending"
-        },
-        {
-          "date": "May 14, 2024",
-          "amount": 432,
-          "percent": 2,
-          "description": "",
-          "status": "pending"
-        },
-        {
-          "date": "May 14, 2024",
-          "amount": 648,
-          "percent": 2,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "22bb",
-      "orderId": "b901e479-54ca-4592-a815-d17a346b1f2d",
+      "id": "729b",
+      "orderId": "6cfb89ee-3693-432d-ba9b-d7b1157c61f0",
       "totalCommission": 0,
       "transactions": [
         {
-          "date": "May 16, 2024",
+          "date": "May 17, 2024",
           "amount": 0,
           "percent": 0,
           "description": "",
           "status": "pending"
         },
         {
-          "date": "May 16, 2024",
+          "date": "May 17, 2024",
           "amount": 0,
           "percent": 0,
           "description": "",
@@ -254,54 +135,13 @@
   ],
   "payments": [
     {
-      "id": "938f",
-      "totaTransaction": 62000,
-      "remainingAmount": 100,
-      "orderId": "0874d393-458f-4b1a-a5bc-e4ea9ed866f8",
-      "transactions": [
-        {
-          "date": "May 14, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": "30000",
-          "status": "paid",
-          "description": ""
-        },
-        {
-          "date": "May 14, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": "15000",
-          "status": "paid",
-          "description": ""
-        },
-        {
-          "date": "May 14, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": "10000",
-          "status": "paid",
-          "description": ""
-        },
-        {
-          "date": "May 14, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": "7000",
-          "status": "pending",
-          "description": ""
-        }
-      ],
-      "forcePayment": false
-    },
-    {
-      "id": "c1f8",
+      "id": "90d4",
       "totaTransaction": 0,
-      "remainingAmount": 337180,
-      "orderId": "b901e479-54ca-4592-a815-d17a346b1f2d",
+      "remainingAmount": 442750,
+      "orderId": "6cfb89ee-3693-432d-ba9b-d7b1157c61f0",
       "transactions": [
         {
-          "date": "May 16, 2024",
+          "date": "May 17, 2024",
           "paymentMethod": "cash",
           "reference": "",
           "amount": 0,
@@ -310,6 +150,21 @@
         }
       ],
       "forcePayment": true
+    }
+  ],
+  "notes": [
+    {
+      "id": "6cfb89ee-3693-432d-ba9b-d7b1157c61f0",
+      "notes": [
+        {
+          "id": "ee32dc90-a5ce-4ce1-97fd-9b6aa8201911",
+          "note": "mame is really smart",
+          "orderItemsId": "ee32dc90-a5ce-4ce1-97fd-9b6aa8201911",
+          "date": "May 17, 2024",
+          "time": "3:24 AM",
+          "user": 1
+        }
+      ]
     }
   ],
   "customers": [

@@ -12,6 +12,19 @@ import { getServices } from "@/redux/features/service/servicesSlice";
 import { NotificationTable } from "./NotificationTable";
 import toast from "react-hot-toast";
 import { getPayments } from "@/redux/features/paymentSlice";
+import { createNote, getNotes } from "@/redux/features/notesSlice";
+
+const date = new Date();
+const options = { month: "short", day: "numeric", year: "numeric" };
+const formattedDate = date.toLocaleDateString("en-US", options);
+let hours = date.getHours();
+const minutes = String(date.getMinutes()).padStart(2, '0');
+const ampm = hours >= 12 ? 'PM' : 'AM';
+hours = hours % 12;
+hours = hours ? hours : 12; 
+const strTime = hours + ':' + minutes + ' ' + ampm;
+
+
 export const Notifications = () => {
   const { id } = useParams<{ id: string }>()
   const { user, error } = useSelector(
@@ -21,6 +34,7 @@ export const Notifications = () => {
     (state: RootState) => state.order
   );
   const { payments } = useSelector((state) => state.payment);
+  const { notes } = useSelector((state) => state.note);
 
   const { products } = useSelector((state: RootState) => state.product);
   const [active , setActive] = useState("proofReady");
@@ -46,6 +60,16 @@ export const Notifications = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
+  const [note, setNote] = useState([
+    {
+      id: "",
+      note: "", 
+      orderItemsId: "", 
+      date: "", 
+      time: "", 
+      user: user?.id
+    }
+  ]);
   const dispatch = useDispatch();
 
 
@@ -111,6 +135,14 @@ export const Notifications = () => {
     })
     dispatch(getProducts());
     dispatch(getServices());
+    dispatch(getNotes()).then((res) => {
+      if (res.payload) {
+        console.log("res", res.payload);
+        
+        const { notes } = res.payload;
+        setNote(notes);
+      }
+    });
   }, [dispatch, id]);
 
   const handleAction = (index: number) => setShowPopover(prevIndex => (prevIndex === index ? null : index));
@@ -216,6 +248,16 @@ const handleUpdateQualityControl = (id, status, index) => {
     handleDeliveryAction(index)
   };
 
+
+  const handleUpdateNote = (notes, index, setExpandedNotes, expandedNotes) => {
+    setNote(notes);
+    // const updatedExpandedNotes = expandedNotes.map((expanded, expandedIndex) =>
+    //   expandedIndex === index ? !expanded : expanded
+    // );
+    // setExpandedNotes(updatedExpandedNotes);
+  }
+
+
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
@@ -226,6 +268,13 @@ const handleUpdateQualityControl = (id, status, index) => {
       ...singleOrder,
       orderItems: formData,
     };
+
+    const noteData = {
+      id: id,
+      notes: note
+    }
+    
+    dispatch(createNote(noteData));
   
     dispatch(updateOrder(data)).then((res) => {
       if (res.payload) {
@@ -324,8 +373,10 @@ const handleUpdateQualityControl = (id, status, index) => {
           handleAction={handleAction}
           showPopover={showPopover}
           handleModalOpen={handleUpdateProofReady}
+          handleUpdateNote={handleUpdateNote}
           popoverRef={popoverRef}
           user={user}
+          note={note}
           products={products}
           services={services}
           status1={{label: "Edit", value: "Edited"}}
@@ -339,8 +390,10 @@ const handleUpdateQualityControl = (id, status, index) => {
           handleAction={handlePendingApprovalAction}
           showPopover={showPopover2}
           handleModalOpen={handleUpdatePendingApproval}
+          handleUpdateNote={handleUpdateNote}
           popoverRef={popoverRef2}
           user={user}
+          note={note}
           products={products}
           services={services}
           status1={{label: "Approve", value: "Approved"}}
@@ -354,8 +407,10 @@ const handleUpdateQualityControl = (id, status, index) => {
           handleAction={handlePrintReadyAction}
           showPopover={showPopover3}
           handleModalOpen={handleUpdatePrintReady}
+          handleUpdateNote={handleUpdateNote}
           popoverRef={popoverRef3}
           user={user}
+          note={note}
           products={products}
           services={services}
           status1={{label: "print", value: "Printed"}}
@@ -369,8 +424,10 @@ const handleUpdateQualityControl = (id, status, index) => {
           handleAction={handleQualityControlAction}
           showPopover={showPopover4}
           handleModalOpen={handleUpdateQualityControl}
+          handleUpdateNote={handleUpdateNote}
           popoverRef={popoverRef4}
           user={user}
+          note={note}
           products={products}
           services={services}
           status1={{label: "Approve", value: "Completed"}}
@@ -384,8 +441,10 @@ const handleUpdateQualityControl = (id, status, index) => {
           handleAction={handleDeliveryAction}
           showPopover={showPopover5}
           handleModalOpen={handleUpdateDelivery}
+          handleUpdateNote={handleUpdateNote}
           popoverRef={popoverRef5}
           user={user}
+          note={note}
           products={products}
           services={services}
           status1={{label: "Deliver", value: "Delivered"}}

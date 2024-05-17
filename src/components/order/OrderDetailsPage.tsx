@@ -231,14 +231,6 @@ const OrderDetailsPage = () => {
     setShowPopover2(index);
   };
 
-  const notes = [{
-    id: uuidv4(),
-    note: "",
-    date: "",
-    userId: user.id,
-  }];
-
-
   const [orderInfo, setOrderInfo] = useState({
     series: "SAL-ORD-YYYY-",
     date: formattedDate,
@@ -265,7 +257,6 @@ const OrderDetailsPage = () => {
       total: 0,
       isDiscounted: false,
       status: "Received",
-      notes: notes,
       printed: false,
       adminApproval: false,
       completed: false,
@@ -293,6 +284,7 @@ const OrderDetailsPage = () => {
       status: "pending",
     }
   ]);
+
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalBirr, setTotalBirr] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -463,7 +455,6 @@ const OrderDetailsPage = () => {
         total: 0,
         isDiscounted: false,
         status: "Received",
-        notes: notes,
         printed: false,
         adminApproval: false,
         completed: false,

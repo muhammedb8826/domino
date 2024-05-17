@@ -24,6 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { createCommission } from "@/redux/features/commission/commissionSlice";
 import { createPayment } from "@/redux/features/paymentSlice";
 import { getDiscounts } from "@/redux/features/dicount/dicountSlice";
+import { createNote } from "@/redux/features/notesSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -70,13 +71,6 @@ export const OrderRegistration = () => {
     status: "Pending Approval",
   });
 
-  const notes = [{
-    id: uuidv4(),
-    note: "",
-    date: "",
-    userId: user.id,
-  }];
-
   const [formData, setFormData] = useState([
     {
       productId: "",
@@ -95,7 +89,6 @@ export const OrderRegistration = () => {
       printed: false,
       adminApproval: false,
       completed: false,
-      notes: notes,
       id: uuidv4(),
     }
   ]);
@@ -212,7 +205,6 @@ export const OrderRegistration = () => {
         printed: false,
         adminApproval: false,
         completed: false,
-        notes: notes,
         id: uuidv4(),
       },
     ]);
@@ -515,7 +507,6 @@ export const OrderRegistration = () => {
         printed: false,
         adminApproval: false,
         completed: false,
-        notes: notes,
         id: ""
       },
     ]);
