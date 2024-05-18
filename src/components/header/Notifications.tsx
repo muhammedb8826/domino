@@ -161,7 +161,8 @@ export const Notifications = () => {
   };
 
   const handleUpdateProofReady = (id, status, index, width, height) => {
-    if (status === "Edited") {
+    if(user?.roles === "graphic-designer" || user?.roles === "reception" || user?.email === "admin@domino.com") {
+    if (status === "Edited" ) {
       const updatedOrderItems = proofReadyOrders.map((item) =>
         item.id === id ? { ...item, status: status, width: width, height: height } : item
       );
@@ -177,9 +178,14 @@ export const Notifications = () => {
       setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
       handleAction(index)
     }
+  } else {
+    const message = "You are not authorized to edit this order";
+    toast.error(message);
+  }
   };
 
   const handleUpdatePendingApproval = (id, status, index) => {
+    if(user?.email === "admin@domino.com"){
     if (!forcePayment) {
       const updatedOrderItems = pendingApprovalOrders.map((item) =>
         item.id === id ? { ...item, status: status } : item
@@ -201,18 +207,29 @@ export const Notifications = () => {
         handlePendingApprovalAction(index)
       }
     }
+  }
+  else {
+    const message = "You are not authorized to edit this order";
+    toast.error(message);
+  }
   };
 
   const handleUpdatePrintReady = (id, status, index) => {
+    if(user?.roles === "operator" || user?.email === "admin@domino.com") {
     const updatedOrderItems = printReadyOrders.map((item) =>
       item.id === id ? { ...item, status: status } : item
     );
     setPrintReadyOrders(updatedOrderItems);
     setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...qualityControl, ...delivery]);
     handlePrintReadyAction(index)
+  } else {
+    const message = "You are not authorized to edit this order";
+    toast.error(message);
+  }
   }
 
   const handleUpdateQualityControl = (id, status, index) => {
+    if(user?.email === "admin@domino.com"){
     if (status === "Completed") {
       const updatedOrderItems = qualityControl.map((item) =>
         item.id === id ? { ...item, status: status, printed: true, adminApproval: true } : item
@@ -229,16 +246,27 @@ export const Notifications = () => {
       setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
       handleQualityControlAction(index)
     }
+  }
+  else {
+    const message = "You are not authorized to edit this order";
+    toast.error(message);
+  }
   };
 
 
   const handleUpdateDelivery = (id, status, index) => {
+    if(user?.roles === "reception" || user?.email === "admin@domino.com") {
     const updatedOrderItems = delivery.map((item) =>
       item.id === id ? { ...item, status: status, completed: true } : item
     );
     setDelivery(updatedOrderItems);
     setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl]);
     handleDeliveryAction(index)
+  }
+  else {
+    const message = "You are not authorized to edit this order";
+    toast.error(message);
+  }
   };
 
   const [expandedNotes, setExpandedNotes] = useState([]);
@@ -408,7 +436,6 @@ export const Notifications = () => {
             handleUpdateNote={handleUpdateNote}
             popoverRef={popoverRef}
             users={users}
-            user={user}
             note={removeDuplicates(note)}
             products={products}
             services={services}
@@ -430,7 +457,6 @@ export const Notifications = () => {
             handleUpdateNote={handleUpdateNote}
             popoverRef={popoverRef2}
             users={users}
-            user={user}
             note={removeDuplicates(note)}
             products={products}
             services={services}
@@ -452,7 +478,6 @@ export const Notifications = () => {
             handleUpdateNote={handleUpdateNote}
             popoverRef={popoverRef3}
             users={users}
-            user={user}
             note={removeDuplicates(note)}
             products={products}
             services={services}
@@ -474,7 +499,6 @@ export const Notifications = () => {
             handleUpdateNote={handleUpdateNote}
             popoverRef={popoverRef4}
             users={users}
-            user={user}
             note={removeDuplicates(note)}
             products={products}
             services={services}
@@ -496,7 +520,6 @@ export const Notifications = () => {
             handleUpdateNote={handleUpdateNote}
             popoverRef={popoverRef5}
             users={users}
-            user={user}
             note={removeDuplicates(note)}
             products={products}
             services={services}

@@ -127,6 +127,106 @@
       ],
       "totalQuantity": 11,
       "grandTotal": 442750
+    },
+    {
+      "id": "81b46676-a60d-444c-905a-92cf0896f633",
+      "series": "IAN-O-0001-2024",
+      "date": "May 18, 2024",
+      "deliveryDate": "May 18, 2024",
+      "orderSource": "In person",
+      "description": "",
+      "customerId": "1710821022900",
+      "salesPartnerId": "",
+      "status": "Pending Approval",
+      "orderItems": [
+        {
+          "productId": "1714005604020",
+          "serviceId": "b664",
+          "priceId": "5e27",
+          "unitPrice": 25000,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unit": 125,
+          "discount": 0,
+          "level": 0,
+          "total": 25000,
+          "isDiscounted": false,
+          "status": "Received",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false,
+          "id": "c9adbc5b-a369-4280-a447-8327f1e84ed8"
+        },
+        {
+          "productId": "1713703632140",
+          "serviceId": "1324",
+          "priceId": "1371",
+          "unitPrice": 300000,
+          "width": "6",
+          "height": "5",
+          "quantity": "5",
+          "unit": 150,
+          "discount": 0,
+          "level": 0,
+          "total": 300000,
+          "isDiscounted": false,
+          "status": "Received",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false,
+          "id": "18dc443e-2b02-4ee3-935f-0750eae54192"
+        }
+      ],
+      "totalBirr": 325000,
+      "tax": 48750,
+      "grandTotal": 373750,
+      "fileNames": [
+        "Pepsi-Sticker-5x5",
+        "Pepsi-Banner-6x5"
+      ],
+      "totalQuantity": 10,
+      "adminApproval": false
+    },
+    {
+      "id": "9b7408c3-d31d-48ff-829a-08adaa3769b1",
+      "series": "IAN-O-0002-2024",
+      "date": "May 18, 2024",
+      "deliveryDate": "May 18, 2024",
+      "orderSource": "telegram",
+      "description": "",
+      "customerId": "1714343248651",
+      "salesPartnerId": "",
+      "status": "Pending Approval",
+      "orderItems": [
+        {
+          "productId": "1713703632140",
+          "serviceId": "e4b1",
+          "priceId": "8d73",
+          "unitPrice": 250000,
+          "width": "5",
+          "height": "5",
+          "quantity": "5",
+          "unit": 125,
+          "discount": 0,
+          "level": 0,
+          "total": 250000,
+          "isDiscounted": false,
+          "status": "Received",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false,
+          "id": "5a17d3e5-3363-4f05-9fff-87b0cefe4480"
+        }
+      ],
+      "totalBirr": 250000,
+      "tax": 37500,
+      "grandTotal": 287500,
+      "fileNames": [
+        "Muhammed-Banner-5x5"
+      ],
+      "totalQuantity": 5,
+      "adminApproval": false
     }
   ],
   "commissions": [
@@ -157,6 +257,41 @@
           "status": "pending"
         }
       ]
+    },
+    {
+      "id": "3b2e",
+      "orderId": "81b46676-a60d-444c-905a-92cf0896f633",
+      "totalCommission": 0,
+      "transactions": [
+        {
+          "date": "May 18, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        },
+        {
+          "date": "May 18, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "8178",
+      "orderId": "9b7408c3-d31d-48ff-829a-08adaa3769b1",
+      "totalCommission": 0,
+      "transactions": [
+        {
+          "date": "May 18, 2024",
+          "amount": 0,
+          "percent": 0,
+          "description": "",
+          "status": "pending"
+        }
+      ]
     }
   ],
   "payments": [
@@ -176,6 +311,40 @@
         }
       ],
       "forcePayment": false
+    },
+    {
+      "id": "66ad",
+      "totaTransaction": 0,
+      "remainingAmount": 373750,
+      "orderId": "81b46676-a60d-444c-905a-92cf0896f633",
+      "transactions": [
+        {
+          "date": "May 18, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": 0,
+          "status": "pending",
+          "description": ""
+        }
+      ],
+      "forcePayment": true
+    },
+    {
+      "id": "1b36",
+      "totaTransaction": 0,
+      "remainingAmount": 287500,
+      "orderId": "9b7408c3-d31d-48ff-829a-08adaa3769b1",
+      "transactions": [
+        {
+          "date": "May 18, 2024",
+          "paymentMethod": "cash",
+          "reference": "",
+          "amount": 0,
+          "status": "pending",
+          "description": ""
+        }
+      ],
+      "forcePayment": true
     }
   ],
   "notes": [

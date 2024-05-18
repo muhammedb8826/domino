@@ -10,13 +10,25 @@ import Loader from '@/common/Loader';
 const DropdownNotification = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { orders, isLoading } = useSelector((state: RootState) => state.order);
-  const {sales} = useSelector((state: RootState) => state.sale);
+  const { sales } = useSelector((state: RootState) => state.sale);
   const { purchases } = useSelector((state: RootState) => state.purchase);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+  const [adminNotification, setAdminNotification] = useState(0);
+  const [financeNotification, setFinanceNotification] = useState(0);
+  const [storeRepNotification, setStoreRepNotification] = useState(0);
+  const [adminNotifications, setAdminNotifications] = useState([]);
+  const [graphicDesignerNotifications, setGraphicDesignerNotifications] = useState([]);
+  const [filteredGraphicDesignerNotifications, setFilteredGraphicDesignerNotifications] = useState([]);
+  const [receptionistNotification, setReceptionistNotification] = useState([]);
+  const [filteredReceiptNotifications, setFilteredReceiptNotifications] = useState([]);
+  const [operatorNotification, setOperatorNotification] = useState([]);
+  const [filteredOperatorNotifications, setFilteredOperatorNotifications] = useState([]);
+  console.log(operatorNotification, filteredOperatorNotifications);
+  
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -55,43 +67,36 @@ const DropdownNotification = () => {
 
   useEffect(() => {
     dispatch(getOrders()).then((res) => {
-      if(res.payload) {
+      if (res.payload) {
         const editedOrder = res.payload.filter(
           (order) => order.status === "Pending Approval"
         );
 
         setAdminNotifications(editedOrder);
-        const notification = editedOrder.map((item) =>
-          item.orderItems.filter((item) => item.status === "edited")
-        );
-        setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
-        const operatorNotification = editedOrder.map((item) =>
-          item.orderItems.filter((item) => item.status === "approved")
-        );
-        setOperatorNotification(
-          operatorNotification.reduce((a, b) => a + b.length, 0)
-        );
-
-        const receptionistNotification = editedOrder.map((item) =>
-          item.orderItems.filter((item) => item.status === "paid")
-        );
-        setReceptionistNotification(
-          receptionistNotification.reduce((a, b) => a + b.length, 0)
-        );
+        setGraphicDesignerNotifications(editedOrder);
+        setReceptionistNotification(editedOrder);
+        setOperatorNotification(editedOrder);
+        const filteredGraphicDesignerNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected"));
+        const filteredReceptionistNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected" || item.status === "Completed"));
+        const filteredOperatorNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Approved"));
+        setFilteredOperatorNotifications(filteredOperatorNotifications);
+        setFilteredReceiptNotifications(filteredReceptionistNotifications);
+        setFilteredGraphicDesignerNotifications(filteredGraphicDesignerNotifications);
 
         let count = 0;
 
-        const matchedOrderStatus = res.payload.filter(status => 
-            res.payload.some(order => order.id === status.orderId)
+        const matchedOrderStatus = res.payload.filter(status =>
+          res.payload.some(order => order.id === status.orderId)
         );
         matchedOrderStatus.forEach(status => {
-            const correspondingOrder = res.payload.find(order => order.id === status.orderId);
-            if (correspondingOrder.payment?.status === "paid") {
-                status.orderItems.forEach(item => {
-                    if (item.status !== "paid" && item.status !== "delivered") {
-                        count++;            }
-                });
-            }
+          const correspondingOrder = res.payload.find(order => order.id === status.orderId);
+          if (correspondingOrder.payment?.status === "paid") {
+            status.orderItems.forEach(item => {
+              if (item.status !== "paid" && item.status !== "delivered") {
+                count++;
+              }
+            });
+          }
         });
 
         setFinanceNotification(count);
@@ -103,17 +108,14 @@ const DropdownNotification = () => {
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
-  }; 
+  };
 
-  const [adminNotification, setAdminNotification] = useState(0);
-  const [operatorNotification, setOperatorNotification] = useState(0);
-  const [receptionistNotification, setReceptionistNotification] = useState(0);
-  const [financeNotification, setFinanceNotification] = useState(0);
-  const [storeRepNotification, setStoreRepNotification] = useState(0);
-  const [adminNotifications, setAdminNotifications] = useState([]);
+
+  console.log(receptionistNotification, filteredReceiptNotifications);
+
 
   // const filteredOrders = orders?.filter((order) => order.status === "received");
-  
+
 
   // useEffect(() => {
   //   const editedOrder = orders?.filter(
@@ -161,8 +163,8 @@ const DropdownNotification = () => {
   //   setFinanceNotification(count);
   // }, [orders, sales, purchases]);
 
-  return isLoading?(<Loader/>):(
-    
+  return isLoading ? (<Loader />) : (
+
     <li className="relative">
       <Link
         ref={trigger}
@@ -193,114 +195,178 @@ const DropdownNotification = () => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80 ${
-          dropdownOpen === true ? 'block' : 'hidden'
-        }`}
+        className={`absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80 ${dropdownOpen === true ? 'block' : 'hidden'
+          }`}
       >
         <div className="px-4.5 py-3">
           <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
         </div>
-        
+
         <ul className="flex h-auto flex-col overflow-y-auto">
-        {user?.email === "admin@domino.com" && (
-          <>
-          {adminNotifications.length > 0 && (
-            adminNotifications.map((notification, index) => (
-          <li>
-            <Link
-              onClick={() => setDropdownOpen(false)}
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to={`/dashboard/notifications/${notification.id}`}
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  you have new pending {notification.series} order
-                </span>{' '}
-                {/* Sint occaecat cupidatat non proident, sunt in culpa qui officia
+          {user?.email === "admin@domino.com" && (
+            <>
+              {adminNotifications?.length > 0 && (
+                adminNotifications?.map((notification, index) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          you have new pending {notification.series} order
+                        </span>{' '}
+                        {/* Sint occaecat cupidatat non proident, sunt in culpa qui officia
                 deserunt mollit anim. */}
-              </p>
+                      </p>
 
-              <p className="text-xs">{notification.date}</p>
-            </Link>
-          </li>
-          ))
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              )}
+            </>
           )}
-          </>
-          )}
-          {user?.roles === "operator" && (
-          <li>
-            <Link
-            onClick={() => setDropdownOpen(false)}
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/dashboard/operator-notifications"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                you have {operatorNotification} new notifications
-                </span>{' '}
-                {/* that a reader will be distracted by the readable. */}
-              </p>
 
-              <p className="text-xs">24 Feb, 2025</p>
-            </Link>
-          </li>
+          {user?.roles === "graphic-designer" && (
+            <>
+              {filteredGraphicDesignerNotifications.some((l) => l.length > 0) ? (
+                graphicDesignerNotifications?.map((notification, index) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          you have new pending {notification.series} order
+                        </span>{' '}
+                        {notification.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected")?.length} items to review
+                      </p>
+
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ): (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                 <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          No new notifications
+                        </span>{' '}
+                        </p>
+                </li>
+              )}
+            </>
           )}
+
           {user?.roles === "reception" && (
-          <li>
-            <Link
-            onClick={() => setDropdownOpen(false)}
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/dashboard/receptionist-notifications"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  You have {receptionistNotification} new notifications
-                </span>{' '}
-                {/* of passages of Lorem Ipsum available, but the majority have
-                suffered */}
-              </p>
+            <>
+              {filteredReceiptNotifications.some((l) => l.length > 0) ? (
+                receptionistNotification?.map((notification, index) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          you have new pending {notification.series} order
+                        </span>{' '}
+                        {notification.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected" || item.status === "Completed")?.length} items to review
+                      </p>
 
-              <p className="text-xs">04 Jan, 2025</p>
-            </Link>
-          </li>
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ): (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                 <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          No new notifications
+                        </span>{' '}
+                        </p>
+                </li>
+              )}
+            </>
           )}
-           {user?.roles === "finance" && (
-          <li>
-            <Link
-            onClick={() => setDropdownOpen(false)}
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/dashboard/finance-notifications"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  You have {financeNotification} new notifications
-                </span>{' '}
-                {/* of passages of Lorem Ipsum available, but the majority have
-                suffered */}
-              </p>
 
-              <p className="text-xs">01 Dec, 2024</p>
-            </Link>
-          </li>
+          {user?.roles === "operator" && (
+            <>
+              {filteredOperatorNotifications.some((l) => l.length > 0) ? (
+                operatorNotification?.map((notification, index) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          you have new pending {notification.series} order
+                        </span>{' '}
+                        {notification.orderItems.filter((item) => item.status === "Approved")?.length} items to review
+                      </p>
+
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ): (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                 <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          No new notifications
+                        </span>{' '}
+                        </p>
+                </li>
+              )}
+            </>
           )}
+
+          {user?.roles === "finance" && (
+            <li>
+              <Link
+                onClick={() => setDropdownOpen(false)}
+                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                to="/dashboard/finance-notifications"
+              >
+                <p className="text-sm">
+                  <span className="text-black dark:text-white">
+                    You have {financeNotification} new notifications
+                  </span>{' '}
+                  {/* of passages of Lorem Ipsum available, but the majority have
+                suffered */}
+                </p>
+
+                <p className="text-xs">01 Dec, 2024</p>
+              </Link>
+            </li>
+          )}
+
+
           {user?.roles === "store-representative" && (
-          <li>
-            <Link
-            onClick={() => setDropdownOpen(false)}
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/dashboard/store-notifications"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  You have {storeRepNotification} new notifications
-                </span>{' '}
-                {/* of passages of Lorem Ipsum available, but the majority have
+            <li>
+              <Link
+                onClick={() => setDropdownOpen(false)}
+                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                to="/dashboard/store-notifications"
+              >
+                <p className="text-sm">
+                  <span className="text-black dark:text-white">
+                    You have {storeRepNotification} new notifications
+                  </span>{' '}
+                  {/* of passages of Lorem Ipsum available, but the majority have
                 suffered */}
-              </p>
+                </p>
 
-              <p className="text-xs">01 Dec, 2024</p>
-            </Link>
-          </li>
+                <p className="text-xs">01 Dec, 2024</p>
+              </Link>
+            </li>
           )}
         </ul>
       </div>

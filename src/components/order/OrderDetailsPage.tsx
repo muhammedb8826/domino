@@ -1227,7 +1227,7 @@ const OrderDetailsPage = () => {
                                     )}
                                   {data.status ===
                                     "Edited" && (
-                                      <span className="bg-warning text-white text-xs font-medium px-2.5 py-0.5 rounded">
+                                      <span className="bg-primary/50 text-white text-xs font-medium px-2.5 py-0.5 rounded">
                                         {data.status}
                                       </span>
                                     )}
@@ -1258,6 +1258,12 @@ const OrderDetailsPage = () => {
                                   {data.status ===
                                     "Delivered" && (
                                       <span className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-primary dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                        {data.status}
+                                      </span>
+                                    )}
+                                    {data.status ===
+                                    "Completed" && (
+                                      <span className="text-white bg-warning hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-warning dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
                                         {data.status}
                                       </span>
                                     )}

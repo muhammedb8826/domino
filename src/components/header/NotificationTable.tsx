@@ -16,7 +16,6 @@ export const NotificationTable = ({
   handleUpdateNote,
   popoverRef,
   users,
-  user,
   note,
   products,
   services,
@@ -27,7 +26,6 @@ export const NotificationTable = ({
   handleChangeNotes,
   newNotes,
 }) => {
-const dispatch = useDispatch();
 const [datas, setDatas] = useState([]);
 
   useEffect(() => {
@@ -184,13 +182,7 @@ const [datas, setDatas] = useState([]);
                               className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                             >
                               <ul className="py-2 text-sm text-gray-700">
-                                <li
-                                  className={`${user?.email !== "admin@domino.com" &&
-                                    user?.roles !== "graphic-designer"
-                                    ? "hidden"
-                                    : ""
-                                    }`}
-                                >
+                                <li>
                                   <button
                                     type="button"
                                     onClick={() =>
@@ -210,13 +202,7 @@ const [datas, setDatas] = useState([]);
                                 </li>
 
                                 {status2.value !== "" && (
-                                  <li
-                                    className={`${user?.email !== "admin@domino.com" &&
-                                      user?.roles !== "graphic-designer"
-                                      ? "hidden"
-                                      : ""
-                                      }`}
-                                  >
+                                  <li>
                                     <button
                                       type="button"
                                       onClick={() =>
