@@ -21,6 +21,7 @@ const DropdownNotification = () => {
   const [financeNotification, setFinanceNotification] = useState(0);
   const [storeRepNotification, setStoreRepNotification] = useState(0);
   const [adminNotifications, setAdminNotifications] = useState([]);
+  const [filteredAdminNotifications, setFilteredAdminNotifications] = useState([]);
   const [graphicDesignerNotifications, setGraphicDesignerNotifications] = useState([]);
   const [filteredGraphicDesignerNotifications, setFilteredGraphicDesignerNotifications] = useState([]);
   const [receptionistNotification, setReceptionistNotification] = useState([]);
@@ -76,6 +77,7 @@ const DropdownNotification = () => {
         setGraphicDesignerNotifications(editedOrder);
         setReceptionistNotification(editedOrder);
         setOperatorNotification(editedOrder);
+        const filterdedAdminNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Edited" || item.status === "Printed"));
         const filteredGraphicDesignerNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected"));
         const filteredReceptionistNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected" || item.status === "Completed"));
         const filteredOperatorNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Approved"));
@@ -217,8 +219,7 @@ const DropdownNotification = () => {
                         <span className="text-black dark:text-white">
                           you have new pending {notification.series} order
                         </span>{' '}
-                        {/* Sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim. */}
+                        {notification.orderItems.filter((item) => item.status === "Edited" || item.status === "Printed")?.length} items to review
                       </p>
 
                       <p className="text-xs">{notification.date}</p>
