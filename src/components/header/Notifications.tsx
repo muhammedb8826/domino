@@ -13,6 +13,8 @@ import { NotificationTable } from "./NotificationTable";
 import toast from "react-hot-toast";
 import { getPayments } from "@/redux/features/paymentSlice";
 import { createNote, getNotes } from "@/redux/features/notesSlice";
+import { v4 as uuidv4 } from 'uuid';
+import { getUsers } from "@/redux/features/user/userSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -21,7 +23,7 @@ let hours = date.getHours();
 const minutes = String(date.getMinutes()).padStart(2, '0');
 const ampm = hours >= 12 ? 'PM' : 'AM';
 hours = hours % 12;
-hours = hours ? hours : 12; 
+hours = hours ? hours : 12;
 const strTime = hours + ':' + minutes + ' ' + ampm;
 
 
@@ -35,9 +37,10 @@ export const Notifications = () => {
   );
   const { payments } = useSelector((state) => state.payment);
   const { notes } = useSelector((state) => state.note);
+  const {users} = useSelector((state) => state.user);
 
   const { products } = useSelector((state: RootState) => state.product);
-  const [active , setActive] = useState("proofReady");
+  const [active, setActive] = useState("proofReady");
   const { services } = useSelector((state: RootState) => state.service);
   const [formData, setFormData] = useState([]);
   const [proofReadyOrders, setProofReadyOrders] = useState([]);
@@ -60,20 +63,11 @@ export const Notifications = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
-  const [note, setNote] = useState([
-    {
-      id: "",
-      note: "", 
-      orderItemsId: "", 
-      date: "", 
-      time: "", 
-      user: user?.id
-    }
-  ]);
+  const [note, setNote] = useState(notes || []);
   const dispatch = useDispatch();
 
 
-    const handleClickOutside = useCallback((event: MouseEvent) => {
+  const handleClickOutside = useCallback((event: MouseEvent) => {
     if (showPopover !== null && popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
       setShowPopover(null);
     }
@@ -126,8 +120,8 @@ export const Notifications = () => {
         setDelivery(orderItems?.filter(item => item.status === "Completed" || item.printed === true || item.adminApproval === true));
       }
     });
-    dispatch(getPayments()).then((res)=>{
-      if(res.payload){
+    dispatch(getPayments()).then((res) => {
+      if (res.payload) {
         const findPayment = res.payload.find((payment) => payment.orderId === id)
         setForcePayment(findPayment.forcePayment)
         setTotalTransaction(findPayment.totaTransaction)
@@ -137,12 +131,11 @@ export const Notifications = () => {
     dispatch(getServices());
     dispatch(getNotes()).then((res) => {
       if (res.payload) {
-        console.log("res", res.payload);
-        
-        const { notes } = res.payload;
-        setNote(notes);
+        const notesData = res.payload.flatMap(noteGroup => noteGroup.notes);
+        setNote(notesData);
       }
     });
+    dispatch(getUsers());
   }, [dispatch, id]);
 
   const handleAction = (index: number) => setShowPopover(prevIndex => (prevIndex === index ? null : index));
@@ -168,49 +161,49 @@ export const Notifications = () => {
   };
 
   const handleUpdateProofReady = (id, status, index, width, height) => {
-    if(status === "Edited"){
-    const updatedOrderItems = proofReadyOrders.map((item) =>
-      item.id === id ? { ...item, status: status, width: width, height: height } : item
-    );
-    setProofReadyOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
-    handleAction(index)
-  }
-  else {
-    const updatedOrderItems = proofReadyOrders.map((item) =>
-      item.id === id ? { ...item, status: status } : item
-    );
-    setProofReadyOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
-    handleAction(index)
-  }
-  };
-  
-  const handleUpdatePendingApproval = (id, status, index) => {
-    if(!forcePayment){
-    const updatedOrderItems = pendingApprovalOrders.map((item) =>
-      item.id === id ? { ...item, status: status } : item
-    );
-    setPendingApprovalOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
-    handlePendingApprovalAction(index)
-    } else {
-       if(status === "Approved" && totaTransaction < singleOrder?.grandTotal){
-        const message = "Please complete payment first before approving the order";
-        toast.error(message);
+    if (status === "Edited") {
+      const updatedOrderItems = proofReadyOrders.map((item) =>
+        item.id === id ? { ...item, status: status, width: width, height: height } : item
+      );
+      setProofReadyOrders(updatedOrderItems);
+      setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
+      handleAction(index)
     }
     else {
-      const updatedOrderItems = pendingApprovalOrders.map((item) =>
-      item.id === id ? { ...item, status: status } : item
-    );
-    setPendingApprovalOrders(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
-    handlePendingApprovalAction(index)
+      const updatedOrderItems = proofReadyOrders.map((item) =>
+        item.id === id ? { ...item, status: status } : item
+      );
+      setProofReadyOrders(updatedOrderItems);
+      setFormData([...updatedOrderItems, ...pendingApprovalOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
+      handleAction(index)
     }
-  }
   };
 
-  const handleUpdatePrintReady = (id, status, index) =>{
+  const handleUpdatePendingApproval = (id, status, index) => {
+    if (!forcePayment) {
+      const updatedOrderItems = pendingApprovalOrders.map((item) =>
+        item.id === id ? { ...item, status: status } : item
+      );
+      setPendingApprovalOrders(updatedOrderItems);
+      setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
+      handlePendingApprovalAction(index)
+    } else {
+      if (status === "Approved" && totaTransaction < singleOrder?.grandTotal) {
+        const message = "Please complete payment first before approving the order";
+        toast.error(message);
+      }
+      else {
+        const updatedOrderItems = pendingApprovalOrders.map((item) =>
+          item.id === id ? { ...item, status: status } : item
+        );
+        setPendingApprovalOrders(updatedOrderItems);
+        setFormData([...updatedOrderItems, ...proofReadyOrders, ...printReadyOrders, ...qualityControl, ...delivery]);
+        handlePendingApprovalAction(index)
+      }
+    }
+  };
+
+  const handleUpdatePrintReady = (id, status, index) => {
     const updatedOrderItems = printReadyOrders.map((item) =>
       item.id === id ? { ...item, status: status } : item
     );
@@ -219,28 +212,28 @@ export const Notifications = () => {
     handlePrintReadyAction(index)
   }
 
-const handleUpdateQualityControl = (id, status, index) => {
-  if(status === "Completed"){
- const updatedOrderItems = qualityControl.map((item) =>
-      item.id === id ? { ...item, status: status, printed: true, adminApproval: true  } : item
-    );
-    setQualityControl(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
-    handleQualityControlAction(index)
-  }
-  else {
-    const updatedOrderItems = qualityControl.map((item) =>
-      item.id === id ? { ...item, status: status, printed: false, adminApproval: false } : item
-    );
-    setQualityControl(updatedOrderItems);
-    setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
-    handleQualityControlAction(index)
-  }
+  const handleUpdateQualityControl = (id, status, index) => {
+    if (status === "Completed") {
+      const updatedOrderItems = qualityControl.map((item) =>
+        item.id === id ? { ...item, status: status, printed: true, adminApproval: true } : item
+      );
+      setQualityControl(updatedOrderItems);
+      setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
+      handleQualityControlAction(index)
+    }
+    else {
+      const updatedOrderItems = qualityControl.map((item) =>
+        item.id === id ? { ...item, status: status, printed: false, adminApproval: false } : item
+      );
+      setQualityControl(updatedOrderItems);
+      setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
+      handleQualityControlAction(index)
+    }
   };
-  
+
 
   const handleUpdateDelivery = (id, status, index) => {
-  const updatedOrderItems = delivery.map((item) =>
+    const updatedOrderItems = delivery.map((item) =>
       item.id === id ? { ...item, status: status, completed: true } : item
     );
     setDelivery(updatedOrderItems);
@@ -248,20 +241,50 @@ const handleUpdateQualityControl = (id, status, index) => {
     handleDeliveryAction(index)
   };
 
+  const [expandedNotes, setExpandedNotes] = useState([]);
+  const [newNotes, setNewNotes] = useState(note);
 
-  const handleUpdateNote = (notes, index, setExpandedNotes, expandedNotes) => {
-    setNote(notes);
-    // const updatedExpandedNotes = expandedNotes.map((expanded, expandedIndex) =>
-    //   expandedIndex === index ? !expanded : expanded
-    // );
-    // setExpandedNotes(updatedExpandedNotes);
+  const handleUpdateNote = (id, newNote, index, setExpandedNotes, expandedNotes) => {
+   setNote((prevNote) => [...prevNote, ...newNote]);
+    setNewNotes([])
+
+    const updatedExpandedNotes = expandedNotes.map((expanded, expandedIndex) =>
+      expandedIndex === index ? true : expanded
+    );
+    setExpandedNotes(updatedExpandedNotes)
   }
+
+  const handleChangeNotes = (index, value, id) => {
+    const newNote = {
+      id: uuidv4(),
+      note: value,
+      orderItemsId: id,
+      userId: user?.id,
+      date: formattedDate,
+      hour: strTime
+    };
+
+    // Create a copy of existing newNotes array and insert the newNote at the specified index
+    const updatedNotes = [...newNotes];
+    updatedNotes[index] = newNote;
+
+    setNewNotes(updatedNotes);
+  };
 
 
   const handleButtonClick = (newActiveState: string) => {
     setActive(newActiveState);
   };
-  
+
+  const removeDuplicates = (notes) => {
+    const uniqueNotes = notes.filter((note, index, self) =>
+      index === self.findIndex((n) => (
+        n?.id === note?.id
+      ))
+    );
+    return uniqueNotes;
+  };
+
   const handleSubmit = () => {
     const data = {
       id: singleOrder?.id,
@@ -270,12 +293,9 @@ const handleUpdateQualityControl = (id, status, index) => {
     };
 
     const noteData = {
-      id: id,
-      notes: note
+      notes: removeDuplicates(note),
     }
-    
-    dispatch(createNote(noteData));
-  
+
     dispatch(updateOrder(data)).then((res) => {
       if (res.payload) {
         console.log("res", res.payload);
@@ -288,6 +308,18 @@ const handleUpdateQualityControl = (id, status, index) => {
         setDelivery(orderItems?.filter((item) => item.status === "Completed" || item.printed === true || item.adminApproval === true));
         const message = "Order status updated successfully";
         toast.success(message);
+
+        dispatch(createNote(noteData)).then((res) => {
+          if (res.payload) {
+            const { notes } = res.payload;
+            setNote(notes);
+            const message = "Note added successfully";
+            toast.success(message);
+          } else {
+            const message = "Something went wrong!";
+            toast.error(message);
+          }
+        });
       } else {
         const message = "Something went wrong!";
         toast.error(message);
@@ -305,7 +337,7 @@ const handleUpdateQualityControl = (id, status, index) => {
     <>
       <Breadcrumb pageName="Notifications" />
       <div className="rounded-sm border border-stroke border-t-0 bg-white px-4 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
-      <nav className="flex justify-between gap-4 items-center px-4">
+        <nav className="flex justify-between gap-4 items-center px-4">
           <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
             <li className="text-gray-500 text-sm dark:text-gray-400">
               <button
@@ -367,92 +399,117 @@ const handleUpdateQualityControl = (id, status, index) => {
           </button>
         </nav>
         {active === "proofReady" && (
-        <NotificationTable
-          title="Proof ready orders"
-          orders={proofReadyOrders}
-          handleAction={handleAction}
-          showPopover={showPopover}
-          handleModalOpen={handleUpdateProofReady}
-          handleUpdateNote={handleUpdateNote}
-          popoverRef={popoverRef}
-          user={user}
-          note={note}
-          products={products}
-          services={services}
-          status1={{label: "Edit", value: "Edited"}}
-          status2={{label: "Reject", value: "Rejected"}}
-        />
-      )}
-      {active === "pending" && (
-        <NotificationTable
-          title="Pending approval orders"
-          orders={pendingApprovalOrders}
-          handleAction={handlePendingApprovalAction}
-          showPopover={showPopover2}
-          handleModalOpen={handleUpdatePendingApproval}
-          handleUpdateNote={handleUpdateNote}
-          popoverRef={popoverRef2}
-          user={user}
-          note={note}
-          products={products}
-          services={services}
-          status1={{label: "Approve", value: "Approved"}}
-          status2={{label: "Reject", value: "Rejected"}}
-        />
-      )}
-      {active === "printReady" && (
-        <NotificationTable
-          title="Print ready orders"
-          orders={printReadyOrders}
-          handleAction={handlePrintReadyAction}
-          showPopover={showPopover3}
-          handleModalOpen={handleUpdatePrintReady}
-          handleUpdateNote={handleUpdateNote}
-          popoverRef={popoverRef3}
-          user={user}
-          note={note}
-          products={products}
-          services={services}
-          status1={{label: "print", value: "Printed"}}
-          status2={{label: "Reject", value: "Edited"}}
-        />
-      )}
-      {active === "qualityControl" && (
-        <NotificationTable
-          title="Quality control and approval"
-          orders={qualityControl}
-          handleAction={handleQualityControlAction}
-          showPopover={showPopover4}
-          handleModalOpen={handleUpdateQualityControl}
-          handleUpdateNote={handleUpdateNote}
-          popoverRef={popoverRef4}
-          user={user}
-          note={note}
-          products={products}
-          services={services}
-          status1={{label: "Approve", value: "Completed"}}
-          status2={{label: "Reject", value: "Approved"}}
-        />
-      )}
-      {active === "delivery" && (
-        <NotificationTable
-          title="Delivery and shipping"
-          orders={delivery}
-          handleAction={handleDeliveryAction}
-          showPopover={showPopover5}
-          handleModalOpen={handleUpdateDelivery}
-          handleUpdateNote={handleUpdateNote}
-          popoverRef={popoverRef5}
-          user={user}
-          note={note}
-          products={products}
-          services={services}
-          status1={{label: "Deliver", value: "Delivered"}}
-          status2={{label: "", value: ""}}
-        />
-      )}
+          <NotificationTable
+            title="Proof ready orders"
+            orders={proofReadyOrders}
+            handleAction={handleAction}
+            showPopover={showPopover}
+            handleModalOpen={handleUpdateProofReady}
+            handleUpdateNote={handleUpdateNote}
+            popoverRef={popoverRef}
+            users={users}
+            user={user}
+            note={removeDuplicates(note)}
+            products={products}
+            services={services}
+            status1={{ label: "Edit", value: "Edited" }}
+            status2={{ label: "Reject", value: "Rejected" }}
+            expandedNotes={expandedNotes}
+            setExpandedNotes={setExpandedNotes}
+            handleChangeNotes={handleChangeNotes}
+            newNotes={newNotes}
+          />
+        )}
+        {active === "pending" && (
+          <NotificationTable
+            title="Pending approval orders"
+            orders={pendingApprovalOrders}
+            handleAction={handlePendingApprovalAction}
+            showPopover={showPopover2}
+            handleModalOpen={handleUpdatePendingApproval}
+            handleUpdateNote={handleUpdateNote}
+            popoverRef={popoverRef2}
+            users={users}
+            user={user}
+            note={removeDuplicates(note)}
+            products={products}
+            services={services}
+            status1={{ label: "Approve", value: "Approved" }}
+            status2={{ label: "Reject", value: "Rejected" }}
+            expandedNotes={expandedNotes}
+            setExpandedNotes={setExpandedNotes}
+            handleChangeNotes={handleChangeNotes}
+            newNotes={newNotes}
+          />
+        )}
+        {active === "printReady" && (
+          <NotificationTable
+            title="Print ready orders"
+            orders={printReadyOrders}
+            handleAction={handlePrintReadyAction}
+            showPopover={showPopover3}
+            handleModalOpen={handleUpdatePrintReady}
+            handleUpdateNote={handleUpdateNote}
+            popoverRef={popoverRef3}
+            users={users}
+            user={user}
+            note={removeDuplicates(note)}
+            products={products}
+            services={services}
+            status1={{ label: "print", value: "Printed" }}
+            status2={{ label: "Reject", value: "Edited" }}
+            expandedNotes={expandedNotes}
+            setExpandedNotes={setExpandedNotes}
+            handleChangeNotes={handleChangeNotes}
+            newNotes={newNotes}
+          />
+        )}
+        {active === "qualityControl" && (
+          <NotificationTable
+            title="Quality control and approval"
+            orders={qualityControl}
+            handleAction={handleQualityControlAction}
+            showPopover={showPopover4}
+            handleModalOpen={handleUpdateQualityControl}
+            handleUpdateNote={handleUpdateNote}
+            popoverRef={popoverRef4}
+            users={users}
+            user={user}
+            note={removeDuplicates(note)}
+            products={products}
+            services={services}
+            status1={{ label: "Approve", value: "Completed" }}
+            status2={{ label: "Reject", value: "Approved" }}
+            expandedNotes={expandedNotes}
+            setExpandedNotes={setExpandedNotes}
+            handleChangeNotes={handleChangeNotes}
+            newNotes={newNotes}
+          />
+        )}
+        {active === "delivery" && (
+          <NotificationTable
+            title="Delivery and shipping"
+            orders={delivery}
+            handleAction={handleDeliveryAction}
+            showPopover={showPopover5}
+            handleModalOpen={handleUpdateDelivery}
+            handleUpdateNote={handleUpdateNote}
+            popoverRef={popoverRef5}
+            users={users}
+            user={user}
+            note={removeDuplicates(note)}
+            products={products}
+            services={services}
+            status1={{ label: "Deliver", value: "Delivered" }}
+            status2={{ label: "", value: "" }}
+            expandedNotes={expandedNotes}
+            setExpandedNotes={setExpandedNotes}
+            handleChangeNotes={handleChangeNotes}
+            newNotes={newNotes}
+          />
+        )}
       </div>
     </>
   );
-  
+
 };

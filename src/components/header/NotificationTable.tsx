@@ -1,19 +1,11 @@
+import { getUsers } from "@/redux/features/user/userSlice";
 import React, { useEffect, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
 import { SiMicrosoftonenote } from "react-icons/si";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
-
-const date = new Date();
-const options = { month: "short", day: "numeric", year: "numeric" };
-const formattedDate = date.toLocaleDateString("en-US", options);
-let hours = date.getHours();
-const minutes = String(date.getMinutes()).padStart(2, '0');
-const ampm = hours >= 12 ? 'PM' : 'AM';
-hours = hours % 12;
-hours = hours ? hours : 12; 
-const strTime = hours + ':' + minutes + ' ' + ampm;
 
 export const NotificationTable = ({
   title,
@@ -23,39 +15,27 @@ export const NotificationTable = ({
   handleModalOpen,
   handleUpdateNote,
   popoverRef,
+  users,
   user,
   note,
   products,
   services,
   status1,
   status2,
+  expandedNotes,
+  setExpandedNotes,
+  handleChangeNotes,
+  newNotes,
 }) => {
-  const [datas, setDatas] = useState([]);
-  const [notes, setNotes] = useState([
-    {
-      id: uuidv4(),
-      note: "",
-      orderItemsId: "",
-      date: formattedDate,
-      time: "",
-      user: user?.id
-    },
-  ]);
-  const [expandedNotes, setExpandedNotes] = useState([]);
+const dispatch = useDispatch();
+const [datas, setDatas] = useState([]);
 
   useEffect(() => {
     setDatas(orders.map(({ width, height }) => ({ width, height })));
-    const newNotes = orders.map(() => ({
-      id: uuidv4(),
-      note: "",
-      orderItemsId: "",
-      date: formattedDate,
-      time: "",
-      user: user?.id
-    }));
-    setNotes(newNotes);
-    setExpandedNotes(new Array(orders.length).fill(false))
-  }, [orders, note]);
+    if (expandedNotes.length === 0) {
+      setExpandedNotes(new Array(orders.length).fill(false));
+    }
+  }, [orders, note, users, setExpandedNotes]);
 
   const handleInputChanges = (index, field, value) => {
     const updatedDatas = datas.map((data, dataIndex) =>
@@ -63,16 +43,6 @@ export const NotificationTable = ({
     );
     setDatas(updatedDatas);
   };
-
-  const handleNotes = (index, value, id) => {
-    const updatedNotes = notes.map((note, noteIndex) =>
-      noteIndex === index ? { ...note, note: value, orderItemsId: id, time: strTime } : note
-    );
-    setNotes(updatedNotes);
-  };
-
-  console.log(notes);
-  
 
   const handleExpandNotes = (index) => {
     const updatedExpandedNotes = expandedNotes.map((expanded, expandedIndex) =>
@@ -274,31 +244,42 @@ export const NotificationTable = ({
                             colSpan={9}
                             className="relative border-b border-[#eee] dark:border-strokedark"
                           >
-                            <div className="grid grid-cols-3 gap-4 border border-[#eee] h-36 overflow-hidden p-2">
+                            <div className="grid grid-cols-3 gap-4 border-stroke dark:border-strokedark h-36 overflow-hidden p-2">
                               <div className="col-span-2">
-                                <ul className="overflow-y-scroll h-30" id="style-4">
-                                  {notes?.filter(n => n.orderItemsId === data.id).length === 0 && (
+                                <ul className="flex flex-col overflow-y-scroll h-30 pe-2 gap-2.5" id="style-4">
+                                  {note?.filter(n => n?.orderItemsId === data.id).length === 0 && (
                                     <li className="mb-2">No notes found</li>
                                   )}
-                                  {notes?.filter(n => n.orderItemsId === data.id).map((n, noteIndex) => (
-                                    <li key={noteIndex} className="mb-2 bg-gray-2 p-2">{n.note}</li>
-                                  ))}
+                                
+                                  {note?.filter(n => n?.orderItemsId === data.id).map((n, noteIndex) => {
+                                    const user = users.find(u => u.id === n.userId);
+                                   return( 
+                                   <li key={noteIndex} className="flex flex-col gap-2.5 border-t border-stroke shadow-2 px-4.5 py-3 bg-gray-2 dark:border-strokedark dark:bg-meta-4">
+                                      <p className="">
+                                        <span className="text-black dark:text-white">
+                                          {n.note}
+                                        </span>{' '}
+
+                                      </p>
+
+                                      <p className="text-xs">Note added by {user?.first_name} on {n.date} at {n.hour}</p>
+                                    </li>
+                                   )
+                                  })}
                                 </ul>
                               </div>
                               <div className="add-notes">
-                                {notes[index] && (
                                 <textarea
                                   title="note"
                                   name="note"
                                   id={`note-${index}`}
                                   onChange={(e) =>
-                                    handleNotes(index, e.target.value, data.id)
+                                    handleChangeNotes(index, e.target.value, data.id)
                                   }
-                                  value={notes[index]?.note || ""}
+                                  value={newNotes[index]?.note || ""}
                                   className="p-2 h-20 w-full rounded bg-gray-2 text-left font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
-                                )}
-                                <button onClick={() => handleUpdateNote(data.id, notes, index, setNotes)} type="button" className="mt-2 p-1 button text-center bg-gray-2 w-full" title="add note">
+                                <button onClick={() => handleUpdateNote(data.id, newNotes, index, setExpandedNotes, expandedNotes)} type="button" className="text-black dark:text-white bg-gray-2 border-stroke dark:border-strokedark dark:bg-meta-4 mt-2 p-1 button text-center w-full" title="add note">
                                   Add Note
                                 </button>
                               </div>
@@ -306,7 +287,7 @@ export const NotificationTable = ({
                           </td>
                         </tr>
                       )}
-                   </React.Fragment>
+                    </React.Fragment>
                   );
                 })}
             </tbody>
