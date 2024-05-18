@@ -328,7 +328,7 @@ const DropdownNotification = () => {
             </>
           )}
 
-          {user?.roles === "finance" && (
+          {/* {user?.roles === "finance" && (
             <li>
               <Link
                 onClick={() => setDropdownOpen(false)}
@@ -339,8 +339,6 @@ const DropdownNotification = () => {
                   <span className="text-black dark:text-white">
                     You have {financeNotification} new notifications
                   </span>{' '}
-                  {/* of passages of Lorem Ipsum available, but the majority have
-                suffered */}
                 </p>
 
                 <p className="text-xs">01 Dec, 2024</p>
@@ -360,14 +358,12 @@ const DropdownNotification = () => {
                   <span className="text-black dark:text-white">
                     You have {storeRepNotification} new notifications
                   </span>{' '}
-                  {/* of passages of Lorem Ipsum available, but the majority have
-                suffered */}
                 </p>
 
                 <p className="text-xs">01 Dec, 2024</p>
               </Link>
             </li>
-          )}
+          )} */}
         </ul>
       </div>
     </li>
