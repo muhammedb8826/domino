@@ -103,8 +103,8 @@ export const Purschase = () => {
 
   const productListContent = purchases.map((purchase, index) => (
     <tr key={purchase.id}>
-      <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
-       {purchase.id}
+      <td className="border-b flex items-center border-[#eee] py-5 px-4 dark:border-strokedark">
+       {purchase.series}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {purchase.orderDate}
@@ -229,7 +229,7 @@ export const Purschase = () => {
         </div>
       </div>
 
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="max-w-full overflow-hidden overflow-x-auto">
           <table className="w-full table-auto">
             <thead>

@@ -1,6 +1,6 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import CustomerSearchInput from "@/components/customer/CustomerSearchInput";
-import { createPurchase } from "@/redux/features/purchaseSlice";
+import { createPurchase, getPurchases } from "@/redux/features/purchaseSlice";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
@@ -16,6 +16,8 @@ import { ProductRegistration } from "./ProductRegistration";
 import { CiEdit } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { getUnits } from "@/redux/features/unit/unitSlice";
+import { RootState } from "@/redux/store";
+import { v4 as uuidv4 } from 'uuid';
 
 interface SupplierType {
   id: string;
@@ -36,6 +38,7 @@ export const PurchaseRegistration = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { units } = useSelector((state) => state.unit);
   const { products, searchTerm } = useSelector((state) => state.product);
+  const { purchases } = useSelector((state) => state.purchase);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -57,6 +60,7 @@ export const PurchaseRegistration = () => {
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getUnits());
+    dispatch(getPurchases());
   }, [dispatch]);
 
   const filteredProducts = products.filter(
@@ -245,11 +249,17 @@ export const PurchaseRegistration = () => {
       toast.error("Please select a supplier");
       return;
     }
+    const date = new Date();
+    const currentYear = date.getFullYear();
+
+    const seriesNumber = String(purchases.length).padStart(4, '0'); // Pad with leading zeros if needed
+
     const data = {
+      series: `IAN-PO-${seriesNumber}-${currentYear}`,
       vendorId: supplierInfo.id,
       purchaseReresentative: user.first_name,
       purchaseReresentativeId: user.id,
-      status: "purchased",
+      status: "Purchased",
       vendorName: supplierInfo.firstName,
       orderDate: orderDate,
       paymentMethod: paymentInfo.paymentMethod,
@@ -267,8 +277,11 @@ export const PurchaseRegistration = () => {
         subTotal: product.subTotal,
         unitId: UoM[index].unitId,
         unitName: UoM[index].unitName,
+        status: "Purchased",
+        id: uuidv4()
       })),
     };
+
     dispatch(createPurchase(data)).then(() => {
       navigate("/dashboard/inventory/purchases");
       toast.success("Purchase created successfully");

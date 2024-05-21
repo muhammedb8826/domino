@@ -326,7 +326,6 @@ export const Notifications = () => {
 
     dispatch(updateOrder(data)).then((res) => {
       if (res.payload) {
-        console.log("res", res.payload);
         const { orderItems } = res.payload;
         setFormData(orderItems);
         setProofReadyOrders(orderItems?.filter((item) => item.status === "Rejected" || item.status === "Received"));

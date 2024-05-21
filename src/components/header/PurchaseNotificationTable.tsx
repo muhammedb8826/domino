@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
-export const NotificationTable = ({
+export const PurchaseNotificationTable = ({
   title,
   orders,
   handleAction,
@@ -18,7 +18,7 @@ export const NotificationTable = ({
   users,
   note,
   products,
-  services,
+  units,
   status1,
   status2,
   expandedNotes,
@@ -26,21 +26,13 @@ export const NotificationTable = ({
   handleChangeNotes,
   newNotes,
 }) => {
-const [datas, setDatas] = useState([]);
 
   useEffect(() => {
-    setDatas(orders.map(({ width, height }) => ({ width, height })));
     if (expandedNotes.length === 0) {
       setExpandedNotes(new Array(orders.length).fill(false));
     }
-  }, [ users, setExpandedNotes]);
+  }, [setExpandedNotes.length, orders.length]);
 
-  const handleInputChanges = (index, field, value) => {
-    const updatedDatas = datas.map((data, dataIndex) =>
-      dataIndex === index ? { ...data, [field]: value } : data
-    );
-    setDatas(updatedDatas);
-  };
 
   const handleExpandNotes = (index) => {
     const updatedExpandedNotes = expandedNotes.map((expanded, expandedIndex) =>
@@ -66,16 +58,16 @@ const [datas, setDatas] = useState([]);
                   Product
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Services
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Width
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Height
+                  Description
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Quantity
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Unit price
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  UoM
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Status
@@ -102,10 +94,9 @@ const [datas, setDatas] = useState([]);
                   const product =
                     data.productId &&
                     products?.find((product) => product.id === data.productId);
-                  const service =
-                    data.serviceId &&
-                    services?.find((service) => service.id === data.serviceId);
-
+                  const unit =
+                    data.unitId &&
+                    units?.find((unit) => unit.id === data.unitId);
                   return (
                     <React.Fragment key={index}>
                       <tr>
@@ -116,44 +107,16 @@ const [datas, setDatas] = useState([]);
                           {product?.name}
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          {service?.name}
-                        </td>
-                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          <input
-                            title="width"
-                            type="number"
-                            name="width"
-                            id="width"
-                            onChange={(e) =>
-                              handleInputChanges(index, "width", e.target.value)
-                            }
-                            value={datas[index]?.width || ""}
-                            className="w-full rounded bg-transparent font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            required
-                            min={0}
-                          />
-                        </td>
-                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          <input
-                            title="height"
-                            type="number"
-                            name="height"
-                            id="height"
-                            onChange={(e) =>
-                              handleInputChanges(
-                                index,
-                                "height",
-                                e.target.value
-                              )
-                            }
-                            value={datas[index]?.height || ""}
-                            className="w-full rounded bg-transparent font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            required
-                            min={0}
-                          />
+                          {data.description}
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           {data.quantity}
+                        </td>
+                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                          {data.unitPrice}
+                        </td>
+                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                          {unit?.name}
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           {data.status}
@@ -190,8 +153,6 @@ const [datas, setDatas] = useState([]);
                                         data.id,
                                         status1.value,
                                         index,
-                                        datas[index].width,
-                                        datas[index].height
                                       )
                                     }
                                     className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
@@ -233,24 +194,24 @@ const [datas, setDatas] = useState([]);
                             <div className="grid grid-cols-3 gap-4 border-stroke dark:border-strokedark h-36 overflow-hidden p-2">
                               <div className="col-span-2">
                                 <ul className="flex flex-col overflow-y-scroll h-30 pe-2 gap-2.5" id="style-4">
-                                  {note?.filter(n => n?.orderItemsId === data.id).length === 0 && (
+                                  {note?.filter(n => n?.productsId === data.id).length === 0 && (
                                     <li className="mb-2">No notes found</li>
                                   )}
-                                
-                                  {note?.filter(n => n?.orderItemsId === data.id).map((n, noteIndex) => {
+
+                                  {note?.filter(n => n?.productsId === data.id).map((n, noteIndex) => {
                                     const user = users.find(u => u.id === n.userId);
-                                   return( 
-                                   <li key={noteIndex} className="flex flex-col gap-2.5 border-t border-stroke shadow-2 px-4.5 py-3 bg-gray-2 dark:border-strokedark dark:bg-meta-4">
-                                      <p className="">
-                                        <span className="text-black dark:text-white">
-                                          {n.note}
-                                        </span>{' '}
+                                    return (
+                                      <li key={noteIndex} className="flex flex-col gap-2.5 border-t border-stroke shadow-2 px-4.5 py-3 bg-gray-2 dark:border-strokedark dark:bg-meta-4">
+                                        <p className="">
+                                          <span className="text-black dark:text-white">
+                                            {n.note}
+                                          </span>{' '}
 
-                                      </p>
+                                        </p>
 
-                                      <p className="text-xs">Note added by {user?.first_name} on {n.date} at {n.hour}</p>
-                                    </li>
-                                   )
+                                        <p className="text-xs">Note added by {user?.first_name} on {n.date} at {n.hour}</p>
+                                      </li>
+                                    )
                                   })}
                                 </ul>
                               </div>

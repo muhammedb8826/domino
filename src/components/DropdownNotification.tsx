@@ -6,6 +6,7 @@ import { getOrders } from '@/redux/features/order/orderSlice';
 import { Sale } from '@/pages/inventory/Sale';
 import { getSales } from '@/redux/features/saleSlice';
 import Loader from '@/common/Loader';
+import { getPurchases } from '@/redux/features/purchaseSlice';
 
 const DropdownNotification = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -17,9 +18,6 @@ const DropdownNotification = () => {
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
-  const [adminNotification, setAdminNotification] = useState(0);
-  const [financeNotification, setFinanceNotification] = useState(0);
-  const [storeRepNotification, setStoreRepNotification] = useState(0);
   const [adminNotifications, setAdminNotifications] = useState([]);
   const [filteredAdminNotifications, setFilteredAdminNotifications] = useState([]);
   const [graphicDesignerNotifications, setGraphicDesignerNotifications] = useState([]);
@@ -28,8 +26,10 @@ const DropdownNotification = () => {
   const [filteredReceiptNotifications, setFilteredReceiptNotifications] = useState([]);
   const [operatorNotification, setOperatorNotification] = useState([]);
   const [filteredOperatorNotifications, setFilteredOperatorNotifications] = useState([]);
-  console.log(operatorNotification, filteredOperatorNotifications);
-  
+  const [financeNotification, setFinanceNotification] = useState([]);
+  const [storeRepNotification, setStoreRepNotification] = useState([]);
+
+
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -81,89 +81,25 @@ const DropdownNotification = () => {
         const filteredGraphicDesignerNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected"));
         const filteredReceptionistNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected" || item.status === "Completed"));
         const filteredOperatorNotifications = editedOrder.map((item) => item.orderItems.filter((item) => item.status === "Approved"));
+        setFilteredAdminNotifications(filterdedAdminNotifications)
         setFilteredOperatorNotifications(filteredOperatorNotifications);
         setFilteredReceiptNotifications(filteredReceptionistNotifications);
         setFilteredGraphicDesignerNotifications(filteredGraphicDesignerNotifications);
-
-        let count = 0;
-
-        const matchedOrderStatus = res.payload.filter(status =>
-          res.payload.some(order => order.id === status.orderId)
-        );
-        matchedOrderStatus.forEach(status => {
-          const correspondingOrder = res.payload.find(order => order.id === status.orderId);
-          if (correspondingOrder.payment?.status === "paid") {
-            status.orderItems.forEach(item => {
-              if (item.status !== "paid" && item.status !== "delivered") {
-                count++;
-              }
-            });
-          }
-        });
-
-        setFinanceNotification(count);
       }
     });
 
     dispatch(getSales());
+    dispatch(getPurchases()).then((res) => {
+      if (res.payload) {
+        const financeNotifications = res.payload.filter((purchase) => purchase.status === "Purchased");
+        setFinanceNotification(financeNotifications);
+      }
+    });
   }, [dispatch]);
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+  console.log(financeNotification);
+  console.log(purchases.map((item) => item.products?.filter((product) => product.status === "Received")));
 
-
-  console.log(receptionistNotification, filteredReceiptNotifications);
-
-
-  // const filteredOrders = orders?.filter((order) => order.status === "received");
-
-
-  // useEffect(() => {
-  //   const editedOrder = orders?.filter(
-  //     (order) => order.status === "received"
-  //   );
-  //   setAdminNotifications(editedOrder);
-  //   const notification = editedOrder.map((item) =>
-  //     item.orderItems.filter((item) => item.status === "edited" || item.status === "rejected")
-  //   );
-  //   const filteredSalesStatus = sales?.filter((sale) => sale.status === "requested");
-  //   setAdminNotification(notification.reduce((a, b) => a + b.length, 0));
-  //    setAdminNotification((prev)=>prev + filteredSalesStatus.length);
-  //   const operatorNotification = editedOrder.map((item) =>
-  //     item.orderItems.filter((item) => item.status === "approved")
-  //   );
-  //   setOperatorNotification(
-  //     operatorNotification.reduce((a, b) => a + b.length, 0)
-  //   );
-
-  //   const receptionistNotification = editedOrder.map((item) =>
-  //     item.orderItems.filter((item) => item.status === "paid")
-  //   );
-  //   setReceptionistNotification(
-  //     receptionistNotification.reduce((a, b) => a + b.length, 0)
-  //   );
-
-  //   let count = 0;
-
-  //   const matchedOrderStatus = orders.filter(status => 
-  //       orders.some(order => order.id === status.orderId)
-  //   );
-  //   matchedOrderStatus.forEach(status => {
-  //       const correspondingOrder = orders.find(order => order.id === status.orderId);
-  //       if (correspondingOrder.payment?.status === "paid") {
-  //           status.orderItems.forEach(item => {
-  //               if (item.status !== "paid" && item.status !== "delivered") {
-  //                   count++;            }
-  //           });
-  //       }
-  //   });
-  //   const matchedSalesStatus = sales.filter(sale => sale.status === "approved");
-  //   const matchedPurchases = purchases.filter(purchase => purchase.status === "purchased");
-  //   setStoreRepNotification(matchedSalesStatus.length+matchedPurchases.length);
-
-  //   setFinanceNotification(count);
-  // }, [orders, sales, purchases]);
 
   return isLoading ? (<Loader />) : (
 
@@ -217,7 +153,7 @@ const DropdownNotification = () => {
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">
-                          you have new pending {notification.series} order
+                          Your {notification.series} order is ready to review
                         </span>{' '}
                         {notification.orderItems.filter((item) => item.status === "Edited" || item.status === "Printed")?.length} items to review
                       </p>
@@ -242,7 +178,7 @@ const DropdownNotification = () => {
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">
-                          you have new pending {notification.series} order
+                          Your {notification.series} order is ready to review
                         </span>{' '}
                         {notification.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected")?.length} items to review
                       </p>
@@ -251,13 +187,13 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ): (
+              ) : (
                 <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                 <p className="text-sm">
-                        <span className="text-black dark:text-white">
-                          No new notifications
-                        </span>{' '}
-                        </p>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
                 </li>
               )}
             </>
@@ -275,7 +211,7 @@ const DropdownNotification = () => {
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">
-                          you have new pending {notification.series} order
+                          Your {notification.series} order is ready to review
                         </span>{' '}
                         {notification.orderItems.filter((item) => item.status === "Received" || item.status === "Rejected" || item.status === "Completed")?.length} items to review
                       </p>
@@ -284,13 +220,13 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ): (
+              ) : (
                 <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                 <p className="text-sm">
-                        <span className="text-black dark:text-white">
-                          No new notifications
-                        </span>{' '}
-                        </p>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
                 </li>
               )}
             </>
@@ -308,7 +244,7 @@ const DropdownNotification = () => {
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">
-                          you have new pending {notification.series} order
+                          Your {notification.series} order is ready to review
                         </span>{' '}
                         {notification.orderItems.filter((item) => item.status === "Approved")?.length} items to review
                       </p>
@@ -317,54 +253,84 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ): (
+              ) : (
                 <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                 <p className="text-sm">
-                        <span className="text-black dark:text-white">
-                          No new notifications
-                        </span>{' '}
-                        </p>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
                 </li>
               )}
             </>
           )}
 
-          {/* {user?.roles === "finance" && (
-            <li>
-              <Link
-                onClick={() => setDropdownOpen(false)}
-                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                to="/dashboard/finance-notifications"
-              >
-                <p className="text-sm">
-                  <span className="text-black dark:text-white">
-                    You have {financeNotification} new notifications
-                  </span>{' '}
-                </p>
+          {user?.roles === "finance" && (
+            <>
+              {purchases.length > 0 ? (
+                purchases?.map((notification) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/purchase-notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          Your {notification.series} purchase is ready to review
+                        </span>{' '}
+                        {notification.products.filter((item) => item.status === "Received" || item.status === "Rejected")?.length} items to review
+                      </p>
 
-                <p className="text-xs">01 Dec, 2024</p>
-              </Link>
-            </li>
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
+                </li>
+              )}
+            </>
           )}
 
-
           {user?.roles === "store-representative" && (
-            <li>
-              <Link
-                onClick={() => setDropdownOpen(false)}
-                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                to="/dashboard/store-notifications"
-              >
-                <p className="text-sm">
-                  <span className="text-black dark:text-white">
-                    You have {storeRepNotification} new notifications
-                  </span>{' '}
-                </p>
+            <>
+              {purchases.length > 0 ? (
+                purchases?.map((notification) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/purchase-notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          Your {notification.series} purchase is ready to review
+                        </span>{' '}
+                        {notification.products.filter((item) => item.status === "Approved")?.length} items to review
+                      </p>
 
-                <p className="text-xs">01 Dec, 2024</p>
-              </Link>
-            </li>
-          )} */}
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
+                </li>
+              )}
+            </>
+          )}
+          
         </ul>
       </div>
     </li>

@@ -21,6 +21,7 @@ import jobOrderProductReducer from "./features/jobOrderProductsSlice";
 import salesPartnersReducer from "./features/salesPartnersSlice";
 import paymentReducer from "./features/paymentSlice";
 import notesReducer from "./features/notesSlice";
+import purchaseNotesReducer from "./features/purchaseNotesSlice";
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -44,7 +45,8 @@ const store = configureStore({
         jobOrderProduct: jobOrderProductReducer,
         salesPartner: salesPartnersReducer,
         payment: paymentReducer,
-        note: notesReducer
+        note: notesReducer,
+        purchaseNote: purchaseNotesReducer
     },
 });
 

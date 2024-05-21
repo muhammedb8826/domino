@@ -61,25 +61,6 @@
       "status": "Pending Approval",
       "orderItems": [
         {
-          "productId": "1713703632140",
-          "serviceId": "1324",
-          "priceId": "1371",
-          "unitPrice": 360000,
-          "width": "6",
-          "height": "6",
-          "quantity": "5",
-          "unit": 180,
-          "discount": 0,
-          "level": 0,
-          "total": 360000,
-          "isDiscounted": false,
-          "status": "Received",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "id": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3"
-        },
-        {
           "productId": "1714005604020",
           "serviceId": "e4b1",
           "priceId": "77da",
@@ -97,6 +78,25 @@
           "adminApproval": false,
           "completed": false,
           "id": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb"
+        },
+        {
+          "productId": "1713703632140",
+          "serviceId": "1324",
+          "priceId": "1371",
+          "unitPrice": 360000,
+          "width": "6",
+          "height": "6",
+          "quantity": "5",
+          "unit": 180,
+          "discount": 0,
+          "level": 0,
+          "total": 360000,
+          "isDiscounted": false,
+          "status": "Received",
+          "printed": false,
+          "adminApproval": false,
+          "completed": false,
+          "id": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3"
         },
         {
           "productId": "1713727389192",
@@ -473,6 +473,272 @@
           "hour": "4:53 AM"
         }
       ]
+    },
+    {
+      "id": "8ce9",
+      "notes": [
+        {
+          "id": "313e0e12-e01d-448c-8e1c-ec02c8fd6541",
+          "note": "this order needs adjsutment",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "cc826b0c-11c9-4383-bd9f-d5500ff2b45b",
+          "note": "but this is not",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "ff8d76e1-c416-431e-b6bd-36b472b56e1d",
+          "note": "ok let do it then",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        null,
+        {
+          "id": "1004b89c-1e0b-48ae-8383-2280e73a1a68",
+          "note": "Approve this order",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:53 AM"
+        }
+      ]
+    },
+    {
+      "id": "7e96",
+      "notes": [
+        {
+          "id": "313e0e12-e01d-448c-8e1c-ec02c8fd6541",
+          "note": "this order needs adjsutment",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "cc826b0c-11c9-4383-bd9f-d5500ff2b45b",
+          "note": "but this is not",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "ff8d76e1-c416-431e-b6bd-36b472b56e1d",
+          "note": "ok let do it then",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        null,
+        {
+          "id": "1004b89c-1e0b-48ae-8383-2280e73a1a68",
+          "note": "Approve this order",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:53 AM"
+        }
+      ]
+    },
+    {
+      "id": "33b5",
+      "notes": [
+        {
+          "id": "313e0e12-e01d-448c-8e1c-ec02c8fd6541",
+          "note": "this order needs adjsutment",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "cc826b0c-11c9-4383-bd9f-d5500ff2b45b",
+          "note": "but this is not",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "ff8d76e1-c416-431e-b6bd-36b472b56e1d",
+          "note": "ok let do it then",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        null,
+        {
+          "id": "1004b89c-1e0b-48ae-8383-2280e73a1a68",
+          "note": "Approve this order",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:53 AM"
+        }
+      ]
+    },
+    {
+      "id": "208f",
+      "notes": [
+        {
+          "id": "313e0e12-e01d-448c-8e1c-ec02c8fd6541",
+          "note": "this order needs adjsutment",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "cc826b0c-11c9-4383-bd9f-d5500ff2b45b",
+          "note": "but this is not",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "ff8d76e1-c416-431e-b6bd-36b472b56e1d",
+          "note": "ok let do it then",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        null,
+        {
+          "id": "1004b89c-1e0b-48ae-8383-2280e73a1a68",
+          "note": "Approve this order",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:53 AM"
+        }
+      ]
+    },
+    {
+      "id": "3f96",
+      "notes": [
+        {
+          "id": "313e0e12-e01d-448c-8e1c-ec02c8fd6541",
+          "note": "this order needs adjsutment",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "cc826b0c-11c9-4383-bd9f-d5500ff2b45b",
+          "note": "but this is not",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "ff8d76e1-c416-431e-b6bd-36b472b56e1d",
+          "note": "ok let do it then",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        null,
+        {
+          "id": "1004b89c-1e0b-48ae-8383-2280e73a1a68",
+          "note": "Approve this order",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:53 AM"
+        }
+      ]
+    },
+    {
+      "id": "f80e",
+      "notes": [
+        {
+          "id": "313e0e12-e01d-448c-8e1c-ec02c8fd6541",
+          "note": "this order needs adjsutment",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "cc826b0c-11c9-4383-bd9f-d5500ff2b45b",
+          "note": "but this is not",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "ff8d76e1-c416-431e-b6bd-36b472b56e1d",
+          "note": "ok let do it then",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        null,
+        {
+          "id": "1004b89c-1e0b-48ae-8383-2280e73a1a68",
+          "note": "Approve this order",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:53 AM"
+        }
+      ]
+    },
+    {
+      "id": "07b2",
+      "notes": [
+        {
+          "id": "313e0e12-e01d-448c-8e1c-ec02c8fd6541",
+          "note": "this order needs adjsutment",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "cc826b0c-11c9-4383-bd9f-d5500ff2b45b",
+          "note": "but this is not",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        {
+          "id": "ff8d76e1-c416-431e-b6bd-36b472b56e1d",
+          "note": "ok let do it then",
+          "orderItemsId": "e63ec53c-6cc1-4695-9344-92c6a5c27cc3",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:49 AM"
+        },
+        null,
+        {
+          "id": "1004b89c-1e0b-48ae-8383-2280e73a1a68",
+          "note": "Approve this order",
+          "orderItemsId": "48958b9f-c51d-4a41-8ba5-f2c6be9cbcdb",
+          "userId": 1,
+          "date": "May 18, 2024",
+          "hour": "4:53 AM"
+        }
+      ]
     }
   ],
   "customers": [
@@ -735,56 +1001,74 @@
   ],
   "purchases": [
     {
-      "id": "4cdb",
-      "vendorId": "a85f",
+      "id": "7230",
+      "series": "IAN-PO-0000-2024",
+      "vendorId": "349b",
       "purchaseReresentative": "Muktar",
       "purchaseReresentativeId": 11,
-      "status": "received",
-      "vendorName": "Muhammed",
-      "orderDate": "2024-04-22",
-      "paymentMethod": "cash",
-      "amount": 690,
+      "status": "Purchased",
+      "vendorName": "Teshager",
+      "orderDate": "2024-05-22",
+      "paymentMethod": "mobile-banking",
+      "amount": 26450,
       "reference": "",
-      "totalAmount": 690,
-      "totalQuantity": 3,
+      "totalAmount": 26450,
+      "totalQuantity": 9,
       "note": "",
       "products": [
         {
+          "productId": "1713727389192",
+          "productName": "T-shirt",
+          "quantity": "5",
+          "description": "The coral black t-shirt ",
+          "unitPrice": "3000",
+          "subTotal": 15000,
+          "unitId": "8dd4",
+          "unitName": "PCS",
+          "status": "Rejected",
+          "id": "831d2f9f-255b-48e6-afb4-3fd6f1689f73"
+        },
+        {
           "productId": "1713703632140",
           "productName": "Banner",
-          "quantity": "3",
-          "description": "",
-          "unitPrice": "200",
-          "subTotal": 600,
+          "quantity": "4",
+          "description": "The mesh banner",
+          "unitPrice": "2000",
+          "subTotal": 8000,
           "unitId": "3e4a",
-          "unitName": "Roll"
+          "unitName": "Roll",
+          "status": "Approved",
+          "id": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c"
         }
       ]
     },
     {
-      "id": "8c9d",
+      "id": "eeea",
+      "series": "IAN-PO-0001-2024",
       "vendorId": "284b",
-      "purchaseReresentative": "fin",
-      "purchaseReresentativeId": 14,
-      "status": "received",
+      "purchaseReresentative": "Muktar",
+      "purchaseReresentativeId": 11,
+      "status": "Purchased",
       "vendorName": "Aster",
-      "orderDate": "2024-04-22",
-      "paymentMethod": "cash",
-      "amount": 1150,
-      "reference": "xxxx",
-      "totalAmount": 1150,
-      "totalQuantity": 1,
+      "orderDate": "2024-05-22",
+      "paymentMethod": "mobile-banking",
+      "amount": 23000,
+      "reference": "958djdd98CBE",
+      "totalAmount": 23000,
+      "totalQuantity": 4,
       "note": "",
       "products": [
         {
-          "productId": "1713788868422",
-          "productName": "Mica Glass 8mm",
-          "quantity": "1",
+          "productId": "1714005604020",
+          "productName": "Sticker",
+          "quantity": "4",
           "description": "",
-          "unitPrice": "1000",
-          "subTotal": 1000,
-          "unitId": "890e",
-          "unitName": "sqm"
+          "unitPrice": "5000",
+          "subTotal": 20000,
+          "unitId": "90fc",
+          "unitName": "M",
+          "status": "Purchased",
+          "id": "53a1eeff-5b02-4881-83b4-e9cb11941a61"
         }
       ]
     }
@@ -891,6 +1175,133 @@
       "id": "ef1a",
       "productId": "1713703632140",
       "status": "added"
+    }
+  ],
+  "purchaseNotes": [
+    {
+      "id": "ee63",
+      "notes": [
+        {
+          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
+          "note": "this item is approved by muktar",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:41 AM"
+        }
+      ]
+    },
+    {
+      "id": "13d1",
+      "notes": [
+        {
+          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
+          "note": "this item is approved by muktar",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:41 AM"
+        },
+        null,
+        {
+          "id": "00277e11-852e-4717-a95f-1651678bafd4",
+          "note": "This item needs to be received ",
+          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:43 AM"
+        }
+      ]
+    },
+    {
+      "id": "cf18",
+      "notes": [
+        {
+          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
+          "note": "this item is approved by muktar",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:41 AM"
+        },
+        null,
+        {
+          "id": "00277e11-852e-4717-a95f-1651678bafd4",
+          "note": "This item needs to be received ",
+          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:43 AM"
+        },
+        {
+          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
+          "note": "Check it out please",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:44 AM"
+        }
+      ]
+    },
+    {
+      "id": "11c5",
+      "notes": [
+        {
+          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
+          "note": "this item is approved by muktar",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:41 AM"
+        },
+        null,
+        {
+          "id": "00277e11-852e-4717-a95f-1651678bafd4",
+          "note": "This item needs to be received ",
+          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:43 AM"
+        },
+        {
+          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
+          "note": "Check it out please",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:44 AM"
+        }
+      ]
+    },
+    {
+      "id": "2cde",
+      "notes": [
+        {
+          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
+          "note": "this item is approved by muktar",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:41 AM"
+        },
+        null,
+        {
+          "id": "00277e11-852e-4717-a95f-1651678bafd4",
+          "note": "This item needs to be received ",
+          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:43 AM"
+        },
+        {
+          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
+          "note": "Check it out please",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:44 AM"
+        }
+      ]
     }
   ]
 }
