@@ -13,7 +13,7 @@ import { RootState } from "@/redux/store";
 import { getPurchasesById, updatePurchase } from "@/redux/features/purchaseSlice";
 import { PurchaseNotificationTable } from "./PurchaseNotificationTable";
 import { getUnits } from "@/redux/features/unit/unitSlice";
-import { getStock } from "@/redux/features/stockSlice";
+import { getStock, updateStock } from "@/redux/features/stockSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -26,14 +26,15 @@ hours = hours ? hours : 12;
 const strTime = hours + ':' + minutes + ' ' + ampm;
 
 export const PurchaseNotifications = () => {
+    const { id } = useParams<{ id: string }>();
     const { user } = useSelector((state: RootState) => state.auth);
+    const { stock } = useSelector((state: RootState) => state.stock)
     const { singlePurchase, isLoading, error } = useSelector((state) => state.purchase);
     const { units } = useSelector((state) => state.unit);
     const { products } = useSelector((state: RootState) => state.product);
-    const { stock } = useSelector((state: RootState) => state.stock)
-    const { id } = useParams<{ id: string }>();
     const { purchaseNotes } = useSelector((state) => state.purchaseNote);
     const { users } = useSelector((state) => state.user);
+
     const [receiveReadyPurchases, setReceiveReadyPurchases] = useState([]);
     const [pendingApprovalPurchases, setPendingApprovalPurchases] = useState([]);
     const [active, setActive] = useState("pending");
@@ -156,9 +157,6 @@ export const PurchaseNotifications = () => {
 
     const handleUpdateReceiveReady = (id, status, index, productId, quantity) => {
         if (user?.roles === "store-representative" || user?.email === "admin@domino.com") {
-            // Debugging: Check the received status
-            console.log("Received status:", status);
-    
             const updatedOrderItems = receiveReadyPurchases.map((item) =>
                 item.id === id ? { ...item, status: status } : item
             );
@@ -184,9 +182,6 @@ export const PurchaseNotifications = () => {
         }
     };
 
-    console.log("stockData", stockData);
-
-
     const removeDuplicates = (notes) => {
         const uniqueNotes = notes.filter((note, index, self) =>
             index === self.findIndex((n) => (
@@ -205,6 +200,19 @@ export const PurchaseNotifications = () => {
         const noteData = {
             notes: removeDuplicates(note),
         }
+
+        stockData.forEach((stockItem) => {
+            dispatch(updateStock(stockItem)).then((res) => {
+                if (res.payload) {
+                    const { stock } = res.payload;
+                    setStockData(stock);
+                }
+                else {
+                    const message = "Something went wrong!";
+                    toast.error(message);
+                }
+            });
+        });
 
         dispatch(updatePurchase(data)).then((res) => {
             if (res.payload) {

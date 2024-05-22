@@ -29,8 +29,6 @@ const DropdownNotification = () => {
   const [financeNotification, setFinanceNotification] = useState([]);
   const [storeRepNotification, setStoreRepNotification] = useState([]);
 
-
-
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return;
@@ -96,10 +94,6 @@ const DropdownNotification = () => {
       }
     });
   }, [dispatch]);
-
-  console.log(financeNotification);
-  console.log(purchases.map((item) => item.products?.filter((product) => product.status === "Received")));
-
 
   return isLoading ? (<Loader />) : (
 
