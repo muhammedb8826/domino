@@ -13,6 +13,7 @@ import { RootState } from "@/redux/store";
 import { getPurchasesById, updatePurchase } from "@/redux/features/purchaseSlice";
 import { PurchaseNotificationTable } from "./PurchaseNotificationTable";
 import { getUnits } from "@/redux/features/unit/unitSlice";
+import { getStock } from "@/redux/features/stockSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -29,7 +30,7 @@ export const PurchaseNotifications = () => {
     const { singlePurchase, isLoading, error } = useSelector((state) => state.purchase);
     const { units } = useSelector((state) => state.unit);
     const { products } = useSelector((state: RootState) => state.product);
-
+    const { stock } = useSelector((state: RootState) => state.stock)
     const { id } = useParams<{ id: string }>();
     const { purchaseNotes } = useSelector((state) => state.purchaseNote);
     const { users } = useSelector((state) => state.user);
@@ -39,6 +40,7 @@ export const PurchaseNotifications = () => {
     const [expandedNotes, setExpandedNotes] = useState([]);
     const [newNotes, setNewNotes] = useState([]);
     const [formData, setFormData] = useState([]);
+    const [stockData, setStockData] = useState([]);
     const handleButtonClick = (newActiveState: string) => {
         setActive(newActiveState);
     };
@@ -94,15 +96,20 @@ export const PurchaseNotifications = () => {
         dispatch(getUnits());
         dispatch(getNotes()).then((res) => {
             if (res.payload) {
-              const notesData = res.payload.flatMap(noteGroup => noteGroup.notes);
-              setNote(notesData);
+                const notesData = res.payload.flatMap(noteGroup => noteGroup.notes);
+                setNote(notesData);
             }
-          });
+        });
         dispatch(getPurchasesById(id)).then((response) => {
             const { products } = response.payload;
             setFormData(products);
             setPendingApprovalPurchases(products.filter((item) => item.status === "Purchased" || item.status === "Rejected"));
             setReceiveReadyPurchases(products.filter((item) => item.status === "Approved" || item.status === "Received"));
+        });
+        dispatch(getStock()).then((res) => {
+            if (res.payload) {
+                setStockData(res.payload);
+            }
         });
     }, [dispatch, id]);
 
@@ -147,19 +154,38 @@ export const PurchaseNotifications = () => {
         }
     };
 
-    const handleUpdateReceiveReady = (id, status, index) => {
+    const handleUpdateReceiveReady = (id, status, index, productId, quantity) => {
         if (user?.roles === "store-representative" || user?.email === "admin@domino.com") {
+            // Debugging: Check the received status
+            console.log("Received status:", status);
+    
             const updatedOrderItems = receiveReadyPurchases.map((item) =>
                 item.id === id ? { ...item, status: status } : item
             );
+            const updatedStock = stockData.map((item) => {
+                if (productId === item.productId) {
+                    let newQuantity;
+                    if (status === "Received") {
+                        newQuantity = parseInt(item.quantity, 10) + parseInt(quantity, 10);
+                    } else {
+                        newQuantity = parseInt(item.quantity, 10) - parseInt(quantity, 10);
+                    }
+                    return { ...item, quantity: newQuantity.toString() }; // Ensure quantity is a string if needed
+                }
+                return item;
+            });
+            setStockData(updatedStock);
             setReceiveReadyPurchases(updatedOrderItems);
             setFormData([...updatedOrderItems, ...pendingApprovalPurchases]);
-            handlePendingApprovalAction(index)
+            handlePendingApprovalAction(index);
         } else {
             const message = "You are not authorized to edit this order";
             toast.error(message);
         }
     };
+
+    console.log("stockData", stockData);
+
 
     const removeDuplicates = (notes) => {
         const uniqueNotes = notes.filter((note, index, self) =>

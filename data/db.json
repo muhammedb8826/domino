@@ -1025,7 +1025,7 @@
           "subTotal": 15000,
           "unitId": "8dd4",
           "unitName": "PCS",
-          "status": "Rejected",
+          "status": "Approved",
           "id": "831d2f9f-255b-48e6-afb4-3fd6f1689f73"
         },
         {
@@ -1275,6 +1275,36 @@
     },
     {
       "id": "2cde",
+      "notes": [
+        {
+          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
+          "note": "this item is approved by muktar",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:41 AM"
+        },
+        null,
+        {
+          "id": "00277e11-852e-4717-a95f-1651678bafd4",
+          "note": "This item needs to be received ",
+          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:43 AM"
+        },
+        {
+          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
+          "note": "Check it out please",
+          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
+          "userId": 11,
+          "date": "May 22, 2024",
+          "hour": "2:44 AM"
+        }
+      ]
+    },
+    {
+      "id": "e42f",
       "notes": [
         {
           "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
