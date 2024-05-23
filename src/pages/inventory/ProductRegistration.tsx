@@ -1,6 +1,7 @@
 import Loader from "@/common/Loader";
 import ErroPage from "@/components/common/ErroPage";
 import { getCategories } from "@/redux/features/category/categorySlice";
+import { createOperatorStore } from "@/redux/features/operatorStoreSlice";
 import { createProduct } from "@/redux/features/product/productSlice";
 import { createStock } from "@/redux/features/stockSlice";
 import { getUnits } from "@/redux/features/unit/unitSlice";
@@ -56,6 +57,7 @@ useEffect(() => {
      
     dispatch(createProduct(data)).then(() => {
       dispatch(createStock(stockData));
+      dispatch(createOperatorStore(stockData));
         handleModalOpen(false);
         const message = "Product created successfully";
         toast.success(message);

@@ -24,6 +24,7 @@ import paymentReducer from "./features/paymentSlice";
 import notesReducer from "./features/notesSlice";
 import purchaseNotesReducer from "./features/purchaseNotesSlice";
 import storeRequestNotesReducer from "./features/storeRquestNotesSlice";
+import operatorStoreReducer from './features/operatorStoreSlice';
 
 const store = configureStore({
     reducer: {
@@ -51,6 +52,7 @@ const store = configureStore({
         note: notesReducer,
         purchaseNote: purchaseNotesReducer,
         storeRequestNote: storeRequestNotesReducer,
+        operatorStore: operatorStoreReducer,
     },
 });
 

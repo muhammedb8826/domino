@@ -15,14 +15,17 @@ import { RootState } from "@/redux/store";
 import { getPrintedTransactions } from "@/redux/features/printedTransactionsSlice";
 import { getProducts } from "@/redux/features/product/productSlice";
 import { getUnits } from "@/redux/features/unit/unitSlice";
+import { getOrders } from "@/redux/features/order/orderSlice";
+import { getOPeratorStore } from "@/redux/features/operatorStoreSlice";
 
 export const OperatorStore = () => {
-
-        const { sales, isLoading, error } = useSelector((state) => state.sale);
+      const { operatorStore, isLoading, error} = useSelector((state) => state.operatorStore);
+        const { sales } = useSelector((state) => state.sale);
         const { printedTransactions } = useSelector((state) => state.printedTransaction);
         const { products } = useSelector((state) => state.product);
         const { user } = useSelector((state: RootState) => state.auth);
         const { units } = useSelector((state) => state.unit);
+        const {orders} = useSelector((state) => state.order);
       
         const dispatch = useDispatch();
         const navigate = useNavigate();
@@ -38,6 +41,8 @@ export const OperatorStore = () => {
           dispatch(getPrintedTransactions())
           dispatch(getProducts());
           dispatch(getUnits())
+          dispatch(getOrders())
+          dispatch(getOPeratorStore());
         }, [dispatch]);
       
         const [showPopover, setShowPopover] = useState(null);
@@ -81,26 +86,25 @@ export const OperatorStore = () => {
           setShowPopover(index);
         };
         
-        const filteredSalesStatus = sales?.filter(
-            (sale) => sale.status === "stocked-out"
-          );
+        const filteredSalesStatus = sales?.map(sale =>
+          sale.products.filter(item => item.status === "Stocked-out")
+        );
 
-          const handleRequestedArea = (productName) => {
+          const handleRequestedArea = (id) => {
             // Calculate total area for requested quantities for the productName
             let totalRequestedArea = 0;
           
-            filteredSalesStatus.forEach((sale) => {
+            sales.forEach((sale) => {
               sale.products.forEach((product) => {
-                if (product.productName === productName) {
-                  const matchingUnit = units.find((unit) => unit.id === product.unitId);
-                  console.log(matchingUnit);
-                  
-                  if(matchingUnit){
-                  const width = matchingUnit.width;
-                  const height = matchingUnit.height;
-                  const quantity = parseInt(product.quantity, 10);
-                  totalRequestedArea += parseInt(width) * parseInt(height) * quantity;
+                if (product.productId === id) {
+                   const matchingUnit = units.find((unit) => unit.id === product.unitId);
+                  if (matchingUnit) {
+                    const width = parseFloat(matchingUnit.width);
+                    const height = parseFloat(matchingUnit.height);
+                    const quantity = parseInt(product.quantity, 10);
+                    totalRequestedArea += width * height * quantity;
                   }
+                  // totalRequestedArea += product.quantity;
                 }
               });
             });
@@ -108,18 +112,36 @@ export const OperatorStore = () => {
             return totalRequestedArea;
           };
 
-          const handlePrintedArea = (productName) => {
+          const handlePrintedArea = (id) => {
             // Calculate total area for printed quantities for the productName
             let totalPrintedArea = 0;
-          
-            printedTransactions.forEach((transaction) => {
-              if (transaction.material.toLowerCase() === productName.toLowerCase()) {
-                const width = parseFloat(transaction.width);
-                const height = parseFloat(transaction.height);
-                const quantity = parseInt(transaction.quantity, 10);
-                totalPrintedArea += width * height * quantity;
-              }
+
+            const printedOrder = orders.forEach((order) => {
+              order.orderItems.forEach((product) => {
+                if (product.productId === id && product.status === "Printed") {
+                  const matchingUnit = units.find((unit) => unit.id === product.unitId);
+                  if (matchingUnit) {
+                    const width = parseFloat(matchingUnit.width);
+                    const height = parseFloat(matchingUnit.height);
+                    const quantity = parseInt(product.quantity, 10);
+                    totalPrintedArea += width * height * quantity;
+                  }
+                  const width = parseFloat(product.width);
+                  const height = parseFloat(product.height);
+                  const quantity = parseInt(product.quantity, 10);
+                  totalPrintedArea += width * height * quantity;
+                }
+              });
             });
+          
+            // printedTransactions.forEach((transaction) => {
+            //   if (transaction.material.toLowerCase() === productName.toLowerCase()) {
+            //     const width = parseFloat(transaction.width);
+            //     const height = parseFloat(transaction.height);
+            //     const quantity = parseInt(transaction.quantity, 10);
+            //     totalPrintedArea += width * height * quantity;
+            //   }
+            // });
           
             return totalPrintedArea;
           };
@@ -134,17 +156,18 @@ export const OperatorStore = () => {
         }
       
 
-        const listContent = products.map((data) =>  {
-          const requestedArea = handleRequestedArea(data.name);
-          const printedArea = handlePrintedArea(data.name);
+        const listContent = operatorStore?.map((data) =>  {
+          const product = products?.find((product) => product.id === data.productId);
+          const requestedArea = handleRequestedArea(data.id);
+          const printedArea = handlePrintedArea(data.id);
           const unitName = handleUnitName(data.unitId);
           return (
           <tr key={data.id}>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {data.name}
+              {product?.name}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {requestedArea}
+              {data.quantity}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
               {printedArea}
@@ -171,7 +194,7 @@ export const OperatorStore = () => {
               {sale.operatorFirstName}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              {sale.products.map((product) => product.quantity).reduce((a, b) => a + Number(b), 0)}
+              {sale.products?.map((product) => product.quantity).reduce((a, b) => a + Number(b), 0)}
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
               {sale.status}
@@ -305,7 +328,7 @@ export const OperatorStore = () => {
                      <thead>
                        <tr className="bg-gray-2 text-left dark:bg-meta-4">
                          <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                           Material
+                           Product
                          </th>
                          <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                            Requested (in units)
