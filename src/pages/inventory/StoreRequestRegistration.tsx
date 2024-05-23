@@ -12,12 +12,14 @@ import Loader from "@/common/Loader";
 import { getUnits } from "@/redux/features/unit/unitSlice";
 import { getUsers } from "@/redux/features/user/userSlice";
 import { RootState } from "@/redux/store";
+import { v4 as uuidv4 } from "uuid";
 
-export const SaleRegistration = () => {
+export const StoreRequestRegistration = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { products, isLoading, error } = useSelector((state) => state.product);
   const { users } = useSelector((state) => state.user);
   const { units } = useSelector((state) => state.unit);
+  const { sales } = useSelector((state) => state.sale);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -72,7 +74,6 @@ export const SaleRegistration = () => {
   });
 
   const operators = users?.filter((user) => user.roles === "operator");
-  console.log(operators);
 
   const handleSelectedOperator = (e) => {
     const { value } = e.target;
@@ -148,25 +149,34 @@ export const SaleRegistration = () => {
       toast.error("Please select operator");
       return;
     }
+
+    const date = new Date();
+    const currentYear = date.getFullYear();
+
+    const seriesNumber = String(sales.length).padStart(4, '0'); // Pad with leading zeros if needed
+
       const data = {
+        series: `IAN-SR-${seriesNumber}-${currentYear}`,
         operatorId: user?.id,
         operatorFirstName: user?.first_name,
-        status: "requested",
+        status: "Requested",
         orderDate: orderDate,
         totalQuantity: totalQuantity,
         note: note,
          products: formData.map((product, index) => ({
+          id: uuidv4(),
           productId: productInfo[index].id,
           productName: productInfo[index].name,
           quantity: product.quantity,
           description: product.description,
           unitId: UoM[index].unitId,
           unitName: UoM[index].unitName,
+          status: "Requested",
         })),
       };
 
       dispatch(createSale(data)).then(() => {
-        navigate("/dashboard/inventory/sales");
+        navigate("/dashboard/inventory/store-request");
         toast.success("Stocked out successfully");
       });
   };
@@ -179,7 +189,7 @@ export const SaleRegistration = () => {
     <Loader />
   ) : (
     <>
-      <Breadcrumb pageName="Sale Order" />
+      <Breadcrumb pageName="Store Request" />
 
       <div className="grid grid-cols-1 gap-9">
         <div className="flex flex-col gap-9">
@@ -187,7 +197,7 @@ export const SaleRegistration = () => {
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
-                Sale Form
+                Request Form
               </h3>
             </div>
 
@@ -247,6 +257,9 @@ export const SaleRegistration = () => {
                         </th>
                         <th className="py-4 px-4 font-medium text-black dark:text-white">
                           UoM
+                        </th>
+                        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                          Status
                         </th>
                         <th className="py-4 px-4 font-medium text-black dark:text-white">
                           Action
@@ -324,6 +337,9 @@ export const SaleRegistration = () => {
                               {UoM.length > 0 &&
                                UoM[index]?.unitName
                                }
+                            </td>
+                            <td className="border border-[#eee] dark:border-strokedark">
+                              {data?.status}
                             </td>
                             <td className="border border-[#eee] px-4 dark:border-strokedark">
                               <div className="flex items-center space-x-3.5">
@@ -411,7 +427,7 @@ export const SaleRegistration = () => {
                   // onClick={handleSubmit}
                   className="flex justify-center rounded bg-primary p-3 font-medium text-gray"
                 >
-                  Add Purchase
+                  Request
                 </button>
               </div>
             </form>

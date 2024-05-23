@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
-export const PurchaseNotificationTable = ({
+export const StoreRequestNotificationTable = ({
   title,
   orders,
   handleAction,
@@ -64,9 +64,6 @@ export const PurchaseNotificationTable = ({
                   Quantity
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Unit price
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   UoM
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -113,9 +110,6 @@ export const PurchaseNotificationTable = ({
                           {data.quantity}
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          {data.unitPrice}
-                        </td>
-                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           {unit?.name}
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -145,7 +139,7 @@ export const PurchaseNotificationTable = ({
                               className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                             >
                               <ul className="py-2 text-sm text-gray-700">
-                                {data.status !== "Received" && (
+                                {data.status !== "Stocked-out" && (
                                 <li>
                                   <button
                                     type="button"

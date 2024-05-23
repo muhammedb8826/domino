@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getOrders } from '@/redux/features/order/orderSlice';
-import { Sale } from '@/pages/inventory/Sale';
+import { Sale } from '@/pages/inventory/StoreRequest';
 import { getSales } from '@/redux/features/saleSlice';
 import Loader from '@/common/Loader';
 import { getPurchases } from '@/redux/features/purchaseSlice';
@@ -157,6 +157,62 @@ const DropdownNotification = () => {
                   </li>
                 ))
               )}
+              {purchases.length > 0 ? (
+                purchases?.map((notification) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/purchase-notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          Your {notification.series} purchase is ready to review
+                        </span>{' '}
+                        {notification.products.filter((item) => item.status === "Received" || item.status === "Returned")?.length} items to review
+                      </p>
+
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
+                </li>
+              )}
+              {sales.length > 0 ? (
+                sales?.map((notification) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/sr-notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          Your {notification.series} purchase is ready to review
+                        </span>{' '}
+                        {notification.products.filter((item) => item.status === "Requested" || item.status === "Rejected")?.length} items to review
+                      </p>
+
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
+                </li>
+              )}
             </>
           )}
 
@@ -256,6 +312,34 @@ const DropdownNotification = () => {
                   </p>
                 </li>
               )}
+              {sales.length > 0 ? (
+                sales?.map((notification) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/sr-notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          Your {notification.series} purchase is ready to review
+                        </span>{' '}
+                        {notification.products.filter((item) => item.status === "Requested" || item.status === "Rejected")?.length} items to review
+                      </p>
+
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
+                </li>
+              )}
             </>
           )}
 
@@ -301,6 +385,34 @@ const DropdownNotification = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
                       to={`/dashboard/purchase-notifications/${notification.id}`}
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          Your {notification.series} purchase is ready to review
+                        </span>{' '}
+                        {notification.products.filter((item) => item.status === "Approved")?.length} items to review
+                      </p>
+
+                      <p className="text-xs">{notification.date}</p>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
+                  <p className="text-sm">
+                    <span className="text-black dark:text-white">
+                      No new notifications
+                    </span>{' '}
+                  </p>
+                </li>
+              )}
+              {sales.length > 0 ? (
+                sales?.map((notification) => (
+                  <li>
+                    <Link
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to={`/dashboard/sr-notifications/${notification.id}`}
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">

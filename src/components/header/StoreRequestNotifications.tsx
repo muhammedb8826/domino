@@ -1,19 +1,18 @@
 import Loader from "@/common/Loader";
-import { NotificationTable } from "./NotificationTable";
 import Breadcrumb from "../Breadcrumb";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getUsers } from "@/redux/features/user/userSlice";
 import { getProducts } from "@/redux/features/product/productSlice";
-import { createNote, getNotes } from "@/redux/features/purchaseNotesSlice";
+import { createNote, getNotes } from "@/redux/features/storeRquestNotesSlice";
 import { v4 as uuidv4 } from 'uuid';
 import toast from "react-hot-toast";
 import { RootState } from "@/redux/store";
-import { getPurchasesById, updatePurchase } from "@/redux/features/purchaseSlice";
-import { PurchaseNotificationTable } from "./PurchaseNotificationTable";
 import { getUnits } from "@/redux/features/unit/unitSlice";
 import { getStock, updateStock } from "@/redux/features/stockSlice";
+import { getSaleById, updateSale } from "@/redux/features/saleSlice";
+import { StoreRequestNotificationTable } from "./StoreRequestNotificationTable";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -25,18 +24,18 @@ hours = hours % 12;
 hours = hours ? hours : 12;
 const strTime = hours + ':' + minutes + ' ' + ampm;
 
-export const PurchaseNotifications = () => {
+export const StoreRequestNotifications = () => {
     const { id } = useParams<{ id: string }>();
     const { user } = useSelector((state: RootState) => state.auth);
     const { stock } = useSelector((state: RootState) => state.stock)
-    const { singlePurchase, isLoading, error } = useSelector((state) => state.purchase);
+    const { singleSale, isLoading, error } = useSelector((state) => state.sale);
     const { units } = useSelector((state) => state.unit);
     const { products } = useSelector((state: RootState) => state.product);
-    const { purchaseNotes } = useSelector((state) => state.purchaseNote);
+    const { storeRequestNotes } = useSelector((state) => state.storeRequestNote);
     const { users } = useSelector((state) => state.user);
 
-    const [receiveReadyPurchases, setReceiveReadyPurchases] = useState([]);
-    const [pendingApprovalPurchases, setPendingApprovalPurchases] = useState([]);
+    const [approveReadyRequests, setApproveReadyRequests] = useState([]);
+    const [pendingStockOutRequests, setPendingStockOutRequests] = useState([]);
     const [active, setActive] = useState("pending");
     const [expandedNotes, setExpandedNotes] = useState([]);
     const [newNotes, setNewNotes] = useState([]);
@@ -53,7 +52,7 @@ export const PurchaseNotifications = () => {
     const popoverRef2 = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<any>(null);
     const dropdownRef = useRef<any>(null);
-    const [note, setNote] = useState(purchaseNotes || []);
+    const [note, setNote] = useState(storeRequestNotes || []);
     const dispatch = useDispatch();
 
 
@@ -101,11 +100,11 @@ export const PurchaseNotifications = () => {
                 setNote(notesData);
             }
         });
-        dispatch(getPurchasesById(id)).then((response) => {
+        dispatch(getSaleById(id)).then((response) => {
             const { products } = response.payload;
             setFormData(products);
-            setPendingApprovalPurchases(products.filter((item) => item.status === "Purchased" || item.status === "Returned" || item.status === "Cancelled"));
-            setReceiveReadyPurchases(products.filter((item) => item.status === "Approved" || item.status === "Received"));
+            setApproveReadyRequests(products.filter((item) => item.status === "Requested" || item.status === "Rejected" || item.status === "Cancelled"));
+            setPendingStockOutRequests(products.filter((item) => item.status === "Approved" || item.status === "Stocked-out"));
         });
         dispatch(getStock()).then((res) => {
             if (res.payload) {
@@ -140,25 +139,12 @@ export const PurchaseNotifications = () => {
     };
 
     const handleUpdatePendingApproval = (id, status, index, productId, quantity) => {
-        if (user?.email === "admin@domino.com" || user?.roles === "finance") {
-            const updatedOrderItems = pendingApprovalPurchases.map((item) =>
+        if (user?.email === "admin@domino.com") {
+            const updatedOrderItems = approveReadyRequests.map((item) =>
                 item.id === id ? { ...item, status: status } : item
             );
-            const updatedStock = stockData?.map((item) => {
-                if (productId === item.productId) {
-                    let newQuantity = parseInt(item.quantity, 10); // Initialize with current quantity
-                    
-                    if (status === "Returned") {
-                        newQuantity -= parseInt(quantity, 10); // Adjust for returned quantity
-                    }
-                    
-                    return { ...item, quantity: newQuantity.toString() }; // Convert to string
-                }
-                return item;
-            });
-            setStockData(updatedStock);
-            setPendingApprovalPurchases(updatedOrderItems);
-            setFormData([...updatedOrderItems, ...receiveReadyPurchases]);
+            setApproveReadyRequests(updatedOrderItems);
+            setFormData([...updatedOrderItems, ...pendingStockOutRequests]);
             handleAction(index)
         }
         else {
@@ -169,22 +155,24 @@ export const PurchaseNotifications = () => {
 
     const handleUpdateReceiveReady = (id, status, index, productId, quantity) => {
         if (user?.roles === "store-representative" || user?.email === "admin@domino.com") {
-            const updatedOrderItems = receiveReadyPurchases.map((item) =>
+            const updatedOrderItems = pendingStockOutRequests.map((item) =>
                 item.id === id ? { ...item, status: status } : item
             );
             const updatedStock = stockData?.map((item) => {
                 if (productId === item.productId) {
                     let newQuantity = parseInt(item.quantity, 10);
-                    if (status === "Received") {
+                    if (status === "Stocked-out") {
+                        newQuantity -= parseInt(quantity, 10);
+                    } else if (status === "Cancelled") {
                         newQuantity += parseInt(quantity, 10);
-                    } 
+                    }
                     return { ...item, quantity: newQuantity.toString() }; // Ensure quantity is a string if needed
                 }
                 return item;
             });
             setStockData(updatedStock);
-            setReceiveReadyPurchases(updatedOrderItems);
-            setFormData([...updatedOrderItems, ...pendingApprovalPurchases]);
+            setPendingStockOutRequests(updatedOrderItems);
+            setFormData([...updatedOrderItems, ...approveReadyRequests]);
             handlePendingApprovalAction(index);
         } else {
             const message = "You are not authorized to edit this order";
@@ -204,7 +192,7 @@ export const PurchaseNotifications = () => {
     const handleSubmit = () => {
         const data = {
             id: id,
-            ...singlePurchase,
+            ...singleSale,
             products: formData
         }
         const noteData = {
@@ -223,12 +211,12 @@ export const PurchaseNotifications = () => {
             });
         });
 
-        dispatch(updatePurchase(data)).then((res) => {
+        dispatch(updateSale(data)).then((res) => {
             if (res.payload) {
                 const { products } = res.payload;
                 setFormData(products);
-                setPendingApprovalPurchases(products.filter((item) => item.status === "Purchased" || item.status === "Returned" || item.status === "Cancelled"));
-                setReceiveReadyPurchases(products.filter((item) => item.status === "Approved" || item.status === "Received"));
+                setApproveReadyRequests(products.filter((item) => item.status === "Requested" || item.status === "Rejected" || item.status === "Cancelled"));
+                setPendingStockOutRequests(products.filter((item) => item.status === "Approved" || item.status === "Stocked-out"));
                 toast.success("Purchase order updated successfully")
 
                 dispatch(createNote(noteData)).then((res) => {
@@ -285,9 +273,9 @@ export const PurchaseNotifications = () => {
                     </button>
                 </nav>
                 {active === "pending" && (
-                    <PurchaseNotificationTable
+                    <StoreRequestNotificationTable
                         title="Pending approval purchases"
-                        orders={pendingApprovalPurchases}
+                        orders={approveReadyRequests}
                         handleAction={handleAction}
                         showPopover={showPopover}
                         handleModalOpen={handleUpdatePendingApproval}
@@ -298,7 +286,7 @@ export const PurchaseNotifications = () => {
                         products={products}
                         units={units}
                         status1={{ label: "Approve", value: "Approved" }}
-                        status2={{ label: "Return", value: "Returned" }}
+                        status2={{ label: "Reject", value: "Rejected" }}
                         expandedNotes={expandedNotes}
                         setExpandedNotes={setExpandedNotes}
                         handleChangeNotes={handleChangeNotes}
@@ -306,9 +294,9 @@ export const PurchaseNotifications = () => {
                     />
                 )}
                 {active === "receive" && (
-                    <PurchaseNotificationTable
+                    <StoreRequestNotificationTable
                         title="Pending approval orders"
-                        orders={receiveReadyPurchases}
+                        orders={pendingStockOutRequests}
                         handleAction={handlePendingApprovalAction}
                         showPopover={showPopover2}
                         handleModalOpen={handleUpdateReceiveReady}
@@ -318,7 +306,7 @@ export const PurchaseNotifications = () => {
                         note={removeDuplicates(note)}
                         products={products}
                         units={units}
-                        status1={{ label: "Receive", value: "Received" }}
+                        status1={{ label: "Stock out", value: "Stocked-out" }}
                         status2={{ label: "Cancel", value: "Cancelled" }}
                         expandedNotes={expandedNotes}
                         setExpandedNotes={setExpandedNotes}

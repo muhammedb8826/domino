@@ -10,7 +10,7 @@ import { CustomerList } from "../components/customer/CustomerList";
 import { CommissionList } from "@/components/commission/CommissionList";
 import { Products } from "@/pages/inventory/Products";
 import { Purschase } from "@/pages/inventory/Purschase";
-import Sale from "@/pages/inventory/Sale";
+import Sale from "@/pages/inventory/StoreRequest";
 import { Reports } from "@/pages/inventory/Reports";
 import { Categories } from "@/pages/inventory/Categories";
 import { People, Suppliers } from "@/pages/inventory/Suppliers";

@@ -26,6 +26,15 @@
       "unitId": "90fc",
       "minStockLevel": "1",
       "initialStock": "0"
+    },
+    {
+      "id": "1716403088465",
+      "name": "Mika",
+      "description": "gfgfd",
+      "categoryId": "833f",
+      "unitId": "1bd6",
+      "minStockLevel": "1",
+      "initialStock": "5"
     }
   ],
   "services": [
@@ -1025,20 +1034,8 @@
           "subTotal": 15000,
           "unitId": "8dd4",
           "unitName": "PCS",
-          "status": "Rejected",
+          "status": "Returned",
           "id": "831d2f9f-255b-48e6-afb4-3fd6f1689f73"
-        },
-        {
-          "productId": "1713703632140",
-          "productName": "Banner",
-          "quantity": "4",
-          "description": "The mesh banner",
-          "unitPrice": "2000",
-          "subTotal": 8000,
-          "unitId": "3e4a",
-          "unitName": "Roll",
-          "status": "Received",
-          "id": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c"
         }
       ]
     },
@@ -1105,40 +1102,34 @@
   ],
   "sales": [
     {
-      "id": "fabf",
+      "id": "109a",
+      "series": "IAN-SR-0000-2024",
       "operatorId": 8,
       "operatorFirstName": "Teshager",
-      "status": "rejected",
-      "orderDate": "2024-04-22",
+      "status": "Requested",
+      "orderDate": "2024-05-22",
       "totalQuantity": 15,
       "note": "",
       "products": [
         {
+          "id": "eac95680-6871-45a6-8bd4-d80f3fcf08ec",
           "productId": "1713727389192",
           "productName": "T-shirt",
-          "quantity": "15",
-          "description": "",
+          "quantity": "5",
+          "description": "df",
           "unitId": "8dd4",
-          "unitName": "PCS"
-        }
-      ]
-    },
-    {
-      "id": "52e9",
-      "operatorId": 12,
-      "operatorFirstName": "ope",
-      "status": "stocked-out",
-      "orderDate": "2024-04-22",
-      "totalQuantity": 1,
-      "note": "",
-      "products": [
+          "unitName": "PCS",
+          "status": "Stocked-out"
+        },
         {
-          "productId": "1713788868422",
-          "productName": "Mica Glass 8mm",
-          "quantity": "1",
-          "description": "",
-          "unitId": "890e",
-          "unitName": "sqm"
+          "id": "d0520ede-4f30-4967-82b7-6361fc255f55",
+          "productId": "1713703632140",
+          "productName": "Banner",
+          "quantity": "10",
+          "description": "gf",
+          "unitId": "3e4a",
+          "unitName": "Roll",
+          "status": "Cancelled"
         }
       ]
     }
@@ -1152,12 +1143,17 @@
     {
       "id": "e65b",
       "productId": "1713727389192",
-      "quantity": "30"
+      "quantity": "5"
     },
     {
       "id": "0a68",
       "productId": "1714005604020",
       "quantity": "0"
+    },
+    {
+      "id": "c6cd",
+      "productId": "1716403088465",
+      "quantity": "5"
     }
   ],
   "jobOrderProducts": [
@@ -1179,789 +1175,110 @@
   ],
   "purchaseNotes": [
     {
-      "id": "ee63",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        }
-      ]
+      "id": "588e",
+      "notes": []
     },
     {
-      "id": "13d1",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        }
-      ]
+      "id": "b239",
+      "notes": []
     },
     {
-      "id": "cf18",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "2287",
+      "notes": []
     },
     {
-      "id": "11c5",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "5528",
+      "notes": []
     },
     {
-      "id": "2cde",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "f41d",
+      "notes": []
     },
     {
-      "id": "e42f",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "fd73",
+      "notes": []
     },
     {
-      "id": "aea4",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "2cb4",
+      "notes": []
     },
     {
-      "id": "d7c8",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "c6c6",
+      "notes": []
     },
     {
-      "id": "40b8",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "f674",
+      "notes": []
     },
     {
-      "id": "ee36",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "f60e",
+      "notes": []
     },
     {
-      "id": "a55c",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "dcc7",
+      "notes": []
     },
     {
-      "id": "ae87",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "04ad",
+      "notes": []
     },
     {
-      "id": "04aa",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "8b94",
+      "notes": []
     },
     {
-      "id": "8096",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "3992",
+      "notes": []
     },
     {
-      "id": "7c7e",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "9450",
+      "notes": []
     },
     {
-      "id": "bc1c",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "ffca",
+      "notes": []
     },
     {
-      "id": "98c7",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "34b3",
+      "notes": []
     },
     {
-      "id": "f1a0",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "2b29",
+      "notes": []
+    }
+  ],
+  "storeRequestNotes": [
+    {
+      "id": "e8fb",
+      "notes": []
     },
     {
-      "id": "f314",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "45a1",
+      "notes": []
     },
     {
-      "id": "1d69",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "df88",
+      "notes": []
     },
     {
-      "id": "e303",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "3bff",
+      "notes": []
     },
     {
-      "id": "f17a",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "1721",
+      "notes": []
     },
     {
-      "id": "7e5f",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "5451",
+      "notes": []
     },
     {
-      "id": "5690",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "1671",
+      "notes": []
     },
     {
-      "id": "e3c3",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
-    },
-    {
-      "id": "227c",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
-    },
-    {
-      "id": "ad61",
-      "notes": [
-        {
-          "id": "bc0939c4-83b2-4434-be44-95ef9ffdadd9",
-          "note": "this item is approved by muktar",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:41 AM"
-        },
-        null,
-        {
-          "id": "00277e11-852e-4717-a95f-1651678bafd4",
-          "note": "This item needs to be received ",
-          "productsId": "f84a8c6a-f78c-4ccc-b1dc-d3a925bea51c",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:43 AM"
-        },
-        {
-          "id": "dd2ea289-fa4e-427b-9510-0b19f936c9d0",
-          "note": "Check it out please",
-          "productsId": "831d2f9f-255b-48e6-afb4-3fd6f1689f73",
-          "userId": 11,
-          "date": "May 22, 2024",
-          "hour": "2:44 AM"
-        }
-      ]
+      "id": "2169",
+      "notes": []
     }
   ]
 }

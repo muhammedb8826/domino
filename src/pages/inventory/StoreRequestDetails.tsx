@@ -9,8 +9,9 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom"
+import { v4 as uuidv4 } from "uuid";
 
-export const SaleDetails = () => {
+export const StoreRequestDetails = () => {
     const { id } = useParams();
     const { user } = useSelector((state: RootState) => state.auth);
     const { products, error } = useSelector((state) => state.product);
@@ -22,12 +23,14 @@ export const SaleDetails = () => {
 
     const [formData, setFormData] = useState([
         {
+            id: uuidv4(),
             productId: "",
             productName: "",
             quantity: "",
             description: "",
             unitId: "",
             unitName: "",
+            status: "Requested",
         },
     ]);
 
@@ -114,12 +117,14 @@ export const SaleDetails = () => {
         setFormData([
             ...formData,
             {
+                id: uuidv4(),
                 productId: "",
                 productName: "",
                 quantity: "",
                 description: "",
                 unitId: "",
                 unitName: "",
+                status: "Requested",
             },
         ]);
     };
@@ -158,7 +163,7 @@ export const SaleDetails = () => {
             id: singleSale.id,
             operatorId: operatorInfo.id,
             operatorFirstName: operatorInfo.firstName,
-            status: "requested",
+            status: "Requested",
             orderDate: orderDate,
             totalQuantity: totalQuantity,
             note: note,
@@ -169,6 +174,8 @@ export const SaleDetails = () => {
                 description: product.description,
                 unitId: product.unitId,
                 unitName: product.unitName,
+                status: product.status,
+                id: product.id,
             })),
         };
         if(singleSale.status !== "stocked-out") {
@@ -189,7 +196,7 @@ export const SaleDetails = () => {
         <Loader />
     ) : (
         <>
-            <Breadcrumb pageName="Sale Order" />
+            <Breadcrumb pageName="Request Details" />
 
             <div className="grid grid-cols-1 gap-9">
                 <div className="flex flex-col gap-9">
@@ -197,7 +204,7 @@ export const SaleDetails = () => {
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Sale Form
+                                Edit Request
                             </h3>
                         </div>
 
@@ -251,6 +258,9 @@ export const SaleDetails = () => {
                                                 </th>
                                                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                                                     UoM
+                                                </th>
+                                                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                                                   Status
                                                 </th>
                                                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                                                     Action
@@ -324,6 +334,9 @@ export const SaleDetails = () => {
                                                         </td>
                                                         <td className="border border-[#eee] dark:border-strokedark">
                                                             {data.unitName}
+                                                        </td>
+                                                        <td className="border border-[#eee] dark:border-strokedark">
+                                                            {data?.status}
                                                         </td>
                                                         <td className="border border-[#eee] px-4 dark:border-strokedark">
                                                             <div className="flex items-center space-x-3.5">

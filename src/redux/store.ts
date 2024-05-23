@@ -1,3 +1,4 @@
+import { storeRequestNotesSlice } from './features/storeRquestNotesSlice';
 import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user/userSlice";
 import authReducer from "./features/user/authentication";
@@ -22,6 +23,8 @@ import salesPartnersReducer from "./features/salesPartnersSlice";
 import paymentReducer from "./features/paymentSlice";
 import notesReducer from "./features/notesSlice";
 import purchaseNotesReducer from "./features/purchaseNotesSlice";
+import storeRequestNotesReducer from "./features/storeRquestNotesSlice";
+
 const store = configureStore({
     reducer: {
         user: userReducer,
@@ -46,7 +49,8 @@ const store = configureStore({
         salesPartner: salesPartnersReducer,
         payment: paymentReducer,
         note: notesReducer,
-        purchaseNote: purchaseNotesReducer
+        purchaseNote: purchaseNotesReducer,
+        storeRequestNote: storeRequestNotesReducer,
     },
 });
 

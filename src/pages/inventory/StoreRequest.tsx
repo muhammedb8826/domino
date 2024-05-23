@@ -12,7 +12,7 @@ import { BsTicketDetailed } from "react-icons/bs";
 import { deleteSale, getSales } from "@/redux/features/saleSlice";
 import { RootState } from "@/redux/store";
 
-export const Sale = () => {
+export const StoreRequest = () => {
   const { sales, isLoading, error } = useSelector((state) => state.sale);
   const { user } = useSelector((state: RootState) => state.auth);
 
@@ -96,7 +96,7 @@ export const Sale = () => {
   const productListContent = sales.map((sale, index) => (
     <tr key={sale.id}>
       <td className="border-b flex items-center border-[#eee] py-5 px-4 pl-9 dark:border-strokedark">
-       {sale.id}
+       {sale.series}
       </td>
       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
         {sale.orderDate}
@@ -137,7 +137,7 @@ export const Sale = () => {
             <ul className="flex flex-col gap-2 border-b border-stroke p-3 dark:border-strokedark">
               <li>
                 <Link
-                to={`/dashboard/inventory/sales/${sale.id}`}
+                to={`/dashboard/inventory/store-request/${sale.id}`}
                   className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                 >
                   <BsTicketDetailed />
@@ -176,7 +176,7 @@ export const Sale = () => {
       {user?.roles === "operator" && (
         <div>
           <Link
-          to={"/dashboard/inventory/sales/add"}
+          to={"/dashboard/inventory/store-request/add"}
             className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
             type="button"
           >

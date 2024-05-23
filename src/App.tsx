@@ -25,14 +25,14 @@ import { OrderRegistration } from "./components/order/OrderRegistration";
 import OrderDetailsPage from "./components/order/OrderDetailsPage";
 import { PurchaseRegistration } from "./pages/inventory/PurchaseRegistration";
 import { Stock } from "./pages/inventory/Stock";
-import { Sale } from "./pages/inventory/Sale";
-import { SaleRegistration } from "./pages/inventory/SaleRegistration";
+import { Sale, StoreRequest } from "./pages/inventory/StoreRequest";
+import { SaleRegistration, StoreRequestRegistration } from "./pages/inventory/StoreRequestRegistration";
 import Setting from "./components/setting/Setting";
 import { CommissionList } from "./components/commission/CommissionList";
 import Pricing from "./components/pricing/Pricing";
 import { CustomerList } from "./components/customer/CustomerList";
 import { Notifications } from "./components/header/Notifications";
-import { SaleDetails } from "./pages/inventory/SaleDetails";
+import { SaleDetails, StoreRequestDetails } from "./pages/inventory/StoreRequestDetails";
 import { PurchaseDetails } from "./pages/inventory/PurchaseDetails";
 import { OperatorStoreSaleDetails } from "./pages/inventory/OperatorStoreSaleDetails";
 import CommissionDetailsPage from "./components/commission/CommissionDetailsPage";
@@ -41,6 +41,7 @@ import Profile from "./pages/Profile";
 import AccountSettings from "./pages/AccountSettings";
 import { OperatorStore } from "./pages/inventory/OperatorStore";
 import { PurchaseNotifications } from "./components/header/PurchaseNotifications";
+import { StoreRequestNotifications } from "./components/header/StoreRequestNotifications";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -76,6 +77,7 @@ const App = () => {
             <Route index element={<OrdersList />} />
             <Route path="/dashboard/notifications/:id" element={<Notifications />} />
             <Route path="/dashboard/purchase-notifications/:id" element={<PurchaseNotifications />} />
+            <Route path="/dashboard/sr-notifications/:id" element={<StoreRequestNotifications />} />
             <Route path="/dashboard/profile" element={<Profile />} />
             <Route path="/dashboard/account-settings" element={<AccountSettings />} />
             {/* <Route path="/dashboard/forms/form-elements" element={<FormElements/>}/> */}
@@ -96,11 +98,11 @@ const App = () => {
             <Route path="/dashboard/inventory/purchases/:id" element={<PurchaseDetails />} />
             <Route path="/dashboard/inventory/purchases/add" element={<PurchaseRegistration />} />
             <Route path="/dashboard/inventory/stock" element={<Stock />} />
-            <Route path="/dashboard/inventory/sales" element={<Sale />} />
-            <Route path="/dashboard/inventory/sales/:id" element={<SaleDetails />} />
+            <Route path="/dashboard/inventory/store-request" element={<StoreRequest />} />
+            <Route path="/dashboard/inventory/store-request/:id" element={<StoreRequestDetails />} />
             <Route path="/dashboard/inventory/operator-store" element={<OperatorStore />} />
             <Route path="/dashboard/inventory/operator-store/:id" element={<OperatorStoreSaleDetails />} />
-            <Route path="/dashboard/inventory/sales/add" element={<SaleRegistration />} />
+            <Route path="/dashboard/inventory/store-request/add" element={<StoreRequestRegistration />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
