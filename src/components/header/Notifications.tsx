@@ -15,6 +15,7 @@ import { getPayments } from "@/redux/features/paymentSlice";
 import { createNote, getNotes } from "@/redux/features/notesSlice";
 import { v4 as uuidv4 } from 'uuid';
 import { getUsers } from "@/redux/features/user/userSlice";
+import { createPrintedTransaction } from "@/redux/features/printedTransactionsSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -217,7 +218,7 @@ export const Notifications = () => {
   const handleUpdatePrintReady = (id, status, index) => {
     if(user?.roles === "operator" || user?.email === "admin@domino.com") {
     const updatedOrderItems = printReadyOrders.map((item) =>
-      item.id === id ? { ...item, status: status } : item
+      item.id === id ? { ...item, status: status, printed: true } : item
     );
     setPrintReadyOrders(updatedOrderItems);
     setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...qualityControl, ...delivery]);
@@ -232,15 +233,16 @@ export const Notifications = () => {
     if(user?.email === "admin@domino.com"){
     if (status === "Completed") {
       const updatedOrderItems = qualityControl.map((item) =>
-        item.id === id ? { ...item, status: status, printed: true, adminApproval: true } : item
+        item.id === id ? { ...item, status: status, adminApproval: true } : item
       );
       setQualityControl(updatedOrderItems);
       setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
       handleQualityControlAction(index)
+
     }
     else {
       const updatedOrderItems = qualityControl.map((item) =>
-        item.id === id ? { ...item, status: status, printed: false, adminApproval: false } : item
+        item.id === id ? { ...item, status: status } : item
       );
       setQualityControl(updatedOrderItems);
       setFormData([...updatedOrderItems, ...proofReadyOrders, ...pendingApprovalOrders, ...printReadyOrders, ...delivery]);
@@ -336,12 +338,30 @@ export const Notifications = () => {
         const message = "Order status updated successfully";
         toast.success(message);
 
+        const filteredPrintedOrders = formData.filter((item) => item.printed === true || item.status === "Void");
+
+        filteredPrintedOrders.forEach((item) => {
+          item.id = uuidv4();
+          dispatch(createPrintedTransaction(item))
+            .then((res) => {
+              if (res.payload) {
+                // const message = "Order status updated successfully";
+                // toast.success(message);
+              } else {
+                toast.error("Something went wrong!");
+              }
+            })
+            .catch((error) => {
+              toast.error(`An error occurred: ${error.message}`);
+            });
+        });
+
         dispatch(createNote(noteData)).then((res) => {
           if (res.payload) {
             const { notes } = res.payload;
             setNote(notes);
-            const message = "Note added successfully";
-            toast.success(message);
+            // const message = "Note added successfully";
+            // toast.success(message);
           } else {
             const message = "Something went wrong!";
             toast.error(message);
@@ -502,7 +522,7 @@ export const Notifications = () => {
             products={products}
             services={services}
             status1={{ label: "Approve", value: "Completed" }}
-            status2={{ label: "Reject", value: "Approved" }}
+            status2={{ label: "Void", value: "Void" }}
             expandedNotes={expandedNotes}
             setExpandedNotes={setExpandedNotes}
             handleChangeNotes={handleChangeNotes}

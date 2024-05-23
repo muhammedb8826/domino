@@ -54,10 +54,15 @@ useEffect(() => {
       productId: data.id,
       quantity: data.initialStock,
        };
+
+       const operatorStoreData = {
+        productId: data.id,
+        quantity: 0,
+       };
      
     dispatch(createProduct(data)).then(() => {
       dispatch(createStock(stockData));
-      dispatch(createOperatorStore(stockData));
+      dispatch(createOperatorStore(operatorStoreData));
         handleModalOpen(false);
         const message = "Product created successfully";
         toast.success(message);

@@ -13,6 +13,8 @@ import { getUnits } from "@/redux/features/unit/unitSlice";
 import { getStock, updateStock } from "@/redux/features/stockSlice";
 import { getSaleById, updateSale } from "@/redux/features/saleSlice";
 import { StoreRequestNotificationTable } from "./StoreRequestNotificationTable";
+import { createSRTransaction } from "@/redux/features/srTransactionsSlice";
+import { getOPeratorStore, updateOperatorStore } from "@/redux/features/operatorStoreSlice";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -28,6 +30,7 @@ export const StoreRequestNotifications = () => {
     const { id } = useParams<{ id: string }>();
     const { user } = useSelector((state: RootState) => state.auth);
     const { stock } = useSelector((state: RootState) => state.stock)
+    const { operatorStore } = useSelector((state: RootState) => state.operatorStore)
     const { singleSale, isLoading, error } = useSelector((state) => state.sale);
     const { units } = useSelector((state) => state.unit);
     const { products } = useSelector((state: RootState) => state.product);
@@ -41,6 +44,7 @@ export const StoreRequestNotifications = () => {
     const [newNotes, setNewNotes] = useState([]);
     const [formData, setFormData] = useState([]);
     const [stockData, setStockData] = useState([]);
+    const [operatorStoreData, setOperatorStore] = useState([]);
     const handleButtonClick = (newActiveState: string) => {
         setActive(newActiveState);
     };
@@ -111,6 +115,11 @@ export const StoreRequestNotifications = () => {
                 setStockData(res.payload);
             }
         });
+        dispatch(getOPeratorStore()).then((res) => {
+            if (res.payload) {
+                setOperatorStore(res.payload);
+            }
+        });
     }, [dispatch, id]);
 
     const handleUpdateNote = (id, newNote, index, setExpandedNotes, expandedNotes) => {
@@ -170,7 +179,20 @@ export const StoreRequestNotifications = () => {
                 }
                 return item;
             });
+            const updatedOperatorStore = operatorStore?.map((item) => {
+                if (productId === item.productId) {
+                    let newQuantity = parseInt(item.quantity, 10);
+                    if (status === "Stocked-out") {
+                        newQuantity += parseInt(quantity, 10);
+                    } else if (status === "Cancelled") {
+                        newQuantity -= parseInt(quantity, 10);
+                    }
+                    return { ...item, quantity: newQuantity }; // Ensure quantity is a string if needed
+                }
+                return item;
+            });
             setStockData(updatedStock);
+            setOperatorStore(updatedOperatorStore);
             setPendingStockOutRequests(updatedOrderItems);
             setFormData([...updatedOrderItems, ...approveReadyRequests]);
             handlePendingApprovalAction(index);
@@ -211,6 +233,18 @@ export const StoreRequestNotifications = () => {
             });
         });
 
+        operatorStoreData.forEach((operatorStoreItem) => {
+            dispatch(updateOperatorStore(operatorStoreItem)).then((res) => {
+                if (res.payload) {
+                  console.log("updated successfully");
+                }
+                else {
+                    const message = "Something went wrong!";
+                    toast.error(message);
+                }
+            });
+        });
+
         dispatch(updateSale(data)).then((res) => {
             if (res.payload) {
                 const { products } = res.payload;
@@ -218,6 +252,22 @@ export const StoreRequestNotifications = () => {
                 setApproveReadyRequests(products.filter((item) => item.status === "Requested" || item.status === "Rejected" || item.status === "Cancelled"));
                 setPendingStockOutRequests(products.filter((item) => item.status === "Approved" || item.status === "Stocked-out"));
                 toast.success("Purchase order updated successfully")
+
+               const filteredRequestedOrders = pendingStockOutRequests.filter((item) => item.status === "Stocked-out");
+                filteredRequestedOrders.forEach((order) => {
+                    order.id = uuidv4();
+                    dispatch(createSRTransaction(order)).then((res) => {
+                        if (res.payload) {
+                          // const message = "Order status updated successfully";
+                          // toast.success(message);
+                        } else {
+                          toast.error("Something went wrong!");
+                        }
+                      })
+                      .catch((error) => {
+                        toast.error(`An error occurred: ${error.message}`);
+                      });
+                  });
 
                 dispatch(createNote(noteData)).then((res) => {
                     if (res.payload) {

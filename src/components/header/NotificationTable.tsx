@@ -182,6 +182,7 @@ const [datas, setDatas] = useState([]);
                               className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
                             >
                               <ul className="py-2 text-sm text-gray-700">
+                                {data.status !== "Void" && (
                                 <li>
                                   <button
                                     type="button"
@@ -200,8 +201,9 @@ const [datas, setDatas] = useState([]);
                                     {status1.label}
                                   </button>
                                 </li>
+                                )}
 
-                                {status2.value !== "" && (
+                                {status2.value && data.status !=="Void" && (
                                   <li>
                                     <button
                                       type="button"

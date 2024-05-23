@@ -1,4 +1,3 @@
-import { storeRequestNotesSlice } from './features/storeRquestNotesSlice';
 import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user/userSlice";
 import authReducer from "./features/user/authentication";
@@ -25,6 +24,7 @@ import notesReducer from "./features/notesSlice";
 import purchaseNotesReducer from "./features/purchaseNotesSlice";
 import storeRequestNotesReducer from "./features/storeRquestNotesSlice";
 import operatorStoreReducer from './features/operatorStoreSlice';
+import srTransactionReducer from './features/srTransactionsSlice';
 
 const store = configureStore({
     reducer: {
@@ -53,6 +53,7 @@ const store = configureStore({
         purchaseNote: purchaseNotesReducer,
         storeRequestNote: storeRequestNotesReducer,
         operatorStore: operatorStoreReducer,
+        srTransaction: srTransactionReducer,
     },
 });
 

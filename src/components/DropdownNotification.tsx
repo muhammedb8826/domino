@@ -157,7 +157,7 @@ const DropdownNotification = () => {
                   </li>
                 ))
               )}
-              {purchases.length > 0 ? (
+              {purchases.length > 0 && (
                 purchases?.map((notification) => (
                   <li>
                     <Link
@@ -176,16 +176,8 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ) : (
-                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                  <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      No new notifications
-                    </span>{' '}
-                  </p>
-                </li>
               )}
-              {sales.length > 0 ? (
+              {sales.length > 0 && (
                 sales?.map((notification) => (
                   <li>
                     <Link
@@ -195,7 +187,7 @@ const DropdownNotification = () => {
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">
-                          Your {notification.series} purchase is ready to review
+                          Your {notification.series} Store Request is ready to review
                         </span>{' '}
                         {notification.products.filter((item) => item.status === "Requested" || item.status === "Rejected")?.length} items to review
                       </p>
@@ -204,14 +196,6 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ) : (
-                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                  <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      No new notifications
-                    </span>{' '}
-                  </p>
-                </li>
               )}
             </>
           )}
@@ -312,34 +296,6 @@ const DropdownNotification = () => {
                   </p>
                 </li>
               )}
-              {sales.length > 0 ? (
-                sales?.map((notification) => (
-                  <li>
-                    <Link
-                      onClick={() => setDropdownOpen(false)}
-                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                      to={`/dashboard/sr-notifications/${notification.id}`}
-                    >
-                      <p className="text-sm">
-                        <span className="text-black dark:text-white">
-                          Your {notification.series} purchase is ready to review
-                        </span>{' '}
-                        {notification.products.filter((item) => item.status === "Requested" || item.status === "Rejected")?.length} items to review
-                      </p>
-
-                      <p className="text-xs">{notification.date}</p>
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                  <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      No new notifications
-                    </span>{' '}
-                  </p>
-                </li>
-              )}
             </>
           )}
 
@@ -378,7 +334,7 @@ const DropdownNotification = () => {
 
           {user?.roles === "store-representative" && (
             <>
-              {purchases.length > 0 ? (
+              {purchases.length > 0 && (
                 purchases?.map((notification) => (
                   <li>
                     <Link
@@ -397,16 +353,8 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ) : (
-                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                  <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      No new notifications
-                    </span>{' '}
-                  </p>
-                </li>
               )}
-              {sales.length > 0 ? (
+              {sales.length > 0 && (
                 sales?.map((notification) => (
                   <li>
                     <Link
@@ -416,7 +364,7 @@ const DropdownNotification = () => {
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">
-                          Your {notification.series} purchase is ready to review
+                          Your {notification.series} Store Request is ready to review
                         </span>{' '}
                         {notification.products.filter((item) => item.status === "Approved")?.length} items to review
                       </p>
@@ -425,14 +373,6 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ) : (
-                <li className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'>
-                  <p className="text-sm">
-                    <span className="text-black dark:text-white">
-                      No new notifications
-                    </span>{' '}
-                  </p>
-                </li>
               )}
             </>
           )}
