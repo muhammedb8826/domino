@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useNavigate, useParams } from "react-router-dom";
 import { updatePurchase } from "@/redux/features/purchaseSlice";
+import { v4 as uuidv4 } from "uuid";
 
 export const PurchaseDetails = () => {
   const { id } = useParams();
@@ -22,6 +23,7 @@ export const PurchaseDetails = () => {
 
   const [formData, setFormData] = useState([
     {
+      id:uuidv4(),
       productId: "",
       productName: "",
       unitId: "",
@@ -30,6 +32,7 @@ export const PurchaseDetails = () => {
       description: "",
       unitPrice: "",
       subTotal: "",
+      status: "Purchased",
     },
   ]);
 
@@ -50,6 +53,8 @@ export const PurchaseDetails = () => {
         description: product.description,
         unitPrice: product.unitPrice,
         subTotal: product.subTotal,
+        id: product.id,
+        status: product.status,
       }));
       setFormData(updatedFormData);
       setGrandTotal(singlePurchase.totalAmount);
@@ -124,6 +129,7 @@ export const PurchaseDetails = () => {
     setFormData([
       ...formData,
       {
+        id: uuidv4(),
         productId: "",
         productName: "",
         unitId: "",
@@ -132,6 +138,7 @@ export const PurchaseDetails = () => {
         description: "",
         unitPrice: "",
         subTotal: "",
+        status: "Purchased",
       },
     ]);
   };
@@ -190,10 +197,11 @@ export const PurchaseDetails = () => {
     }
     const data = {
       id: singlePurchase.id,
+      series: singlePurchase.series,
       vendorId: supplierInfo.id,
       purchaseReresentative: user?.first_name,
       purchaseReresentativeId: user?.id,
-      status: "purchased",
+      status: "Purchased",
       vendorName: supplierInfo.firstName,
       orderDate: orderDate,
       paymentMethod: paymentInfo.paymentMethod,
@@ -211,6 +219,8 @@ export const PurchaseDetails = () => {
         subTotal: product.subTotal,
         unitId: product.unitId,
         unitName: product.unitName,
+        id:product.id,
+        status:product.status
       })),
     };
     if(singlePurchase.status !== "received") {
@@ -526,7 +536,7 @@ export const PurchaseDetails = () => {
                 </div>
                 {singlePurchase.status !== "received" && (
                   <>
-                  {user?.roles === 'finance' && (
+                  {(user?.roles === 'finance' || user?.email==="admin@domino.com") && (
                 <button
                   type="submit"
                   className="flex justify-center rounded bg-primary p-3 font-medium text-gray">

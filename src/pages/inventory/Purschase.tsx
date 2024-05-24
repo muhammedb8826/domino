@@ -187,7 +187,7 @@ export const Purschase = () => {
       <Breadcrumb pageName="Purchases" />
 
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
-      {user?.roles === "finance" && (
+      {(user?.roles === "finance" || user?.email === "admin@domino.com") && (
         <div>
           <Link
           to={"/dashboard/inventory/purchases/add"}

@@ -169,7 +169,7 @@ const DropdownNotification = () => {
                         <span className="text-black dark:text-white">
                           Your {notification.series} purchase is ready to review
                         </span>{' '}
-                        {notification.products.filter((item) => item.status === "Received" || item.status === "Returned")?.length} items to review
+                        {notification.products.filter((item) => item.status === "Purchased" || item.status === "Returned")?.length} items to review
                       </p>
 
                       <p className="text-xs">{notification.date}</p>

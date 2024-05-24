@@ -161,6 +161,7 @@ export const StoreRequestDetails = () => {
         }
         const data = {
             id: singleSale.id,
+            series: singleSale.series,
             operatorId: operatorInfo.id,
             operatorFirstName: operatorInfo.firstName,
             status: "Requested",
@@ -180,7 +181,7 @@ export const StoreRequestDetails = () => {
         };
         if(singleSale.status !== "stocked-out") {
         dispatch(updateSale(data)).then(() => {
-            navigate("/dashboard/inventory/sales");
+            navigate("/dashboard/inventory/store-request");
             toast.success("Stocked out successfully");
         });
     } else {

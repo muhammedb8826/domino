@@ -619,7 +619,38 @@
       "status": "active"
     }
   ],
-  "purchases": [],
+  "purchases": [
+    {
+      "id": "b72b",
+      "series": "IAN-PO-0000-2024",
+      "vendorId": "349b",
+      "purchaseReresentative": "Admin",
+      "purchaseReresentativeId": 1,
+      "status": "Purchased",
+      "vendorName": "Teshager",
+      "orderDate": "2024-05-24",
+      "paymentMethod": "mobile-banking",
+      "amount": 1840,
+      "reference": "",
+      "totalAmount": 1840,
+      "totalQuantity": 8,
+      "note": "",
+      "products": [
+        {
+          "productId": "1716476025933",
+          "productName": "T-shirt",
+          "quantity": "8",
+          "description": "A coral t-shirt",
+          "unitPrice": "200",
+          "subTotal": 1600,
+          "unitId": "8dd4",
+          "unitName": "PCS",
+          "id": "522108a0-98eb-44a5-ade8-7cdfe3f99c86",
+          "status": "Received"
+        }
+      ]
+    }
+  ],
   "printedTransactions": [
     {
       "id": "4ec02295-e4f8-430d-85aa-789ca27ae491",
@@ -680,6 +711,16 @@
       "unitId": "90fc",
       "unitName": "M",
       "status": "Stocked-out"
+    },
+    {
+      "id": "90b0cee1-a718-4441-8658-2f84e23a5f5e",
+      "productId": "1716476001044",
+      "productName": "Sticker",
+      "quantity": "5",
+      "description": "This is urgent",
+      "unitId": "90fc",
+      "unitName": "M",
+      "status": "Stocked-out"
     }
   ],
   "sales": [
@@ -714,6 +755,28 @@
           "status": "Stocked-out"
         }
       ]
+    },
+    {
+      "id": "c7c6",
+      "series": "IAN-SR-0001-2024",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "status": "Requested",
+      "orderDate": "2024-05-24",
+      "totalQuantity": 5,
+      "note": "",
+      "products": [
+        {
+          "productId": "1716476001044",
+          "productName": "Sticker",
+          "quantity": "5",
+          "description": "This is urgent",
+          "unitId": "90fc",
+          "unitName": "M",
+          "status": "Stocked-out",
+          "id": "feada75d-e261-43cd-97e1-0bf6155e26fc"
+        }
+      ]
     }
   ],
   "stock": [
@@ -725,12 +788,12 @@
     {
       "id": "f5c9",
       "productId": "1716476001044",
-      "quantity": "21"
+      "quantity": "16"
     },
     {
       "id": "b033",
       "productId": "1716476025933",
-      "quantity": "5"
+      "quantity": "13"
     }
   ],
   "jobOrderProducts": [
@@ -750,7 +813,16 @@
       "status": "added"
     }
   ],
-  "purchaseNotes": [],
+  "purchaseNotes": [
+    {
+      "id": "64f6",
+      "notes": []
+    },
+    {
+      "id": "a41b",
+      "notes": []
+    }
+  ],
   "storeRequestNotes": [
     {
       "id": "f728",
@@ -775,6 +847,14 @@
     {
       "id": "8c95",
       "notes": []
+    },
+    {
+      "id": "6685",
+      "notes": []
+    },
+    {
+      "id": "1939",
+      "notes": []
     }
   ],
   "operatorStore": [
@@ -786,7 +866,7 @@
     {
       "id": "c010",
       "productId": "1716476001044",
-      "quantity": 3
+      "quantity": 8
     },
     {
       "id": "723b",
