@@ -818,6 +818,9 @@ const OrderDetailsPage = () => {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
+    documentTitle: "Order document",
+    onAfterPrint: () => toast.success("Printing completed successfully"),
+    removeAfterPrint: true,
   });
 
   if (error) {
@@ -1335,6 +1338,7 @@ const OrderDetailsPage = () => {
                                         : ""
                                         }`}
                                     >
+                                      {data.status === "Received" && (
                                       <button
                                         onClick={() => handleCancel(index)}
                                         type="button"
@@ -1342,6 +1346,7 @@ const OrderDetailsPage = () => {
                                       >
                                         <MdDelete /> Delete
                                       </button>
+                                      )}
                                     </li>
                                   </ul>
                                 </div>
@@ -1538,7 +1543,7 @@ const OrderDetailsPage = () => {
               </div>
               </div>
               <div className="px-4">
-              <button type="button" className="mb-2 w-full text-graydark bg-gray hover:bg-gray/10 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700" onClick={handlePrint}>
+              <button type="button" className="mb-2 w-full text-graydark bg-gray-2 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700" onClick={handlePrint}>
               <FaPrint />
               <span className="ms-2">Print this out!</span> 
               </button>

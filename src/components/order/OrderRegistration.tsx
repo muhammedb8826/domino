@@ -628,48 +628,6 @@ export const OrderRegistration = () => {
             </button>
           </div>
 
-
-          {/* <nav className="flex justify-between gap-4 items-center px-4">
-          <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("order")}
-                className={`${active === "order" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Order
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("payment")}
-                className={`${active === "payment" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Payment
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("commission")}
-                className={`${active === "commission" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Commission
-              </button>
-            </li>
-          </ul>
-          <button
-            type="submit"
-            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Submit
-          </button>
-        </nav> */}
-
           {activeTab === "order" && (
             <>
               <div className="grid sm:grid-cols-3 sm:gap-6 mb-4 p-4">

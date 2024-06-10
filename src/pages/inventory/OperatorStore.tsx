@@ -56,11 +56,6 @@ export const OperatorStore = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const triggerRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
-  const [active, setActive] = useState('home');
-
-  const handlChangeTab = (newActiveState) => {
-    setActive(newActiveState);
-  }
 
   // close on click outside
   useEffect(() => {
@@ -224,26 +219,55 @@ export const OperatorStore = () => {
     );
   });
 
+  const [activeTab, setActiveTab] = useState('home');
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+  };
+
   return isLoading ? (
     <Loader />
   ) : (
     <>
       {/* <Breadcrumb pageName="Operator store" /> */}
-      <nav>
-        <ul className="list-reset py-4 pl-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
-          <li className="text-gray-500 text-sm dark:text-gray-400">
-            <button type="button" onClick={() => handlChangeTab("home")} className={`${active === 'home' ? 'text-white bg-black' : ''} px-5 py-1.5 font-medium text-gray-900`}>Home</button>
+      <div className="mb-4 flex justify-between items-center px-4">
+        <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" role="tablist">
+          <li className="me-2" role="presentation">
+            <button
+              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'home' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+              id="order-tab"
+              type="button"
+              role="tab"
+              onClick={() => handleTabClick('home')}
+            >
+              Home
+            </button>
           </li>
-          <li className="text-gray-500 text-sm dark:text-gray-400">
-            <button type="button" onClick={() => handlChangeTab("requested")} className={`${active === 'requested' ? 'text-white bg-black' : ''} px-5 py-1.5 font-medium text-gray-900`}>Requested transactions</button>
+          <li className="me-2" role="presentation">
+            <button
+              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'printed' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+              id="payment-tab"
+              type="button"
+              role="tab"
+              onClick={() => handleTabClick('printed')}
+            >
+              Printed
+            </button>
           </li>
-          <li className="text-gray-500 text-sm dark:text-gray-400">
-            <button type="button" onClick={() => handlChangeTab("printed")} className={`${active === 'printed' ? 'text-white bg-black' : ''} px-5 py-1.5 font-medium text-gray-900`}>Printed transactions</button>
+          <li className="me-2" role="presentation">
+            <button
+              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'requested' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+              id="commission-tab"
+              type="button"
+              role="tab"
+              onClick={() => handleTabClick('requested')}
+            >
+              Requested
+            </button>
           </li>
         </ul>
-      </nav>
-
-      {active === 'home' && (
+      </div>
+      {activeTab === 'home' && (
         <>
           <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
             <label htmlFor="table-search" className="sr-only">
@@ -376,7 +400,7 @@ export const OperatorStore = () => {
         </>
       )}
 
-      {active === 'printed' && (
+      {activeTab === 'printed' && (
         <>
           <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
             <label htmlFor="table-search" className="sr-only">
@@ -515,7 +539,7 @@ export const OperatorStore = () => {
         </>
       )}
 
-      {active === 'requested' && (
+      {activeTab === 'requested' && (
         <>
           <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
             <label htmlFor="table-search" className="sr-only">

@@ -41,7 +41,6 @@ export const Notifications = () => {
   const {users} = useSelector((state) => state.user);
 
   const { products } = useSelector((state: RootState) => state.product);
-  const [active, setActive] = useState("proofReady");
   const { services } = useSelector((state: RootState) => state.service);
   const [formData, setFormData] = useState([]);
   const [proofReadyOrders, setProofReadyOrders] = useState([]);
@@ -118,7 +117,7 @@ export const Notifications = () => {
         setPendingApprovalOrders(orderItems?.filter(item => item.status === "Edited"));
         setPrintReadyOrders(orderItems?.filter(item => item.status === "Approved"));
         setQualityControl(orderItems?.filter(item => item.status === "Printed"));
-        setDelivery(orderItems?.filter(item => item.status === "Completed" || item.printed === true || item.adminApproval === true));
+        setDelivery(orderItems?.filter(item => item.status === "Completed"));
       }
     });
     dispatch(getPayments()).then((res) => {
@@ -302,8 +301,10 @@ export const Notifications = () => {
   };
 
 
-  const handleButtonClick = (newActiveState: string) => {
-    setActive(newActiveState);
+  const [activeTab, setActiveTab] = useState('proofReady');
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
   };
 
   const removeDuplicates = (notes) => {
@@ -334,7 +335,7 @@ export const Notifications = () => {
         setPendingApprovalOrders(orderItems?.filter((item) => item.status === "Edited"));
         setPrintReadyOrders(orderItems?.filter((item) => item.status === "Approved"));
         setQualityControl(orderItems?.filter((item) => item.status === "Printed"));
-        setDelivery(orderItems?.filter((item) => item.status === "Completed" || item.printed === true || item.adminApproval === true));
+        setDelivery(orderItems?.filter((item) => item.status === "Completed"));
         const message = "Order status updated successfully";
         toast.success(message);
 
@@ -383,8 +384,74 @@ export const Notifications = () => {
   ) : (
     <>
       <Breadcrumb pageName="Notifications" />
+      <div className="mb-4 flex justify-between items-center px-4">
+            <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" role="tablist">
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'proofReady' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="order-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('proofReady')}
+                >
+                  Proof Ready
+                </button>
+              </li>
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'pending' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="payment-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('pending')}
+                >
+                  Pending
+                </button>
+              </li>
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'printReady' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="print-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('printReady')}
+                >
+                  Print Ready
+                </button>
+              </li>
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'qualityControl' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="quality-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('qualityControl')}
+                >
+                  Quality Control
+                </button>
+              </li>
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'delivery' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="delivery-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('delivery')}
+                >
+                  Delivery
+                </button>
+              </li>
+            </ul>
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
+          </div>
       <div className="rounded-sm border border-stroke border-t-0 bg-white px-4 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
-        <nav className="flex justify-between gap-4 items-center px-4">
+        {/* <nav className="flex justify-between gap-4 items-center px-4">
           <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
             <li className="text-gray-500 text-sm dark:text-gray-400">
               <button
@@ -444,8 +511,8 @@ export const Notifications = () => {
           >
             Save changes
           </button>
-        </nav>
-        {active === "proofReady" && (
+        </nav> */}
+        {activeTab === "proofReady" && (
           <NotificationTable
             title="Proof ready orders"
             orders={proofReadyOrders}
@@ -466,7 +533,7 @@ export const Notifications = () => {
             newNotes={newNotes}
           />
         )}
-        {active === "pending" && (
+        {activeTab === "pending" && (
           <NotificationTable
             title="Pending approval orders"
             orders={pendingApprovalOrders}
@@ -487,7 +554,7 @@ export const Notifications = () => {
             newNotes={newNotes}
           />
         )}
-        {active === "printReady" && (
+        {activeTab === "printReady" && (
           <NotificationTable
             title="Print ready orders"
             orders={printReadyOrders}
@@ -508,7 +575,7 @@ export const Notifications = () => {
             newNotes={newNotes}
           />
         )}
-        {active === "qualityControl" && (
+        {activeTab === "qualityControl" && (
           <NotificationTable
             title="Quality control and approval"
             orders={qualityControl}
@@ -529,7 +596,7 @@ export const Notifications = () => {
             newNotes={newNotes}
           />
         )}
-        {active === "delivery" && (
+        {activeTab === "delivery" && (
           <NotificationTable
             title="Delivery and shipping"
             orders={delivery}
