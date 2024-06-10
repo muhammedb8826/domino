@@ -26,6 +26,15 @@
       "unitId": "8dd4",
       "minStockLevel": "1",
       "initialStock": "5"
+    },
+    {
+      "id": "1716548980189",
+      "name": "Film",
+      "description": "sdfhks",
+      "categoryId": "520e",
+      "unitId": "1bd6",
+      "minStockLevel": "2",
+      "initialStock": "0"
     }
   ],
   "services": [
@@ -132,8 +141,8 @@
           "level": 0,
           "total": 15000,
           "isDiscounted": false,
-          "status": "Received",
-          "printed": false,
+          "status": "Approved",
+          "printed": true,
           "adminApproval": false,
           "completed": false,
           "id": "72f91dbf-29d4-4f58-b9b4-b7603a6d2641"
@@ -156,17 +165,35 @@
           "adminApproval": false,
           "completed": false,
           "id": "764f6a1f-b243-4959-9de1-abed63b3b308"
+        },
+        {
+          "productId": "1716476001044",
+          "serviceId": "b664",
+          "priceId": "4182",
+          "unitPrice": 15000,
+          "width": "5",
+          "height": "6",
+          "quantity": "5",
+          "unit": 150,
+          "discount": 0,
+          "level": 0,
+          "total": 15000,
+          "isDiscounted": false,
+          "status": "Edited",
+          "printed": true,
+          "adminApproval": false,
+          "completed": false,
+          "id": "72f91dbf-29d4-4f58-b9b4-b7603a6d2641"
         }
       ],
       "totalBirr": 24600,
       "tax": 3690,
-      "grandTotal": 28290,
       "fileNames": [
         "Teshager-Sticker-5x6",
         "Teshager-Sticker-6x4"
       ],
       "totalQuantity": 10,
-      "adminApproval": false
+      "grandTotal": 28290
     },
     {
       "id": "9dddb6e4-4ccf-4efb-8ff6-a57f1177a7e3",
@@ -327,7 +354,7 @@
           "description": ""
         }
       ],
-      "forcePayment": true
+      "forcePayment": false
     },
     {
       "id": "d708",
@@ -358,6 +385,18 @@
     },
     {
       "id": "c2d0",
+      "notes": []
+    },
+    {
+      "id": "3bd2",
+      "notes": []
+    },
+    {
+      "id": "912c",
+      "notes": []
+    },
+    {
+      "id": "d349",
       "notes": []
     }
   ],
@@ -507,6 +546,12 @@
       "productId": "1716476025933",
       "serviceId": "b664",
       "unitPrice": "150"
+    },
+    {
+      "id": "3e31",
+      "productId": "1716548980189",
+      "serviceId": "1324",
+      "unitPrice": "100"
     }
   ],
   "dicounts": [
@@ -617,6 +662,12 @@
       "name": "Glass",
       "description": "gg",
       "status": "active"
+    },
+    {
+      "id": "520e",
+      "name": "Film",
+      "description": "film",
+      "status": "active"
     }
   ],
   "purchases": [
@@ -686,6 +737,44 @@
       "total": 15000,
       "isDiscounted": false,
       "status": "Printed",
+      "printed": true,
+      "adminApproval": false,
+      "completed": false
+    },
+    {
+      "id": "e8127cd5-a14d-4f5f-ae3d-4cf3a607421e",
+      "productId": "1716476001044",
+      "serviceId": "b664",
+      "priceId": "4182",
+      "unitPrice": 15000,
+      "width": "5",
+      "height": "6",
+      "quantity": "5",
+      "unit": 150,
+      "discount": 0,
+      "level": 0,
+      "total": 15000,
+      "isDiscounted": false,
+      "status": "Edited",
+      "printed": true,
+      "adminApproval": false,
+      "completed": false
+    },
+    {
+      "id": "b62a3715-7f80-47e4-8d9b-91c095bd272c",
+      "productId": "1716476001044",
+      "serviceId": "b664",
+      "priceId": "4182",
+      "unitPrice": 15000,
+      "width": "5",
+      "height": "6",
+      "quantity": "5",
+      "unit": 150,
+      "discount": 0,
+      "level": 0,
+      "total": 15000,
+      "isDiscounted": false,
+      "status": "Approved",
       "printed": true,
       "adminApproval": false,
       "completed": false
@@ -794,6 +883,11 @@
       "id": "b033",
       "productId": "1716476025933",
       "quantity": "13"
+    },
+    {
+      "id": "31ce",
+      "productId": "1716548980189",
+      "quantity": "0"
     }
   ],
   "jobOrderProducts": [
@@ -810,6 +904,11 @@
     {
       "id": "a093",
       "productId": "1716476025933",
+      "status": "added"
+    },
+    {
+      "id": "76be",
+      "productId": "1716548980189",
       "status": "added"
     }
   ],
@@ -871,6 +970,11 @@
     {
       "id": "723b",
       "productId": "1716476025933",
+      "quantity": 0
+    },
+    {
+      "id": "d755",
+      "productId": "1716548980189",
       "quantity": 0
     }
   ]

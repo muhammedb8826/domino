@@ -70,9 +70,9 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/get-started" element={<GetStarted />} />
         <Route element={<PrivateRoute />}>
-          <Route path="/add-order" element={<OrderRegistration />} />
-          <Route path="/order/:id" element={<OrderDetailsPage />} />
           <Route path="/dashboard" element={<DefaultLayout />}>
+          <Route path="/dashboard/order/:id" element={<OrderDetailsPage />} />
+          <Route path="/dashboard/add-order" element={<OrderRegistration />} />
             <Route path="/dashboard/ecommerce" element={<ECommerce />} />
             <Route index element={<OrdersList />} />
             <Route path="/dashboard/notifications/:id" element={<Notifications />} />

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import SidebarLinkGroup from "./SidebarLinkGroup";
-import { FaUsersGear } from "react-icons/fa6";
+import { TbBuildingWarehouse } from "react-icons/tb";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { MdOutlineWarehouse, MdPeopleOutline } from "react-icons/md";
 import { RiHandCoinLine } from "react-icons/ri";
@@ -67,7 +67,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-        <NavLink to="/">
+        <NavLink to="/dashboard">
           {/* <img src={Logo} alt="Logo" /> */}
           <span className="text-white">IAN PLC</span>{" "}
         </NavLink>
@@ -127,9 +127,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   return (
                     <React.Fragment>
                       <NavLink
-                        to="dashboard"
+                        to="/dashboard"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === "/" ||
-                            pathname.includes("dashboard")) &&
+                          pathname.includes("dashboard")) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
                         onClick={(e) => {
@@ -224,7 +224,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === "/inventory" ||
-                            pathname.includes("inventory")) &&
+                          pathname.includes("inventory")) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
                         onClick={(e) => {
@@ -334,18 +334,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               }
                             >
                               Products
-                            </NavLink>
-                          </li>
-
-                          <li>
-                            <NavLink
-                              to="/dashboard/inventory/suppliers"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Suppliers
                             </NavLink>
                           </li>
                         </ul>
@@ -607,6 +595,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <NavLink
+                  to="/dashboard/inventory/suppliers"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
+                    }`}
+                >
+                  <TbBuildingWarehouse />
+                  Suppliers
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
                   to="/dashboard/customers"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
                     }`}
@@ -615,7 +613,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Customers
                 </NavLink>
               </li>
-
               <li>
                 <NavLink
                   to="/dashboard/commission"

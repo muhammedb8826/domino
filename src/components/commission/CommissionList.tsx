@@ -3,7 +3,7 @@ import { IoBagAdd } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../common/Loading";
 import ErroPage from "../common/ErroPage";
-import { useEffect, useRef, useState } from "react"; 
+import { useEffect, useRef, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
@@ -14,12 +14,10 @@ import { NavLink } from "react-router-dom";
 import Loader from "@/common/Loader";
 import Breadcrumb from "../Breadcrumb";
 import { SalesPartnerRegistration } from "./SalesPartnerRegistrationModal";
+import { getSalesPartners } from "@/redux/features/salesPartnersSlice";
 
 export const CommissionList = () => {
-  const { commissions, isLoading, error } = useSelector(
-    (state) => state.commission
-  );
-  const { orders } = useSelector((state) => state.order);
+  const { salesPartners, isLoading, error } = useSelector((state) => state.salesPartner)
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [showPopover, setShowPopover] = useState<number | null>(null);
@@ -47,31 +45,20 @@ export const CommissionList = () => {
   const handleAction = (index: number) => {
     setShowPopover((prevIndex) => (prevIndex === index ? null : index));
   };
-
+  
   const handleModalOpen = () => {
     setOpenModal((prev) => !prev);
   };
+
   useEffect(() => {
-    dispatch(getCommissions());
-    dispatch(getOrders());
+    dispatch(getSalesPartners());
   }, [dispatch]);
 
 
-
-  const filteredOrders = commissions.map(commission => {
-    const commissionOrders = orders.filter(order => order.commissionId === commission.id);
-    return {
-      ...commission,
-      hasOrder: commissionOrders
-    };
-  });
-
-  
   if (error) return <ErroPage error={error} />;
-  return isLoading?(<Loader/>):(
+  return isLoading ? (<Loader />) : (
     <>
-    <Breadcrumb pageName="Commissions" />
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+      <Breadcrumb pageName="Commissions" />
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div>
           <button
@@ -80,7 +67,7 @@ export const CommissionList = () => {
             className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <IoBagAdd />
-            <span className="ml-2">Add New Commission</span>
+            <span className="ml-2">Add sales partner</span>
           </button>
         </div>
         <label htmlFor="table-search" className="sr-only">
@@ -111,192 +98,169 @@ export const CommissionList = () => {
         </div>
       </div>
 
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-all-search"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label htmlFor="checkbox-all-search" className="sr-only">
-                  checkbox
-                </label>
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Customer name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Phone number
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Company type
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Total Earned
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Balance
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {commissions.map((commission, index) => (
-            <tr
-              key={commission.id}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-            >
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-table-search-1"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-table-search-1" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </td>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {commission.firstName}
-              </th>
-              <td className="px-6 py-4">{commission.phone}</td>
-              <td className="px-6 py-4">{commission.companyType}</td>
-              <td className="px-6 py-4">
-                {filteredOrders[index].hasOrder.reduce((acc, order) => (acc += order.totalCommission), 0)}
-              </td>
-              <td className="px-6 py-4">
-               {commission.balance}
-              </td>
-              <td className="px-6 py-4 relative">
-            <button
-              onClick={() => handleAction(index)}
-              title="action"
-              type="button"
-              className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              <CiMenuKebab />
-            </button>
-            {showPopover === index && (
-              <div
-                ref={popoverRef}
-                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-              >
-                <ul className="py-2 text-sm text-gray-700">
-                  <li key={`${commission.id}-${index}-1`}>
-                    <NavLink
-                      to={`/dashboard/commission/${commission.id}`}
-                      className="flex items-center w-full gap-2 px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline hover:bg-gray-100"
-                    >
-                      <FaRegEdit />
-                      Details
-                    </NavLink>{" "}
-                  </li>
-                  <li key={`${commission.id}-${index}-2`}>
+      <div className="rounded-sm border border-stroke border-t-0 bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                  Partner name
+                </th>
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                  Phone number
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Company
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Address
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Joined date
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {salesPartners.map((partner, index) =>
+                <tr key={partner.id}>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {partner.firstName}
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {partner.phone}
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {partner.companyType}
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    Address
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    Joined date
+                  </td>
+                  <td className="px-6 py-4 relative">
                     <button
-                      // onClick={() => handleDeleteOrder(commission.id)}
+                      onClick={() => handleAction(index)}
+                      title="action"
                       type="button"
-                      className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                      className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                     >
-                      <MdDelete /> Delete
+                      <CiMenuKebab />
                     </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <nav
-        className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-        aria-label="Table navigation"
-      >
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-          Showing{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            1-10
-          </span>{" "}
-          of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            1000
-          </span>
-        </span>
-        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Previous
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              1
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              2
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              aria-current="page"
-              className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-            >
-              3
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              4
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              5
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Next
-            </a>
-          </li>
-        </ul>
-      </nav>
-      {openModal && (
-        <CommissionRegistration handleModalOpen={handleModalOpen} />
-      )}
-    </div>
-  </>
-  );
+                    {showPopover === index && (
+                      <div
+                        ref={popoverRef}
+                        className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                      >
+                        <ul className="py-2 text-sm text-gray-700">
+                          <li>
+                            <NavLink
+                              to={`#`}
+                              className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
+                            >
+                              <FaRegEdit />
+                              Edit
+                            </NavLink>{" "}
+                          </li>
+                          <li>
+                            <button
+                              // onClick={() => handleDeleteOrder(order.id)}
+                              type="button"
+                              className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                            >
+                              <MdDelete /> Delete
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <nav
+            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            aria-label="Table navigation"
+          >
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+              Showing{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1-10
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1000
+              </span>
+            </span>
+            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Previous
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  1
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  2
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  aria-current="page"
+                  className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                >
+                  3
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  4
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  5
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
+          </nav>
+          </div>
+        </div>
+          {openModal && (
+            <SalesPartnerRegistration handleModalOpen={handleModalOpen} />
+          )}
+        </>
+        );
 };

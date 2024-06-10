@@ -30,6 +30,7 @@
     "react-router-dom": "^6.21.0",
     "react-scroll-parallax": "^3.4.5",
     "react-select": "^5.8.0",
+    "react-to-print": "^2.15.1",
     "sort-by": "^0.0.2",
     "sweetalert2": "^11.10.3",
     "tailwind-datepicker-react": "^1.4.3",

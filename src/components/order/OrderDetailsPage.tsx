@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Datepicker } from "flowbite-react";
 import CustomerSearchInput from "../customer/CustomerSearchInput";
-import { FaChevronDown, FaChevronUp, FaRegEdit } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaPrint, FaRegEdit } from "react-icons/fa";
 import { CiMenuKebab, CiSettings } from "react-icons/ci";
 import Select from "react-select";
 import { getServices } from "../../redux/features/service/servicesSlice";
@@ -31,6 +31,8 @@ import { getSalesPartners } from "@/redux/features/salesPartnersSlice";
 import { IoMdClose } from "react-icons/io";
 import Loader from "@/common/Loader";
 import { v4 as uuidv4 } from 'uuid';
+import { useReactToPrint } from "react-to-print";
+import Breadcrumb from "../Breadcrumb";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -807,10 +809,16 @@ const OrderDetailsPage = () => {
     });
   };
 
-  const [active, setActive] = useState("order");
-  const handleButtonClick = (newActiveState: string) => {
-    setActive(newActiveState);
+  const [activeTab, setActiveTab] = useState('order');
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
   };
+
+  const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   if (error) {
     return <ErroPage error={error} />;
@@ -818,54 +826,55 @@ const OrderDetailsPage = () => {
 
   return isLoading ? (<Loader />) : (
     <>
-      <section className="max-w-[1250px] mx-auto rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4 mb-10">
-        <GoBack goback="/dashboard" />
-        <h2 className="px-4 text-title-md2 font-semibold text-black dark:text-white">
-          Order Details
-        </h2>
+    <Breadcrumb pageName="Order details" />
+      <section className="bg-white">
         <form onSubmit={handleSubmit}>
-        <nav className="flex justify-between gap-4 items-center px-4">
-          <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("order")}
-                className={`${active === "order" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Order
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("payment")}
-                className={`${active === "payment" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Payment
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("commission")}
-                className={`${active === "commission" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Commission
-              </button>
-            </li>
-          </ul>
-          <button
-            type="submit"
-            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-           Update
-          </button>
-        </nav>
-          {active === "order" && (
+        <div className="mb-4 flex justify-between items-center px-4">
+            <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" role="tablist">
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'order' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="order-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('order')}
+                >
+                  Order
+                </button>
+              </li>
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'payment' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="payment-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('payment')}
+                >
+                  Payment
+                </button>
+              </li>
+              <li className="me-2" role="presentation">
+                <button
+                  className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'commission' ? 'border-primary text-primary' : 'hover:text-graydark hover:border-graydark dark:hover:text-gray'}`}
+                  id="commission-tab"
+                  type="button"
+                  role="tab"
+                  onClick={() => handleTabClick('commission')}
+                >
+                  Commission
+                </button>
+              </li>
+            </ul>
+            <button
+              type="submit"
+              className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
+          </div>
+          {activeTab === "order" && (
             <>
+            <div ref={componentRef}>
               <div className="grid sm:grid-cols-3 sm:gap-6 mb-4 p-4">
                 <div className="w-full">
                   <label
@@ -1350,12 +1359,6 @@ const OrderDetailsPage = () => {
                     >
                       Add row
                     </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center rounded border-[1.5px] border-stroke bg-transparent px-2 py-1 font-medium text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-primary dark:hover:text-primary transition-colors"
-                    >
-                      Download
-                    </button>
                   </div>
                 </div>
 
@@ -1533,11 +1536,18 @@ const OrderDetailsPage = () => {
                   </ul>
                 </div>
               </div>
+              </div>
+              <div className="px-4">
+              <button type="button" className="mb-2 w-full text-graydark bg-gray hover:bg-gray/10 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700" onClick={handlePrint}>
+              <FaPrint />
+              <span className="ms-2">Print this out!</span> 
+              </button>
+              </div>
             </>
           )}
 
 
-          {active === "payment" && (
+          {activeTab === "payment" && (
             <div
               className={`${user?.email !== "admin@domino.com" && user?.roles !== "finance"
                 ? "hidden"
@@ -1807,7 +1817,7 @@ const OrderDetailsPage = () => {
             </div>
           )}
 
-          {active === "commission" && (
+          {activeTab === "commission" && (
             <>
               <div
                 className={`grid grid-cols-2 gap-4 px-4 mb-4`}>

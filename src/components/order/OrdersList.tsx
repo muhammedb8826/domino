@@ -189,7 +189,7 @@ const OrdersList = () => {
           <td className="border-b border-[#eee] p-4 dark:border-strokedark">
             <h5 className="font-medium text-black dark:text-white">
               <NavLink
-                to={`/order/${order.id}`}
+                to={`/dashboard/order/${order.id}`}
                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
               >
                 {order.series}
@@ -300,7 +300,7 @@ const OrdersList = () => {
             }`}
         >
           <NavLink
-            to="/add-order"
+            to="/dashboard/add-order"
             className="inline-flex items-center justify-center rounded bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90"
           >
             <IoBagAdd />
