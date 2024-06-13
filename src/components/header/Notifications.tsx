@@ -383,8 +383,8 @@ export const Notifications = () => {
     <Loader />
   ) : (
     <>
-      <Breadcrumb pageName="Notifications" />
-      <div className="mb-4 flex justify-between items-center px-4">
+      <Breadcrumb pageName="Order details" />
+      <div className="mb-4 flex justify-between items-center bg-white">
             <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" role="tablist">
               <li className="me-2" role="presentation">
                 <button
@@ -447,71 +447,10 @@ export const Notifications = () => {
               onClick={handleSubmit}
               className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              Submit
+              Save changes
             </button>
           </div>
       <div className="rounded-sm border border-stroke border-t-0 bg-white px-4 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
-        {/* <nav className="flex justify-between gap-4 items-center px-4">
-          <ul className="list-reset py-4 rounded flex bg-white dark:bg-boxdark dark:text-white">
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("proofReady")}
-                className={`${active === "proofReady" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Proof Ready
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("pending")}
-                className={`${active === "pending" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Pending
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("printReady")}
-                className={`${active === "printReady" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Print Ready
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("qualityControl")}
-                className={`${active === "qualityControl" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Quality Control
-              </button>
-            </li>
-            <li className="text-gray-500 text-sm dark:text-gray-400">
-              <button
-                type="button"
-                onClick={() => handleButtonClick("delivery")}
-                className={`${active === "delivery" ? "text-white bg-black" : ""
-                  } px-5 py-1.5 font-medium text-graydark`}
-              >
-                Delivery
-              </button>
-            </li>
-          </ul>
-          < button
-            type="submit"
-            onClick={handleSubmit}
-            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-full sm:w-auto px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Save changes
-          </button>
-        </nav> */}
         {activeTab === "proofReady" && (
           <NotificationTable
             title="Proof ready orders"

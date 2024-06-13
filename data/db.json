@@ -59,103 +59,6 @@
   ],
   "orders": [
     {
-      "id": "b6657c52-9533-4713-ba3f-011d9fe2fe52",
-      "series": "IAN-O-0000-2024",
-      "date": "May 23, 2024",
-      "deliveryDate": "May 23, 2024",
-      "orderSource": "telegram",
-      "description": "",
-      "customerId": "1710814124476",
-      "salesPartnerId": "",
-      "status": "Pending Approval",
-      "orderItems": [
-        {
-          "productId": "1716475966508",
-          "serviceId": "b664",
-          "priceId": "a00e",
-          "unitPrice": 15000,
-          "width": "5",
-          "height": "3",
-          "quantity": "5",
-          "unit": 75,
-          "discount": 0,
-          "level": 0,
-          "total": 15000,
-          "isDiscounted": false,
-          "status": "Completed",
-          "printed": true,
-          "adminApproval": true,
-          "completed": false,
-          "id": "f4e5f8c0-08ad-468a-be0d-3af895146777"
-        },
-        {
-          "productId": "1716475966508",
-          "serviceId": "b664",
-          "priceId": "a00e",
-          "unitPrice": 15000,
-          "width": "5",
-          "height": "3",
-          "quantity": "5",
-          "unit": 75,
-          "discount": 0,
-          "level": 0,
-          "total": 15000,
-          "isDiscounted": false,
-          "status": "Delivered",
-          "printed": true,
-          "adminApproval": false,
-          "completed": true,
-          "id": "f4e5f8c0-08ad-468a-be0d-3af895146777"
-        },
-        {
-          "productId": "1716475966508",
-          "serviceId": "e4b1",
-          "priceId": "dbac",
-          "unitPrice": 10000,
-          "width": "4",
-          "height": "5",
-          "quantity": "5",
-          "unit": 100,
-          "discount": 1500,
-          "level": "1",
-          "total": 8500,
-          "isDiscounted": true,
-          "status": "Completed",
-          "printed": true,
-          "adminApproval": true,
-          "completed": false,
-          "id": "ac1bd88e-1477-4535-ba0f-4b10701fdc5f"
-        },
-        {
-          "productId": "1716475966508",
-          "serviceId": "b664",
-          "priceId": "a00e",
-          "unitPrice": 15000,
-          "width": "5",
-          "height": "3",
-          "quantity": "5",
-          "unit": 75,
-          "discount": 0,
-          "level": 0,
-          "total": 15000,
-          "isDiscounted": false,
-          "status": "Printed",
-          "printed": true,
-          "adminApproval": false,
-          "completed": false,
-          "id": "f4e5f8c0-08ad-468a-be0d-3af895146777"
-        }
-      ],
-      "totalBirr": 23500,
-      "tax": 3525,
-      "fileNames": [
-        "Biniyam-Banner-4x5",
-        "Biniyam-Banner-5x3"
-      ],
-      "totalQuantity": 10,
-      "grandTotal": 27025
-    },
-    {
       "id": "fc427851-9b90-4c44-9377-8b8d663f0a2d",
       "series": "IAN-O-0001-2024",
       "date": "May 23, 2024",
@@ -296,27 +199,6 @@
   ],
   "commissions": [
     {
-      "id": "14da",
-      "orderId": "b6657c52-9533-4713-ba3f-011d9fe2fe52",
-      "totalCommission": 0,
-      "transactions": [
-        {
-          "date": "May 23, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        },
-        {
-          "date": "May 23, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
       "id": "9339",
       "orderId": "fc427851-9b90-4c44-9377-8b8d663f0a2d",
       "totalCommission": 0,
@@ -360,23 +242,6 @@
     }
   ],
   "payments": [
-    {
-      "id": "d79e",
-      "totaTransaction": 0,
-      "remainingAmount": 27025,
-      "orderId": "b6657c52-9533-4713-ba3f-011d9fe2fe52",
-      "transactions": [
-        {
-          "date": "May 23, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ],
-      "forcePayment": false
-    },
     {
       "id": "8952",
       "totaTransaction": 0,

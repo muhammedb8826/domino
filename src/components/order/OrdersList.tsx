@@ -5,7 +5,7 @@ import { IoBagAdd } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import {deleteOrder,getOrders} from "@/redux/features/order/orderSlice";
+import { deleteOrder, getOrders } from "@/redux/features/order/orderSlice";
 import { RootState } from "@/redux/store";
 import ErroPage from "../common/ErroPage";
 import { FaFirstOrderAlt, FaRegEdit } from "react-icons/fa";
@@ -15,6 +15,7 @@ import Loader from "@/common/Loader";
 import Breadcrumb from "../Breadcrumb";
 import { getCustomers } from "@/redux/features/customer/customerSlice";
 import { getPayments } from "@/redux/features/paymentSlice";
+import { useDownloadExcel } from 'react-export-table-to-excel';
 
 interface User {
   email: string;
@@ -28,7 +29,7 @@ const OrdersList = () => {
     (state: RootState) => state.order
   );
   const { customers } = useSelector((state: RootState) => state.customer);
-  const {payments} = useSelector((state: RootState) => state.payment);
+  const { payments } = useSelector((state: RootState) => state.payment);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -174,6 +175,15 @@ const OrdersList = () => {
     });
   };
 
+
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: 'Orders table',
+    sheet: 'Orders'
+  })
+
   if (error) {
     return <ErroPage error={error} />;
   }
@@ -181,100 +191,101 @@ const OrdersList = () => {
   const orderListContent =
     filterDate.length > 0
       ? filterDate.map((order, index: number) => {
-        const payment = payments.find((payment)=> payment.orderId === order.id);
+        const payment = payments.find((payment) => payment.orderId === order.id);
         console.log(payment);
-        
-      return(
-        <tr key={order.id}>
-          <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-            <h5 className="font-medium text-black dark:text-white">
-              <NavLink
-                to={`/dashboard/order/${order.id}`}
-                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                {order.series}
-              </NavLink>{" "}
-            </h5>
-          </td>
-          <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-            {/* <FaFirstOrderAlt className="w-8 h-8 rounded-full" /> */}
-            <div className="">
-              <div className="text-base font-semibold">
-                {customers.find((customer) => customer.id === order.customerId)?.firstName} {" "}
-                {customers.find((customer) => customer.id === order.customerId)?.lastName}
+
+        return (
+          <tr key={order.id}>
+            <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+              <h5 className="font-medium text-black dark:text-white">
+                <NavLink
+                  to={`/dashboard/order/${order.id}`}
+                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  {order.series}
+                </NavLink>{" "}
+              </h5>
+            </td>
+            <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+              {/* <FaFirstOrderAlt className="w-8 h-8 rounded-full" /> */}
+              <div className="">
+                <div className="text-base font-semibold">
+                  {customers.find((customer) => customer.id === order.customerId)?.firstName} {" "}
+                  {customers.find((customer) => customer.id === order.customerId)?.lastName}
+                </div>
+                <div className="font-normal text-gray-500">
+                  {customers.find((customer) => customer.id === order.customerId)?.phone}
+                </div>
               </div>
-              <div className="font-normal text-gray-500">
-                {customers.find((customer) => customer.id === order.customerId)?.phone}
-              </div>
-            </div>
-          </td>
-          <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-            {order.grandTotal?.toLocaleString()}
-          </td>
-          <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-            {order.status === "Pending Approval" && (
-              <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger">
-                {order.status}
-              </span>
-            )}
-            {order.status === "In Production" && (
-              <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-sm font-medium text-warning">
-                {order.status}
-              </span>
-            )}
-            {order.status === "Awaiting Shipment" && (
-              <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                {order.status}
-              </span>
-            )}
-          </td>
-          <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-            {order.date}
-          </td>
-          <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-            {order.deliveryDate}
-          </td>
-          <td className="px-6 py-4 relative">
-            <button
-              onClick={() => handleAction(index)}
-              title="action"
-              type="button"
-              className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              <CiMenuKebab />
-            </button>
-            {showPopover === index && (
-              <div
-                ref={popoverRef}
-                className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+            </td>
+            <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+              {order.grandTotal?.toLocaleString()}
+            </td>
+            <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+              {order.status === "Pending Approval" && (
+                <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger">
+                  {order.status}
+                </span>
+              )}
+              {order.status === "In Production" && (
+                <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-sm font-medium text-warning">
+                  {order.status}
+                </span>
+              )}
+              {order.status === "Awaiting Shipment" && (
+                <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
+                  {order.status}
+                </span>
+              )}
+            </td>
+            <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+              {order.date}
+            </td>
+            <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+              {order.deliveryDate}
+            </td>
+            <td className="px-6 py-4 relative">
+              <button
+                onClick={() => handleAction(index)}
+                title="action"
+                type="button"
+                className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
-                <ul className="py-2 text-sm text-gray-700">
-                  <li>
-                    <NavLink
-                      to={`/order/${order.id}`}
-                      className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
-                    >
-                      <FaRegEdit />
-                      Edit
-                    </NavLink>{" "}
-                  </li>
-                  {user?.email === "admin@domino.com" && (
+                <CiMenuKebab />
+              </button>
+              {showPopover === index && (
+                <div
+                  ref={popoverRef}
+                  className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                >
+                  <ul className="py-2 text-sm text-gray-700">
                     <li>
-                      <button
-                        onClick={() => handleDeleteOrder(order.id)}
-                        type="button"
-                        className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                      <NavLink
+                        to={`/order/${order.id}`}
+                        className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
                       >
-                        <MdDelete /> Delete
-                      </button>
+                        <FaRegEdit />
+                        Edit
+                      </NavLink>{" "}
                     </li>
-                  )}
-                </ul>
-              </div>
-            )}
-          </td>
-        </tr>
-      )}
+                    {user?.email === "admin@domino.com" && (
+                      <li>
+                        <button
+                          onClick={() => handleDeleteOrder(order.id)}
+                          type="button"
+                          className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                        >
+                          <MdDelete /> Delete
+                        </button>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </td>
+          </tr>
+        )
+      }
       )
       : null;
 
@@ -295,8 +306,8 @@ const OrdersList = () => {
       >
         <div
           className={`${user?.email !== "admin@domino.com" && user?.roles !== "reception"
-              ? "hidden"
-              : ""
+            ? "hidden"
+            : ""
             }`}
         >
           <NavLink
@@ -411,7 +422,11 @@ const OrdersList = () => {
         <div className="max-w-full overflow-x-auto">
           {orders && (
             <>
-              <table className="w-full table-auto">
+              <button type="button" onClick={onDownload} className="float-right bg-gray-2 text-left dark:bg-meta-4 hover:bg-gray-3 text-graydark font-bold py-2 px-4 rounded inline-flex items-center">
+                <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" /></svg>
+                <span>Export</span>
+              </button>
+              <table ref={tableRef} className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-2 text-left dark:bg-meta-4">
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
