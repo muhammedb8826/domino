@@ -16,6 +16,9 @@ import { GoBack } from "../common/GoBack";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { RootState } from "@/redux/store";
+import { getSalesPartnerById, getSalesPartners } from "@/redux/features/salesPartnersSlice";
+import Loader from "@/common/Loader";
+import Breadcrumb from "../Breadcrumb";
 
 const date = new Date();
 const options = { month: "short", day: "numeric", year: "numeric" };
@@ -23,6 +26,8 @@ const formattedDate = date.toLocaleDateString("en-US", options);
 
 const CommissionDetailsPage = () => {
   const { id } = useParams();
+  console.log(id);
+  
   const { orders } = useSelector((state) => state.order);
   const { singleCommission, isLoading, error } = useSelector(
     (state) => state.commission
@@ -32,23 +37,7 @@ const CommissionDetailsPage = () => {
   useEffect(() => {
     dispatch(getOrders());
     dispatch(getCommissions());
-    dispatch(getCommissionById(id)).then((res) => {
-      if (res.payload) {
-        const commission = res.payload;
-        if (commission.data) {
-          setFormData(commission.data);
-        } else {
-          setFormData([
-            {
-              date: formattedDate,
-              description: "",
-              paymentAmount: "",
-              status: "Earning",
-            },
-          ]);
-        }
-      }
-    });
+    dispatch(getCommissionById(id));
   }, [dispatch, id]);
 
   const [formData, setFormData] = useState([
@@ -198,264 +187,162 @@ const CommissionDetailsPage = () => {
     });
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
   if (error) {
     return <ErroPage error={error} />;
   }
  
-  return (
-    <section className="bg-white dark:bg-gray-900 wrapper py-4 border p-0 min-h-screen">
-      <GoBack goback="/dashboard" />
-      <h2 className="ps-4 my-4 text-2xl font-bold text-gray-900 dark:text-white">
-        Transaction Details
-      </h2>
-      <hr />
-      <button
-              // onClick={handleIsCollapsed}
-              type="button"
-              className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
+  return isLoading ? (<Loader/>): (
+    <>
+    <Breadcrumb pageName="Transaction details" />
+    <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+        <label htmlFor="table-search" className="sr-only">
+          Search
+        </label>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+            <svg
+              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Commission Details{" "}
-              {/* <span className="font-thin">
-                {isCollapsed ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "} */}
-            </button>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-        <div className="w-full py-4">
-          <div className="flex items-center">
-            <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Sales Person :
-            </p>
-            <p className="flex-1">{singleCommission?.firstName}</p>
+              <path
+                fillRule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
           </div>
-          <div className="flex items-center">
-            <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Balance :
-            </p>
-            <p className="flex-1">{balance}</p>
-          </div>
-          <div className="flex items-center">
-            <p className="w-1/4 gap-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Total Transaction :
-            </p>
-            <p className="flex-1">{totalTransaction}</p>
-          </div>
-        </div>
-        <div>
-          <table
-            className="
-               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          >
-            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="p-4 w-4 border border-gray-300">
-                  No
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Product id
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Commission
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {findOrder.map((order, index) => (
-                <tr
-                  key={index}
-                  className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <td className="px-2 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                    {index + 1}
-                  </td>
-                  <td
-                    scope="row"
-                    className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
-                  >
-                    {order.id}
-                  </td>
-                  <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                    {order.orderItems.reduce(
-                      (acc, item) => acc + item.commissionPrice,
-                      0
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <input
+            type="text"
+            id="table-search"
+            className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Search for customers"
+          />
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
-      <button
-              // onClick={handleIsCollapsed}
-              type="button"
-              className="w-full py-2 px-4 border-t border-b mb-4 font-semibold flex items-center gap-4"
-            >
-              Transactions{" "}
-              {/* <span className="font-thin">
-                {isCollapsed ? <FaChevronUp /> : <FaChevronDown />}{" "}
-              </span>{" "} */}
-            </button>
-        <div className="container p-4">
-          <table
-            className="
-               col-span-2 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          >
-            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="p-4 w-4 border border-gray-300">
-                  No
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
+      <div className="rounded-sm border border-stroke border-t-0 bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                   Date
                 </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Amount
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Percent
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                   Description
                 </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  Payment amount
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Status
-                </th>
-                <th scope="col" className="px-4 py-2 border border-gray-300">
-                  {/* Action */}
-                  <span className="font-semibold flex justify-center items-center">
-                    <CiSettings className="text-xl font-bold" />
-                  </span>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {formData && formData.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="text-center">
-                    No data found
+              {singleCommission?.transactions.map((transaction, index) =>
+                <tr key={index}>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {transaction.date}
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {transaction.amount}
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {transaction.percent}
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {transaction.description}
+                  </td>
+                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
+                    {transaction.status}
                   </td>
                 </tr>
               )}
-              {formData &&
-                formData.map((data, index) => (
-                  <tr
-                    key={index}
-                    className="bg-white border-b m-0 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  >
-                    <td className="px-4 w-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      {index + 1}
-                    </td>
-                    <td
-                      scope="row"
-                      className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300"
-                    >
-                      {data.date}
-                    </td>
-                    <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      <label
-                        htmlFor={`${data.description}-${index}`}
-                        className="sr-only"
-                      >
-                        Description
-                      </label>
-                      <input
-                        type="text"
-                        name="description"
-                        value={data.description}
-                        id={`${data.description}-${index}`} // Generate a unique id using the index value
-                        className="text-gray-900 sm:text-sm block w-full p-1 border-0"
-                        onChange={(e) => handleFormChange(e, index)}
-                      />
-                    </td>
-                    <td className="font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      <label
-                        htmlFor={`${data.paymentAmount}-${index}`}
-                        className="sr-only"
-                      >
-                        Payment amount
-                      </label>
-                      <input
-                        type="number"
-                        name="paymentAmount"
-                        value={data.paymentAmount}
-                        id={`${data.paymentAmount}-${index}`}
-                        className="text-gray-900 sm:text-sm block w-full p-1 border-0"
-                        placeholder="0"
-                        onChange={(e) => handleFormChange(e, index)}
-                        min={0}
-                      />
-                    </td>
-                    <td className="px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300">
-                      <span
-                        className={`${
-                          data.status === "Paid"
-                            ? "bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300"
-                            : "bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-                        }`}
-                      >
-                        {data.status}
-                      </span>
-                    </td>
-                    <td className="px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-300 w-10 relative">
-                      <button
-                        onClick={() => handleAction(index)}
-                        title="action"
-                        type="button"
-                        className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                      >
-                        <CiMenuKebab />
-                      </button>
-                      {showPopover === index && (
-                        <div
-                          ref={popoverRef}
-                          className="absolute z-40 right-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
-                        >
-                          <ul className="py-2 text-sm text-gray-700">
-                            <li>
-                              <button
-                                onClick={() => handleCancel(index)}
-                                type="button"
-                                className="text-left text-red-500 flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                              >
-                                <MdDelete /> Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
             </tbody>
           </table>
-          <div className="p-4 flex items-center justify-between">
-            <button
-              onClick={handleAddRow}
-              type="button"
-              className="bg-gray-2 rounded px-2 font-semibold flex items-center gap-4"
-            >
-              Add transaction
-            </button>
-            <button
-              type="button"
-              className="bg-gray-2 rounded px-2 font-semibold flex items-center gap-4"
-            >
-              Download
-            </button>
-          </div>
-          {user?.email === "admin@domino.com" || user.roles === 'finance' ? (
-          <button
-            type="submit"
-            className="float-right text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          <nav
+            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            aria-label="Table navigation"
           >
-            update
-          </button>
-          ): ''}
-
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+              Showing{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1-10
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                1000
+              </span>
+            </span>
+            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Previous
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  1
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  2
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  aria-current="page"
+                  className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                >
+                  3
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  4
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  5
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
+          </nav>
+          </div>
         </div>
-      </form>
-    </section>
+    </>
   );
 };
 

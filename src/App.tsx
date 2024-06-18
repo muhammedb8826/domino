@@ -42,6 +42,7 @@ import AccountSettings from "./pages/AccountSettings";
 import { OperatorStore } from "./pages/inventory/OperatorStore";
 import { PurchaseNotifications } from "./components/header/PurchaseNotifications";
 import { StoreRequestNotifications } from "./components/header/StoreRequestNotifications";
+import { SalesPartnerList } from "./components/commission/salesPartnerList";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -90,6 +91,7 @@ const App = () => {
             <Route path="/dashboard/pricing" element={<Pricing />} />
             <Route path="/dashboard/commission" element={<CommissionList />} />
             <Route path="/dashboard/commission/:id" element={<CommissionDetailsPage />} />
+            <Route path="/dashboard/sales-partners" element={<SalesPartnerList />} />
             <Route path="/dashboard/inventory/products" element={<Products />} />
             <Route path="/dashboard/inventory/category" element={<Categories />} />
             <Route path="/dashboard/inventory/service" element={<ServicesList />} />

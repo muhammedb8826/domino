@@ -6,6 +6,7 @@ import { IoPricetagsOutline } from "react-icons/io5";
 import { MdOutlineWarehouse, MdPeopleOutline } from "react-icons/md";
 import { RiHandCoinLine } from "react-icons/ri";
 import { LiaUsersCogSolid } from "react-icons/lia";
+import { FaBorderAll, FaPersonWalkingLuggage } from "react-icons/fa6";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -114,6 +115,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     (isActive && "!text-white")
                   }
                 >
+                  <FaBorderAll />
                   Job orders
                 </NavLink>
               </li>
@@ -620,10 +622,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     }`}
                 >
                   <RiHandCoinLine />
-                  Commission
+                  Commissions
                 </NavLink>
               </li>
-
+              <li>
+                <NavLink
+                  to="/dashboard/sales-partners"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
+                    }`}
+                >
+                  <FaPersonWalkingLuggage />
+                  Sales partners
+                </NavLink>
+              </li>
               {/* <li>
                 <NavLink
                   to="/dashboard/chart"

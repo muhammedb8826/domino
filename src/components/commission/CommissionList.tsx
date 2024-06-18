@@ -17,6 +17,8 @@ import { SalesPartnerRegistration } from "./SalesPartnerRegistrationModal";
 import { getSalesPartners } from "@/redux/features/salesPartnersSlice";
 
 export const CommissionList = () => {
+  const { commissions } = useSelector((state)=> state.commission);
+  const { orders } = useSelector((state)=>state.order);
   const { salesPartners, isLoading, error } = useSelector((state) => state.salesPartner)
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
@@ -52,6 +54,8 @@ export const CommissionList = () => {
 
   useEffect(() => {
     dispatch(getSalesPartners());
+    dispatch(getCommissions());
+    dispatch(getOrders());
   }, [dispatch]);
 
 
@@ -60,16 +64,6 @@ export const CommissionList = () => {
     <>
       <Breadcrumb pageName="Commissions" />
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-        <div>
-          <button
-            type="button"
-            onClick={handleModalOpen}
-            className="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            <IoBagAdd />
-            <span className="ml-2">Add sales partner</span>
-          </button>
-        </div>
         <label htmlFor="table-search" className="sr-only">
           Search
         </label>
@@ -103,6 +97,9 @@ export const CommissionList = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
+              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                  Order reference
+                </th>
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                   Partner name
                 </th>
@@ -110,13 +107,7 @@ export const CommissionList = () => {
                   Phone number
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Company
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Address
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Joined date
+                  Total earned
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action
@@ -124,22 +115,22 @@ export const CommissionList = () => {
               </tr>
             </thead>
             <tbody>
-              {salesPartners.map((partner, index) =>
-                <tr key={partner.id}>
+              {commissions.map((commission, index) =>{
+               const orderReference = orders.find((order)=> order.id === commission.orderId);
+               const salesPartner = salesPartners.find((partner)=> partner.id === orderReference?.salesPartnerId);
+                return( 
+                <tr key={commission.id}>
                   <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-                    {partner.firstName}
+                    {orderReference?.series}
                   </td>
                   <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-                    {partner.phone}
+                    {salesPartner?.firstName}
                   </td>
                   <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-                    {partner.companyType}
+                    {salesPartner?.phone}
                   </td>
                   <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-                    Address
-                  </td>
-                  <td className="border-b border-[#eee] p-4 dark:border-strokedark">
-                    Joined date
+                    {commission.totalCommission}
                   </td>
                   <td className="px-6 py-4 relative">
                     <button
@@ -158,11 +149,11 @@ export const CommissionList = () => {
                         <ul className="py-2 text-sm text-gray-700">
                           <li>
                             <NavLink
-                              to={`#`}
+                              to={`/dashboard/commission/${commission.id}`}
                               className="flex items-center w-full gap-2 px-4 py-2 font-medium text-primary dark:text-primary hover:underline hover:bg-gray-100"
                             >
                               <FaRegEdit />
-                              Edit
+                              Details
                             </NavLink>{" "}
                           </li>
                           <li>
@@ -179,7 +170,9 @@ export const CommissionList = () => {
                     )}
                   </td>
                 </tr>
-              )}
+                )
+                
+              })}
             </tbody>
           </table>
           <nav
@@ -258,9 +251,6 @@ export const CommissionList = () => {
           </nav>
           </div>
         </div>
-          {openModal && (
-            <SalesPartnerRegistration handleModalOpen={handleModalOpen} />
-          )}
         </>
         );
 };

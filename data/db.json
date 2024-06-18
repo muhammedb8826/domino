@@ -59,98 +59,19 @@
   ],
   "orders": [
     {
-      "id": "fc427851-9b90-4c44-9377-8b8d663f0a2d",
-      "series": "IAN-O-0001-2024",
-      "date": "May 23, 2024",
-      "deliveryDate": "May 23, 2024",
-      "orderSource": "In person",
-      "description": "",
-      "customerId": "1710822546278",
-      "salesPartnerId": "",
-      "status": "Pending Approval",
-      "orderItems": [
-        {
-          "productId": "1716476001044",
-          "serviceId": "b664",
-          "priceId": "4182",
-          "unitPrice": 15000,
-          "width": "5",
-          "height": "6",
-          "quantity": "5",
-          "unit": 150,
-          "discount": 0,
-          "level": 0,
-          "total": 15000,
-          "isDiscounted": false,
-          "status": "Approved",
-          "printed": true,
-          "adminApproval": false,
-          "completed": false,
-          "id": "72f91dbf-29d4-4f58-b9b4-b7603a6d2641"
-        },
-        {
-          "productId": "1716476001044",
-          "serviceId": "1324",
-          "priceId": "d08d",
-          "unitPrice": 9600,
-          "width": "6",
-          "height": "4",
-          "quantity": "5",
-          "unit": 120,
-          "discount": 0,
-          "level": 0,
-          "total": 9600,
-          "isDiscounted": false,
-          "status": "Received",
-          "printed": false,
-          "adminApproval": false,
-          "completed": false,
-          "id": "764f6a1f-b243-4959-9de1-abed63b3b308"
-        },
-        {
-          "productId": "1716476001044",
-          "serviceId": "b664",
-          "priceId": "4182",
-          "unitPrice": 15000,
-          "width": "5",
-          "height": "6",
-          "quantity": "5",
-          "unit": 150,
-          "discount": 0,
-          "level": 0,
-          "total": 15000,
-          "isDiscounted": false,
-          "status": "Edited",
-          "printed": true,
-          "adminApproval": false,
-          "completed": false,
-          "id": "72f91dbf-29d4-4f58-b9b4-b7603a6d2641"
-        }
-      ],
-      "totalBirr": 24600,
-      "tax": 3690,
-      "fileNames": [
-        "Teshager-Sticker-5x6",
-        "Teshager-Sticker-6x4"
-      ],
-      "totalQuantity": 10,
-      "grandTotal": 28290
-    },
-    {
-      "id": "9dddb6e4-4ccf-4efb-8ff6-a57f1177a7e3",
-      "series": "IAN-O-0002-2024",
-      "date": "May 23, 2024",
-      "deliveryDate": "May 23, 2024",
-      "orderSource": "In person",
+      "series": "IAN-O-0000-2024",
+      "date": "Jun 19, 2024",
+      "deliveryDate": "Jun 19, 2024",
+      "orderSource": "telegram",
       "description": "",
       "customerId": "1710809287639",
-      "salesPartnerId": "",
+      "salesPartnerId": "1714343286476",
       "status": "Pending Approval",
       "orderItems": [
         {
-          "productId": "1716476025933",
+          "productId": "1716475966508",
           "serviceId": "e4b1",
-          "priceId": "4c32",
+          "priceId": "dbac",
           "unitPrice": 10000,
           "width": "5",
           "height": "4",
@@ -164,77 +85,56 @@
           "printed": false,
           "adminApproval": false,
           "completed": false,
-          "id": "8d3a770f-b707-431b-bb41-55212d0c0be2"
+          "id": "665abeb2-5691-4177-b3fe-e89f3e5f1875"
         },
         {
           "productId": "1716476001044",
-          "serviceId": "1324",
-          "priceId": "d08d",
-          "unitPrice": 17280,
+          "serviceId": "b664",
+          "priceId": "4182",
+          "unitPrice": 18000,
           "width": "6",
-          "height": "6",
+          "height": "5",
           "quantity": "6",
-          "unit": 216,
+          "unit": 180,
           "discount": 0,
           "level": 0,
-          "total": 17280,
+          "total": 18000,
           "isDiscounted": false,
           "status": "Received",
           "printed": false,
           "adminApproval": false,
           "completed": false,
-          "id": "d44d2f7f-8da2-46db-bd30-579b05a29355"
+          "id": "d36d62bd-535e-48b6-88d4-b34b8cdbcda5"
         }
       ],
-      "totalBirr": 27280,
-      "tax": 4092,
-      "grandTotal": 31372,
+      "totalBirr": 28000,
+      "tax": 4200,
       "fileNames": [
-        "Coca Cola-T-shirt-5x4",
-        "Coca Cola-Sticker-6x6"
+        "Coca Cola-Banner-5x4",
+        "Coca Cola-Sticker-6x5"
       ],
       "totalQuantity": 11,
-      "adminApproval": false
+      "grandTotal": 32200,
+      "id": "968f9f9f-57f8-4071-ae77-235a5bc9503a"
     }
   ],
   "commissions": [
     {
-      "id": "9339",
-      "orderId": "fc427851-9b90-4c44-9377-8b8d663f0a2d",
-      "totalCommission": 0,
+      "id": "bdb9",
+      "orderId": "968f9f9f-57f8-4071-ae77-235a5bc9503a",
+      "totalCommission": 740,
       "transactions": [
         {
-          "date": "May 23, 2024",
-          "amount": 0,
-          "percent": 0,
+          "date": "Jun 19, 2024",
+          "amount": 200,
+          "percent": 2,
           "description": "",
           "status": "pending"
         },
         {
-          "date": "May 23, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        }
-      ]
-    },
-    {
-      "id": "547c",
-      "orderId": "9dddb6e4-4ccf-4efb-8ff6-a57f1177a7e3",
-      "totalCommission": 0,
-      "transactions": [
-        {
-          "date": "May 23, 2024",
-          "amount": 0,
-          "percent": 0,
-          "description": "",
-          "status": "pending"
-        },
-        {
-          "date": "May 23, 2024",
-          "amount": 0,
-          "percent": 0,
+          "date": "Jun 19, 2024",
+          "amount": 540,
+          "percent": 3,
           "description": "",
           "status": "pending"
         }
@@ -243,30 +143,13 @@
   ],
   "payments": [
     {
-      "id": "8952",
+      "id": "51ca",
       "totaTransaction": 0,
-      "remainingAmount": 28290,
-      "orderId": "fc427851-9b90-4c44-9377-8b8d663f0a2d",
+      "remainingAmount": 32200,
+      "orderId": "968f9f9f-57f8-4071-ae77-235a5bc9503a",
       "transactions": [
         {
-          "date": "May 23, 2024",
-          "paymentMethod": "cash",
-          "reference": "",
-          "amount": 0,
-          "status": "pending",
-          "description": ""
-        }
-      ],
-      "forcePayment": false
-    },
-    {
-      "id": "d708",
-      "totaTransaction": 0,
-      "remainingAmount": 31372,
-      "orderId": "9dddb6e4-4ccf-4efb-8ff6-a57f1177a7e3",
-      "transactions": [
-        {
-          "date": "May 23, 2024",
+          "date": "Jun 19, 2024",
           "paymentMethod": "cash",
           "reference": "",
           "amount": 0,
@@ -277,32 +160,7 @@
       "forcePayment": true
     }
   ],
-  "notes": [
-    {
-      "id": "ced8",
-      "notes": []
-    },
-    {
-      "id": "1f74",
-      "notes": []
-    },
-    {
-      "id": "c2d0",
-      "notes": []
-    },
-    {
-      "id": "3bd2",
-      "notes": []
-    },
-    {
-      "id": "912c",
-      "notes": []
-    },
-    {
-      "id": "d349",
-      "notes": []
-    }
-  ],
+  "notes": [],
   "customers": [
     {
       "id": "1710809287639",
@@ -361,6 +219,14 @@
       "firstName": "Ahadu",
       "lastName": "Teshager",
       "email": ""
+    },
+    {
+      "id": "1718749429868",
+      "phone": "09-0507-8826",
+      "companyType": "individual",
+      "firstName": "Muktar",
+      "lastName": "Berisso",
+      "email": "muktar@gmail.com"
     }
   ],
   "units": [
@@ -761,28 +627,28 @@
       "operatorFirstName": "Teshager",
       "status": "Requested",
       "orderDate": "2024-05-23",
-      "totalQuantity": 8,
+      "totalQuantity": 9,
       "note": "",
       "products": [
         {
-          "id": "117409e9-4b2a-4e5b-ac30-e23f044046c6",
           "productId": "1716476001044",
           "productName": "Sticker",
-          "quantity": "3",
+          "quantity": "4",
           "description": "it's not urgent",
           "unitId": "90fc",
           "unitName": "M",
-          "status": "Stocked-out"
+          "status": "Stocked-out",
+          "id": "117409e9-4b2a-4e5b-ac30-e23f044046c6"
         },
         {
-          "id": "5beaeb97-b5e9-4458-9333-867e87f179f6",
           "productId": "1716475966508",
           "productName": "Banner",
           "quantity": "5",
           "description": "I need a banner it's is urgent",
           "unitId": "3e4a",
           "unitName": "Roll",
-          "status": "Stocked-out"
+          "status": "Stocked-out",
+          "id": "5beaeb97-b5e9-4458-9333-867e87f179f6"
         }
       ]
     },

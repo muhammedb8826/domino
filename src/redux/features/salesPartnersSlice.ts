@@ -1,3 +1,4 @@
+import { getSales } from '@/redux/features/saleSlice';
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { salesPartnersURL } from '../api/API'
@@ -7,12 +8,14 @@ interface SalesPartnerState {
   salesPartners: [];
   isLoading: boolean;
   error: string | null;
+  singleSalesPartner: null;
   searchTerm: string;
 }
 
 const initialState: SalesPartnerState = {
   salesPartners: [],
   isLoading: false,
+  singleSalesPartner: null,
   error: null,
   searchTerm: "",
 };
@@ -23,6 +26,16 @@ export const getSalesPartners = createAsyncThunk("salesPartner/getSalesPartners"
     return response.data;
   } catch (error) {
     console.error("Error fetching sales partners:", error);
+    throw error;
+  }
+});
+
+export const getSalesPartnerById = createAsyncThunk("salesPartner/getSalesPartnerById", async (salesPartnerId) => {
+  try {
+    const response = await axios.get(`${salesPartnersURL}/${salesPartnerId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching sales partner by id:", error);
     throw error;
   }
 });
@@ -79,7 +92,18 @@ const salesPartnerSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message || null;
     });
-
+   builder.addCase(getSalesPartnerById.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getSalesPartnerById.fulfilled, (state, action) => {
+      state.singleSalesPartner = action.payload;
+      state.isLoading = false;
+      state.error = null;
+    });
+    builder.addCase(getSalesPartnerById.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message || null;
+    });
     builder.addCase(createSalesPartner.pending, (state) => {
       state.isLoading = true;
     });
