@@ -627,13 +627,13 @@
       "operatorFirstName": "Teshager",
       "status": "Requested",
       "orderDate": "2024-05-23",
-      "totalQuantity": 9,
+      "totalQuantity": 10,
       "note": "",
       "products": [
         {
           "productId": "1716476001044",
           "productName": "Sticker",
-          "quantity": "4",
+          "quantity": "5",
           "description": "it's not urgent",
           "unitId": "90fc",
           "unitName": "M",
@@ -671,6 +671,28 @@
           "unitName": "M",
           "status": "Stocked-out",
           "id": "feada75d-e261-43cd-97e1-0bf6155e26fc"
+        }
+      ]
+    },
+    {
+      "id": "408f",
+      "series": "IAN-SR-0002-2024",
+      "operatorId": 8,
+      "operatorFirstName": "Teshager",
+      "status": "Requested",
+      "orderDate": "2024-06-19",
+      "totalQuantity": 7,
+      "note": "",
+      "products": [
+        {
+          "productId": "1716548980189",
+          "productName": "Film",
+          "quantity": "7",
+          "description": "this film I want for t-shirt printing",
+          "unitId": "1bd6",
+          "unitName": "Linear",
+          "status": "Requested",
+          "id": "30ef6e04-29a7-415e-b1f0-6faaa3256d30"
         }
       ]
     }

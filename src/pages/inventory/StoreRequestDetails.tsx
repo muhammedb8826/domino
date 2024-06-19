@@ -88,9 +88,6 @@ export const StoreRequestDetails = () => {
         firstName: "",
     });
 
-    const operators = users?.filter((user) => user.roles === "operator");
-    console.log(operators);
-
     const handleSelectedOperator = (e) => {
         const { value } = e.target;
         const operator = users?.find((user) => Number(user?.id) === Number(value));
@@ -179,14 +176,18 @@ export const StoreRequestDetails = () => {
                 id: product.id,
             })),
         };
-        if(singleSale.status !== "stocked-out") {
-        dispatch(updateSale(data)).then(() => {
-            navigate("/dashboard/inventory/store-request");
-            toast.success("Stocked out successfully");
+
+       formData.forEach(element => {
+            if (element.status !== "Stocked-out") {
+                dispatch(updateSale(data)).then(() => {
+                    navigate("/dashboard/inventory/store-request");
+                    toast.success("Stocked out successfully");
+                });
+            }
+            else {
+                toast.error("Sale already stocked out");
+            }
         });
-    } else {
-        toast.error("Sale already stocked out");
-    }
     };
 
     if (error) {
@@ -261,7 +262,7 @@ export const StoreRequestDetails = () => {
                                                     UoM
                                                 </th>
                                                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                                                   Status
+                                                    Status
                                                 </th>
                                                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                                                     Action
@@ -412,15 +413,15 @@ export const StoreRequestDetails = () => {
                                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                     ></textarea>
                                 </div>
-                                {singleSale.status !== "stocked-out" && (
-                                <button
-                                    type="submit"
-                                    // onClick={handleSubmit}
-                                    className="flex justify-center rounded bg-primary p-3 font-medium text-gray"
-                                >
-                                    Update
-                                </button>
-                                 )}
+                                {singleSale.status !== "Stocked-out" && (
+                                    <button
+                                        type="submit"
+                                        // onClick={handleSubmit}
+                                        className="flex justify-center rounded bg-primary p-3 font-medium text-gray"
+                                    >
+                                        Update
+                                    </button>
+                                )}
                             </div>
                         </form>
                     </div>
